@@ -14,4 +14,4 @@ for r in rows:
     if m:
         plot+=1;a=w[m.end():];e=re.search(r'(?m)^==[^=]',a);PL.append(len(a[:e.start()] if e else a))
     if 'tt1375666' in r['tconst']: ex=(r['title'],r['pageid'],r['revid'],r['timestamp'],len(w),len(links))
-print({'rows':n,'with_text':ok,'median_chars':s.median(L),'plot_section':plot,'median_plot_chars':s.median(PL),'median_links':s.median(LK),'links_to_other_movies_in_set_so_far':inner});print('Inception',ex)
+print({'rows':n,'with_text':ok,'median_chars':s.median(L),'plot_section':plot,'median_plot_chars':s.median(PL),'median_links':s.median(LK),'links_to_other_movies_in_set':inner});print('Inception',ex)
