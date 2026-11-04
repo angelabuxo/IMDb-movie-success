@@ -1,6 +1,6 @@
 # IMDb and Wikipedia: data structure
 
-This is a candidate dataset for the final project, as of 4 November 2026. It's separate from the founder-exits design in [design.md](design.md), and the raw data isn't in this repo.
+This is the data behind the working question in the [README](../README.md), as of 4 November 2026. The raw data isn't in this repo, and [data-sources.md](data-sources.md) lists where it comes from.
 
 The scope is non-adult movies with at least 100,000 IMDb votes. Wikipedia figures cover all 2,763 pages, pulled on 4 November 2026.
 
@@ -68,9 +68,60 @@ Actors are covered less well. Of the 13,611 actors credited on movies with 100,0
 
 To test the misses, I checked 100 unlinked movies with 1,000+ votes against Wikipedia. Four had their own page and two more were covered on a shared page.
 
+## Money, studios and scores
+
+These come from the Wikipedia infoboxes and article text, through `scripts/imdb/parse_infobox.py`. Counts are out of 2,764 movies.
+
+| Field | Movies |
+|---|---:|
+| Budget and gross both in USD | 2,567 |
+| Studios | 2,661 |
+| Distributors | 2,725 |
+| Producers | 2,624 |
+| Starring | 2,750 |
+| Metacritic score | 2,431 |
+| Rotten Tomatoes score, Wikipedia text | 1,983 |
+| Rotten Tomatoes score, Wikipedia or Wikidata | 2,740 |
+| Critical response section | 2,443 |
+
+The clean sample drops streaming films, rentals-only or regional grosses, non-USD figures, budgets under $1,000 and 2026 releases. That leaves 2,446 movies, with a median gross of 3.4 times budget. 169 grossed less than their budget.
+
+Clean movies by genre, counting a movie once for each genre it has:
+
+| Genre | All years | Since 2000 | Since 2010 |
+|---|---:|---:|---:|
+| Drama | 1,093 | 794 | 465 |
+| Action | 875 | 709 | 478 |
+| Comedy | 805 | 601 | 341 |
+| Adventure | 753 | 592 | 398 |
+| Thriller | 484 | 375 | 215 |
+| Crime | 466 | 322 | 182 |
+| Sci-Fi | 301 | 236 | 150 |
+| Romance | 285 | 214 | 103 |
+| Horror | 280 | 223 | 139 |
+| Mystery | 272 | 217 | 121 |
+
+## Checks on those fields
+
+- **Hand-read sample.** I read 50 random rows against the raw infobox and 49 were right. The error was a parser bug, now fixed. No budget or gross under $1,000 remains.
+- **Wikipedia against Wikidata.** 77.9% of 1,788 budgets and 84.3% of 1,744 grosses agree within 5%. 34 budgets and 88 grosses differ by more than 50%, so these figures carry real uncertainty.
+- **Rotten Tomatoes.** The two sources agree within 5 points on 98.1% of 1,967 movies.
+- **First signal.** Log gross ÷ budget correlates about 0.24 with both IMDb rating and Metacritic. That's exploratory and comes from a hit-heavy sample.
+
+## Screenplays
+
+MovieSum has 2,200 rows covering 2,188 distinct IMDb IDs, with scenes, characters and dialogue marked up. 1,181 are in the 100k+ set and 1,095 of the clean movies have a usable script. The median script has 205,872 characters, 126 scenes, 874 dialogue lines and 55 character labels.
+
+Screenplays were written before release, so a film's success can't have shaped them, unlike reviews and ratings.
+
 ## What's still open
 
 - **Reviews can't be joined yet.** The Hugging Face copy has no movie ID. Stanford's original archive should have review URLs, but its servers weren't reachable from my machine, and the archived copy was rate-limited when I tried it.
+- **The sample favours hits.** A 100,000-vote cut drops films few people saw. Articles for the 10k+ tier are still being downloaded, and their budget coverage isn't measured yet.
+- **The franchise flag is noisy.** Wikidata's series property also holds lists, so it marks Inception as part of the BBC's 100 greatest films. The "follows" property is cleaner but misses first films in a series.
+- **Screenplays need checking.** 12 IDs appear twice, character labels aren't cleaned, and I haven't read any scripts to confirm the markup or whether they're final versions.
+- **Release month isn't validated.** It's parsed for 2,762 movies, but I haven't checked a sample.
+- **Studio names aren't merged.** The clean sample has 1,296 distinct name strings, and some will be the same company.
 - **Credits are partial.** `title.principals` lists principal cast and crew, so people lower down the credits may be missing, along with the links they'd create.
 - **Plot sections are unverified.** I found them by matching headings such as "Plot", "Synopsis" and "Premise", and haven't read a sample.
 - **Wikipedia links are a rough count.** It's a simple text match that doesn't follow redirects, and the total isn't checked against the API.
