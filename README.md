@@ -28,21 +28,22 @@ Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 | Release month | Parsed, not validated | 2,762 | Wikipedia |
 | Franchise flag | Rough only | 464 by the "follows" link | Wikidata |
 | True profit | Not available | | Not published |
-| Reviews linked to movies | Missing | 0 | Stanford archive not downloaded |
+| Reviews linked to movies | Partial, nothing after 2010 | 433 clean movies | Large Movie Review Dataset URL lists |
 
 After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
 
-Articles for movies with 10,000+ votes are still being downloaded, and the TMDB file hasn't been downloaded yet.
+Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet.
 
 ## Decisions still open
 
 - **Profit measure.** Neither option is real profit, because budgets leave out marketing and cinemas keep part of the gross. Gross ÷ budget is less affected by inflation and blockbuster size but favours micro-budget horror. Gross minus budget mostly rewards blockbusters.
 - **Genre and dates.** See the genre table in [the data structure doc](docs/imdb-data-structure.md).
-- **Which text carries the sentiment half.** Linked reviews are missing, so Wikipedia's critic text, tested against critic scores, is the fallback.
+- **Which text carries the sentiment half.** The linked reviews we have stop at 2010. Wikipedia's critic text, tested against critic scores, is the fallback, and MovieLens Tag Genome may fill the gap to about 2021 if its coverage holds up.
+- **Which sample to use.** The 100k+ tier is cleaner, and the 10k+ tier has far more flops.
 
 ## Known problems
 
-- **The sample favours hits.** Only 169 of the 2,446 movies grossed less than their budget, because a 100,000-vote cut drops films few people saw.
+- **The 100k+ sample favours hits.** Only 169 of the 2,446 movies grossed less than their budget, because that cut drops films few people saw. In the 10k to 100k tier, 38.1% did.
 - **Franchises could swamp the result.** 11 of the 12 highest-margin films have a series or franchise link in Wikidata, and the current flag is noisy.
 - **Network leakage.** Success can make actors more central, so a film's cast centrality should only use films released before it.
 
@@ -59,7 +60,3 @@ Raw data, article text and screenplays aren't in this repo. Please don't commit 
 ## Collection rules
 
 We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
-
-## The earlier idea
-
-This repo began as a study of what European founders take home, which is where the old name `EU-founder-exits` came from. That work is still here: [`docs/design.md`](docs/design.md), [`docs/sources.md`](docs/sources.md), [`docs/references-founder-payoffs.md`](docs/references-founder-payoffs.md), [`data/founder_sources.tsv`](data/founder_sources.tsv) and [`scripts/europe_registers.py`](scripts/europe_registers.py). Register data about named people is reported only in aggregate.
