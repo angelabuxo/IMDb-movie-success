@@ -59,7 +59,3 @@ Raw data, article text and screenplays aren't in this repo. Please don't commit 
 ## Collection rules
 
 We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
-
-## The earlier idea
-
-This repo began as a study of what European founders take home, which is where the old name `EU-founder-exits` came from. That work is still here: [`docs/design.md`](docs/design.md), [`docs/sources.md`](docs/sources.md), [`docs/references-founder-payoffs.md`](docs/references-founder-payoffs.md), [`data/founder_sources.tsv`](data/founder_sources.tsv) and [`scripts/europe_registers.py`](scripts/europe_registers.py). Register data about named people is reported only in aggregate.
