@@ -4,13 +4,13 @@ Everything the project uses, with links, as of 4 November 2026. Per-movie links 
 
 | Source | What we use it for | Link | Licence or terms | Status |
 |---|---|---|---|---|
-| IMDb non-commercial datasets | Movies, ratings, cast and crew | [Docs](https://developer.imdb.com/non-commercial-datasets/), [files](https://datasets.imdbws.com/) | Personal and non-commercial use; full terms not read yet | Downloaded |
+| IMDb non-commercial datasets | Movies, ratings, cast and crew | [Docs](https://developer.imdb.com/non-commercial-datasets/), [files](https://datasets.imdbws.com/) | Personal and non-commercial use, full terms not read yet | Downloaded |
 | Wikidata, through QLever | IMDb ID to Wikipedia links, second source for money, studios, scores and series | [QLever](https://qlever.dev/wikidata) | Wikidata's own terms not checked yet | Downloaded |
 | English Wikipedia | Budget, gross, studios, producers, critic scores and critic text | [API](https://en.wikipedia.org/w/api.php) | Text is CC BY-SA, so credit it if we quote it | 100k+ tier done, 10k+ tier in progress |
-| MovieSum | Screenplays and summaries with IMDb IDs | [Hugging Face](https://huggingface.co/datasets/rohitsaxena/MovieSum) | CC BY-NC 4.0; the screenplays are still under copyright | Downloaded |
-| Large Movie Review Dataset, Hugging Face copy | Review text and sentiment labels | [Hugging Face](https://huggingface.co/datasets/stanfordnlp/imdb) | Card licence listed as "other"; not read yet | Downloaded, no movie IDs |
+| MovieSum | Screenplays and summaries with IMDb IDs | [Hugging Face](https://huggingface.co/datasets/rohitsaxena/MovieSum) | CC BY-NC 4.0, and the screenplays are still under copyright | Downloaded |
+| Large Movie Review Dataset, Hugging Face copy | Review text and sentiment labels | [Hugging Face](https://huggingface.co/datasets/stanfordnlp/imdb) | Card licence listed as "other", not read yet | Downloaded, no movie IDs |
 | Large Movie Review Dataset, original | Should link reviews to movies through URL files | [Stanford](https://ai.stanford.edu/~amaas/data/sentiment/), [archived file](https://web.archive.org/web/20261012055938id_/https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz) | Not read yet | Not downloaded: Stanford unreachable from Gyula's machine, archive rate-limited |
-| TMDB movies on Kaggle | Third money source, and more low-vote movies | [Kaggle](https://www.kaggle.com/datasets/alanvourch/tmdb-movies-daily-updates) | Listed as Apache 2.0 by the uploader; TMDB's terms not checked | Not downloaded, needs a Kaggle login |
+| TMDB movies on Kaggle | Third money source, and more low-vote movies | [Kaggle](https://www.kaggle.com/datasets/alanvourch/tmdb-movies-daily-updates) | Listed as Apache 2.0 by the uploader, TMDB's terms not checked | Not downloaded, needs a Kaggle login |
 
 To cite MovieSum, use Saxena and Keller, "MovieSum: An Abstractive Summarization Dataset for Movie Screenplays", Findings of ACL 2024.
 
@@ -45,4 +45,4 @@ There's one row per movie and article, so 12,675 rows for 12,673 movies with 10,
 | `min_votes_tier` | `100k` for 100,000+ votes, `10k` for 10,000 to 99,999 |
 | `in_moviesum` | 1 if MovieSum has a screenplay for this ID |
 
-12,562 of the movies have a Wikipedia link, and 2,020 are in MovieSum. Links come from Wikidata and I spot-checked a handful rather than testing all of them.
+12,562 of the movies have a Wikipedia link, and 2,020 are in MovieSum. Links come from Wikidata, and I opened only a few of them to test.
