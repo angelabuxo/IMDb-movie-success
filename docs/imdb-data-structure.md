@@ -116,8 +116,8 @@ Screenplays were written before release, so a film's success can't have shaped t
 
 ## What's still open
 
-- **Reviews can't be joined yet.** The Hugging Face copy has no movie ID. Stanford's original archive should have review URLs, but its servers weren't reachable from my machine, and the archived copy was rate-limited when I tried it.
-- **The sample favours hits.** A 100,000-vote cut drops films few people saw. Articles for the 10k+ tier are still being downloaded, and their budget coverage isn't measured yet.
+- **Reviews stop at 2010.** The Hugging Face copy has no movie ID, but a mirror's URL lists link reviews to 14,127 movies. They cover 1,376 of the 6,851 clean movies with 20,514 reviews (median 11 per film). Only 2 clean movies from 2010 onwards have any, so this source can't support a recent date range. The review text isn't matched to the URLs yet.
+- **The 100k+ sample favours hits.** Adding movies with 10,000 to 99,999 votes gives 6,851 clean movies, and 38.1% of those added movies grossed under budget, against 6.9% at 100k+. About half of that tier has budget and gross in USD, and its parsing isn't hand-checked. White God's $700 million budget is probably a misread currency.
 - **The franchise flag is noisy.** Wikidata's series property also holds lists, so it marks Inception as part of the BBC's 100 greatest films. The "follows" property is cleaner but misses first films in a series.
 - **Screenplays need checking.** 12 IDs appear twice, character labels aren't cleaned, and I haven't read any scripts to confirm the markup or whether they're final versions.
 - **Release month isn't validated.** It's parsed for 2,762 movies, but I haven't checked a sample.
