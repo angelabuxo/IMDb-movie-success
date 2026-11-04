@@ -28,7 +28,8 @@ Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 | Release month | Parsed, not validated | 2,762 | Wikipedia |
 | Franchise flag | Rough only | 464 by the "follows" link | Wikidata |
 | True profit | Not available | | Not published |
-| Reviews linked to movies | Partial, nothing after 2010 | 433 clean movies | Large Movie Review Dataset URL lists |
+| Reviews linked to movies | Have, nothing after 2017 | 2,070 clean movies | MovieLens Tag Genome |
+| Prior awards | Have | 1,479 of the 6,851 clean movies below appear | DLu/oscar_data |
 
 After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
 
@@ -38,7 +39,7 @@ Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with
 
 - **Profit measure.** Neither option is real profit, because budgets leave out marketing and cinemas keep part of the gross. Gross ÷ budget is less affected by inflation and blockbuster size but favours micro-budget horror. Gross minus budget mostly rewards blockbusters.
 - **Genre and dates.** See the genre table in [the data structure doc](docs/imdb-data-structure.md).
-- **Which text carries the sentiment half.** The linked reviews we have stop at 2010. Wikipedia's critic text, tested against critic scores, is the fallback, and MovieLens Tag Genome may fill the gap to about 2021 if its coverage holds up.
+- **Which text carries the sentiment half.** MovieLens Tag Genome has audience reviews for 5,842 of the 6,851 clean movies, but none after 2017. Wikipedia's critic text covers later films too. Using both would let us compare critics with audiences, and would limit the audience half to 2017 or earlier.
 - **Which sample to use.** The 100k+ tier is cleaner, and the 10k+ tier has far more flops.
 
 ## Known problems
@@ -47,8 +48,24 @@ Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with
 - **Franchises could swamp the result.** 11 of the 12 highest-margin films have a series or franchise link in Wikidata, and the current flag is noisy.
 - **Network leakage.** Success can make actors more central, so a film's cast centrality should only use films released before it.
 
+## Get the data
+
+The data isn't in git. If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
+
+```bash
+python3 scripts/get_data.py --list
+```
+
+```bash
+python3 scripts/get_data.py --all
+```
+
+`--all` needs about 4.5 GB. Wikipedia articles are a separate step of about an hour: `python3 scripts/get_data.py wikipedia`. Everything goes in `data/raw/`, which git ignores.
+
 ## In this repo
 
+- [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
+- [`scripts/get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json): the downloader and its list of files.
 - [`docs/data-sources.md`](docs/data-sources.md): where each dataset comes from, with links and licences.
 - [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md): how the data fits together, with coverage and checks.
 - [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.
