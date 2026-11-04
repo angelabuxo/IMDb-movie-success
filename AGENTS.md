@@ -33,8 +33,10 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 ```bash
 cd data/raw && mkdir -p features && ../../.venv/bin/python ../../scripts/imdb/parse_infobox.py
+../../.venv/bin/python ../../scripts/imdb/extract_reception.py
 ```
 
+`parse_infobox.py` writes budget, gross, studios and score fields to `features/wiki_infobox.csv`. `extract_reception.py` writes the Reception / Critical response section text to `features/wiki_reception.csv`. Both default to `wiki/articles.jsonl` and are resumable only in the sense that you re-run them after a fresh pull.
 ## What the script can't fetch
 
 - OpusData is a paid extract, so a person has to arrange it with sales@opusdata.com.
@@ -43,7 +45,7 @@ cd data/raw && mkdir -p features && ../../.venv/bin/python ../../scripts/imdb/pa
 
 ## Rules
 
-- Never commit anything from `data/raw/`, or any article text, review text or screenplay. Commit only code, docs and derived numbers.
+- Never commit anything from `data/raw/` or `build/`, or any article text, review text, reception text or screenplay. Commit only code, docs and derived numbers.
 - Don't quote long passages from screenplays or reviews, in the paper or in chat.
 - Never put an email address, password or token in code.
 - Don't invent a result, source or number. Every number in a doc should come from a script's output.

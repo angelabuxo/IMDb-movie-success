@@ -82,7 +82,8 @@ These come from the Wikipedia infoboxes and article text, through `scripts/imdb/
 | Metacritic score | 2,431 |
 | Rotten Tomatoes score, Wikipedia text | 1,983 |
 | Rotten Tomatoes score, Wikipedia or Wikidata | 2,740 |
-| Critical response section | 2,443 |
+| Critical response section (length only, via `parse_infobox.py`) | 2,443 |
+| Reception / critical text (`features/wiki_reception.csv`, via `extract_reception.py`) | 2,485 of 2,763 pages |
 
 The clean sample drops streaming films, rentals-only or regional grosses, non-USD figures, budgets under $1,000 and 2026 releases. That leaves 2,446 movies, with a median gross of 3.4 times budget. 169 grossed less than their budget.
 
