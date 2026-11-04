@@ -66,6 +66,7 @@ python3 scripts/get_data.py --all
 
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
 - [`scripts/get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json): the downloader and its list of files.
+- [`docs/hpc.md`](docs/hpc.md): how to get at the data on DTU HPC.
 - [`docs/data-sources.md`](docs/data-sources.md): where each dataset comes from, with links and licences.
 - [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md): how the data fits together, with coverage and checks.
 - [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.

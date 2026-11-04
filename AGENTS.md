@@ -35,6 +35,10 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cd data/raw && mkdir -p features && ../../.venv/bin/python ../../scripts/imdb/parse_infobox.py
 ```
 
+## Working on DTU HPC
+
+See [docs/hpc.md](docs/hpc.md) for access, the shared folder and job rules.
+
 ## What the script can't fetch
 
 - OpusData is a paid extract, so a person has to arrange it with sales@opusdata.com.
