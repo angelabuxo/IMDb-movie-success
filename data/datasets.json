@@ -1,0 +1,88 @@
+{
+  "note": "Everything scripts/get_data.py can fetch. Paths are relative to the data folder (data/raw by default), which git ignores.",
+  "datasets": {
+    "imdb": {
+      "about": "Movies, ratings, cast and crew",
+      "license": "Personal and non-commercial use; read https://developer.imdb.com/non-commercial-datasets/",
+      "size": "about 2 GB",
+      "files": [
+        {"url": "https://datasets.imdbws.com/title.basics.tsv.gz", "path": "raw/title.basics.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/title.ratings.tsv.gz", "path": "raw/title.ratings.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/title.principals.tsv.gz", "path": "raw/title.principals.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/title.crew.tsv.gz", "path": "raw/title.crew.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/title.episode.tsv.gz", "path": "raw/title.episode.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/title.akas.tsv.gz", "path": "raw/title.akas.tsv.gz"},
+        {"url": "https://datasets.imdbws.com/name.basics.tsv.gz", "path": "raw/name.basics.tsv.gz"}
+      ]
+    },
+    "moviesum": {
+      "about": "2,200 screenplays and summaries with IMDb IDs",
+      "license": "CC BY-NC 4.0; the screenplays are still under copyright, so never commit or publish them",
+      "size": "about 477 MB",
+      "files": [
+        {"url": "https://huggingface.co/datasets/rohitsaxena/MovieSum/resolve/main/train.jsonl", "path": "scripts/moviesum/train.jsonl"},
+        {"url": "https://huggingface.co/datasets/rohitsaxena/MovieSum/resolve/main/val.jsonl", "path": "scripts/moviesum/val.jsonl"},
+        {"url": "https://huggingface.co/datasets/rohitsaxena/MovieSum/resolve/main/test.jsonl", "path": "scripts/moviesum/test.jsonl"}
+      ]
+    },
+    "genome": {
+      "about": "MovieLens Tag Genome 2021: IMDb reviews with IMDb IDs",
+      "license": "CC BY-NC 3.0; cite the two papers named in its readme. Reviews were collected from IMDb, so never commit or publish the text",
+      "size": "about 1.9 GB",
+      "files": [
+        {"url": "https://files.grouplens.org/datasets/tag-genome-2021/genome_2021.zip", "path": "reviews/genome/genome_2021.zip"}
+      ]
+    },
+    "reviews_hf": {
+      "about": "Large Movie Review Dataset, text and labels without movie IDs",
+      "license": "Hugging Face card lists 'other'; read it before publishing anything from the text",
+      "size": "about 83 MB",
+      "files": [
+        {"url": "https://huggingface.co/datasets/stanfordnlp/imdb/resolve/main/plain_text/train-00000-of-00001.parquet", "path": "reviews/hf/train.parquet"},
+        {"url": "https://huggingface.co/datasets/stanfordnlp/imdb/resolve/main/plain_text/test-00000-of-00001.parquet", "path": "reviews/hf/test.parquet"},
+        {"url": "https://huggingface.co/datasets/stanfordnlp/imdb/resolve/main/plain_text/unsupervised-00000-of-00001.parquet", "path": "reviews/hf/unsupervised.parquet"}
+      ]
+    },
+    "review_urls": {
+      "about": "URL lists linking those reviews to movies, from an unofficial mirror with no licence or card",
+      "license": "Unknown",
+      "size": "about 5 MB",
+      "files": [
+        {"url": "https://huggingface.co/datasets/hohai/aclImdb/resolve/main/train/urls_pos.txt", "path": "reviews/urls/train_urls_pos.txt"},
+        {"url": "https://huggingface.co/datasets/hohai/aclImdb/resolve/main/train/urls_neg.txt", "path": "reviews/urls/train_urls_neg.txt"},
+        {"url": "https://huggingface.co/datasets/hohai/aclImdb/resolve/main/train/urls_unsup.txt", "path": "reviews/urls/train_urls_unsup.txt"},
+        {"url": "https://huggingface.co/datasets/hohai/aclImdb/resolve/main/test/urls_pos.txt", "path": "reviews/urls/test_urls_pos.txt"},
+        {"url": "https://huggingface.co/datasets/hohai/aclImdb/resolve/main/test/urls_neg.txt", "path": "reviews/urls/test_urls_neg.txt"}
+      ]
+    },
+    "oscars": {
+      "about": "Oscar nominations and wins with IMDb film and person IDs, pinned to one commit",
+      "license": "Repo is BSD-2, but it was partly built from Oscars.org and scraped IMDb pages",
+      "size": "about 2 MB",
+      "files": [
+        {"url": "https://raw.githubusercontent.com/DLu/oscar_data/c5e9716b7e020e70205d6b95f5a5678526c1b45f/oscars.csv", "path": "features/ext/oscars.csv"}
+      ]
+    }
+  },
+  "wikidata": {
+    "about": "Tables queried from Wikidata through QLever, used for Wikipedia links and as a second source",
+    "license": "Wikidata content is reported as CC0",
+    "endpoint": "https://qlever.dev/api/wikidata",
+    "prefixes": "PREFIX wdt: <http://www.wikidata.org/prop/direct/> PREFIX p: <http://www.wikidata.org/prop/> PREFIX psv: <http://www.wikidata.org/prop/statement/value/> PREFIX ps: <http://www.wikidata.org/prop/statement/> PREFIX pq: <http://www.wikidata.org/prop/qualifier/> PREFIX wikibase: <http://wikiba.se/ontology#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX schema: <http://schema.org/>",
+    "queries": {
+      "wiki/wd_tt_enwiki.tsv": "SELECT ?imdb ?item ?article WHERE { ?item wdt:P345 ?imdb . FILTER(STRSTARTS(?imdb,\"tt\")) ?article schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> }",
+      "features/wd_budget.tsv": "SELECT ?imdb ?amt ?unit WHERE { ?i wdt:P345 ?imdb . ?i p:P2130 ?s . ?s psv:P2130 ?v . ?v wikibase:quantityAmount ?amt ; wikibase:quantityUnit ?unit . FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_gross.tsv": "SELECT ?imdb ?amt ?unit ?scope WHERE { ?i wdt:P345 ?imdb . ?i p:P2142 ?s . ?s psv:P2142 ?v . ?v wikibase:quantityAmount ?amt ; wikibase:quantityUnit ?unit . OPTIONAL { ?s pq:P3005 ?scope } FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_studio.tsv": "SELECT ?imdb ?c ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P272 ?c . ?c rdfs:label ?name . FILTER(LANG(?name)=\"en\") FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_distributor.tsv": "SELECT ?imdb ?c ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P750 ?c . ?c rdfs:label ?name . FILTER(LANG(?name)=\"en\") FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_scores.tsv": "SELECT ?imdb ?score ?by ?byName WHERE { ?i wdt:P345 ?imdb . ?i p:P444 ?s . ?s ps:P444 ?score ; pq:P447 ?by . ?by rdfs:label ?byName . FILTER(LANG(?byName)=\"en\") FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_series.tsv": "SELECT ?imdb ?s ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P179 ?s . OPTIONAL { ?s rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_follows.tsv": "SELECT ?imdb ?s WHERE { ?i wdt:P345 ?imdb . ?i wdt:P155 ?s . FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_franchise.tsv": "SELECT ?imdb ?s ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P8345 ?s . OPTIONAL { ?s rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }"
+    }
+  },
+  "not_downloadable": {
+    "opusdata": "Paid extract. Ask sales@opusdata.com; a person has to arrange it.",
+    "tmdb_kaggle": "Don't use until the group settles TMDB's terms, which bar use in connection with machine learning applications."
+  }
+}

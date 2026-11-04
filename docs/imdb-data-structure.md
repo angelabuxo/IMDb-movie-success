@@ -116,7 +116,7 @@ Screenplays were written before release, so a film's success can't have shaped t
 
 ## What's still open
 
-- **Reviews stop at 2010.** The Hugging Face copy has no movie ID, but a mirror's URL lists link reviews to 14,127 movies. They cover 1,376 of the 6,851 clean movies with 20,514 reviews (median 11 per film). Only 2 clean movies from 2010 onwards have any, so this source can't support a recent date range. The review text isn't matched to the URLs yet.
+- **Reviews stop at 2017.** MovieLens Tag Genome covers 5,842 of the 6,851 clean movies with 1,621,933 reviews (median 163 per film), and 1,524 of those movies grossed under budget. Coverage is close to complete through the 2000s, 1,618 of 2,032 for the 2010s, and zero for 2018 onwards. Its reviews have no date or rating, and I haven't read a sample. The Large Movie Review Dataset is much smaller (1,376 clean movies, 20,514 reviews) and has almost nothing from 2010 onwards, but it does have sentiment labels.
 - **The 100k+ sample favours hits.** Adding movies with 10,000 to 99,999 votes gives 6,851 clean movies, and 38.1% of those added movies grossed under budget, against 6.9% at 100k+. About half of that tier has budget and gross in USD, and its parsing isn't hand-checked. White God's $700 million budget is probably a misread currency.
 - **The franchise flag is noisy.** Wikidata's series property also holds lists, so it marks Inception as part of the BBC's 100 greatest films. The "follows" property is cleaner but misses first films in a series.
 - **Screenplays need checking.** 12 IDs appear twice, character labels aren't cleaned, and I haven't read any scripts to confirm the markup or whether they're final versions.
