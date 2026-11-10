@@ -1,0 +1,7 @@
+,value
+n_movies_with_critic_text,1829
+n_movies_with_audience_text,1829
+n_shared,1829
+min_term_count,30
+n_terms,1944
+n_banned_name_tokens,6439

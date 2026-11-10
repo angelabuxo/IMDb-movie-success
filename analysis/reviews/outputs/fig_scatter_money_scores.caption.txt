@@ -1,0 +1,1 @@
+Figure. Pairwise relationships among log(gross/budget), IMDb rating, Metacritic and Rotten Tomatoes for the 100k+ clean theatrical sample with year ≤ 2017. Dashed line marks break-even (gross = budget). Points are individual movies; axes are labelled in native units.

@@ -1,0 +1,15 @@
+{
+  "hand_label": {
+    "status": "awaiting_labels",
+    "n_exported": 50,
+    "n_labelled": 0,
+    "path": "/Users/angelabuxo/Library/Mobile Documents/com~apple~CloudDocs/Erasmus/DTU/Courses/SGAI-02805/Project/IMDb-movie-success/build/imdb/features/reviews_private/hand_label_sample_50.csv"
+  },
+  "stanford_vader": {
+    "n_docs": 2000,
+    "n_non_neutral": 1988,
+    "accuracy_vs_stanford": 0.7334004024144869,
+    "frac_vader_neutral": 0.006
+  },
+  "n_movies_text": 2070
+}
