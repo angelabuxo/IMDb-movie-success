@@ -71,8 +71,56 @@ python3 scripts/get_data.py --all
 - [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.
 - [`data/movie_links.csv`](data/movie_links.csv): IMDb, Wikipedia and Wikidata links for 12,673 movies.
 - [`scripts/imdb/`](scripts/imdb/): the code behind the numbers.
+- [`scripts/imdb/build_actor_network.py`](scripts/imdb/build_actor_network.py): builds the weighted principal-actor co-appearance network.
+- [`scripts/imdb/build_actor_network_interactive.py`](scripts/imdb/build_actor_network_interactive.py): builds a self-contained interactive HTML version.
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
+
+## Actor co-appearance network
+
+After downloading the IMDb datasets, build the network with:
+
+```bash
+python3 scripts/imdb/build_actor_network.py
+```
+
+The default includes non-adult movies with at least 10,000 IMDb votes. For
+each movie, it keeps the first three distinct `actor`/`actress` entries in
+IMDb's principal ordering. An undirected edge joins every pair in that cast,
+and its `weight` is the number of movies shared by the pair. Wikipedia data is
+not used.
+
+The generated files are written to the git-ignored `build/actor-network/`
+directory:
+
+- `nodes.csv`: actor ID, name, number of included movies and weighted degree.
+- `edges.csv`: the two actor IDs and the shared-movie edge weight.
+- `movies_used.csv`: the movie-to-selected-actors audit table.
+- `actor_network.svg`: a plot of the 150 actors with the most included movies;
+  node size reflects movie count and edge width reflects shared movies.
+
+Use `--min-votes 0` to include all non-adult movies, or `--plot-nodes N` to
+change the number of actors displayed in the SVG. The CSV files always contain
+the complete network for the selected movie threshold.
+
+For a browser-based version that highlights an actor and its visible
+collaborators on hover, run:
+
+```bash
+python3 scripts/imdb/build_actor_network_interactive.py
+```
+
+This writes `actor_network_interactive.html` alongside the static outputs.
+It has no external JavaScript or network dependency, so it can be opened
+directly as a local file. The layout selector starts with a force-directed
+layout and also offers radial, grid and ring layouts; changing it moves the
+nodes and edges while preserving the hover highlighting.
+The community selector can colour the graph using Louvain, link communities,
+or connected components. It reports Newman-Girvan modularity for each node
+partition; link communities additionally report partition density and the
+modularity of their strongest-link node projection. These metrics are not
+directly interchangeable: link communities can overlap, while the displayed
+node projection assigns each actor to one strongest incident link community.
 
 ## Collection rules
 
