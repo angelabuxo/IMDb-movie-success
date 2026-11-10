@@ -56,9 +56,12 @@ def load_reception_text(imdb_ids: set[str]) -> dict[str, str]:
 def load_audience_corpus(
     imdb_ids: set[str],
     max_per_movie: int = 30,
-    max_chars_total: int = 8_000_000,
 ) -> dict[str, str]:
-    """Concatenate up to max_per_movie Tag Genome reviews per movie."""
+    """Concatenate up to max_per_movie Tag Genome reviews per movie.
+
+    Stops once every requested movie has max_per_movie reviews (or the zip ends),
+    so coverage is not truncated by a global character budget.
+    """
     z = zipfile.ZipFile(GENOME_ZIP)
     item2imdb: dict[int, str] = {}
     with z.open("movie_dataset_public_final/raw/metadata.json") as fh:
@@ -72,10 +75,11 @@ def load_audience_corpus(
 
     buckets: dict[str, list[str]] = {tt: [] for tt in imdb_ids}
     counts: Counter[str] = Counter()
-    total_chars = 0
+    done = 0
+    target = len(imdb_ids)
     with z.open("movie_dataset_public_final/raw/reviews.json") as fh:
         for line in io.TextIOWrapper(fh, encoding="utf8"):
-            if total_chars >= max_chars_total:
+            if done >= target:
                 break
             row = json.loads(line)
             tt = item2imdb.get(row["item_id"])
@@ -86,7 +90,8 @@ def load_audience_corpus(
                 continue
             buckets[tt].append(txt)
             counts[tt] += 1
-            total_chars += len(txt)
+            if counts[tt] == max_per_movie:
+                done += 1
     return {tt: "\n".join(parts) for tt, parts in buckets.items() if parts}
 
 
@@ -124,10 +129,9 @@ def count_terms(texts: list[str], ban: set[str]) -> Counter[str]:
     return counts
 
 
-def rates_per_10k(counts: Counter[str], min_count: int = 20) -> pd.Series:
+def rates_per_10k(counts: Counter[str]) -> dict[str, float]:
     total = sum(counts.values()) or 1
-    keep = {t: c for t, c in counts.items() if c >= min_count}
-    return pd.Series({t: 10000.0 * c / total for t, c in keep.items()})
+    return {t: 10000.0 * c / total for t, c in counts.items()}
 
 
 def build_term_rate_table(
@@ -140,23 +144,25 @@ def build_term_rate_table(
     shared = sorted(set(critic_texts) & set(audience_texts))
     critic_counts = count_terms([critic_texts[tt] for tt in shared], ban)
     audience_counts = count_terms([audience_texts[tt] for tt in shared], ban)
-    cr = rates_per_10k(critic_counts, min_count=min_count)
-    ar = rates_per_10k(audience_counts, min_count=min_count)
-    terms = sorted(set(cr.index) | set(ar.index))
+    cr = rates_per_10k(critic_counts)
+    ar = rates_per_10k(audience_counts)
+    # Keep terms frequent enough in BOTH corpora so log rates are comparable.
+    terms = sorted(
+        t
+        for t in set(critic_counts) & set(audience_counts)
+        if critic_counts[t] >= min_count and audience_counts[t] >= min_count
+    )
     df = pd.DataFrame(
         {
             "term": terms,
-            "critic_per_10k": [cr.get(t, 0.0) for t in terms],
-            "audience_per_10k": [ar.get(t, 0.0) for t in terms],
-            "critic_n": [critic_counts.get(t, 0) for t in terms],
-            "audience_n": [audience_counts.get(t, 0) for t in terms],
+            "critic_per_10k": [cr[t] for t in terms],
+            "audience_per_10k": [ar[t] for t in terms],
+            "critic_n": [critic_counts[t] for t in terms],
+            "audience_n": [audience_counts[t] for t in terms],
         }
     )
-    # Require the term to meet min_count in at least one corpus and appear in both.
-    df = df[(df["critic_n"] >= min_count) | (df["audience_n"] >= min_count)]
-    df = df[(df["critic_n"] > 0) & (df["audience_n"] > 0)]
-    df["log_critic"] = np.log10(df["critic_per_10k"].clip(lower=1e-6))
-    df["log_audience"] = np.log10(df["audience_per_10k"].clip(lower=1e-6))
+    df["log_critic"] = np.log10(df["critic_per_10k"])
+    df["log_audience"] = np.log10(df["audience_per_10k"])
     df["log_ratio_audience_over_critic"] = df["log_audience"] - df["log_critic"]
     df["n_movies_shared"] = len(shared)
     return df.sort_values("audience_n", ascending=False)
