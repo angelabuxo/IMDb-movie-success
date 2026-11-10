@@ -1,1 +1,0 @@
-Figure. Quadrant view of money vs audience rating (100k+ clean, year ≤ 2017). Vertical dashed line: break-even; horizontal: median IMDb rating (7.00). Squares mark extreme disagreements (profitable + below-median rating, or unprofitable + above-median rating).

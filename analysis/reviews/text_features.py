@@ -282,19 +282,22 @@ def sentiment_profit_by_genre_null(
     n_perm: int = 500,
     random_state: int = 0,
 ) -> pd.DataFrame:
-    """Per-genre Spearman(sentiment, log profit) vs label-shuffle null."""
-    from .nulls import spearman_with_null
+    """Per-genre Spearman(sentiment, log profit) vs decade-stratified null."""
+    from .nulls import decade_label, spearman_with_null
 
     m = movies.merge(text_features, on="imdb_id", how="inner")
     rows = []
     for genre, sub in _explode_genre(m).groupby("genre"):
         if len(sub) < 30:
             continue
+        # Within one genre, stratify the null by decade only.
+        strata = decade_label(sub["year"])
         res = spearman_with_null(
             sub["mean_vader_compound"],
             sub["log_gross_over_budget"],
             n_perm=n_perm,
             random_state=random_state,
+            strata=strata,
         )
         rows.append({"genre": genre, **res})
     return pd.DataFrame(rows).sort_values("rho")

@@ -1,0 +1,26 @@
+imdb_id,title,year,genres,log_gross_over_budget,gross_minus_budget,imdb_rating,metacritic,rotten_tomatoes,rank_log_gross_over_budget,rank_imdb_rating,disagreement_residual,profit_quintile,disagreement_group
+tt2322441,Fifty Shades of Grey,2015,"Drama,Romance,Thriller",2.6562304523724136,529700000.0,4.2,46.0,25.0,1919.0,7.0,-1272.6366290313495,5.0,rating_below_money
+tt1259571,The Twilight Saga: New Moon,2009,"Adventure,Drama,Fantasy",2.65605490598383,662000000.0,4.8,44.0,28.0,1918.0,15.5,-1263.8706857144361,5.0,rating_below_money
+tt3322940,Annabelle,2014,"Horror,Mystery,Thriller",3.679605817328607,251100000.00000003,5.5,37.0,28.0,2038.0,80.5,-1230.7838837440136,5.0,rating_below_money
+tt1325004,The Twilight Saga: Eclipse,2010,"Action,Adventure,Drama",2.3301430370577036,631000000.0,5.1,58.0,46.0,1830.0,26.5,-1229.4676738260794,5.0,rating_below_money
+tt1099212,Twilight,2008,"Drama,Fantasy,Romance",2.410105436705302,375000000.0,5.4,,48.0,1860.0,59.0,-1204.9459733334738,5.0,rating_below_money
+tt4465564,Fifty Shades Darker,2017,"Drama,Mystery,Romance",1.93546618989423,326000000.0,4.6,33.0,11.0,1650.0,12.0,-1196.0978767817132,4.0,rating_below_money
+tt1536044,Paranormal Activity 2,2010,"Horror,Mystery",4.080358320247361,174500000.0,5.7,53.0,58.0,2060.0,132.5,-1184.6346367161027,5.0,rating_below_money
+tt4281724,Terrifier,2016,Horror,2.237864036679424,376798.0,5.5,,63.0,1801.0,80.5,-1167.7553176355982,5.0,rating_below_money
+tt1114740,Paul Blart: Mall Cop,2009,"Action,Comedy,Crime",1.9676501356917193,160000000.0,5.3,39.0,34.0,1664.5,44.5,-1167.454054876954,4.0,rating_below_money
+tt1324999,The Twilight Saga: Breaking Dawn - Part 1,2011,"Adventure,Drama,Fantasy",1.7515934275027203,605000000.0,5.0,45.0,25.0,1525.0,20.5,-1154.3549621675702,4.0,rating_below_money
+tt1333125,Movie 43,2013,Comedy,1.6863989535702288,26400000.0,4.4,18.0,5.0,1479.0,9.5,-1153.1215695895655,4.0,rating_below_money
+tt0952640,Alvin and the Chipmunks,2007,"Adventure,Animation,Comedy",1.8492076961406017,307900000.0,5.3,39.0,29.0,1600.0,44.5,-1150.300710936056,4.0,rating_below_money
+tt2101441,Spring Breakers,2012,"Crime,Drama,Thriller",1.8468787684491346,26700000.0,5.3,63.0,67.0,1597.5,44.5,-1149.6358526437732,4.0,rating_below_money
+tt1778304,Paranormal Activity 3,2011,"Horror,Mystery,Thriller",3.7232808808312687,202000000.0,5.8,59.0,67.0,2039.0,163.0,-1148.5498270609269,5.0,rating_below_money
+tt1477076,Saw 3D,2010,"Horror,Mystery",2.080911049659196,119200000.0,5.5,24.0,9.0,1717.0,80.5,-1145.416079014894,5.0,rating_below_money
+tt2184339,The Purge,2013,"Horror,Sci-Fi,Thriller",3.415538498932813,88300000.0,5.8,,41.0,2020.0,163.0,-1143.496904039577,5.0,rating_below_money
+tt2592614,Resident Evil: The Final Chapter,2016,"Action,Horror,Sci-Fi",2.0608319524306644,274100000.0,5.5,49.0,38.0,1705.0,80.5,-1142.2247592119363,5.0,rating_below_money
+tt1284575,Bad Teacher,2011,"Comedy,Romance",2.379546134130174,196000000.0,5.7,47.0,45.0,1850.0,132.5,-1128.7865401643423,5.0,rating_below_money
+tt3348730,Jigsaw,2017,"Horror,Mystery,Thriller",2.343727036325221,94200000.0,5.7,39.0,32.0,1836.5,132.5,-1125.196305386015,5.0,rating_below_money
+tt0799949,Epic Movie,2007,"Adventure,Comedy,Fantasy",1.4690257587173554,66900000.0,2.5,17.0,2.0,1282.0,1.0,-1109.230736157676,4.0,rating_below_money
+tt1144884,The Final Destination,2009,"Horror,Thriller",1.5443659156903855,147400000.0,5.1,30.0,28.0,1353.0,26.5,-1102.6127116585092,4.0,rating_below_money
+tt1132626,Saw V,2008,"Horror,Thriller",2.392831970841824,107400000.0,5.8,20.0,13.0,1853.0,163.0,-1099.0843701150818,5.0,rating_below_money
+tt0391198,The Grudge,2004,"Horror,Mystery,Thriller",2.930126516455997,177300000.0,5.9,49.0,41.0,1969.0,196.0,-1096.9337948770067,5.0,rating_below_money
+tt0450278,Hostel,2005,Horror,2.8381033293504077,77200000.0,5.9,55.0,60.0,1958.0,196.0,-1094.008418390962,5.0,rating_below_money
+tt0362120,Scary Movie 4,2006,Comedy,1.4968289680514462,138700000.0,5.1,40.0,34.0,1314.0,26.5,-1092.2409222988965,4.0,rating_below_money

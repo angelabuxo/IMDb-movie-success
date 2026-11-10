@@ -2,7 +2,11 @@
 n_primary,2095.0
 n_under_budget,130.0
 frac_under_budget,0.06205250596658711
-imdb_rating_median,7.0
-n_profitable_low_imdb,910.0
-n_loved_unprofitable,63.0
+n_with_residual,2095.0
+n_profit_q1,420.0
+n_profit_q5,419.0
+profit_q1_max_log,0.6000567574939334
+profit_q5_min_log,1.9832976811269336
+mean_imdb_q1,6.781666666666667
+mean_imdb_q5,7.293317422434367
 n_complete_score_rows,1833.0

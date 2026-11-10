@@ -1,10 +1,9 @@
-"""Scattertext-style comparison of critic vs audience language.
+"""Scattertext-style comparison of Tag Genome language across disagreement groups.
 
-Measures: term rates per 10,000 words in Wikipedia reception text vs Tag Genome
-reviews; points near the diagonal share vocabulary.
-Misses: reception sections mix quotes and editorial voice; audience reviews are
-pre-2018 only; name filtering is heuristic (starring lists + title tokens), not
-full NER.
+Measures: term rates per 10,000 words in Tag Genome reviews for movies in the
+extreme disagreement residual groups (rating_above_money vs rating_below_money).
+Misses: name filtering is heuristic (titles + starring), not full NER; residual
+groups are sample-specific ranks; reviews stop at 2017.
 """
 from __future__ import annotations
 
@@ -13,7 +12,6 @@ import json
 import re
 import zipfile
 from collections import Counter
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -36,32 +34,15 @@ STOPWORDS = {
     "www", "com", "org",
 }
 
-
-def load_reception_text(imdb_ids: set[str]) -> dict[str, str]:
-    """Load Wikipedia reception plain text for selected movies."""
-    path = FEATURES / "wiki_reception.csv"
-    # reception_text can contain newlines; pandas handles quoted CSV.
-    usecols = ["tconst", "reception_found", "reception_text"]
-    df = pd.read_csv(path, usecols=usecols)
-    found = df["reception_found"].astype(str).isin(["1", "True", "true"]) | (df["reception_found"] == 1)
-    df = df[found & df["tconst"].isin(imdb_ids)]
-    out = {}
-    for _, row in df.iterrows():
-        text = row["reception_text"]
-        if isinstance(text, str) and text.strip():
-            out[row["tconst"]] = text
-    return out
+GROUP_ABOVE = "rating_above_money"
+GROUP_BELOW = "rating_below_money"
 
 
 def load_audience_corpus(
     imdb_ids: set[str],
     max_per_movie: int = 30,
 ) -> dict[str, str]:
-    """Concatenate up to max_per_movie Tag Genome reviews per movie.
-
-    Stops once every requested movie has max_per_movie reviews (or the zip ends),
-    so coverage is not truncated by a global character budget.
-    """
+    """Concatenate up to max_per_movie Tag Genome reviews per movie."""
     z = zipfile.ZipFile(GENOME_ZIP)
     item2imdb: dict[int, str] = {}
     with z.open("movie_dataset_public_final/raw/metadata.json") as fh:
@@ -104,12 +85,10 @@ def name_blacklist(movies: pd.DataFrame) -> set[str]:
             if len(tok) > 2:
                 names.add(tok.lower())
         starring = str(row.get("starring") or "")
-        # Infobox starring may not be on the analysis table; optional column.
         for piece in re.split(r"[|\n;,]", starring):
             for tok in TOKEN_RE.findall(piece):
                 if len(tok) > 2:
                     names.add(tok.lower())
-    # Common given names that dominate movie text without being informative here.
     names.update(
         {
             "john", "james", "david", "michael", "robert", "william", "mary",
@@ -134,44 +113,43 @@ def rates_per_10k(counts: Counter[str]) -> dict[str, float]:
     return {t: 10000.0 * c / total for t, c in counts.items()}
 
 
-def build_term_rate_table(
-    critic_texts: dict[str, str],
-    audience_texts: dict[str, str],
+def build_group_term_rate_table(
+    above_texts: dict[str, str],
+    below_texts: dict[str, str],
     ban: set[str],
     min_count: int = 25,
 ) -> pd.DataFrame:
-    """Term rates per 10k words for critic and audience corpora (shared movies)."""
-    shared = sorted(set(critic_texts) & set(audience_texts))
-    critic_counts = count_terms([critic_texts[tt] for tt in shared], ban)
-    audience_counts = count_terms([audience_texts[tt] for tt in shared], ban)
-    cr = rates_per_10k(critic_counts)
-    ar = rates_per_10k(audience_counts)
-    # Keep terms frequent enough in BOTH corpora so log rates are comparable.
+    """Term rates per 10k words for the two disagreement residual groups."""
+    above_counts = count_terms(list(above_texts.values()), ban)
+    below_counts = count_terms(list(below_texts.values()), ban)
+    ar = rates_per_10k(above_counts)
+    br = rates_per_10k(below_counts)
     terms = sorted(
         t
-        for t in set(critic_counts) & set(audience_counts)
-        if critic_counts[t] >= min_count and audience_counts[t] >= min_count
+        for t in set(above_counts) & set(below_counts)
+        if above_counts[t] >= min_count and below_counts[t] >= min_count
     )
     df = pd.DataFrame(
         {
             "term": terms,
-            "critic_per_10k": [cr[t] for t in terms],
-            "audience_per_10k": [ar[t] for t in terms],
-            "critic_n": [critic_counts[t] for t in terms],
-            "audience_n": [audience_counts[t] for t in terms],
+            "rating_above_money_per_10k": [ar[t] for t in terms],
+            "rating_below_money_per_10k": [br[t] for t in terms],
+            "rating_above_money_n": [above_counts[t] for t in terms],
+            "rating_below_money_n": [below_counts[t] for t in terms],
         }
     )
-    df["log_critic"] = np.log10(df["critic_per_10k"])
-    df["log_audience"] = np.log10(df["audience_per_10k"])
-    df["log_ratio_audience_over_critic"] = df["log_audience"] - df["log_critic"]
-    df["n_movies_shared"] = len(shared)
-    return df.sort_values("audience_n", ascending=False)
+    df["log_above"] = np.log10(df["rating_above_money_per_10k"])
+    df["log_below"] = np.log10(df["rating_below_money_per_10k"])
+    df["log_ratio_above_over_below"] = df["log_above"] - df["log_below"]
+    df["n_movies_above"] = len(above_texts)
+    df["n_movies_below"] = len(below_texts)
+    return df.sort_values("rating_above_money_n", ascending=False)
 
 
 def top_term_examples(
     term: str,
-    critic_texts: dict[str, str],
-    audience_texts: dict[str, str],
+    above_texts: dict[str, str],
+    below_texts: dict[str, str],
     n: int = 3,
     window: int = 80,
 ) -> dict[str, list[str]]:
@@ -191,42 +169,58 @@ def top_term_examples(
                 break
         return out
 
-    return {"critic": snip(critic_texts), "audience": snip(audience_texts)}
+    return {GROUP_ABOVE: snip(above_texts), GROUP_BELOW: snip(below_texts)}
 
 
-def run_comparison(
+def run_disagreement_comparison(
     movies: pd.DataFrame,
     min_count: int = 25,
     max_per_movie: int = 30,
 ) -> tuple[pd.DataFrame, dict[str, str], dict[str, str]]:
-    ids = set(movies["imdb_id"])
-    critic = load_reception_text(ids)
-    audience = load_audience_corpus(ids, max_per_movie=max_per_movie)
-    # Starring names if available from infobox file.
+    """Compare Tag Genome vocabulary for residual disagreement extremes."""
+    if "disagreement_group" not in movies.columns:
+        raise ValueError("movies must include disagreement_group from disagreement.py")
+
+    above_ids = set(movies.loc[movies["disagreement_group"] == GROUP_ABOVE, "imdb_id"])
+    below_ids = set(movies.loc[movies["disagreement_group"] == GROUP_BELOW, "imdb_id"])
+    # Prefer films that actually have Tag Genome reviews.
+    if "n_reviews_genome" in movies.columns:
+        has = set(movies.loc[movies["n_reviews_genome"] > 0, "imdb_id"])
+        above_ids &= has
+        below_ids &= has
+
+    above_texts = load_audience_corpus(above_ids, max_per_movie=max_per_movie)
+    below_texts = load_audience_corpus(below_ids, max_per_movie=max_per_movie)
+
     ib_path = FEATURES / "wiki_infobox.csv"
+    subset = movies[movies["imdb_id"].isin(above_ids | below_ids)].copy()
     if ib_path.exists():
         ib = pd.read_csv(ib_path, usecols=["tconst", "starring", "title"])
         ib = ib.rename(columns={"tconst": "imdb_id"})
-        merged = movies[["imdb_id"]].merge(ib, on="imdb_id", how="left")
+        merged = subset[["imdb_id"]].merge(ib, on="imdb_id", how="left")
     else:
-        merged = movies.copy()
+        merged = subset.copy()
         merged["starring"] = ""
+        if "title" not in merged.columns and "title" in subset.columns:
+            merged["title"] = subset["title"].values
     ban = name_blacklist(merged)
-    table = build_term_rate_table(critic, audience, ban, min_count=min_count)
-    out_path = OUTPUTS / "critic_vs_audience_term_rates.csv"
-    # Rates only — no raw text.
-    table.to_csv(out_path, index=False)
+
+    table = build_group_term_rate_table(above_texts, below_texts, ban, min_count=min_count)
+    table.to_csv(OUTPUTS / "disagreement_term_rates.csv", index=False)
     meta = pd.Series(
         {
-            "n_movies_with_critic_text": len(critic),
-            "n_movies_with_audience_text": len(audience),
-            "n_shared": len(set(critic) & set(audience)),
+            "group_a": GROUP_ABOVE,
+            "group_b": GROUP_BELOW,
+            "n_movies_group_a_ids": len(above_ids),
+            "n_movies_group_b_ids": len(below_ids),
+            "n_movies_with_text_a": len(above_texts),
+            "n_movies_with_text_b": len(below_texts),
             "min_term_count": min_count,
             "n_terms": len(table),
             "n_banned_name_tokens": len(ban),
+            "max_per_movie": max_per_movie,
         }
     )
     meta.to_csv(OUTPUTS / "scattertext_coverage.csv", header=["value"])
-    # Keep example windows private (may contain copyrighted review text).
     PRIVATE.mkdir(parents=True, exist_ok=True)
-    return table, critic, audience
+    return table, above_texts, below_texts

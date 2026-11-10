@@ -1,100 +1,87 @@
 # Reviews analysis — do money, critics and audience agree?
 
-Part of the DTU 02805 final project (*What makes a movie highly profitable?*).  
-Notebook: [`01_exploration.ipynb`](01_exploration.ipynb). Helpers live in this folder; derived numbers and figures are under [`outputs/`](outputs/).
-
-## Question
-
-Do theatrical money, critic scores and audience reception move together, and where do they disagree?
+Notebook: [`01_exploration.ipynb`](01_exploration.ipynb). Derived numbers/figures: [`outputs/`](outputs/).
 
 ## Sample (from data)
 
-| Slice | N | Under budget | Notes |
-|---|---:|---:|---|
-| Clean 100k+ (all years) | 2 446 | 169 (6.9%) | Wikipedia USD budget/gross |
-| Clean 100k+, year ≤ 2017 | 2 095 | 130 (6.2%) | Tag Genome eligibility cut |
-| … with Tag Genome reviews | 2 070 | — | Median hundreds of reviews/film |
-| Optional 10k–100k (Wikidata money) | 1 126 | 366 (32.5%) | Not hand-checked |
-| … year ≤ 2017 | 1 012 | 316 (31.2%) | Flop-rich sensitivity check |
+| Slice | N | Under budget |
+|---|---:|---:|
+| Clean 100k+, year ≤ 2017 | 2 095 | 130 (6.2%) |
+| … with Tag Genome reviews | 2 070 | — |
+| Optional 10k Wikidata ≤ 2017 | 1 012 | 316 (31.2%) |
 
-Reviews have **no date** and **no post-2017 coverage**, so every audience-text analysis is restricted to movies released in 2017 or earlier.
+Tag Genome has **no dates** and **no post-2017 coverage**, so audience-text work is cut at 2017.
 
-**Money proxies.** `log(gross/budget)` (primary) and `gross − budget`. Neither is studio profit: marketing is missing and cinemas keep part of the gross.
+`movie_level_table.csv` includes `disagreement_residual` (and `disagreement_group`, `profit_quintile`) for the network branch to join on `imdb_id` (non-null for the 2 095 primary movies).
 
-## Idea 1 — score agreement
+## Idea 1 — scores and residual disagreement
 
-**Measures.** Spearman rank correlation among `log(gross/budget)`, IMDb `averageRating`, Metacritic and Rotten Tomatoes, with a **label-shuffle null** (1 000 permutations).
+**Null.** Primary: shuffle within **genre × decade** (first-listed genre). Report ρ, stratified null mean/std, **z-score**. Global shuffle is secondary (`p_null_global`).
 
-| Pair | N | ρ | p_null |
-|---|---:|---:|---:|
-| log(gross/budget) ↔ IMDb | 2 095 | 0.266 | 0.001 |
-| log(gross/budget) ↔ Metacritic | 1 834 | 0.261 | 0.001 |
-| log(gross/budget) ↔ Rotten Tomatoes | 2 093 | 0.326 | 0.001 |
-| IMDb ↔ Metacritic | 1 834 | 0.757 | 0.001 |
-| IMDb ↔ Rotten Tomatoes | 2 093 | 0.785 | 0.001 |
-| Metacritic ↔ Rotten Tomatoes | 1 833 | 0.931 | 0.001 |
+| Pair | N | ρ | null_mean_strat | null_std_strat | z_strat | p_null_strat | p_null_global |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| log(g/b) ↔ IMDb | 2 095 | 0.266 | 0.099 | 0.018 | 9.51 | 0.001 | 0.001 |
+| log(g/b) ↔ Metacritic | 1 834 | 0.261 | 0.089 | 0.020 | 8.71 | 0.001 | 0.001 |
+| log(g/b) ↔ RT | 2 093 | 0.326 | 0.122 | 0.018 | 11.41 | 0.001 | 0.001 |
+| IMDb ↔ Metacritic | 1 834 | 0.757 | 0.233 | 0.018 | 29.14 | 0.001 | 0.001 |
+| IMDb ↔ RT | 2 093 | 0.785 | 0.234 | 0.018 | 31.29 | 0.001 | 0.001 |
+| Metacritic ↔ RT | 1 833 | 0.931 | 0.218 | 0.019 | 38.00 | 0.001 | 0.001 |
 
-Critics agree strongly with each other and with IMDb; money agrees only weakly with all three. Every observed |ρ| beats the shuffle null.
+Stratified null means are **not** ~0: genre×decade structure alone induces positive rank correlation. Observed ρ still sits many σ above that baseline.
 
-**Quadrants** (break-even × median IMDb = 7.0): 910 profitable + below-median rating; 63 loved + unprofitable. Extreme examples (from `outputs/`): *Fifty Shades of Grey*, *Epic Movie*, *Twilight: New Moon* on the profitable-low side; *The Boondock Saints*, *Once Upon a Time in America*, *Mr. Nobody* on the loved-unprofitable side.
+**Disagreement.** Residual of `rank(IMDb) ~ rank(log(gross/budget))`.
 
-**What it misses.** The 100k+ cut barely contains flops, so “agreement” is mostly among hits. Optional 10k Wikidata tier (≤2017): ρ(log profit, IMDb) = 0.201 (still above null), with 31.2% under budget.
+| Quantity | Value |
+|---|---:|
+| N with residual | 2 095 |
+| Residual mean (numerical ~0) | ≈ 0 |
+| Residual std | 582.7 |
+| rating_above_money (residual Q5) | 419 |
+| rating_below_money (residual Q1) | 419 |
+| middle | 1 257 |
+| Profit Q1 N / max log(g/b) | 420 / 0.601 |
+| Profit Q5 N / min log(g/b) | 419 / 1.983 |
+| Mean IMDb in profit Q1 / Q5 | 6.78 / 7.29 |
 
-Figures: `outputs/fig_scatter_money_scores.png`, `outputs/fig_quadrants_money_imdb.png`.
+Top positive residual (liked beyond money): *It's a Wonderful Life*, *Once Upon a Time in America*, *Once Upon a Time in the West*, …  
+Top negative residual (liked less than money): *Fifty Shades of Grey*, *Twilight: New Moon*, *Annabelle*, …
 
-## Text features (Tag Genome + VADER)
+Display uses **extreme profit quintiles**, not break-even × median. Figures: `fig_scatter_money_scores.png`, `fig_profit_quintiles_disagreement.png`.
 
-**Measures.** Per movie (up to 40 reviews): mean token length; type–token ratio on **fixed 100-token samples**; mean VADER compound. Aggregated by genre.
+## Text features
 
-| Check | N | ρ | p_null |
-|---|---:|---:|---:|
-| VADER ↔ log(gross/budget) | 2 070 | 0.127 | 0.001 |
-| VADER ↔ IMDb | 2 070 | 0.218 | 0.001 |
-| Lexical diversity ↔ log(gross/budget) | 2 070 | −0.160 | 0.001 |
-| Review length ↔ log(gross/budget) | 2 070 | −0.105 | 0.001 |
+| Check | N | ρ | null_mean_strat | z_strat | p_null_strat | p_null_global |
+|---|---:|---:|---:|---:|---:|---:|
+| VADER ↔ log(g/b) | 2 070 | 0.127 | 0.025 | 6.10 | 0.001 | 0.001 |
+| VADER ↔ IMDb | 2 070 | 0.218 | 0.054 | 10.28 | 0.001 | 0.001 |
+| Diversity ↔ log(g/b) | 2 070 | −0.160 | −0.053 | −5.86 | 0.001 | 0.001 |
+| Length ↔ log(g/b) | 2 070 | −0.105 | −0.065 | −2.51 | 0.006 | 0.001 |
 
-Comedy/Romance reviews are more positive on VADER than Thriller/Crime (see `genre_text_features.csv`). Lexical diversity barely varies by genre once length is fixed.
+Hand-label sample (50 reviews) still awaiting labels. VADER vs Stanford polarity: accuracy **0.733** on 1 988 non-neutral of 2 000 docs.
 
-**Validation**
+## Idea 2 — Tag Genome language of disagreement groups
 
-- **Hand labels:** 50 random Tag Genome reviews exported to `build/imdb/features/reviews_private/hand_label_sample_50.csv` (gitignored text). Template without text: `outputs/hand_label_template_50.csv`. **Agreement not yet reported — labels awaiting fill-in.**
-- **Automatic transfer check:** VADER vs Stanford Large Movie Review gold polarity on 2 000 docs: accuracy **0.733** on 1 988 non-neutral predictions (0.6% VADER-neutral). Different corpus than Tag Genome.
+Compares Tag Genome reviews for `rating_above_money` vs `rating_below_money` (not Wikipedia vs audience).
 
-**What it misses.** VADER is a general lexicon, not movie-specific; Tag Genome has no stars or dates; short reviews drop out of the diversity sample.
+| Coverage | Value |
+|---|---:|
+| Movies with text (above / below) | 415 / 412 |
+| Min term count (both corpora) | 25 |
+| Terms kept | 4 825 |
+| Name tokens banned | 4 381 |
 
-## Idea 2 (exploratory) — critic vs audience language
+Divergent examples (from data): *tarantino*, *noir*, *nomination* favor rating_above_money; *scares*, *slasher*, *doll* favor rating_below_money.
 
-**Measures.** Term rates per 10 000 words in Wikipedia reception text vs Tag Genome reviews for **1 829** shared movies; log–log scatter; person/title tokens removed; **min count = 30 in both** corpora (1 944 terms).
+Figure: `fig_scattertext_disagreement_groups.png`.
 
-- Critic-heavy terms are encyclopedic/score meta-language: *grossed*, *consensus*, *reception*, *tomatoes*, *ebert*, …
-- Audience-heavy terms are experiential: *awesome*, *really*, *watched*, *loved*, *i'm*, …
-- Near-diagonal shared terms include *making*, *special*, *genre*, *cinema*, *trailer*.
-
-**What it misses.** Reception sections mix quotes with Wikipedia voice; name filtering is heuristic, not NER. Short windows for inspecting top terms are kept private under `build/` and are not committed.
-
-Figure: `outputs/fig_scattertext_critic_audience.png`.
-
-## How to re-run
-
-Data lives in `build/imdb/` (gitignored). From the repo root:
+## Re-run
 
 ```bash
-python3 scripts/get_data.py --data-dir build/imdb --status
-python3 scripts/get_data.py --data-dir build/imdb genome   # if missing
-cd build/imdb && ../../.venv/bin/python ../../scripts/imdb/parse_infobox.py
-cd ../.. && PYTHONPATH=. .venv/bin/python -m analysis.reviews.run_exploration
+PYTHONPATH=. .venv/bin/python -m analysis.reviews.run_exploration
 ```
 
-Then open `01_exploration.ipynb`.
+## Open
 
-## Limitations and open questions
-
-1. Hand-label the 50-review sample and report agreement / κ with VADER.
-2. Does the weak money↔reception link strengthen in the flop-rich 10k tier once Wikipedia money is hand-checked (not only Wikidata)?
-3. Franchise / release-month / awards leakage into both money and scores is still open at project level.
-4. Critic **sentiment** (not only section length / scores) on Wikipedia reception text is unused beyond the vocabulary scatter.
-5. True marketing spend remains unavailable; every “profit” claim is a proxy.
-
-## What is deliberately not in git
-
-Raw Tag Genome / Stanford review text, Wikipedia article wikitext, reception full text, screenplays, and the hand-label CSV **with** review text. Only code, docs, aggregate CSVs and figures are committed.
+1. Hand-label the 50-review sample and report agreement.
+2. Hand-check 10k-tier money if used beyond sensitivity.
+3. Franchise / awards leakage (project-level).
