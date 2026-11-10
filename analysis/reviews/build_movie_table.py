@@ -97,7 +97,8 @@ def _reception_chars() -> pd.Series:
     rec["reception_chars"] = pd.to_numeric(rec["reception_chars"], errors="coerce").fillna(0)
     found = rec["reception_found"].astype(str).isin(["1", "True", "true"]) | (rec["reception_found"] == 1)
     rec.loc[~found, "reception_chars"] = 0
-    return rec.set_index("tconst")["reception_chars"]
+    # One title (Apocalypse Now) has two pages; keep the longer section.
+    return rec.groupby("tconst", sort=False)["reception_chars"].max()
 
 
 def _genome_review_counts(imdb_ids: Iterable[str] | None = None) -> pd.DataFrame:
