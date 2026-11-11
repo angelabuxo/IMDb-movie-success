@@ -1,0 +1,16 @@
+{
+ "subsamples": 100,
+ "seeds_first_last": [
+  20262112,
+  20262211
+ ],
+ "subsample_size_per_group": 236,
+ "larger_group": "successful",
+ "top_n": 50,
+ "median_jaccard_high": 0.6949152542372882,
+ "median_jaccard_low": 0.6666666666666666,
+ "terms_in_top_in_90pct_high": 5,
+ "terms_in_top_in_90pct_low": 29,
+ "matched_median_jaccard_high": 0.8867924528301887,
+ "matched_median_jaccard_low": 0.9607843137254902
+}

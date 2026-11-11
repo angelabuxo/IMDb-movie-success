@@ -1,0 +1,11 @@
+variable,SMD before,SMD after
+release year,0.268,0.023
+log budget,-0.085,-0.03
+log IMDb votes,-1.058,-1.057
+genre: Horror,0.118,0.0
+genre: Sci-Fi,0.103,0.0
+genre: Thriller,-0.198,0.0
+genre: Adventure,-0.101,0.0
+genre: Action,-0.007,0.0
+genre: Comedy,0.188,0.0
+genre: Drama,-0.126,0.0

@@ -1,0 +1,30 @@
+{
+ "scripts": 1095,
+ "parse_errors": 0,
+ "empty_dialogue": 0,
+ "empty_action": 4,
+ "under_min_scenes": 44,
+ "min_scenes_flag": 20,
+ "excluded_little_dialogue": 8,
+ "excluded_little_dialogue_titles": [
+  "Air Force One_1997",
+  "Carrie_1976",
+  "Casablanca_1942",
+  "It's a Wonderful Life_1946",
+  "Little Miss Sunshine_2006",
+  "Mary Poppins Returns_2018",
+  "Megamind_2010",
+  "The Matrix Reloaded_2003"
+ ],
+ "dialogue_share_of_words_median": 0.40177727358668935,
+ "median_words": {
+  "dialogue": 8840,
+  "action": 12170,
+  "full": 22180
+ },
+ "total_words": {
+  "dialogue": 10036412,
+  "action": 13560605,
+  "full": 24704109
+ }
+}
