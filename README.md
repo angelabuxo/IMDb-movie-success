@@ -74,6 +74,20 @@ python3 scripts/get_data.py --all
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
 
+## The movie graph
+
+One network of the 12,673 movies with 10,000+ votes, the people who made them (actors with billing order, directors, writers, producers, composers, cinematographers, editors) and their studios and distributors. Build it from the data folder after downloading the IMDb files and parsing the infoboxes:
+
+```bash
+cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_tables.sql
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/build_graph.py
+```
+
+That takes about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. Studio names aren't merged yet.
+
 ## Collection rules
 
 We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
