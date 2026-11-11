@@ -1,1 +1,13 @@
 mwparserfromhell==0.7.2
+# scripts/screenplays, scripts/reviews and notebooks/
+igraph==1.0.0
+matplotlib==3.11.2
+networkx==3.6.1
+numpy==2.5.3
+pandas==3.0.5
+scikit-learn==1.9.1
+scipy==1.18.1
+sentence-transformers==6.1.0
+vaderSentiment==3.3.2
+ipykernel==7.3.0
+nbconvert==7.17.1
