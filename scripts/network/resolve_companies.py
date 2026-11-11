@@ -32,6 +32,11 @@ resolved in this order, and only by identifier, never by similar spelling:
 4. Otherwise the name stays unresolved and becomes its own node, as do
    redirects that fail rule 2.
 
+Before that, a name the infobox parser ran together ("Tremolo ProductionsGil
+Friesen Productions", from list items whose <br> it dropped) is split where a
+lowercase letter meets a capitalised word, but only when every piece is
+itself a Wikipedia article.
+
 So labels and subsidiaries are never folded into a parent, at the cost of
 leaving some renames unmerged when Wikidata lacks the old name as an alias.
 
@@ -142,6 +147,7 @@ def other_items(name, target):
                    and same_name(name, h.get("match", {}).get("text", h.get("label", "")))})
 
 
+GLUE = re.compile(r"(?<=[a-z)\]])(?=[A-Z][a-z])")
 LEGAL = r"\b(inc|incorporated|corp|corporation|company|co|ltd|limited|llc|plc|the)\b"
 
 
@@ -181,6 +187,20 @@ def main():
                     uses.append((r["tconst"], role, n))
     names = {n for _, _, n in uses}
     wiki = resolve_titles(names)
+    # The infobox parser drops <br> inside list templates, so some entries arrive run together:
+    # "Tremolo ProductionsGil Friesen Productions". Split such a name where a lowercase letter or
+    # bracket meets a capitalised word, but only when every piece is itself a Wikipedia article.
+    pieces = {}
+    for n in sorted(names - set(wiki)):
+        parts = [p.strip() for p in GLUE.split(n) if p.strip()]
+        if len(parts) > 1 and all(len(p) >= 3 for p in parts):
+            pieces[n] = parts
+    found = resolve_titles({p for ps in pieces.values() for p in ps})
+    split = {n: ps for n, ps in pieces.items() if all(p in found for p in ps)}
+    wiki.update(found)
+    uses = sorted({(t, role, p) for t, role, n in uses for p in split.get(n, [n])})
+    names = {n for _, _, n in uses}
+    print(f"split {len(split)} run-together names into {sum(len(v) for v in split.values())} companies")
     anchors, wd_labels = film_companies()
 
     rows, how = [], defaultdict(int)
