@@ -1,0 +1,6 @@
+# Never commit review / reception text or private extracts.
+**/hand_label_sample*.csv
+!**/hand_label_template*.csv
+__pycache__/
+.ipynb_checkpoints/
+*.parquet

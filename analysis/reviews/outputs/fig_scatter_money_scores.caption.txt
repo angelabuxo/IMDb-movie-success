@@ -1,0 +1,1 @@
+Figure. Pairwise relationships among log(gross/budget), IMDb rating, Metacritic and Rotten Tomatoes for the 100k+ clean theatrical sample with year ≤ 2017. Associations are tested with a genre×decade stratified label shuffle (global shuffle reported as secondary).

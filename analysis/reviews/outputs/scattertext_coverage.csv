@@ -1,0 +1,11 @@
+,value
+group_a,rating_above_money
+group_b,rating_below_money
+n_movies_group_a_ids,415
+n_movies_group_b_ids,412
+n_movies_with_text_a,415
+n_movies_with_text_b,412
+min_term_count,25
+n_terms,4825
+n_banned_name_tokens,4381
+max_per_movie,30

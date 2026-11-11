@@ -1,0 +1,13 @@
+,value
+n_with_residual,2095.0
+residual_mean,-1.3892043177438522e-14
+residual_std,582.6751779162855
+n_rating_above_money,419.0
+n_rating_below_money,419.0
+n_middle,1257.0
+n_profit_q1,420.0
+n_profit_q5,419.0
+profit_q1_max,0.6000567574939334
+profit_q5_min,1.9832976811269336
+mean_imdb_profit_q1,6.781666666666667
+mean_imdb_profit_q5,7.293317422434367

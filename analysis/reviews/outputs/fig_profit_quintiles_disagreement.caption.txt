@@ -1,0 +1,1 @@
+Figure. Money vs IMDb rating with extreme profit quintiles (100k+ clean, year ≤ 2017). Circles: lowest profit quintile (Q1, log(g/b) ≤ 0.600); triangles: highest (Q5, log(g/b) ≥ 1.983). Squares: largest |disagreement_residual| from rank(IMDb) ~ rank(log(g/b)).

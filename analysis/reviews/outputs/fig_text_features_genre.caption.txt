@@ -1,0 +1,1 @@
+Figure. Audience Tag Genome text features for 100k+ movies (year ≤ 2017): mean VADER compound and fixed-sample lexical diversity by genre (top 10 by count), and movie-level sentiment vs log(gross/budget).
