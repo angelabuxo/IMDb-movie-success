@@ -48,8 +48,7 @@ distributor,A Plus Films (Turkey),,A Plus Films (Turkey),unresolved,1
 distributor,A&A Release,,A&A Release,unresolved,1
 distributor,A&E Networks,Q83723,A+E Global Media,redirect,1
 distributor,A-Film Benelux,,A-Film Benelux,redirect_unconfirmed,3
-distributor,A-Film Distribution,Q1807410,A-Film,redirect,9
-distributor,A-Film DistributionWellspring Media,,A-Film DistributionWellspring Media,unresolved,1
+distributor,A-Film Distribution,Q1807410,A-Film,redirect,10
 distributor,A.U.M. Films & Media,,A.U.M. Films & Media,unresolved,1
 distributor,A24,Q16248298,A24,wikipedia,108
 distributor,A24 (United States),,A24 (United States),unresolved,1
@@ -87,7 +86,7 @@ distributor,Abramorama,,Abramorama,unresolved,2
 distributor,Absurda (United States),,Absurda (United States),unresolved,1
 distributor,Ad Vitam,,Ad Vitam,unresolved,1
 distributor,Ad Vitam (company),Q21511428,Ad Vitam (company),wikipedia,7
-distributor,Adlabs,,Adlabs,redirect_unconfirmed,1
+distributor,Adlabs,,Adlabs,redirect_unconfirmed,2
 distributor,Affirm Films,Q4688987,Affirm Films,wikipedia,2
 distributor,After Dark Films,Q4690493,After Dark Films,wikipedia,10
 distributor,Ajith Vinayaka Release,,Ajith Vinayaka Release,unresolved,1
@@ -157,6 +156,7 @@ distributor,Argos Films (France)Ceskoslovensky Film Export (Czechoslovakia),,Arg
 distributor,Ariane Distribution,,Ariane Distribution,redirect_unconfirmed,1
 distributor,Aries Films,,Aries Films,unresolved,1
 distributor,Arrow Films,Q4796124,Arrow Films,wikipedia,7
+distributor,Art,Q735,Art,wikipedia,1
 distributor,Art Pictures Group,,Art Pictures Group,unresolved,1
 distributor,Arthouse Traffic,,Arthouse Traffic,unresolved,1
 distributor,Artificial Eye,,Artificial Eye,redirect_unconfirmed,3
@@ -342,9 +342,9 @@ distributor,China Star Entertainment Group,Q5099920,China Star Entertainment Gro
 distributor,Chorki (Bangladesh),,Chorki (Bangladesh),unresolved,1
 distributor,CiBy 2000,Q4036210,Ciby 2000,redirect,1
 distributor,Ciby 2000 (France),,Ciby 2000 (France),unresolved,1
+distributor,Cine,,Cine,redirect_unconfirmed,1
 distributor,Cine Qua Non Films,,Cine Qua Non Films,unresolved,2
 distributor,Cine-Britannia,,Cine-Britannia,unresolved,1
-distributor,CineRocket,,CineRocket,unresolved,1
 distributor,CineVox,Q5120638,CineVox,wikipedia,2
 distributor,Cineclick Asia,,Cineclick Asia,unresolved,3
 distributor,Cinecom,Q5120660,Cinecom,wikipedia,3
@@ -511,7 +511,7 @@ distributor,Embassy Pictures,Q5369517,Embassy Pictures,wikipedia,15
 distributor,Embrafilme,Q16056309,Embrafilme,wikipedia,2
 distributor,Emerson Film Enterprises,,Emerson Film Enterprises,unresolved,1
 distributor,Emperor Group,Q4038028,Emperor Group,wikipedia,2
-distributor,Emperor Motion Pictures,Q5373909,Emperor Motion Pictures,film,5
+distributor,Emperor Motion Pictures,,Emperor Motion Pictures,redirect_unconfirmed,6
 distributor,Empire International (Lebanon),,Empire International (Lebanon),unresolved,1
 distributor,Empire International Pictures,Q5374088,Empire International Pictures,wikipedia,2
 distributor,Empire Pictures,,Empire Pictures,redirect_unconfirmed,4
@@ -520,25 +520,25 @@ distributor,Engine FilmTV Man Union,,Engine FilmTV Man Union,unresolved,1
 distributor,Enlightenment Films,,Enlightenment Films,unresolved,1
 distributor,Ente Nazionale Industrie Cinematografiche,Q16552199,Ente Nazionale Industrie Cinematografiche,wikipedia,2
 distributor,Enterprise Pictures Limited,,Enterprise Pictures Limited,unresolved,1
+distributor,Entertainment,Q173799,Entertainment,wikipedia,1
 distributor,Entertainment Film Distributors,Q5380451,Entertainment Film Distributors,wikipedia,68
 distributor,Entertainment Film Distributors (United Kingdom),,Entertainment Film Distributors (United Kingdom),unresolved,2
 distributor,Entertainment One,,Entertainment One,redirect_unconfirmed,85
 distributor,"Entertainment One (Canada, United Kingdom and Ireland)",,"Entertainment One (Canada, United Kingdom and Ireland)",unresolved,1
 distributor,Entertainment One (United Kingdom),,Entertainment One (United Kingdom),unresolved,2
-distributor,Entertainment One Films,Q5323811,Entertainment One Films,film,11
+distributor,Entertainment One Films,,Entertainment One Films,redirect_unconfirmed,11
 distributor,Entertainment One Films Canada,,Entertainment One Films Canada,redirect_unconfirmed,1
 distributor,Entertainment One Films Spain,,Entertainment One Films Spain,unresolved,1
 distributor,Entertainment One UK,Q134938783,Entertainment One UK,wikipedia,13
 distributor,Entertainment Studios,Q5380468,Allen Media Group,redirect,6
 distributor,Entertainment Studios (North America),,Entertainment Studios (North America),unresolved,1
-distributor,EntertainmentOne,,EntertainmentOne,unresolved,1
 distributor,Entract Films,,Entract Films,unresolved,1
 distributor,Epic Pictures Group,Q43401821,Epic Pictures Group,wikipedia,5
 distributor,Epic Pictures Releasing,,Epic Pictures Releasing,unresolved,1
 distributor,Epoch Producing Co.,,Epoch Producing Co.,unresolved,1
 distributor,Erler Film,Q5389773,Erler Film,wikipedia,1
 distributor,Eros Entertainment,Q5395348,Eros International,redirect,2
-distributor,Eros International,Q5395348,Eros International,wikipedia,71
+distributor,Eros International,Q5395348,Eros International,wikipedia,72
 distributor,Eros International (International),,Eros International (International),unresolved,1
 distributor,Estonian Culture Film,Q5401546,Estonian Culture Film,wikipedia,1
 distributor,Estudios Churubusco,Q3501058,Estudios Churubusco,wikipedia,1
@@ -557,8 +557,8 @@ distributor,EuropaCorp. Distribution,,EuropaCorp. Distribution,redirect_unconfir
 distributor,"Europe, the Middle East and Africa",Q1071661,"Europe, the Middle East and Africa",wikipedia,1
 distributor,Event Film Distribution,,Event Film Distribution,unresolved,1
 distributor,Excel Entertainment,Q5419397,Excel Entertainment,wikipedia,1
-distributor,Excel Entertainment Group,Q5419399,Excel Entertainment Group,film,2
-distributor,Exclusive Media,,Exclusive Media,unresolved,2
+distributor,Excel Entertainment Group,,Excel Entertainment Group,redirect_unconfirmed,2
+distributor,Exclusive Media,Q17089396,Exclusive Media,film,2
 distributor,Exclusive Media Group(International),,Exclusive Media Group(International),unresolved,1
 distributor,Expanded Entertainment,,Expanded Entertainment,unresolved,1
 distributor,Faces Distribution,,Faces Distribution,unresolved,3
@@ -594,7 +594,7 @@ distributor,Filmax (Spain),,Filmax (Spain),unresolved,3
 distributor,Filmax International,Q3392176,Filmax,redirect,1
 distributor,Filmax international,,Filmax international,unresolved,1
 distributor,Filmfreak Distributie (Netherlands),,Filmfreak Distributie (Netherlands),unresolved,1
-distributor,Filmiran,Q27063108,Filmiran,film,2
+distributor,Filmiran,,Filmiran,unresolved,2
 distributor,Filmiran (Iran),,Filmiran (Iran),unresolved,1
 distributor,Filmiran (Iran) Memento Films Distribution (France),,Filmiran (Iran) Memento Films Distribution (France),unresolved,1
 distributor,Filmladen,,Filmladen,unresolved,1
@@ -770,7 +770,7 @@ distributor,Huayi Brothers Media,Q8007810,Huayi Brothers,redirect,1
 distributor,Hulu,Q1630304,Hulu,wikipedia,38
 distributor,Hyde Park Entertainment,Q17335653,Hyde Park Entertainment,wikipedia,3
 distributor,I.R.S. Media,,I.R.S. Media,unresolved,1
-distributor,IFC Films,,IFC Films,redirect_unconfirmed,106
+distributor,IFC Films,Q2910457,IFC Films,film,106
 distributor,IFC Films (US),,IFC Films (US),unresolved,1
 distributor,IFC First Take,,IFC First Take,redirect_unconfirmed,1
 distributor,IFC Midnight,,IFC Midnight,redirect_unconfirmed,21
@@ -821,8 +821,7 @@ distributor,Island Records,Q190585,Island Records,wikipedia,3
 distributor,Istituto Luce,Q781183,Istituto Luce,wikipedia,4
 distributor,Ital-Noleggio Cinematografico,,Ital-Noleggio Cinematografico,unresolved,1
 distributor,Izaro Films (Spain),,Izaro Films (Spain),unresolved,1
-distributor,JCE Movies Limited,Q1114301,JCE Movies Limited,wikipedia,2
-distributor,JCE Movies LimitedEmperor Motion Pictures,,JCE Movies LimitedEmperor Motion Pictures,unresolved,1
+distributor,JCE Movies Limited,Q1114301,JCE Movies Limited,wikipedia,3
 distributor,JVC,Q215901,JVC,wikipedia,1
 distributor,Janus Films,Q6155948,Janus Films,wikipedia,3
 distributor,Janus Films (US),,Janus Films (US),unresolved,1
@@ -991,8 +990,7 @@ distributor,Maasranga Production,,Maasranga Production,unresolved,1
 distributor,Madman Entertainment,Q1816526,Madman Entertainment,wikipedia,18
 distributor,Madman Entertainment (Australia) (New Zealand),,Madman Entertainment (Australia) (New Zealand),unresolved,1
 distributor,Madman Films,Q1816526,Madman Entertainment,redirect,1
-distributor,Madras Talkies,Q3537670,Madras Talkies,wikipedia,1
-distributor,Madras TalkiesAdlabs,,Madras TalkiesAdlabs,unresolved,1
+distributor,Madras Talkies,Q3537670,Madras Talkies,wikipedia,2
 distributor,Magenta Light Studios,Q138278651,Magenta Light Studios,wikipedia,1
 distributor,Magic Frames,,Magic Frames,redirect_unconfirmed,3
 distributor,Magnet Releasing,,Magnet Releasing,redirect_unconfirmed,18
@@ -1195,6 +1193,7 @@ distributor,Olive Films,,Olive Films,unresolved,1
 distributor,Olympic Films (France),,Olympic Films (France),unresolved,1
 distributor,Omjee Star Studios,,Omjee Star Studios,unresolved,1
 distributor,On Pictures,,On Pictures,redirect_unconfirmed,1
+distributor,One,,One,redirect_unconfirmed,1
 distributor,Open Road Films,Q4121965,Open Road Films,wikipedia,44
 distributor,Optimum Releasing,Q7628112,StudioCanal UK,redirect,9
 distributor,Optimum Releasing (United Kingdom),,Optimum Releasing (United Kingdom),unresolved,2
@@ -1238,9 +1237,8 @@ distributor,Pandora Cinema (Germany),,Pandora Cinema (Germany),unresolved,1
 distributor,Pandora Film,Q3362049,Pandora Film,wikipedia,4
 distributor,Pandora Film Verleih (Germany),,Pandora Film Verleih (Germany),unresolved,1
 distributor,Pandora Filmes,,Pandora Filmes,unresolved,1
-distributor,Panorama Studios,Q19895072,Panorama Studios,wikipedia,12
+distributor,Panorama Studios,Q19895072,Panorama Studios,wikipedia,13
 distributor,Panorama Studios International,,Panorama Studios International,unresolved,1
-distributor,Panorama StudiosViacom18 Motion Pictures,,Panorama StudiosViacom18 Motion Pictures,unresolved,1
 distributor,Pantelion Films,Q7131686,Pantelion Films,wikipedia,6
 distributor,Panthéon Distribution,,Panthéon Distribution,unresolved,1
 distributor,Paramount Classics,Q1148711,Paramount Vantage,redirect,13
@@ -1273,7 +1271,7 @@ distributor,Parufamet,Q1524436,Parufamet,wikipedia,1
 distributor,Pathé,Q1544011,Pathé,wikipedia,63
 distributor,Pathé (France),,Pathé (France),unresolved,1
 distributor,Pathé Consortium Cinéma,,Pathé Consortium Cinéma,redirect_unconfirmed,1
-distributor,Pathé Distribution,,Pathé Distribution,redirect_unconfirmed,40
+distributor,Pathé Distribution,Q3368732,Pathé Distribution,film,40
 distributor,Pathé Distribution (France and United Kingdom),,Pathé Distribution (France and United Kingdom),unresolved,1
 distributor,Pathé Distribution (France),,Pathé Distribution (France),unresolved,1
 distributor,"Pathé Distribution (France, Switzerland & United Kingdom)BIM Distribuzione (Italy)",,"Pathé Distribution (France, Switzerland & United Kingdom)BIM Distribuzione (Italy)",unresolved,1
@@ -1359,7 +1357,7 @@ distributor,RD Illuminations,,RD Illuminations,redirect_unconfirmed,1
 distributor,RKO Pictures,Q267282,RKO Pictures,wikipedia,16
 distributor,RKO Radio Pictures,Q267282,RKO Pictures,redirect,38
 distributor,RLJ Entertainment,Q124454993,RLJ Entertainment,wikipedia,8
-distributor,RLJE Films,Q30277272,RLJE Films,film,32
+distributor,RLJE Films,,RLJE Films,redirect_unconfirmed,32
 distributor,RSVP Movies,Q85795495,RSVP Movies,wikipedia,4
 distributor,Radio Television Belgrade,,Radio Television Belgrade,redirect_unconfirmed,1
 distributor,"Radio Television Belgrade (Yugoslavia, video)",,"Radio Television Belgrade (Yugoslavia, video)",unresolved,1
@@ -1413,6 +1411,7 @@ distributor,Roadshow Film Distributors (Australia and New Zealand),,Roadshow Fil
 distributor,Roadshow Films,,Roadshow Films,redirect_unconfirmed,17
 distributor,Roadside Attractions,Q7339672,Roadside Attractions,wikipedia,90
 distributor,Roadside Attractions (United States),,Roadside Attractions (United States),unresolved,1
+distributor,Rocket,Q41291,Rocket,wikipedia,1
 distributor,Rockwell Eyes,,Rockwell Eyes,redirect_unconfirmed,1
 distributor,Rocky Mountain Pictures,Q7355925,Rocky Mountain Pictures,wikipedia,3
 distributor,Rogue Pictures,Q1404450,Rogue Pictures,wikipedia,15
@@ -1538,7 +1537,7 @@ distributor,Silver Nitrate,Q207442,Silver nitrate,redirect,1
 distributor,Silver Screen Partners II,,Silver Screen Partners II,redirect_unconfirmed,1
 distributor,Silver Screen Partners III,,Silver Screen Partners III,redirect_unconfirmed,1
 distributor,Silver Screen Partners IV,,Silver Screen Partners IV,redirect_unconfirmed,3
-distributor,SinemArt,,SinemArt,unresolved,1
+distributor,Sinem,Q45972937,Sinem,wikipedia,1
 distributor,Sippy Films,,Sippy Films,unresolved,1
 distributor,Sita Ramam,Q113455828,Sita Ramam,wikipedia,1
 distributor,Skanda Cinemass,,Skanda Cinemass,unresolved,1
@@ -1705,7 +1704,7 @@ distributor,Thorn EMI,Q7796279,Thorn EMI,wikipedia,2
 distributor,Thorn EMI Screen Entertainment,,Thorn EMI Screen Entertainment,redirect_unconfirmed,2
 distributor,Thorn EMI Screen Entertainment  (United Kingdom),,Thorn EMI Screen Entertainment  (United Kingdom),unresolved,1
 distributor,Thunderbird Entertainment,Q7799087,Thunderbird Entertainment,wikipedia,1
-distributor,Thunderbird Releasing,,Thunderbird Releasing,redirect_unconfirmed,3
+distributor,Thunderbird Releasing,Q7553176,Thunderbird Releasing,film,3
 distributor,Tiger Media,Q18394359,Tiger Media,wikipedia,1
 distributor,Tiglon (distributor),,Tiglon (distributor),unresolved,1
 distributor,Tiglon Film,,Tiglon Film,unresolved,3
@@ -1819,7 +1818,6 @@ distributor,Universe Entertainment Limited,,Universe Entertainment Limited,unres
 distributor,Universum Film,,Universum Film,redirect_unconfirmed,7
 distributor,Universum Film A.G.,Q41468,UFA GmbH,redirect,1
 distributor,Universum Film AG,,Universum Film AG,redirect_unconfirmed,2
-distributor,Universum FilmBuena Vista International,,Universum FilmBuena Vista International,unresolved,1
 distributor,Urban Vision,Q4006365,Urban Vision,wikipedia,2
 distributor,Utopia (company),Q106818334,Utopia (company),wikipedia,1
 distributor,VHX,Q17086968,VHX,wikipedia,1
@@ -1849,9 +1847,8 @@ distributor,Vertigo Films,Q4010298,Vertigo Films,wikipedia,20
 distributor,Vertigo Releasing,,Vertigo Releasing,redirect_unconfirmed,6
 distributor,Vestron Pictures,Q7923503,Vestron Pictures,wikipedia,8
 distributor,Viacom (1952–2005),Q3088127,Viacom (1952–2005),wikipedia,1
-distributor,Viacom 18 Motion Pictures,Q7924435,Viacom18 Studios,redirect,5
-distributor,Viacom 18 Motion PicturesEros International,,Viacom 18 Motion PicturesEros International,unresolved,1
-distributor,Viacom18 Motion Pictures,Q7924435,Viacom18 Studios,redirect,11
+distributor,Viacom 18 Motion Pictures,Q7924435,Viacom18 Studios,redirect,6
+distributor,Viacom18 Motion Pictures,Q7924435,Viacom18 Studios,redirect,12
 distributor,Viacom18 Studios,Q7924435,Viacom18 Studios,wikipedia,14
 distributor,ViacomCBS,,ViacomCBS,redirect_unconfirmed,1
 distributor,Vice Media,Q18395343,Vice Media,wikipedia,1
@@ -1933,7 +1930,7 @@ distributor,Weintraub Entertainment Group,Q7980272,Weintraub Entertainment Group
 distributor,Well Go USA,Q118903893,Well Go USA Entertainment,redirect,3
 distributor,Well Go USA Entertainment,Q118903893,Well Go USA Entertainment,wikipedia,13
 distributor,Wellgo (USA)  Atlas GMBH (Germany)  Kaleidoscope (UK)  Universal Full Band (China)  First International (France)  Fine Films (Japan)  Front Row (Middle East)  M Pictures (Thailand)  Ram Indo (Malaysia)  Joy N Contents Group (Korea)  Big Movie (Baltics)  Hom (Benelux)  One World Movies (India)  Sound Space (Indonesia)  Hollywood (Greece)  Cinescape (Kuwait)  Rio Negro AV (Brazil)   Eagle Entertainment (Australia)  Kotai Entertainment (Poland)  Take One AB (Scandinavia),,Wellgo (USA)  Atlas GMBH (Germany)  Kaleidoscope (UK)  Universal Full Band (China)  First International (France)  Fine Films (Japan)  Front Row (Middle East)  M Pictures (Thailand)  Ram Indo (Malaysia)  Joy N Contents Group (Korea)  Big Movie (Baltics)  Hom (Benelux)  One World Movies (India)  Sound Space (Indonesia)  Hollywood (Greece)  Cinescape (Kuwait)  Rio Negro AV (Brazil)   Eagle Entertainment (Australia)  Kotai Entertainment (Poland)  Take One AB (Scandinavia),unresolved,1
-distributor,Wellspring Media,,Wellspring Media,redirect_unconfirmed,1
+distributor,Wellspring Media,,Wellspring Media,redirect_unconfirmed,2
 distributor,Werner Herzog Filmproduktion,,Werner Herzog Filmproduktion,redirect_unconfirmed,3
 distributor,West End Films,,West End Films,unresolved,1
 distributor,Westinghouse Broadcasting,Q7988935,Westinghouse Broadcasting,wikipedia,2
@@ -2087,10 +2084,10 @@ studio,ABC Motion Pictures,,ABC Motion Pictures,redirect_unconfirmed,2
 studio,ABC Pictures,,ABC Pictures,redirect_unconfirmed,3
 studio,ABKCO Films,,ABKCO Films,unresolved,1
 studio,ABKCO Records,Q2819021,ABKCO Records,wikipedia,2
-studio,ACE Entertainment,,ACE Entertainment,unresolved,2
+studio,ACE Entertainment,Q55595319,ACE Entertainment,film,2
 studio,AD406  Dasepo Club,,AD406  Dasepo Club,unresolved,1
 studio,ADA Films,,ADA Films,unresolved,1
-studio,AEG Live,Q975408,AEG Live,film,3
+studio,AEG Live,,AEG Live,redirect_unconfirmed,3
 studio,AGBO,Q86755103,AGBO,wikipedia,11
 studio,AGBO Films,Q86755103,AGBO,redirect,1
 studio,AGC Studios,Q107348977,AGC Studios,wikipedia,15
@@ -2113,7 +2110,7 @@ studio,AVRO (broadcaster),,AVRO (broadcaster),redirect_unconfirmed,1
 studio,AZ Celtic Films,,AZ Celtic Films,redirect_unconfirmed,1
 studio,Aalayam Productions,Q104846835,Aalayam Productions,wikipedia,1
 studio,Aamir Khan,Q9557,Aamir Khan,wikipedia,3
-studio,Aamir Khan Productions,Q2820005,Aamir Khan Productions,film,6
+studio,Aamir Khan Productions,,Aamir Khan Productions,redirect_unconfirmed,6
 studio,Aaradyaa Studios,,Aaradyaa Studios,unresolved,1
 studio,Aardman Animations,Q301092,Aardman Animations,wikipedia,5
 studio,Aardman Features,,Aardman Features,redirect_unconfirmed,5
@@ -2122,7 +2119,7 @@ studio,Aascar Film Pvt. Ltd,,Aascar Film Pvt. Ltd,unresolved,1
 studio,Aashiq Abu,Q4662709,Aashiq Abu,wikipedia,1
 studio,Aashirvad Cinemas,Q4662716,Aashirvad Cinemas,wikipedia,5
 studio,"Abduction Films, Manis Film, Pink Buffalo Films",,"Abduction Films, Manis Film, Pink Buffalo Films",unresolved,1
-studio,Abhishek Agarwal Arts,Q111262042,Abhishek Agarwal Arts,film,2
+studio,Abhishek Agarwal Arts,,Abhishek Agarwal Arts,unresolved,2
 studio,Abhishek Agarwal ArtsI Am Buddha Productions,,Abhishek Agarwal ArtsI Am Buddha Productions,unresolved,1
 studio,Abhishek Pictures,Q27958422,Abhishek Pictures,wikipedia,1
 studio,Abhuvanasa Creations,,Abhuvanasa Creations,unresolved,1
@@ -2379,7 +2376,7 @@ studio,Art Pictures Studio,Q20312102,Art Pictures Studio,wikipedia,3
 studio,Art et Essai,Q104889257,art et essai,film,1
 studio,Arte,Q8073,Arte,wikipedia,32
 studio,Arte France,Q2864832,Arte France,wikipedia,1
-studio,Arte France Cinéma,Q2864822,Arte France Cinéma,film,50
+studio,Arte France Cinéma,,Arte France Cinéma,redirect_unconfirmed,50
 studio,Artemis Rising Foundation,Q105833904,Artemis Rising Foundation,wikipedia,1
 studio,Arthur P. Jacobs,Q18971,Arthur P. Jacobs,wikipedia,2
 studio,Artina Films,,Artina Films,unresolved,3
@@ -2437,7 +2434,7 @@ studio,Automatik Entertainment,,Automatik Entertainment,unresolved,2
 studio,Avala Film,Q2873244,Avala Film,wikipedia,1
 studio,"Avalon, New Zealand",Q4827528,"Avalon, New Zealand",wikipedia,1
 studio,Avatar Studios,Q124751065,Avatar Studios,wikipedia,1
-studio,Avenging Conscience,Q4828094,Avenging Conscience,film,2
+studio,Avenging Conscience,,Avenging Conscience,redirect_unconfirmed,2
 studio,Avenue Pictures,,Avenue Pictures,unresolved,1
 studio,Aversand Films,,Aversand Films,unresolved,1
 studio,Avery Pix,,Avery Pix,unresolved,1
@@ -2594,7 +2591,7 @@ studio,Ben Wheatley,Q2895597,Ben Wheatley,wikipedia,1
 studio,Ben Younger,Q1983058,Ben Younger,wikipedia,1
 studio,Benaras Media Works,,Benaras Media Works,redirect_unconfirmed,5
 studio,Benaroya Pictures,,Benaroya Pictures,redirect_unconfirmed,4
-studio,BenderSpink,,BenderSpink,redirect_unconfirmed,4
+studio,BenderSpink,Q20874104,BenderSpink,film,4
 studio,Benedict Cumberbatch,Q244674,Benedict Cumberbatch,wikipedia,1
 studio,Benetton Group,Q817139,Benetton Group,wikipedia,1
 studio,Benmar Productions,,Benmar Productions,unresolved,1
@@ -2612,7 +2609,7 @@ studio,Betty Thomas,Q254732,Betty Thomas,wikipedia,2
 studio,Beyond Infinity  Phantom Productions,,Beyond Infinity  Phantom Productions,unresolved,1
 studio,Beyond International,Q4900034,Beyond International,wikipedia,1
 studio,Beşiktaş Cultural Center,,Beşiktaş Cultural Center,unresolved,1
-studio,Beşiktaş Kültür Merkezi,Q6050606,Beşiktaş Kültür Merkezi,film,4
+studio,Beşiktaş Kültür Merkezi,,Beşiktaş Kültür Merkezi,unresolved,4
 studio,Bhadrakali Pictures,,Bhadrakali Pictures,unresolved,1
 studio,Bhandarkar Entertainment,,Bhandarkar Entertainment,unresolved,1
 studio,Bhansali Productions,,Bhansali Productions,redirect_unconfirmed,5
@@ -2742,7 +2739,7 @@ studio,Broken Road Productions,Q24817863,Broken Road Productions,film,5
 studio,Broken Road ProductionsBaby Way Productions,,Broken Road ProductionsBaby Way Productions,unresolved,1
 studio,Bron Creative,,Bron Creative,redirect_unconfirmed,6
 studio,Bron Studios,Q16954085,Bron Studios,wikipedia,46
-studio,Brooksfilms,Q2926174,Brooksfilms,film,10
+studio,Brooksfilms,,Brooksfilms,redirect_unconfirmed,10
 studio,Brookstreet Pictures,Q4975132,Brookstreet Pictures,wikipedia,6
 studio,Brothers K Productions,,Brothers K Productions,unresolved,1
 studio,Brothers/Dowdle Productions,,Brothers/Dowdle Productions,unresolved,1
@@ -2773,7 +2770,7 @@ studio,Busted Shark Productions,,Busted Shark Productions,unresolved,1
 studio,Buster Keaton ProductionsJoseph M. Schenck Productions,,Buster Keaton ProductionsJoseph M. Schenck Productions,unresolved,1
 studio,Butcher's Run Films,,Butcher's Run Films,redirect_unconfirmed,1
 studio,BuzzFeed Studios,,BuzzFeed Studios,redirect_unconfirmed,3
-studio,Bwark Productions,Q18635277,Bwark Productions,film,2
+studio,Bwark Productions,,Bwark Productions,redirect_unconfirmed,2
 studio,Bórd Scannán na hÉireann/Irish Film Board,,Bórd Scannán na hÉireann/Irish Film Board,unresolved,1
 studio,Böcek Yapım,Q6018869,Böcek Yapım,film,1
 studio,C More Entertainment,Q9184391,C More Entertainment,wikipedia,1
@@ -2932,7 +2929,7 @@ studio,Charles B. Pierce Film Productions,,Charles B. Pierce Film Productions,un
 studio,Charles B. Wessler,Q5075343,Charles B. Wessler,wikipedia,3
 studio,Charles Band,Q738410,Charles Band,wikipedia,1
 studio,Charles Band Productions,,Charles Band Productions,redirect_unconfirmed,1
-studio,Charles Chaplin Productions,Q18413941,Charles Chaplin Productions,film,2
+studio,Charles Chaplin Productions,,Charles Chaplin Productions,redirect_unconfirmed,2
 studio,Charles Fries (producer),Q5083197,Charles Fries (producer),wikipedia,1
 studio,Charles H. Joffe,Q376138,Charles H. Joffe,wikipedia,1
 studio,Charles H. Schneer,Q188167,Charles H. Schneer,wikipedia,1
@@ -3289,7 +3286,7 @@ studio,Denver and Delilah Films,,Denver and Delilah Films,redirect_unconfirmed,1
 studio,Denver and Delilah Productions,Q23016773,Denver and Delilah Productions,wikipedia,12
 studio,Department of Motion PicturesRT FeaturesStay Gold Features,,Department of Motion PicturesRT FeaturesStay Gold Features,unresolved,1
 studio,Department of Post,,Department of Post,unresolved,1
-studio,Depth of Field,,Depth of Field,redirect_unconfirmed,5
+studio,Depth of Field,Q18219680,Depth of Field,film,5
 studio,Depth of Field Productions,,Depth of Field Productions,unresolved,1
 studio,Derrick Comedy,Q5262996,Derrick Comedy,wikipedia,1
 studio,Desert Wolf Productions,,Desert Wolf Productions,redirect_unconfirmed,1
@@ -3509,6 +3506,7 @@ studio,Endemol Shine Group,Q23837644,Endemol Shine Group,wikipedia,3
 studio,Endemol Shine UK,Q5376047,Banijay UK Productions,redirect,1
 studio,Endgame Entertainment,,Endgame Entertainment,redirect_unconfirmed,17
 studio,Endymion Films,,Endymion Films,unresolved,1
+studio,Engine,Q44167,Engine,wikipedia,1
 studio,Engine FilmTV Man Union,,Engine FilmTV Man Union,unresolved,1
 studio,English Breakfast Productions,,English Breakfast Productions,redirect_unconfirmed,1
 studio,Enigma Productions,,Enigma Productions,redirect_unconfirmed,4
@@ -3597,7 +3595,6 @@ studio,Fanes FilmSenator Film ProduktionSeven PicturesTyphoon,,Fanes FilmSenator
 studio,Fangoria,Q5433849,Fangoria,wikipedia,1
 studio,Fantagio,Q13424955,Fantagio,wikipedia,1
 studio,Fantastic Factory,Q5434191,Fantastic Factory,film,3
-studio,Fantastic FactoryFilmax International,,Fantastic FactoryFilmax International,unresolved,1
 studio,Fantastic Films (Ireland),,Fantastic Films (Ireland),redirect_unconfirmed,4
 studio,Fantastic Films (company),Q17105373,Fantastic Films (company),wikipedia,1
 studio,Fantasy Films,,Fantasy Films,redirect_unconfirmed,1
@@ -3626,7 +3623,8 @@ studio,Fifth Element Productions,,Fifth Element Productions,unresolved,1
 studio,Fifth Season (company),Q111475937,Fifth Season (company),wikipedia,24
 studio,Fifth Season (production company),,Fifth Season (production company),redirect_unconfirmed,3
 studio,Figaro,,Figaro,unresolved,1
-studio,Figment Films,Q89783315,Figment Films,film,2
+studio,Figment Films,,Figment Films,unresolved,2
+studio,Film,Q11424,Film,wikipedia,2
 studio,Film 360,,Film 360,unresolved,1
 studio,Film Agency for Wales,,Film Agency for Wales,unresolved,1
 studio,Film Center Serbia and Mir Media Group,,Film Center Serbia and Mir Media Group,unresolved,1
@@ -3648,15 +3646,13 @@ studio,Film i Väst,Q2748604,Film i Väst,wikipedia,46
 studio,Film4,Q1108255,Film4,wikipedia,7
 studio,Film4 Productions,Q5448886,Film4 Productions,wikipedia,136
 studio,FilmCamp,Q122176701,FilmCamp,film,1
-studio,FilmColony,Q17335573,FilmColony,film,6
+studio,FilmColony,,FilmColony,redirect_unconfirmed,6
 studio,FilmDistrict,Q624886,FilmDistrict,wikipedia,1
-studio,FilmEngine,,FilmEngine,unresolved,1
 studio,FilmEngineBenderSpink,,FilmEngineBenderSpink,unresolved,1
 studio,FilmFernsehFonds Bayern,Q1290177,FilmFernsehFonds Bayern,wikipedia,2
 studio,FilmFour International,,FilmFour International,redirect_unconfirmed,2
 studio,FilmFour Productions,,FilmFour Productions,redirect_unconfirmed,1
 studio,FilmNation Entertainment,Q5448895,FilmNation Entertainment,wikipedia,75
-studio,FilmScience,,FilmScience,unresolved,1
 studio,FilmScienceNeighborhood Watch Films,,FilmScienceNeighborhood Watch Films,unresolved,1
 studio,FilmWave,,FilmWave,redirect_unconfirmed,1
 studio,Filma-Cass,Q19611286,Filma-Cass,film,1
@@ -3676,6 +3672,7 @@ studio,Filmline International,,Filmline International,unresolved,1
 studio,Filmology Finance,,Filmology Finance,redirect_unconfirmed,1
 studio,Filmové studio Barrandov,,Filmové studio Barrandov,redirect_unconfirmed,1
 studio,Filmplan International,,Filmplan International,unresolved,1
+studio,Films,,Films,redirect_unconfirmed,1
 studio,Films A2,,Films A2,redirect_unconfirmed,3
 studio,Films Christian Fechner,,Films Christian Fechner,unresolved,1
 studio,Films Georges de Beauregard,,Films Georges de Beauregard,unresolved,1
@@ -3724,9 +3721,8 @@ studio,Folimage,Q496797,Folimage,wikipedia,1
 studio,Fondo de Fomento CinematográficoInstituto Mexicano de CinematografíaUniversidad de GuadalajaraIguana ProduccionesVentana Films,,Fondo de Fomento CinematográficoInstituto Mexicano de CinematografíaUniversidad de GuadalajaraIguana ProduccionesVentana Films,unresolved,1
 studio,Fono Film,,Fono Film,unresolved,1
 studio,Footprint Features,,Footprint Features,unresolved,1
-studio,Foresight Unlimited,,Foresight Unlimited,redirect_unconfirmed,4
+studio,Foresight Unlimited,,Foresight Unlimited,redirect_unconfirmed,5
 studio,Foresight UnlimitedSignature Pictures,,Foresight UnlimitedSignature Pictures,unresolved,1
-studio,Foresight UnlimitedThe Safran Company,,Foresight UnlimitedThe Safran Company,unresolved,1
 studio,Forest Park Pictures,,Forest Park Pictures,unresolved,1
 studio,Forewarned,,Forewarned,unresolved,1
 studio,Fortis Films,Q108560833,Fortis Films,wikipedia,10
@@ -3757,10 +3753,10 @@ studio,Fragile Films,,Fragile Films,redirect_unconfirmed,3
 studio,Framestore Animation,,Framestore Animation,redirect_unconfirmed,1
 studio,France 2,Q525894,France 2,wikipedia,14
 studio,France 2 Cinema,,France 2 Cinema,redirect_unconfirmed,1
-studio,France 2 Cinéma,Q10498467,France 2 Cinéma,film,47
+studio,France 2 Cinéma,,France 2 Cinéma,redirect_unconfirmed,47
 studio,France 3,Q1322641,France 3,wikipedia,3
 studio,France 3 Cinema,,France 3 Cinema,redirect_unconfirmed,1
-studio,France 3 Cinéma,,France 3 Cinéma,redirect_unconfirmed,42
+studio,France 3 Cinéma,Q10498468,France 3 Cinéma,film,42
 studio,France Télévisions,Q1124861,France Télévisions,wikipedia,10
 studio,Franchise Pictures,Q3750890,Franchise Pictures,wikipedia,22
 studio,Francinex,Q112567157,Francinex,wikipedia,2
@@ -3828,7 +3824,7 @@ studio,Fís Éireann/Screen Ireland,,Fís Éireann/Screen Ireland,redirect_uncon
 studio,G&H Productions,,G&H Productions,unresolved,1
 studio,G-Unit Films,,G-Unit Films,redirect_unconfirmed,1
 studio,G-Unit Films and Television Inc.,Q5511936,G-Unit Films and Television Inc.,wikipedia,1
-studio,G. Mahesh Babu Entertainment,,G. Mahesh Babu Entertainment,redirect_unconfirmed,4
+studio,G. Mahesh Babu Entertainment,Q20539271,G. Mahesh Babu Entertainment,film,4
 studio,G. P. Sippy,Q355899,G. P. Sippy,wikipedia,1
 studio,GDH 559,Q21880729,GDH 559,wikipedia,1
 studio,GED Cinema,,GED Cinema,unresolved,1
@@ -3899,13 +3895,13 @@ studio,Gil Netter Productions,,Gil Netter Productions,unresolved,2
 studio,Gil Netter ProductionsJohn Jacobs Productions,,Gil Netter ProductionsJohn Jacobs Productions,unresolved,1
 studio,Gilbert Films,,Gilbert Films,redirect_unconfirmed,4
 studio,Gimages Films,Q78992365,Gimages Films,film,1
-studio,Gladden Entertainment,Q17387146,Gladden Entertainment,film,4
+studio,Gladden Entertainment,,Gladden Entertainment,redirect_unconfirmed,4
 studio,Glass Eye Pix,Q5567045,Glass Eye Pix,wikipedia,6
 studio,Glen Echo Entertainment,,Glen Echo Entertainment,redirect_unconfirmed,1
 studio,Glenn Close,Q372311,Glenn Close,wikipedia,1
 studio,Global Entertainment Group,,Global Entertainment Group,unresolved,1
 studio,Global Gate Entertainment,,Global Gate Entertainment,unresolved,1
-studio,Global Road Entertainment,Q54958869,Global Road Entertainment,film,5
+studio,Global Road Entertainment,,Global Road Entertainment,redirect_unconfirmed,5
 studio,Globo Filmes,Q5571070,Globo Filmes,wikipedia,8
 studio,Globomedia,,Globomedia,unresolved,2
 studio,Globoplay,Q10290155,Globoplay,wikipedia,1
@@ -3993,7 +3989,7 @@ studio,Guerilla Films,Q96081986,Guerilla Films,film,1
 studio,Guerrilla High Productions,,Guerrilla High Productions,unresolved,1
 studio,Guilty By Association Media,,Guilty By Association Media,unresolved,1
 studio,Gulfstream Pictures,Q22079430,Gulfstream Pictures,film,3
-studio,Gunn Films,Q24843224,Gunn Films,film,4
+studio,Gunn Films,,Gunn Films,redirect_unconfirmed,4
 studio,Gunpowder & Sky,Q20715669,Gunpowder & Sky,wikipedia,3
 studio,Guppy CinemasJohn Paul George Productions,,Guppy CinemasJohn Paul George Productions,unresolved,1
 studio,Guru Studio,Q5620440,Guru Studio,wikipedia,1
@@ -4021,7 +4017,7 @@ studio,Hakikat Entertainment Pvt. Ltd.,,Hakikat Entertainment Pvt. Ltd.,unresolv
 studio,Hakuhodo,Q2633520,Hakuhodo,wikipedia,4
 studio,Hal B. Wallis,Q472520,Hal B. Wallis,wikipedia,1
 studio,Hal Roach Studios,Q3125893,Hal Roach Studios,wikipedia,3
-studio,Hal Wallis Productions,,Hal Wallis Productions,redirect_unconfirmed,4
+studio,Hal Wallis Productions,Q17386442,Hal Wallis Productions,film,4
 studio,Hal and Jim McElroy,Q5640961,Hal and Jim McElroy,wikipedia,3
 studio,Halas and Batchelor,Q3782532,Halas and Batchelor,wikipedia,2
 studio,Halcyon Pictures,,Halcyon Pictures,unresolved,1
@@ -4199,7 +4195,7 @@ studio,Identity Films,Q5988305,Identity Films,wikipedia,1
 studio,Iervolino & Lady Bacardi Entertainment,,Iervolino & Lady Bacardi Entertainment,unresolved,1
 studio,Ignite Entertainment,Q16996606,Ignite Entertainment,wikipedia,4
 studio,Ikusgarri Films,,Ikusgarri Films,unresolved,1
-studio,Illuminati Films,Q6000338,Illuminati Films,film,3
+studio,Illuminati Films,,Illuminati Films,redirect_unconfirmed,3
 studio,Illumination (company),Q1189512,Illumination (company),wikipedia,10
 studio,Illumination Entertainment,Q1189512,Illumination (company),redirect,7
 studio,Illusion Entertainment Group,,Illusion Entertainment Group,unresolved,1
@@ -4235,7 +4231,7 @@ studio,Indelible Pictures,,Indelible Pictures,unresolved,1
 studio,Independent Film Channel,Q1150514,IFC (American TV channel),redirect,1
 studio,Independent Filmmakers Group BFG,,Independent Filmmakers Group BFG,unresolved,1
 studio,Independent Lens,Q15036230,Independent Lens,wikipedia,1
-studio,Independent Pictures,,Independent Pictures,redirect_unconfirmed,2
+studio,Independent Pictures,Q78187279,Independent Pictures,film,2
 studio,Independent PicturesAlfred Shay Productions,,Independent PicturesAlfred Shay Productions,unresolved,1
 studio,Indian Paintbrush,,Indian Paintbrush,unresolved,2
 studio,Indian Paintbrush (company),Q17415951,Indian Paintbrush (company),wikipedia,18
@@ -4332,7 +4328,7 @@ studio,JW Productions,,JW Productions,redirect_unconfirmed,1
 studio,Jack Cummings Productions,,Jack Cummings Productions,unresolved,1
 studio,Jack Giarraputo Productions,Q18219612,Jack Giarraputo Productions,film,1
 studio,Jack H. Harris,Q16083769,Jack H. Harris,wikipedia,1
-studio,Jack Rollins & Charles H. Joffe Productions,,Jack Rollins & Charles H. Joffe Productions,unresolved,2
+studio,Jack Rollins & Charles H. Joffe Productions,Q122950110,Jack Rollins & Charles H. Joffe Productions,film,2
 studio,Jack Rollins (producer),Q3157307,Jack Rollins (producer),wikipedia,1
 studio,Jack Rollins–Charles H. Joffe Productions,,Jack Rollins–Charles H. Joffe Productions,unresolved,3
 studio,Jackass (franchise),Q465616,Jackass (franchise),wikipedia,2
@@ -4347,8 +4343,7 @@ studio,Jaffe/Lansing Production,,Jaffe/Lansing Production,unresolved,1
 studio,Jaffe/Lansing Productions,,Jaffe/Lansing Productions,redirect_unconfirmed,1
 studio,Jagged Films,,Jagged Films,redirect_unconfirmed,2
 studio,Jaguar Bite,,Jaguar Bite,unresolved,1
-studio,Jalem Productions,,Jalem Productions,redirect_unconfirmed,5
-studio,Jalem ProductionsReynard ProductionsPatricia Productions,,Jalem ProductionsReynard ProductionsPatricia Productions,unresolved,1
+studio,Jalem Productions,,Jalem Productions,redirect_unconfirmed,6
 studio,Jalor Productions,Q140392997,Jalor Productions,film,1
 studio,James D. Stern,Q6132212,James D. Stern,wikipedia,5
 studio,James H. Nicholson,Q6135246,James H. Nicholson,wikipedia,1
@@ -4384,10 +4379,10 @@ studio,Jerry Lewis Films,,Jerry Lewis Films,unresolved,1
 studio,Jerry Media,Q61434728,Jerry Media,wikipedia,1
 studio,Jerry Wald Productions,,Jerry Wald Productions,unresolved,2
 studio,Jerry Weintraub,Q365844,Jerry Weintraub,wikipedia,1
-studio,Jerry Weintraub Productions,,Jerry Weintraub Productions,redirect_unconfirmed,5
+studio,Jerry Weintraub Productions,Q17345505,Jerry Weintraub Productions,film,5
 studio,Jerry Zucker,Q363666,Jerry Zucker,wikipedia,3
 studio,Jerry Zucker (film director),,Jerry Zucker (film director),redirect_unconfirmed,3
-studio,Jersey Films,Q3177524,Jersey Films,film,8
+studio,Jersey Films,,Jersey Films,redirect_unconfirmed,8
 studio,Jersey Group,,Jersey Group,redirect_unconfirmed,5
 studio,"Jet Tone Production Co., Ltd.",,"Jet Tone Production Co., Ltd.",unresolved,1
 studio,Jet Tone Productions,,Jet Tone Productions,unresolved,2
@@ -4463,7 +4458,7 @@ studio,KOJO Studios,,KOJO Studios,redirect_unconfirmed,1
 studio,KVN Productions,Q121879193,KVN Productions,wikipedia,1
 studio,Kabir Khan (director),Q6344216,Kabir Khan (director),wikipedia,2
 studio,Kadokawa Daiei Studio,Q11630733,Kadokawa Daiei Studio,wikipedia,1
-studio,Kadokawa Pictures,,Kadokawa Pictures,redirect_unconfirmed,3
+studio,Kadokawa Pictures,Q2547139,Kadokawa Pictures,film,3
 studio,Kaijyu Theatre,,Kaijyu Theatre,unresolved,1
 studio,Kaktus Producciones Cinematográficas,,Kaktus Producciones Cinematográficas,unresolved,1
 studio,Kalaahi Media,,Kalaahi Media,unresolved,1
@@ -4483,7 +4478,7 @@ studio,Karen Johnson (producer),Q6369742,Karen Johnson (producer),wikipedia,1
 studio,Karen Rosenfelt,Q72846771,Karen Rosenfelt,wikipedia,1
 studio,Kartemquin Films,Q6373523,Kartemquin Films,wikipedia,3
 studio,Karz Entertainment,,Karz Entertainment,unresolved,2
-studio,Katalyst Films,Q21292719,Katalyst Films,film,2
+studio,Katalyst Films,,Katalyst Films,redirect_unconfirmed,2
 studio,Katalyst Media,Q16977652,Katalyst Media,wikipedia,3
 studio,Katsu,,Katsu,unresolved,1
 studio,KatzSmith Productions,Q60754208,KatzSmith Productions,wikipedia,2
@@ -4508,7 +4503,7 @@ studio,Kevin Costner,Q11930,Kevin Costner,wikipedia,4
 studio,Kevin Hart,Q618352,Kevin Hart,wikipedia,2
 studio,Kevin McCormick Productions,,Kevin McCormick Productions,unresolved,1
 studio,Kevin Misher,Q1740222,Kevin Misher,wikipedia,4
-studio,Khalabo Ink Society,Q119026174,Khalabo Ink Society,film,2
+studio,Khalabo Ink Society,,Khalabo Ink Society,redirect_unconfirmed,2
 studio,Khara (studio),Q1203676,Khara (studio),wikipedia,4
 studio,Kick the Machine,,Kick the Machine,redirect_unconfirmed,1
 studio,Kid Cudi,Q299138,Kid Cudi,wikipedia,1
@@ -4552,7 +4547,7 @@ studio,Konami,Q45700,Konami,wikipedia,2
 studio,Konrad Pictures,,Konrad Pictures,redirect_unconfirmed,2
 studio,Kopelson Entertainment,,Kopelson Entertainment,redirect_unconfirmed,1
 studio,Koppelman & Levien ProductionsOvernight Productions,,Koppelman & Levien ProductionsOvernight Productions,unresolved,1
-studio,Kowalski Films,,Kowalski Films,unresolved,2
+studio,Kowalski Films,Q41594791,Kowalski Films,film,2
 studio,Krasnoff Foster ProductionsUnited Performers' Studio,,Krasnoff Foster ProductionsUnited Performers' Studio,unresolved,1
 studio,Kreo Films FZ,,Kreo Films FZ,unresolved,1
 studio,KriArj Entertainment,,KriArj Entertainment,redirect_unconfirmed,3
@@ -4623,7 +4618,7 @@ studio,Laura Ziskin Productions,,Laura Ziskin Productions,redirect_unconfirmed,1
 studio,Laurel Productions,,Laurel Productions,redirect_unconfirmed,3
 studio,Lauren Shuler Donner,Q469795,Lauren Shuler Donner,wikipedia,1
 studio,Laurence Mark,Q1808004,Laurence Mark,wikipedia,6
-studio,Laurence Mark Productions,,Laurence Mark Productions,redirect_unconfirmed,5
+studio,Laurence Mark Productions,Q17386257,Laurence Mark Productions,film,5
 studio,Laurie MacDonald,Q3827956,Laurie MacDonald,wikipedia,12
 studio,Lava Bear Films,Q6502174,Lava Bear Films,wikipedia,6
 studio,Lava Productions,,Lava Productions,unresolved,1
@@ -4669,7 +4664,7 @@ studio,Les Films Séville,Q18154370,Les Films Séville,wikipedia,1
 studio,Les Films de Pierre,,Les Films de Pierre,unresolved,1
 studio,Les Films de la Pléiade,,Les Films de la Pléiade,unresolved,2
 studio,Les Films des Tournelles,,Les Films des Tournelles,unresolved,1
-studio,Les Films du Carrosse,Q3232649,Les Films du Carrosse,film,2
+studio,Les Films du Carrosse,,Les Films du Carrosse,unresolved,2
 studio,Les Films du Fleuve,Q19955849,Les Films du Fleuve,wikipedia,12
 studio,Les Films du Losange,Q605307,Les Films du Losange,wikipedia,12
 studio,Les Films du Poisson,Q2421484,Les Films du Poisson,wikipedia,1
@@ -4832,7 +4827,7 @@ studio,MSNBC Films,Q6717823,MS NOW Films,redirect,1
 studio,MTI Home Video,Q6718457,MTI Home Video,wikipedia,1
 studio,MTV Animation,Q16162454,MTV Animation,wikipedia,2
 studio,MTV Entertainment Studios,Q117684575,MTV Entertainment Studios,wikipedia,15
-studio,MTV Films,Q1111024,MTV Films,film,19
+studio,MTV Films,,MTV Films,redirect_unconfirmed,19
 studio,MTV Productions,,MTV Productions,redirect_unconfirmed,2
 studio,MWM (entertainment company),Q32186,MWM (entertainment company),wikipedia,2
 studio,MWM Studios,Q32186,MWM (entertainment company),redirect,4
@@ -4855,7 +4850,6 @@ studio,"Madhouse, Inc.",Q650867,"Madhouse, Inc.",wikipedia,1
 studio,Madman Entertainment,Q1816526,Madman Entertainment,wikipedia,1
 studio,Madras Enterprises,,Madras Enterprises,unresolved,1
 studio,Madras Talkies,Q3537670,Madras Talkies,wikipedia,5
-studio,Madras TalkiesLyca Productions,,Madras TalkiesLyca Productions,unresolved,2
 studio,Mafilm,Q1161600,Mafilm,wikipedia,1
 studio,Mag Bodard,Q3276488,Mag Bodard,wikipedia,1
 studio,Magenta Light Studios,Q138278651,Magenta Light Studios,wikipedia,1
@@ -5024,7 +5018,7 @@ studio,Metromedia Producers Corporation,,Metromedia Producers Corporation,redire
 studio,Mice Productions,,Mice Productions,unresolved,1
 studio,Michael Benaroya,Q3308028,Michael Benaroya,wikipedia,3
 studio,Michael De Luca,Q920273,Michael De Luca,wikipedia,5
-studio,Michael De Luca Productions,,Michael De Luca Productions,redirect_unconfirmed,5
+studio,Michael De Luca Productions,,Michael De Luca Productions,redirect_unconfirmed,6
 studio,Michael Douglas,Q119798,Michael Douglas,wikipedia,1
 studio,Michael Grandage Company,Q6830724,Michael Grandage,redirect,1
 studio,Michael Gruskoff,Q3308227,Michael Gruskoff,wikipedia,2
@@ -5059,7 +5053,7 @@ studio,Milkshake Films,,Milkshake Films,unresolved,3
 studio,Milkyway Image,Q588960,Milkyway Image,wikipedia,3
 studio,Mill House Motion Pictures,,Mill House Motion Pictures,unresolved,1
 studio,Millbrook Pictures,,Millbrook Pictures,unresolved,1
-studio,Millennium Films,Q11882864,Millennium Films,film,30
+studio,Millennium Films,,Millennium Films,redirect_unconfirmed,30
 studio,Millennium Films777 Films CorporationOrder Productions,,Millennium Films777 Films CorporationOrder Productions,unresolved,1
 studio,Millennium Media,Q3879177,Millennium Media,wikipedia,34
 studio,Miller-Boyett Productions,Q6859039,Miller-Boyett,redirect,1
@@ -5259,7 +5253,7 @@ studio,New VisionsColumbia-Delphi Productions,,New VisionsColumbia-Delphi Produc
 studio,New World Pictures,Q3067564,New World Pictures,wikipedia,11
 studio,New Zealand Film Commission,Q7015366,New Zealand Film Commission,wikipedia,18
 studio,New Zealand Film Production Fund,,New Zealand Film Production Fund,unresolved,1
-studio,New Zealand On Air,,New Zealand On Air,redirect_unconfirmed,2
+studio,New Zealand On Air,Q121034572,New Zealand On Air,film,2
 studio,Newdon Productions,,Newdon Productions,unresolved,1
 studio,Newmarket Capital Group,Q7018547,Newmarket Capital Group,wikipedia,3
 studio,Newmarket Films,Q3875639,Newmarket Films,wikipedia,8
@@ -5317,7 +5311,7 @@ studio,North Hollywood Films,,North Hollywood Films,unresolved,1
 studio,North by Northwest Entertainment,,North by Northwest Entertainment,unresolved,1
 studio,Northern Ireland Film & Television Commission,Q7058525,Northern Ireland Screen,redirect,1
 studio,Northern Ireland Screen,Q7058525,Northern Ireland Screen,wikipedia,6
-studio,Northern Lights Entertainment,,Northern Lights Entertainment,redirect_unconfirmed,3
+studio,Northern Lights Entertainment,Q17345595,Northern Lights Entertainment,film,3
 studio,Northern Lights Films,,Northern Lights Films,unresolved,1
 studio,Norwegian Film Institute,Q6514373,Norwegian Film Institute,wikipedia,3
 studio,Nostromo,Q430248,Nostromo,wikipedia,1
@@ -5409,7 +5403,7 @@ studio,Oshima Productions,,Oshima Productions,unresolved,1
 studio,Our Stories Films,Q7111190,Our Stories Films,wikipedia,2
 studio,Out of the Blue... Entertainment,,Out of the Blue... Entertainment,unresolved,1
 studio,Outerbanks Entertainment,Q7112041,Outerbanks Entertainment,wikipedia,5
-studio,Outlaw Productions,Q615141,Outlaw Productions,film,6
+studio,Outlaw Productions,,Outlaw Productions,redirect_unconfirmed,6
 studio,Outlier Society,,Outlier Society,redirect_unconfirmed,1
 studio,Outpost Films,,Outpost Films,unresolved,1
 studio,Overbrook Entertainment,Q2326925,Overbrook Entertainment,wikipedia,21
@@ -5453,7 +5447,7 @@ studio,PalmStar Entertainment,,PalmStar Entertainment,redirect_unconfirmed,5
 studio,PalmStar Media,Q24913707,PalmStar Media,wikipedia,9
 studio,Palo Vista Productions,,Palo Vista Productions,unresolved,1
 studio,Palomar (production company),,Palomar (production company),redirect_unconfirmed,2
-studio,Palomar Pictures,Q27963386,Palomar Pictures,film,3
+studio,Palomar Pictures,,Palomar Pictures,redirect_unconfirmed,3
 studio,Palomar Pictures International,,Palomar Pictures International,redirect_unconfirmed,1
 studio,"Pan Arts, Inc.",,"Pan Arts, Inc.",unresolved,1
 studio,Pan Européenne Production,,Pan Européenne Production,redirect_unconfirmed,1
@@ -5511,6 +5505,7 @@ studio,Pathé,Q1544011,Pathé,wikipedia,70
 studio,Pathé Films,,Pathé Films,redirect_unconfirmed,2
 studio,Pathé Pictures International,,Pathé Pictures International,redirect_unconfirmed,1
 studio,Pathé Productions Ltd,,Pathé Productions Ltd,unresolved,1
+studio,Patricia Productions,,Patricia Productions,redirect_unconfirmed,1
 studio,Patriot Pictures,,Patriot Pictures,unresolved,1
 studio,Patron Inc. Avernus  Productions,,Patron Inc. Avernus  Productions,unresolved,1
 studio,Paul Feig,Q2031292,Paul Feig,wikipedia,1
@@ -5710,7 +5705,7 @@ studio,Prufrock Pictures,,Prufrock Pictures,unresolved,2
 studio,Public Road Productions,,Public Road Productions,redirect_unconfirmed,1
 studio,Pueblo Film AG Productions,,Pueblo Film AG Productions,unresolved,1
 studio,Pukka Films,,Pukka Films,unresolved,1
-studio,Punch Palace Productions,,Punch Palace Productions,redirect_unconfirmed,3
+studio,Punch Palace Productions,Q133456721,Punch Palace Productions,film,3
 studio,"Punch Productions, inc.",,"Punch Productions, inc.",unresolved,1
 studio,Pure Flix (studio),,Pure Flix (studio),redirect_unconfirmed,1
 studio,Pure Flix Entertainment,Q7261086,Pinnacle Peak Pictures,redirect,2
@@ -5819,7 +5814,7 @@ studio,Rastar,Q7295254,Rastar,wikipedia,20
 studio,Rat Entertainment,,Rat Entertainment,unresolved,1
 studio,Rat Pack Filmproduktion,Q1402681,Rat Pack Filmproduktion,wikipedia,3
 studio,RatPac Entertainment,Q3041294,RatPac Entertainment,wikipedia,24
-studio,RatPac-Dune Entertainment,Q21116815,RatPac-Dune Entertainment,film,46
+studio,RatPac-Dune Entertainment,,RatPac-Dune Entertainment,redirect_unconfirmed,46
 studio,Ratpac-Dune Entertainment,,Ratpac-Dune Entertainment,redirect_unconfirmed,3
 studio,Raven Banner Entertainment,,Raven Banner Entertainment,unresolved,1
 studio,Ravine Pictures,,Ravine Pictures,unresolved,1
@@ -5863,7 +5858,6 @@ studio,Reel Life Production Private Limited,,Reel Life Production Private Limite
 studio,Reel Life Productions,Q4048130,Reel Life Productions,wikipedia,2
 studio,Refugee Films,,Refugee Films,unresolved,1
 studio,Regency Enterprises,Q466459,Regency Enterprises,wikipedia,120
-studio,Regency EnterprisesThe Wolper Organization,,Regency EnterprisesThe Wolper Organization,unresolved,1
 studio,Regional screen agencies,Q7309238,Regional screen agencies,wikipedia,1
 studio,Reichsparteitag-Film,,Reichsparteitag-Film,unresolved,1
 studio,Rejaputhra Visual Media,,Rejaputhra Visual Media,unresolved,1
@@ -5894,6 +5888,7 @@ studio,Revolt (TV network),Q7318582,Revolt (TV network),wikipedia,2
 studio,Revolution Films,Q17037404,Revolution Films,wikipedia,12
 studio,Revolution Studios,Q1160868,Revolution Studios,wikipedia,47
 studio,RexMedia,,RexMedia,unresolved,1
+studio,Reynard Productions,,Reynard Productions,redirect_unconfirmed,1
 studio,"Reynolds Pictures, Inc.",,"Reynolds Pictures, Inc.",unresolved,1
 studio,Rhino Entertainment,Q627091,Rhino Entertainment,wikipedia,2
 studio,Rhombus Media,Q24191919,Rhombus Media,wikipedia,10
@@ -5945,7 +5940,7 @@ studio,Robert N. Fried,Q7347926,Robert N. Fried,wikipedia,1
 studio,Robert Newmyer,Q548332,Robert Newmyer,wikipedia,1
 studio,Robert Simonds,Q731692,Robert Simonds,wikipedia,12
 studio,Robert Simonds Company,,Robert Simonds Company,unresolved,1
-studio,Robert Simonds Productions,,Robert Simonds Productions,redirect_unconfirmed,6
+studio,Robert Simonds Productions,Q17343522,Robert Simonds Productions,film,6
 studio,Robert Stigwood,Q1934278,Robert Stigwood,wikipedia,1
 studio,Robert Stigwood Organization,,Robert Stigwood Organization,redirect_unconfirmed,1
 studio,Robert Vince,Q7350620,Robert Vince,wikipedia,1
@@ -5958,11 +5953,11 @@ studio,Rocket Science (film production company),Q137258601,Rocket Science (film 
 studio,Rockline Entertainments,,Rockline Entertainments,redirect_unconfirmed,1
 studio,Rockstar Games,Q94912,Rockstar Games,wikipedia,1
 studio,Rockwood Pictures,,Rockwood Pictures,unresolved,1
-studio,Rodar y Rodar,,Rodar y Rodar,unresolved,4
+studio,Rodar y Rodar,Q6110408,Rodar y Rodar,film,4
 studio,Rodney Rothman,Q7357051,Rodney Rothman,wikipedia,1
 studio,Rodriguez International Pictures,,Rodriguez International Pictures,redirect_unconfirmed,3
 studio,Roger Birnbaum,Q945551,Roger Birnbaum,wikipedia,11
-studio,Roger Birnbaum Productions,,Roger Birnbaum Productions,redirect_unconfirmed,5
+studio,Roger Birnbaum Productions,Q25659094,Roger Birnbaum Productions,film,5
 studio,Rogue,Q1404450,Rogue,film,1
 studio,Rogue Pictures,Q1404450,Rogue Pictures,wikipedia,15
 studio,Rohit Shetty Picturez,,Rohit Shetty Picturez,redirect_unconfirmed,4
@@ -6100,6 +6095,7 @@ studio,Scholastic Studios,,Scholastic Studios,redirect_unconfirmed,1
 studio,Schramm Film,,Schramm Film,unresolved,1
 studio,Schramm Film Koerner Weber Kaiser,,Schramm Film Koerner Weber Kaiser,unresolved,1
 studio,Schweizer Radio und Fernsehen,Q1441462,Schweizer Radio und Fernsehen,wikipedia,1
+studio,Science,Q336,Science,wikipedia,1
 studio,Scooter Braun,Q1189670,Scooter Braun,wikipedia,1
 studio,Scope Pictures,,Scope Pictures,unresolved,1
 studio,Scorched Films,,Scorched Films,unresolved,1
@@ -6107,7 +6103,7 @@ studio,Scotia International,,Scotia International,unresolved,1
 studio,Scott Budnick (film producer),Q7436064,Scott Budnick (film producer),wikipedia,1
 studio,Scott Free Productions,Q3476213,Scott Free Productions,wikipedia,65
 studio,Scott Rudin,Q461529,Scott Rudin,wikipedia,8
-studio,Scott Rudin Productions,,Scott Rudin Productions,redirect_unconfirmed,25
+studio,Scott Rudin Productions,Q17295709,Scott Rudin Productions,film,25
 studio,Scott Sanders Productions,Q24817356,Scott Sanders Productions,film,1
 studio,Scott Steindorff,Q2009462,Scott Steindorff,wikipedia,1
 studio,Scott Stuber,Q7437329,Scott Stuber,wikipedia,6
@@ -6187,7 +6183,7 @@ studio,"Sheen ProductionsLeeds/Ben-Ami Productions, Inc.",,"Sheen ProductionsLee
 studio,Sheldrake Films,,Sheldrake Films,unresolved,1
 studio,Shemaroo Entertainment,Q7494074,Shemaroo Entertainment,wikipedia,2
 studio,Sherwood Pictures,Q7495559,Sherwood Pictures,wikipedia,3
-studio,Sherwood Productions,,Sherwood Productions,redirect_unconfirmed,2
+studio,Sherwood Productions,Q30174965,Sherwood Productions,film,2
 studio,Shin-Ei Animation,Q1136386,Shin-Ei Animation,wikipedia,1
 studio,ShinCine CommunicationsIM Pictures,,ShinCine CommunicationsIM Pictures,unresolved,1
 studio,Shining Excalibur Films,,Shining Excalibur Films,redirect_unconfirmed,1
@@ -6241,7 +6237,7 @@ studio,Silver Reel,,Silver Reel,unresolved,2
 studio,Silver Screen Partners,Q3483998,Silver Screen Partners,wikipedia,16
 studio,Silver Screen Partners II,,Silver Screen Partners II,redirect_unconfirmed,4
 studio,Silver Screen Partners III,,Silver Screen Partners III,redirect_unconfirmed,8
-studio,Silver Screen Partners IV,Q25917011,Silver Screen Partners IV,film,8
+studio,Silver Screen Partners IV,,Silver Screen Partners IV,redirect_unconfirmed,8
 studio,Silver Sphere Corporation,,Silver Sphere Corporation,unresolved,1
 studio,Simian Films,,Simian Films,unresolved,1
 studio,Simmons/Hamilton Productions,,Simmons/Hamilton Productions,redirect_unconfirmed,1
@@ -6251,7 +6247,7 @@ studio,Sister (production company),Q136340661,Sister (production company),wikipe
 studio,Sithara Entertainments,,Sithara Entertainments,unresolved,1
 studio,Sivakarthikeyan,Q3531959,Sivakarthikeyan,wikipedia,1
 studio,Sivakarthikeyan Productions,,Sivakarthikeyan Productions,redirect_unconfirmed,1
-studio,Six Entertainment Company,Q59723471,Six Entertainment Company,film,3
+studio,Six Entertainment Company,,Six Entertainment Company,unresolved,3
 studio,Skellington Productions,Q3486223,Skellington Productions,wikipedia,2
 studio,Skirball Productions,,Skirball Productions,unresolved,1
 studio,Skubalon,,Skubalon,unresolved,1
@@ -6288,7 +6284,7 @@ studio,Société de développement des entreprises culturelles,Q3487934,Sociét�
 studio,Sodium Fox,,Sodium Fox,unresolved,1
 studio,SoftBank Ventures Korea,,SoftBank Ventures Korea,unresolved,1
 studio,Sogecable,Q2095445,PRISA TV,redirect,1
-studio,Sogecine,Q78631420,Sogecine,film,5
+studio,Sogecine,,Sogecine,redirect_unconfirmed,5
 studio,Sogepaq,,Sogepaq,unresolved,1
 studio,Sogetel,Q3488916,Sogetel,wikipedia,2
 studio,Sohail Khan,Q983053,Sohail Khan,wikipedia,2
@@ -6328,11 +6324,11 @@ studio,Soundrya Production,Q7564884,Soundrya Production,wikipedia,1
 studio,Soundrya ProductionsSoham Rockstar Entertainment,,Soundrya ProductionsSoham Rockstar Entertainment,unresolved,1
 studio,South Australian Film Corporation,Q7566109,South Australian Film Corporation,wikipedia,17
 studio,South Pacific Pictures,Q7568115,South Pacific Pictures,wikipedia,1
-studio,Southpaw Entertainment,,Southpaw Entertainment,redirect_unconfirmed,4
+studio,Southpaw Entertainment,Q27962292,Southpaw Entertainment,film,4
 studio,Space Rocket Nation,Q19599673,Space Rocket Nation,wikipedia,2
 studio,Spanky Pictures,,Spanky Pictures,unresolved,1
+studio,Sparke,Q37504233,Sparke,wikipedia,1
 studio,Sparke Films,,Sparke Films,unresolved,1
-studio,SparkeFilms,,SparkeFilms,unresolved,1
 studio,Sparkle Roll Media,,Sparkle Roll Media,unresolved,1
 studio,Sparkle Roll Media Shanghai Taihe PictureShinework PicturesTaihe EntertainmentSparkle Roll Culture & Entertainment DevelopmentTop Entertainment,,Sparkle Roll Media Shanghai Taihe PictureShinework PicturesTaihe EntertainmentSparkle Roll Culture & Entertainment DevelopmentTop Entertainment,unresolved,1
 studio,Special Broadcasting Service,Q1075994,Special Broadcasting Service,wikipedia,1
@@ -6389,7 +6385,7 @@ studio,Stan (service),,Stan (service),redirect_unconfirmed,3
 studio,Stan Rogow,Q7597858,Stan Rogow,wikipedia,1
 studio,Stan Winston,Q320211,Stan Winston,wikipedia,1
 studio,Stanley Donen Enterprises,,Stanley Donen Enterprises,unresolved,1
-studio,Stanley Donen Films,Q18219588,Stanley Donen Films,film,2
+studio,Stanley Donen Films,,Stanley Donen Films,unresolved,2
 studio,Stanley Kramer Pictures Corp.,,Stanley Kramer Pictures Corp.,unresolved,1
 studio,Stanley Kramer Productions,Q17386674,Stanley Kramer Productions,film,3
 studio,Stanley Kubrick Productions,,Stanley Kubrick Productions,redirect_unconfirmed,2
@@ -6514,7 +6510,7 @@ studio,Syco Entertainment,Q2755989,Syco Entertainment,wikipedia,2
 studio,Sydney Sweeney,Q49561909,Sydney Sweeney,wikipedia,2
 studio,Syncopy Inc.,Q984047,Syncopy Inc.,wikipedia,11
 studio,Südwestrundfunk,Q700133,Südwestrundfunk,wikipedia,4
-studio,T-Series,,T-Series,unresolved,6
+studio,T-Series,Q7667850,T-Series,film,6
 studio,T-Series (company),Q7667850,T-Series (company),wikipedia,53
 studio,T-Series Films,,T-Series Films,redirect_unconfirmed,22
 studio,T-Street,,T-Street,redirect_unconfirmed,1
@@ -6524,7 +6520,7 @@ studio,T. T. Filmműhely,,T. T. Filmműhely,unresolved,1
 studio,TBS Radio,Q843448,TBS Radio,wikipedia,1
 studio,TF1,Q214683,TF1,wikipedia,17
 studio,TF1 Droits Audiovisuels,,TF1 Droits Audiovisuels,redirect_unconfirmed,2
-studio,TF1 Films Production,,TF1 Films Production,redirect_unconfirmed,39
+studio,TF1 Films Production,Q80455720,TF1 Films Production,film,39
 studio,TF1 Group,Q2412906,TF1 Group,wikipedia,10
 studio,TF1 Séries Films,Q59312334,TF1 Séries Films,wikipedia,1
 studio,TG4,Q2252456,TG4,wikipedia,2
@@ -6700,7 +6696,7 @@ studio,The Rank Organisation,Q1535788,The Rank Organisation,wikipedia,1
 studio,The Really Useful Group,,The Really Useful Group,redirect_unconfirmed,1
 studio,The Rebel Fleet,,The Rebel Fleet,unresolved,1
 studio,The SPA Studios,,The SPA Studios,unresolved,1
-studio,The Safran Company,Q17295785,The Safran Company,film,27
+studio,The Safran Company,Q17295785,The Safran Company,film,28
 studio,The Samuel Goldwyn Company,Q13403877,The Samuel Goldwyn Company,wikipedia,3
 studio,The Satish Kaushik Entertainment Production,,The Satish Kaushik Entertainment Production,unresolved,1
 studio,The Saul Zaentz Company,Q736466,Saul Zaentz,redirect,2
@@ -6724,6 +6720,7 @@ studio,The Wachowskis,Q195719,The Wachowskis,wikipedia,2
 studio,The Walt Disney Company India,Q3523273,Disney India,redirect,1
 studio,The Weinstein Company,Q1138789,The Weinstein Company,wikipedia,26
 studio,The Who Films LtdPolytel FilmsCurbishley-Baird Enterprises,,The Who Films LtdPolytel FilmsCurbishley-Baird Enterprises,unresolved,1
+studio,The Wolper Organization,,The Wolper Organization,redirect_unconfirmed,1
 studio,The Woss Group,,The Woss Group,unresolved,1
 studio,The Zanuck Company,Q97359852,The Zanuck Company,wikipedia,19
 studio,The Zanuck Company (Film Company),,The Zanuck Company (Film Company),redirect_unconfirmed,1
@@ -6765,7 +6762,7 @@ studio,Tiny Ponies,,Tiny Ponies,unresolved,1
 studio,Tippett Studio,Q8334,Tippett Studio,wikipedia,1
 studio,Tips Films,,Tips Films,unresolved,1
 studio,Tips FilmsMaximilian Films (UK),,Tips FilmsMaximilian Films (UK),unresolved,1
-studio,Tips Industries,Q3529282,Tips Industries,film,10
+studio,Tips Industries,,Tips Industries,unresolved,10
 studio,Titanus,Q1172062,Titanus,wikipedia,2
 studio,TitanusLes Films Marceau,,TitanusLes Films Marceau,unresolved,1
 studio,"Titmouse, Inc.",Q17025680,"Titmouse, Inc.",wikipedia,1
@@ -6837,7 +6834,7 @@ studio,Trianera PC AIE,,Trianera PC AIE,unresolved,1
 studio,Tribal Arts Production,,Tribal Arts Production,unresolved,1
 studio,Tribeca Enterprises,Q1579809,Tribeca Enterprises,wikipedia,3
 studio,Tribeca Film Institute,Q7840377,Tribeca Film Institute,wikipedia,1
-studio,Tribeca Productions,Q1579809,TriBeCa Productions,film,11
+studio,Tribeca Productions,,Tribeca Productions,redirect_unconfirmed,11
 studio,Tricolour FilmsVarghese Moolan Pictures27th Entertainment,,Tricolour FilmsVarghese Moolan Pictures27th Entertainment,unresolved,1
 studio,Trigger Street Productions,Q7841714,Trigger Street Productions,wikipedia,13
 studio,Trilogy Entertainment Group,,Trilogy Entertainment Group,redirect_unconfirmed,1
@@ -6881,7 +6878,7 @@ studio,Two to Tangle Productions,,Two to Tangle Productions,unresolved,1
 studio,Tyler Durden and Kino Fist,,Tyler Durden and Kino Fist,unresolved,1
 studio,Tyler Perry Studios,Q7860124,Tyler Perry Studios,wikipedia,13
 studio,Type A Films,Q7860855,Type A Films,wikipedia,2
-studio,Téléfilm Canada,Q3546604,Telefilm Canada,film,3
+studio,Téléfilm Canada,,Téléfilm Canada,redirect_unconfirmed,3
 studio,Téléma,Q30737762,Téléma,film,1
 studio,Télévision Suisse Romande,Q115895,Télévision Suisse Romande,wikipedia,3
 studio,UFA Cinema,,UFA Cinema,unresolved,1
@@ -6962,7 +6959,7 @@ studio,Valley 9000,,Valley 9000,unresolved,1
 studio,Valley Forge Films,,Valley Forge Films,unresolved,1
 studio,Valve Corporation,Q193559,Valve Corporation,wikipedia,1
 studio,"Vanadas Productions, Inc.",,"Vanadas Productions, Inc.",unresolved,1
-studio,Vandalia FilmsMichael De Luca Productions,,Vandalia FilmsMichael De Luca Productions,unresolved,1
+studio,Vandalia Films,,Vandalia Films,redirect_unconfirmed,1
 studio,Vanguard Animation,Q544150,Vanguard Animation,wikipedia,4
 studio,Vanguard Films,Q7914838,Vanguard Films,wikipedia,7
 studio,Vanguard Films & Animation,Q544150,Vanguard Animation,redirect,1
@@ -7082,12 +7079,11 @@ studio,Wanda Pictures,,Wanda Pictures,redirect_unconfirmed,2
 studio,Wang Film Productions,Q16926358,Brilliant Animation Studios,redirect,2
 studio,Wango Films,,Wango Films,unresolved,1
 studio,WarParty Films,,WarParty Films,unresolved,1
-studio,Warner Animation Group,Q140190602,Warner Animation Group,film,7
-studio,Warner Animation GroupReel FX Animation,,Warner Animation GroupReel FX Animation,unresolved,1
+studio,Warner Animation Group,Q140190602,Warner Animation Group,film,8
 studio,Warner Bros.,Q137691184,Warner Bros.,wikipedia,4
 studio,Warner Bros. Animation,Q13416804,Warner Bros. Animation,wikipedia,10
 studio,Warner Bros. Feature Animation,,Warner Bros. Feature Animation,redirect_unconfirmed,4
-studio,Warner Bros. Japan,Q11351680,Warner Bros. Japan,film,2
+studio,Warner Bros. Japan,,Warner Bros. Japan,redirect_unconfirmed,2
 studio,Warner Bros. Pictures,Q8016302,Warner Bros. Pictures,wikipedia,151
 studio,Warner Bros. Pictures (1923–1967),Q137645681,Warner Bros. Pictures (1923–1967),wikipedia,1
 studio,Warner Bros. Pictures Animation,Q47517081,Warner Bros. Pictures Animation,wikipedia,5
@@ -7114,7 +7110,7 @@ studio,We Produce 2017 AIE,,We Produce 2017 AIE,unresolved,1
 studio,WeWork,Q19995004,WeWork,wikipedia,1
 studio,Weed Road Pictures,Q10719511,Weed Road Pictures,film,9
 studio,Weekend Blockbusters,Q27958088,Weekend Blockbusters,wikipedia,2
-studio,Wega Film,Q2554119,Wega Film,film,3
+studio,Wega Film,,Wega Film,unresolved,3
 studio,Weinstock Productions,,Weinstock Productions,unresolved,1
 studio,Weintraub Entertainment Group,Q7980272,Weintraub Entertainment Group,wikipedia,3
 studio,Well Go USA,Q118903893,Well Go USA Entertainment,redirect,1
@@ -7153,7 +7149,7 @@ studio,Wildwood Enterprises,,Wildwood Enterprises,unresolved,1
 studio,"Wildwood Enterprises, Inc",Q17386965,"Wildwood Enterprises, Inc",wikipedia,15
 studio,Will Gluck,Q2576503,Will Gluck,wikipedia,1
 studio,Will Packer,Q8016519,Will Packer,wikipedia,1
-studio,Will Packer Productions,,Will Packer Productions,redirect_unconfirmed,10
+studio,Will Packer Productions,Q22079554,Will Packer Productions,film,10
 studio,Will Vinton Productions,,Will Vinton Productions,redirect_unconfirmed,1
 studio,William Castle,Q934087,William Castle,wikipedia,1
 studio,William Castle Enterprises,,William Castle Enterprises,unresolved,1
@@ -7165,7 +7161,7 @@ studio,Win's Entertainment,Q8023572,Win's Entertainment,wikipedia,1
 studio,Winchester Capital PartnersManagement 360Eleven Eleven Films,,Winchester Capital PartnersManagement 360Eleven Eleven Films,unresolved,1
 studio,Winchester Films,Q8023804,Winchester Films,wikipedia,1
 studio,Winchester Pictures Corporation,,Winchester Pictures Corporation,unresolved,1
-studio,Wind Dancer Films,,Wind Dancer Films,redirect_unconfirmed,3
+studio,Wind Dancer Films,Q108527676,Wind Dancer Films,film,3
 studio,Window Seat Films,,Window Seat Films,unresolved,2
 studio,Windy Hill Productions,,Windy Hill Productions,unresolved,1
 studio,WingNut Films,Q3569323,WingNut Films,wikipedia,19
