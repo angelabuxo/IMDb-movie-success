@@ -1,0 +1,47 @@
+{
+ "shuffles": 1000,
+ "stratified": true,
+ "strata": 31,
+ "n_high": 290,
+ "n_low": 236,
+ "terms": 18719,
+ "count_test": {
+  "real": 210,
+  "null_mean": 182.041,
+  "null_std": 13.420783748963265,
+  "z": 2.083261344715415,
+  "p": 0.023976023976023976,
+  "null_p05": 160.95,
+  "null_p95": 204.0
+ },
+ "count_test_successful_side": {
+  "real": 124,
+  "null_mean": 96.677,
+  "null_std": 18.252008295165954,
+  "z": 1.4969859512520873,
+  "p": 0.07292707292707293,
+  "null_p05": 68.0,
+  "null_p95": 125.0
+ },
+ "count_test_unsuccessful_side": {
+  "real": 86,
+  "null_mean": 85.364,
+  "null_std": 18.15304484203785,
+  "z": 0.03503544477162205,
+  "p": 0.43656343656343655,
+  "null_p05": 61.0,
+  "null_p95": 117.0
+ },
+ "count_test_global_shuffle": {
+  "real": 210,
+  "null_mean": 182.421,
+  "null_std": 13.512007006116203,
+  "z": 2.041073542036826,
+  "p": 0.025974025974025976,
+  "null_p05": 160.0,
+  "null_p95": 205.0
+ },
+ "terms_q_below_0_05": 0,
+ "terms_familywise_below_0_05": 0,
+ "smallest_p_possible": 0.000999000999000999
+}

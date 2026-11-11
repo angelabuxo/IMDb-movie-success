@@ -1,0 +1,1096 @@
+tconst,movie_name,sequel_follows,named_franchise,series_noisy,likely_franchise,action_share,n_scenes,possible_transcript
+tt0031679,Mr. Smith Goes to Washington_1939,False,False,False,False,0.33247067892737187,1,True
+tt0032138,The Wizard of Oz_1939,False,False,True,False,0.5987821876604797,2,True
+tt0033467,Citizen Kane_1941,False,False,False,False,0.46052829281485713,100,False
+tt0033870,The Maltese Falcon_1941,False,False,False,False,0.4569156804733728,67,False
+tt0034583,Casablanca_1942,False,False,False,False,0.9842760428041057,74,False
+tt0038650,It's a Wonderful Life_1946,False,False,False,False,0.9770131152164716,172,False
+tt0042192,All About Eve_1950,False,False,False,False,0.2768941276716609,54,False
+tt0044079,Strangers on a Train_1951,False,False,False,False,0.6228403658674295,83,False
+tt0047296,On the Waterfront_1954,False,False,False,False,0.4259739207904754,67,False
+tt0047396,Rear Window_1954,False,False,False,False,0.6587580631765455,442,False
+tt0052357,Vertigo_1958,False,False,False,False,0.6150585385547033,259,False
+tt0053604,The Apartment_1960,False,False,False,False,0.45128900006948786,101,False
+tt0054215,Psycho_1960,False,False,False,False,0.6013225931267367,126,False
+tt0056592,To Kill a Mockingbird_1962,False,False,False,False,0.4926077728170973,144,False
+tt0056869,The Birds_1963,False,False,False,False,0.5840739195996022,95,False
+tt0057012,Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb_1964,False,False,False,False,0.31362454498179926,43,False
+tt0057076,From Russia with Love_1963,True,False,True,True,0.6897137780524547,98,False
+tt0058150,Goldfinger_1964,True,False,True,True,0.7522875816993464,97,False
+tt0061418,Bonnie and Clyde_1967,False,False,False,False,0.6186916531744118,162,False
+tt0061512,Cool Hand Luke_1967,False,False,False,False,0.588594450905466,105,False
+tt0062622,2001: A Space Odyssey_1968,False,False,False,False,0.4633288227334235,16,True
+tt0063350,Night of the Living Dead_1968,False,False,True,False,0.6419560356103118,2,True
+tt0063442,Planet of the Apes_1968,False,True,True,True,0.6069091860769432,61,False
+tt0063522,Rosemary's Baby_1968,True,False,False,True,0.5416841629251591,30,False
+tt0064665,Midnight Cowboy_1969,False,False,False,False,0.6109629897419675,236,False
+tt0066921,A Clockwork Orange_1971,False,False,False,False,0.19986096628432395,58,False
+tt0068646,The Godfather_1972,False,False,True,False,0.5473417721518987,225,False
+tt0069704,American Graffiti_1973,False,False,False,False,0.5426843451965574,1,True
+tt0070047,The Exorcist_1973,False,True,True,True,0.4937578400334508,101,False
+tt0070379,Mean Streets_1973,False,False,False,False,0.5310671936758893,101,False
+tt0070735,The Sting_1973,False,False,False,False,0.547421972786369,134,False
+tt0071315,Chinatown_1974,False,False,False,False,0.5021060455896927,77,False
+tt0071562,The Godfather Part II_1974,True,False,True,True,0.5111650121277287,242,False
+tt0072431,Young Frankenstein_1974,False,False,True,False,0.4634146341463415,82,False
+tt0072684,Barry Lyndon_1975,False,False,False,False,0.24212659806672904,241,False
+tt0072890,Dog Day Afternoon_1975,False,False,False,False,0.5355824790307548,70,False
+tt0073195,Jaws_1975,False,False,True,False,0.6370748299319728,248,False
+tt0073486,One Flew Over the Cuckoo's Nest_1975,False,False,False,False,0.522641817884584,106,False
+tt0073629,The Rocky Horror Picture Show_1975,False,False,False,False,0.4522233414879839,133,False
+tt0074119,All the President's Men_1976,False,False,False,False,0.3757393876130828,1,True
+tt0074285,Carrie_1976,False,False,False,False,0.981500872600349,92,False
+tt0074958,Network_1976,False,False,False,False,0.3591457811856405,164,False
+tt0075148,Rocky_1976,False,False,True,False,0.47927911015159336,107,False
+tt0075314,Taxi Driver_1976,False,False,False,False,0.6117155504074794,44,False
+tt0075686,Annie Hall_1977,False,False,False,False,0.26903922770456634,67,False
+tt0076759,Star Wars_1977,True,True,True,True,0.5655014290649832,487,False
+tt0077402,Dawn of the Dead_1978,True,False,True,True,0.8518459998946648,1,True
+tt0077416,The Deer Hunter_1978,False,False,False,False,0.6872705450437729,216,False
+tt0077651,Halloween_1978,False,False,True,False,0.7196083261485404,105,False
+tt0078346,Superman_1978,False,False,True,False,0.6317244063838069,220,False
+tt0078748,Alien_1979,False,True,True,True,0.5488847494865549,222,False
+tt0078788,Apocalypse Now_1979,False,False,False,False,0.5896818085181773,61,False
+tt0079417,Kramer vs. Kramer_1979,False,False,False,False,0.4767516434183101,134,False
+tt0079817,Rocky II_1979,True,False,True,True,0.30069710481693146,64,False
+tt0079945,Star Trek: The Motion Picture_1979,True,True,True,True,0.6708949445038533,155,False
+tt0080339,Airplane!_1980,False,False,False,False,0.3635759388501163,335,False
+tt0080455,The Blues Brothers_1980,False,False,False,False,0.2609041344843253,1,True
+tt0080684,Star Wars: Episode V - The Empire Strikes Back_1980,True,True,True,True,0.6344310921813203,277,False
+tt0080761,Friday the 13th_1980,False,False,True,False,0.7425760286225402,135,False
+tt0081398,Raging Bull_1980,False,False,False,False,0.42715171407731584,87,False
+tt0081505,The Shining_1980,False,False,False,False,0.5093377798951881,231,False
+tt0082010,An American Werewolf in London_1981,False,False,False,False,0.00034521446448606196,77,True
+tt0082340,Escape from New York_1981,False,False,False,False,0.5234104046242775,154,False
+tt0082971,Indiana Jones and the Raiders of the Lost Ark_1981,False,True,True,True,0.7899504297278984,139,False
+tt0083658,Blade Runner_1982,False,True,False,True,0.6793837438846451,128,False
+tt0083907,The Evil Dead_1981,False,False,True,False,0.6819141449683321,101,False
+tt0083987,Gandhi_1982,False,False,False,False,0.0,113,True
+tt0084516,Poltergeist_1982,False,False,False,False,0.4757060504771593,184,False
+tt0084602,Rocky III_1982,True,False,True,True,0.47154592979835697,97,False
+tt0084726,Star Trek II: The Wrath of Khan_1982,True,True,True,True,0.43793683665544914,227,False
+tt0084787,The Thing_1982,False,True,True,True,0.6807440925087984,176,False
+tt0085794,The King of Comedy_1982,False,False,False,False,0.4371823661505732,146,False
+tt0086190,Star Wars: Episode VI - Return of the Jedi_1983,True,True,True,True,0.6711454484380248,146,False
+tt0086879,Amadeus_1984,False,False,False,False,0.477286723950849,174,False
+tt0086960,Beverly Hills Cop_1984,False,True,True,True,0.46371487189274296,108,False
+tt0086979,Blood Simple_1984,False,False,False,False,0.7711830734081653,44,False
+tt0087332,Ghostbusters_1984,False,True,False,True,0.6778039215686275,58,False
+tt0087363,Gremlins_1984,False,True,True,True,0.9189280107647455,79,False
+tt0087469,Indiana Jones and the Temple of Doom_1984,True,True,True,True,0.7715409590409591,173,False
+tt0087800,A Nightmare on Elm Street_1984,False,False,True,False,0.7206816299159796,144,False
+tt0087928,Police Academy_1984,False,False,True,False,0.6576794772197596,135,False
+tt0088128,Sixteen Candles_1984,False,False,False,False,0.5251566356559711,112,False
+tt0088247,The Terminator_1984,False,True,True,True,0.7534371467123737,256,False
+tt0088763,Back to the Future_1985,False,True,True,True,0.5556537102473498,124,False
+tt0088847,The Breakfast Club_1985,False,False,False,False,0.0002631809807877884,36,True
+tt0088930,Clue_1985,False,False,False,False,0.3632808256382401,168,False
+tt0088939,The Color Purple_1985,False,False,False,False,0.5576117954007646,140,False
+tt0089218,The Goonies_1985,False,False,False,False,0.450119153310593,52,False
+tt0089880,Rambo: First Blood Part II_1985,True,False,True,True,0.676477727879597,341,False
+tt0089927,Rocky IV_1985,True,False,True,True,0.5565892391561982,43,False
+tt0090329,Witness_1985,False,False,False,False,0.6970880843138145,162,False
+tt0090605,Aliens_1986,True,True,True,True,0.7066506147167195,193,False
+tt0091042,Ferris Bueller's Day Off_1986,False,False,False,False,0.47546691991136436,262,False
+tt0091064,The Fly_1986,False,False,True,False,0.4109643068428318,43,False
+tt0091203,Highlander_1986,False,True,True,True,0.5874992858367137,96,False
+tt0091369,Labyrinth_1986,False,False,False,False,0.7288992216718893,93,False
+tt0091763,Platoon_1986,False,False,False,False,0.6051818564808313,157,False
+tt0092005,Stand by Me_1986,False,False,False,False,0.561079254556625,26,False
+tt0092099,Top Gun_1986,False,True,True,True,0.5537923385376674,93,False
+tt0092644,Beverly Hills Cop II_1987,True,True,True,True,0.5340642129992169,42,False
+tt0092991,Evil Dead II_1987,False,False,True,False,0.8594012311135982,231,False
+tt0093010,Fatal Attraction_1987,False,False,False,False,0.771718290656555,39,False
+tt0093058,Full Metal Jacket_1987,False,False,False,False,0.795795198302162,84,False
+tt0093177,Hellraiser_1987,False,False,False,False,0.7367350133041165,192,False
+tt0093409,Lethal Weapon_1987,False,False,True,False,0.6262971233416524,94,False
+tt0093437,The Lost Boys_1987,False,True,False,True,0.6625354479571474,177,False
+tt0093748,"Planes, Trains & Automobiles_1987",False,False,False,False,0.43750609339962954,172,False
+tt0093773,Predator_1987,False,True,True,True,0.8099837592956664,181,False
+tt0093779,The Princess Bride_1987,False,False,False,False,0.5409119603748846,1,True
+tt0093822,Raising Arizona_1987,False,False,False,False,0.6630119983450559,43,False
+tt0094012,Spaceballs_1987,False,False,False,False,0.5553684045595205,92,False
+tt0094291,Wall Street_1987,False,False,False,False,0.38442118019322047,169,False
+tt0094721,Beetlejuice_1988,False,True,False,True,0.5468901205243248,143,False
+tt0094737,Big_1988,False,False,False,False,0.0,79,True
+tt0094898,Coming to America_1988,False,False,False,False,0.4829035138400126,57,False
+tt0095016,Die Hard_1988,False,False,True,False,0.6134389268253263,120,False
+tt0095631,Midnight Run_1988,False,False,False,False,0.49862977945974163,273,False
+tt0095705,The Naked Gun: From the Files of Police Squad!_1988,False,False,True,False,0.5759503180247408,129,False
+tt0096320,Twins_1988,False,False,False,False,0.49367513176808814,161,False
+tt0096438,Who Framed Roger Rabbit_1988,False,True,False,True,0.6838581604452921,66,False
+tt0096446,Willow_1988,False,True,False,True,0.7096605516580243,139,False
+tt0096754,The Abyss_1989,False,False,False,False,0.7046563048709111,245,False
+tt0096895,Batman_1989,False,False,True,False,0.7287072304196139,209,False
+tt0096928,Bill & Ted's Excellent Adventure_1989,False,True,True,True,0.5502168835502169,19,True
+tt0097165,Dead Poets Society_1989,False,False,False,False,0.4552231979509696,98,False
+tt0097216,Do the Right Thing_1989,False,False,False,False,0.47459409715375006,99,False
+tt0097239,Driving Miss Daisy_1989,False,False,False,False,0.4011420413990007,97,False
+tt0097428,Ghostbusters II_1989,True,True,False,True,0.45846334735223626,156,False
+tt0097493,Heathers_1988,False,False,False,False,0.5001718065458294,170,False
+tt0097576,Indiana Jones and the Last Crusade_1989,True,True,True,True,0.008136381247578458,98,True
+tt0097742,Licence to Kill_1989,True,True,True,True,0.6557783284523542,106,False
+tt0097757,The Little Mermaid_1989,False,False,True,False,0.6507570597789071,55,False
+tt0098084,Pet Sematary_1989,False,False,False,False,0.6196711529536564,646,False
+tt0099077,Awakenings_1990,False,False,False,False,0.5973033707865169,139,False
+tt0099348,Dances with Wolves_1990,False,False,False,False,0.7791281892946361,275,False
+tt0099653,Ghost_1990,False,False,False,False,0.6126013472631197,100,False
+tt0099685,Goodfellas_1990,False,False,False,False,0.45352973176549355,154,False
+tt0099785,Home Alone_1990,False,True,True,True,0.4529711375212224,62,False
+tt0099871,Jacob's Ladder_1990,False,False,False,False,0.6235248190745023,101,False
+tt0100150,Miller's Crossing_1990,False,False,False,False,0.6161942132091386,87,False
+tt0100157,Misery_1990,False,False,False,False,0.5675112639891479,1,True
+tt0100403,Predator 2_1990,True,True,True,True,0.7330310014125344,114,False
+tt0100405,Pretty Woman_1990,False,False,False,False,0.47203228869895536,161,False
+tt0100802,Total Recall_1990,False,False,False,False,0.630397392957364,161,False
+tt0100935,Wild at Heart_1990,False,False,False,False,0.3718061337509071,175,False
+tt0101272,The Addams Family_1991,False,False,False,False,0.6099348534201955,65,False
+tt0101410,Barton Fink_1991,False,False,False,False,0.5073128763980499,13,True
+tt0101507,Boyz n the Hood_1991,False,False,False,False,0.4240589965471674,96,False
+tt0102138,JFK_1991,False,False,False,False,0.28326878388845855,124,False
+tt0102266,The Last Boy Scout_1991,False,False,False,False,0.5507251579551982,125,False
+tt0102685,Point Break_1991,False,False,False,False,0.7004743931576578,114,False
+tt0102798,Robin Hood: Prince of Thieves_1991,False,False,False,False,0.5742079391961668,109,False
+tt0102926,The Silence of the Lambs_1991,False,False,False,False,0.5600991325898389,136,False
+tt0103064,Terminator 2: Judgment Day_1991,True,True,True,True,0.825923942153187,117,False
+tt0103074,Thelma & Louise_1991,False,False,False,False,0.47304303840155126,241,False
+tt0103639,Aladdin_1992,False,True,True,True,0.5932814467208424,40,False
+tt0103644,Alien³_1992,False,True,True,True,0.6361972644962435,47,False
+tt0103772,Basic Instinct_1992,False,False,False,False,0.48253320782344944,138,False
+tt0103776,Batman Returns_1992,True,False,True,True,0.6136726369923745,188,False
+tt0103855,The Bodyguard_1992,False,False,False,False,0.6353538859613139,208,False
+tt0103874,Bram Stoker's Dracula_1992,False,False,False,False,0.5531987830483781,115,False
+tt0104257,A Few Good Men_1992,False,False,False,False,0.2726472164790566,78,False
+tt0104691,The Last of the Mohicans_1992,False,False,False,False,0.6781590763309814,102,False
+tt0104797,Malcolm X_1992,False,False,False,False,0.4558965185083253,168,False
+tt0105236,Reservoir Dogs_1992,False,False,False,False,0.256571183349426,50,False
+tt0105417,Sister Act_1992,False,False,True,False,0.49489795918367346,148,False
+tt0105695,Unforgiven_1992,False,False,False,False,0.5381320597377,107,False
+tt0106220,Addams Family Values_1993,True,False,False,True,0.5211501392161062,83,False
+tt0106308,Army of Darkness_1992,False,False,True,False,0.7997350254515027,89,False
+tt0106582,Cliffhanger_1993,False,False,False,False,0.7477795786061588,103,False
+tt0106611,Cool Runnings_1993,False,False,False,False,0.6327408793264734,170,False
+tt0106677,Dazed and Confused_1993,False,False,False,False,0.5125386465132257,5,True
+tt0106697,Demolition Man_1993,False,False,False,False,0.6006008319211216,153,False
+tt0106977,The Fugitive_1993,False,False,False,False,0.6808181096108022,312,False
+tt0107048,Groundhog Day_1993,False,False,False,False,0.5129852378348825,146,False
+tt0107290,Jurassic Park_1993,False,True,True,True,0.6395405520687344,100,False
+tt0107688,The Nightmare Before Christmas_1993,False,False,False,False,0.63831697774357,88,False
+tt0107818,Philadelphia_1993,False,False,False,False,0.4072136563876652,100,False
+tt0108037,The Sandlot_1993,False,False,False,False,0.5487811189897003,166,False
+tt0108052,Schindler's List_1993,False,False,False,False,0.6949431273125942,258,False
+tt0108160,Sleepless in Seattle_1993,False,False,False,False,0.40847563515202,174,False
+tt0108358,Tombstone_1993,False,False,False,False,0.5165446756838803,114,False
+tt0108399,True Romance_1993,False,False,False,False,0.377030877030877,83,False
+tt0109040,Ace Ventura: Pet Detective_1994,False,False,False,False,0.5096091683808405,133,False
+tt0109445,Clerks_1994,False,False,False,False,0.22984670874661858,64,False
+tt0109506,The Crow_1994,False,False,False,False,0.7374018856532442,119,False
+tt0109686,Dumb and Dumber_1994,False,False,False,False,0.49618527380253713,140,False
+tt0109707,Ed Wood_1994,False,False,False,False,0.4326137470954201,163,False
+tt0109830,Forrest Gump_1994,False,False,False,False,0.43144378844804093,192,False
+tt0110148,Interview with the Vampire: The Vampire Chronicles_1994,False,False,False,False,0.5220534407027818,137,False
+tt0110357,The Lion King_1994,False,True,True,True,0.4507716153379608,53,False
+tt0110413,Léon_1994,False,False,False,False,0.6954319154511311,83,False
+tt0110475,The Mask_1994,False,False,False,False,0.6098487911377052,114,False
+tt0110478,Maverick_1994,False,False,False,False,0.36082358656253505,166,False
+tt0110632,Natural Born Killers_1994,False,False,False,False,0.4575305639121808,125,False
+tt0110912,Pulp Fiction_1994,False,False,False,False,0.41386111677888865,85,False
+tt0111161,The Shawshank Redemption_1994,False,False,False,False,0.49640859050712866,242,False
+tt0111257,Speed_1994,False,False,False,False,0.6038373487408699,159,False
+tt0111282,Stargate_1994,False,True,False,True,0.7966083842426795,176,False
+tt0111503,True Lies_1994,False,False,False,False,0.644306185259953,297,False
+tt0112442,Bad Boys_1995,False,False,True,False,0.5020825444907232,278,False
+tt0112462,Batman Forever_1995,True,False,True,True,0.6161476990906586,167,False
+tt0112471,Before Sunrise_1995,False,False,True,False,0.1972003261755912,43,False
+tt0112573,Braveheart_1995,False,False,False,False,0.6703944385673266,117,False
+tt0112641,Casino_1995,False,False,False,False,0.30046806886438054,437,False
+tt0112864,Die Hard with a Vengeance_1995,True,False,True,True,0.561340911919678,103,False
+tt0113101,Four Rooms_1995,False,False,False,False,0.46681785118309016,38,False
+tt0113118,Friday_1995,False,False,False,False,0.4763059811867716,104,False
+tt0113189,GoldenEye_1995,True,False,True,True,0.7574428527161348,38,False
+tt0113277,Heat_1995,False,False,False,False,0.5451264880952381,246,False
+tt0113492,Judge Dredd_1995,False,False,False,False,0.5615292137533061,113,False
+tt0113497,Jumanji_1995,False,True,False,True,0.6630522448248051,81,False
+tt0113627,Leaving Las Vegas_1995,False,False,False,False,0.5592094944319548,148,False
+tt0113749,Mallrats_1995,True,False,False,True,0.38704290485569925,30,False
+tt0114069,Outbreak_1995,False,False,False,False,0.622216844143272,115,False
+tt0114369,Se7en_1995,False,False,False,False,0.6158920805845635,201,False
+tt0114388,Sense and Sensibility_1995,False,False,False,False,0.43827436930885205,189,False
+tt0114709,Toy Story_1995,False,False,True,False,0.6019733690966568,101,False
+tt0114746,12 Monkeys_1995,False,False,False,False,0.5108874416156832,173,False
+tt0114814,The Usual Suspects_1995,False,False,False,False,0.5011373209772536,134,False
+tt0115685,The Birdcage_1996,False,False,False,False,0.36406387773096893,76,False
+tt0115759,Broken Arrow_1996,False,False,False,False,0.5950278418358738,188,False
+tt0115798,The Cable Guy_1996,False,False,False,False,0.5312145289443814,133,False
+tt0116136,DragonHeart_1996,False,False,False,False,0.7102911501873739,173,False
+tt0116209,The English Patient_1996,False,False,False,False,0.5660533456880005,237,False
+tt0116282,Fargo_1996,False,False,False,False,0.48097145718577866,112,False
+tt0116367,From Dusk Till Dawn_1996,False,True,False,True,0.5381945989233439,33,False
+tt0116629,Independence Day_1996,False,False,False,False,0.5996107434799532,294,False
+tt0116695,Jerry Maguire_1996,False,False,False,False,0.5064014106102422,170,False
+tt0116705,Jingle All the Way_1996,False,False,False,False,0.5285734246192538,6,True
+tt0116922,Lost Highway_1997,False,False,False,False,0.6999473129610115,184,False
+tt0117060,Mission: Impossible_1996,False,True,True,True,0.611856503948996,208,False
+tt0117500,The Rock_1996,False,False,False,False,0.5631480324797001,233,False
+tt0117509,Romeo + Juliet_1996,False,False,True,False,0.5762887995301134,187,False
+tt0117571,Scream_1996,False,False,True,False,0.5794132881292084,105,False
+tt0117666,Sling Blade_1996,False,False,False,False,0.2100836320191159,86,False
+tt0117731,Star Trek: First Contact_1996,True,True,True,True,0.6919730344124794,176,False
+tt0117913,A Time to Kill_1996,False,False,False,False,0.3463130331953712,63,False
+tt0118571,Air Force One_1997,False,False,False,False,0.9483698760724499,344,False
+tt0118583,Alien Resurrection_1997,False,True,True,True,0.7097926109050955,104,False
+tt0118615,Anaconda_1997,False,False,True,False,0.6945202512453974,26,False
+tt0118617,Anastasia_1997,False,True,False,True,0.6815820427367183,114,False
+tt0118655,Austin Powers: International Man of Mystery_1997,False,False,True,False,0.45946093408991706,132,False
+tt0118688,Batman & Robin_1997,True,False,True,True,0.6042721664671762,163,False
+tt0118689,Bean_1997,False,False,True,False,0.7251715039577836,180,False
+tt0118715,The Big Lebowski_1998,False,False,False,False,0.4518069390308455,3,True
+tt0118749,Boogie Nights_1997,False,False,False,False,0.4132320623048155,157,False
+tt0118842,Chasing Amy_1997,True,False,False,True,0.22863059569968278,36,False
+tt0118880,Con Air_1997,False,False,False,False,0.5685981013904754,121,False
+tt0118883,Conspiracy Theory_1997,False,False,False,False,0.6047072230014026,182,False
+tt0118884,Contact_1997,False,False,False,False,0.45231579312017184,190,False
+tt0118929,Dark City_1998,False,False,False,False,0.7165921929011044,179,False
+tt0118971,The Devil's Advocate_1997,False,False,False,False,0.34119217081850534,231,False
+tt0119008,Donnie Brasco_1997,False,False,False,False,0.3379350014380213,118,False
+tt0119081,Event Horizon_1997,False,False,False,False,0.50497403794827,316,False
+tt0119094,Face_Off_1997,False,False,False,False,0.6183264425669602,155,False
+tt0119116,The Fifth Element_1997,False,False,False,False,0.5440896408166881,247,False
+tt0119174,The Game_1997,False,False,False,False,0.649508162042097,166,False
+tt0119217,Good Will Hunting_1997,False,False,False,False,0.2997641404476881,127,False
+tt0119229,Grosse Pointe Blank_1997,False,False,False,False,0.5489040141486682,122,False
+tt0119345,I Know What You Did Last Summer_1997,False,False,True,False,0.4035289604909858,56,False
+tt0119396,Jackie Brown_1997,False,False,False,False,0.40005146183783086,101,False
+tt0119488,L.A. Confidential_1997,False,False,False,False,0.4759841097869267,172,False
+tt0119528,Liar Liar_1997,False,False,False,False,0.35315757204169224,79,False
+tt0119567,The Lost World: Jurassic Park_1997,True,True,True,True,0.7492622590569473,93,False
+tt0119643,Meet Joe Black_1998,False,False,False,False,0.39474525119829573,75,False
+tt0119654,Men in Black_1997,False,True,True,True,0.6395964070382675,139,False
+tt0119738,My Best Friend's Wedding_1997,False,False,False,False,0.5549619494196326,61,False
+tt0119822,As Good as It Gets_1997,False,False,False,False,0.42555616112569983,120,False
+tt0120082,Scream 2_1997,True,False,True,True,0.615790541911914,76,False
+tt0120184,Sphere_1998,False,False,False,False,0.35884185728398815,188,False
+tt0120188,Three Kings_1999,False,False,False,False,0.6047416111547851,140,False
+tt0120201,Starship Troopers_1997,False,True,False,True,0.4759348878134624,163,False
+tt0120338,Titanic_1997,False,False,False,False,0.6898893301064405,195,False
+tt0120347,Tomorrow Never Dies_1997,True,False,True,True,0.6163712615177396,194,False
+tt0120382,The Truman Show_1998,False,False,False,False,0.6059940235542275,167,False
+tt0120586,American History X_1998,False,False,False,False,0.5151129182383775,131,False
+tt0120587,Antz_1998,False,False,True,False,0.5565121284392996,58,False
+tt0120591,Armageddon_1998,False,False,False,False,0.5546762042462522,325,False
+tt0120601,Being John Malkovich_1999,False,False,False,False,0.4126446367142708,171,False
+tt0120611,Blade_1998,False,False,True,False,0.7169881767268201,111,False
+tt0120616,The Mummy_1999,False,False,True,False,0.7234973086124402,103,False
+tt0120647,Deep Impact_1998,False,False,False,False,0.5173984651505064,36,False
+tt0120655,Dogma_1999,True,False,False,True,0.2532794192562404,68,False
+tt0120660,Enemy of the State_1998,False,False,False,False,0.4837830215286265,188,False
+tt0120663,Eyes Wide Shut_1999,False,False,False,False,0.4024840957285671,60,False
+tt0120667,Fantastic Four_2005,False,False,True,False,0.6191273918546646,173,False
+tt0120669,Fear and Loathing in Las Vegas_1998,False,False,False,False,0.38002677870631146,110,False
+tt0120681,From Hell_2001,False,False,False,False,0.40098018913508665,1,True
+tt0120685,Godzilla_1998,False,True,False,True,0.0030097817908201654,173,True
+tt0120689,The Green Mile_1999,False,False,False,False,0.5807137075013492,109,False
+tt0120737,The Lord of the Rings: The Fellowship of the Ring_2001,False,False,True,False,0.537108072048032,140,False
+tt0120744,The Man in the Iron Mask_1998,False,False,False,False,0.6176069773780322,132,False
+tt0120746,The Mask of Zorro_1998,False,False,False,False,0.6353728412870137,100,False
+tt0120755,Mission: Impossible II_2000,True,True,True,True,0.5536997047287471,150,False
+tt0120780,Out of Sight_1998,False,False,False,False,0.44736213893530674,155,False
+tt0120789,Pleasantville_1998,False,False,False,False,0.6329670329670329,152,False
+tt0120804,Resident Evil_2002,False,False,True,False,0.6922523171060919,112,False
+tt0120812,Rush Hour_1998,False,False,True,False,0.6125573112045773,309,False
+tt0120815,Saving Private Ryan_1998,False,False,False,False,0.623549535389025,68,False
+tt0120863,The Thin Red Line_1998,False,False,False,False,0.585595821871387,126,False
+tt0120891,Wild Wild West_1999,False,False,False,False,0.0,132,True
+tt0120902,The X Files_1998,False,True,False,True,0.7035869565217391,126,False
+tt0120903,X-Men_2000,False,False,True,False,0.7672816100335423,216,False
+tt0120915,Star Wars: Episode I - The Phantom Menace_1999,False,True,True,True,0.5099784049445231,185,False
+tt0121164,Corpse Bride_2005,False,False,False,False,0.530254264563888,56,False
+tt0121765,Star Wars: Episode II - Attack of the Clones_2002,True,True,True,True,0.5139285438691257,150,False
+tt0121766,Star Wars: Episode III - Revenge of the Sith_2005,True,True,True,True,0.5149994845537954,240,False
+tt0122151,Lethal Weapon 4_1998,False,False,True,False,0.5167666303162486,117,False
+tt0122933,Analyze This_1999,False,False,False,False,0.2838219538326678,103,False
+tt0124315,The Cider House Rules_1999,False,False,False,False,0.4962046011911713,189,False
+tt0125439,Notting Hill_1999,False,False,False,False,0.3650733673405126,127,False
+tt0125664,Man on the Moon_1999,False,False,False,False,0.4793046021365612,172,False
+tt0126029,Shrek_2001,False,True,True,True,0.24979770189351028,35,False
+tt0126886,Election_1999,False,False,False,False,0.4684049208548516,208,False
+tt0128853,You've Got Mail_1998,False,False,False,False,0.37869898505417326,198,False
+tt0129167,The Iron Giant_1999,False,False,False,False,0.6321281516159963,115,False
+tt0129387,There's Something About Mary_1998,False,False,False,False,0.3944686370795886,122,False
+tt0133093,The Matrix_1999,False,True,True,True,0.6202830188679245,218,False
+tt0133152,Planet of the Apes_2001,False,True,False,True,0.9090696587190276,60,False
+tt0133751,The Faculty_1998,False,False,False,False,0.502337833388212,38,False
+tt0134084,Scream 3_2000,True,False,True,True,0.42484584488318156,68,False
+tt0134119,The Talented Mr. Ripley_1999,False,False,False,False,0.41792244323889893,130,False
+tt0134273,8MM_1999,False,False,False,False,0.584542638186858,282,False
+tt0134847,Pitch Black_2000,False,True,False,True,0.593290852598873,212,False
+tt0137494,Entrapment_1999,False,False,False,False,0.6688419705694177,181,False
+tt0137523,Fight Club_1999,False,False,False,False,0.6385059007753122,252,False
+tt0138097,Shakespeare in Love_1998,False,False,False,False,0.4776279840551798,193,False
+tt0138524,Intolerable Cruelty_2003,False,False,False,False,0.3609441794188712,48,False
+tt0138704,Pi_1998,False,False,False,False,0.5395138888888888,60,False
+tt0139134,Cruel Intentions_1999,False,True,True,True,0.33888213851761845,106,False
+tt0139654,Training Day_2001,False,False,False,False,0.44315036298114585,72,False
+tt0140352,The Insider_1999,False,False,False,False,0.4154413176181518,203,False
+tt0142688,The Ninth Gate_1999,False,False,False,False,0.6930259461246076,140,False
+tt0143145,The World Is Not Enough_1999,True,False,True,True,0.6882619846123496,260,False
+tt0144117,The Boondock Saints_1999,False,False,False,False,0.5345598817534716,135,False
+tt0145660,Austin Powers: The Spy Who Shagged Me_1999,True,False,True,True,0.4254204240799415,110,False
+tt0146316,Lara Croft: Tomb Raider_2001,False,True,False,True,0.6879223128900048,144,False
+tt0146675,End of Days_1999,False,False,False,False,0.689111313315135,116,False
+tt0146838,Any Given Sunday_1999,False,False,False,False,0.31881107491856675,74,False
+tt0146882,High Fidelity_2000,False,False,False,False,0.3078414306061086,101,False
+tt0147800,10 Things I Hate About You_1999,False,False,False,False,0.4897449008579058,92,False
+tt0151738,Never Been Kissed_1999,False,False,False,False,0.49804670544318086,189,False
+tt0151804,Office Space_1999,False,False,False,False,0.16158457127964557,56,False
+tt0154506,Following_1998,False,False,False,False,0.5490422933539015,91,False
+tt0158983,"South Park: Bigger, Longer & Uncut_1999",False,True,False,True,0.4058326746266173,120,False
+tt0159365,Cold Mountain_2003,False,False,False,False,0.5860525953462756,201,False
+tt0160127,Charlie's Angels_2000,False,True,True,True,0.6673260949576739,146,False
+tt0161081,What Lies Beneath_2000,False,False,False,False,0.5812676759274663,127,False
+tt0162222,Cast Away_2000,False,False,False,False,0.684439691391032,300,False
+tt0162346,Ghost World_2001,False,False,False,False,0.327066269545793,110,False
+tt0162661,Sleepy Hollow_1999,False,False,False,False,0.6581675205528417,197,False
+tt0163025,Jurassic Park III_2001,True,True,True,True,0.7142023759015698,119,False
+tt0163187,Runaway Bride_1999,False,False,False,False,0.48370906353256093,132,False
+tt0163651,American Pie_1999,False,False,True,False,0.4499235863474274,210,False
+tt0164052,Hollow Man_2000,False,False,False,False,0.6224643755238893,209,False
+tt0166896,The Straight Story_1999,False,False,False,False,0.5467783205396604,202,False
+tt0166924,Mulholland Drive_2001,False,False,True,False,0.5941582269191252,100,False
+tt0167190,Hellboy_2004,False,False,True,False,0.6664968506854391,227,False
+tt0167260,The Lord of the Rings: The Return of the King_2003,True,False,True,True,0.6702229681131623,206,False
+tt0167261,The Lord of the Rings: The Two Towers_2002,True,False,True,True,0.6544526651185397,190,False
+tt0167404,The Sixth Sense_1999,False,False,False,False,0.687235275759062,93,False
+tt0169547,American Beauty_1999,False,False,False,False,0.5043733252439456,163,False
+tt0172495,Gladiator_2000,False,False,False,False,0.5902332735196103,122,False
+tt0175142,Scary Movie_2000,False,False,True,False,0.4886978047032767,112,False
+tt0175880,Magnolia_1999,False,False,False,False,0.414227548590305,323,False
+tt0180093,Requiem for a Dream_2000,False,False,True,False,0.5366369542226922,157,False
+tt0181689,Minority Report_2002,False,False,False,False,0.6998767230751989,146,False
+tt0181865,Traffic_2000,False,False,False,False,0.4665768473416934,241,False
+tt0181875,Almost Famous_2000,False,False,True,False,0.5142242268801037,183,False
+tt0183649,Phone Booth_2002,False,False,False,False,0.2605457504068094,2,True
+tt0183790,A Knight's Tale_2001,False,False,False,False,0.5756657107742729,67,False
+tt0185431,Little Nicky_2000,False,False,False,False,0.47512029436739317,131,False
+tt0186151,Frequency_2000,False,False,False,False,0.6541570867017726,210,False
+tt0187078,Gone in 60 Seconds_2000,False,False,False,False,0.5332739041122437,154,False
+tt0187393,The Patriot_2000,False,False,False,False,0.7009468612056474,168,False
+tt0187738,Blade II_2002,False,False,True,False,0.7409687678382125,140,False
+tt0190590,"O Brother, Where Art Thou?_2000",False,False,False,False,0.5311067452521283,6,True
+tt0195685,Erin Brockovich_2000,False,False,False,False,0.45451657312294824,261,False
+tt0195714,Final Destination_2000,False,False,True,False,0.722128413162555,144,False
+tt0206634,Children of Men_2006,False,False,True,False,0.6698260522206486,150,False
+tt0208092,Snatch_2000,False,False,False,False,0.4883345212639582,127,False
+tt0209144,Memento_2000,False,False,True,False,0.5395777823324451,180,False
+tt0209958,The Cell_2000,False,False,False,False,0.670432793314347,114,False
+tt0212338,Meet the Parents_2000,False,False,True,False,0.45804066543438077,92,False
+tt0212985,Hannibal_2001,True,False,False,True,0.5490111062935663,63,False
+tt0213149,Pearl Harbor_2001,False,False,False,False,0.6489998765279664,301,False
+tt0217505,Gangs of New York_2002,False,False,False,False,0.6027108759045253,112,False
+tt0217869,Unbreakable_2000,False,False,True,False,0.6566725455614344,91,False
+tt0218967,The Family Man_2000,False,False,False,False,0.49742211894561034,153,False
+tt0221027,Blow_2001,False,False,False,False,0.4046029919447641,169,False
+tt0230838,Sweet November_2001,False,False,False,False,0.4592029417610813,116,False
+tt0234215,The Matrix Reloaded_2003,True,True,True,True,0.9719864995178399,156,False
+tt0240772,Ocean's Eleven_2001,False,False,True,False,0.5394224709938096,258,False
+tt0244244,Swordfish_2001,False,False,False,False,0.5559052597887549,193,False
+tt0245674,Thir13en Ghosts_2001,False,False,False,False,0.6286063196458556,87,False
+tt0246578,Donnie Darko_2001,False,False,False,False,0.45600817951891515,184,False
+tt0250494,Legally Blonde_2001,False,False,False,False,0.4694465504169826,154,False
+tt0251160,John Q_2002,False,False,False,False,0.42340761537111776,167,False
+tt0251736,House of 1000 Corpses_2003,False,False,True,False,0.441412923324289,129,False
+tt0253474,The Pianist_2002,False,False,True,False,0.6461078724342331,164,False
+tt0257044,Road to Perdition_2002,False,False,False,False,0.6474126818488736,207,False
+tt0257106,Scary Movie 2_2001,True,False,True,True,0.5644185833409695,105,False
+tt0258000,Panic Room_2002,False,False,False,False,0.7559319043838758,168,False
+tt0258463,The Bourne Identity_2002,False,False,True,False,0.6014006419608987,159,False
+tt0259324,Ghost Rider_2007,False,False,True,False,0.381339160550837,95,False
+tt0259711,Vanilla Sky_2001,False,False,False,False,0.465260152284264,111,False
+tt0261392,Jay and Silent Bob Strike Back_2001,True,False,False,True,0.39328825652300164,136,False
+tt0263488,Jeepers Creepers_2001,False,False,True,False,0.680281489230184,56,False
+tt0264464,Catch Me If You Can_2002,False,False,False,False,0.43995181085761614,230,False
+tt0265086,Black Hawk Down_2001,False,False,False,False,0.5475265475265475,281,False
+tt0265666,The Royal Tenenbaums_2001,False,False,True,False,0.6153145695364238,144,False
+tt0266697,Kill Bill: Vol. 1_2003,False,False,True,False,0.686577752553916,43,False
+tt0266915,Rush Hour 2_2001,True,False,True,True,0.4960101961653552,110,False
+tt0268126,Adaptation._2002,False,False,False,False,0.3785857922600238,202,False
+tt0268695,The Time Machine_2002,False,False,False,False,0.5900617781359119,71,False
+tt0272152,K-PAX_2001,False,False,False,False,0.5007822549803567,106,False
+tt0272338,Punch-Drunk Love_2002,False,False,False,False,0.3902356902356902,84,False
+tt0277027,I Am Sam_2001,False,False,False,False,0.40601503759398494,141,False
+tt0278504,Insomnia_2002,False,False,False,False,0.6236810276514994,165,False
+tt0281358,A Walk to Remember_2002,False,False,False,False,0.5572502451247413,224,False
+tt0286106,Signs_2002,False,False,False,False,0.6810864734956695,82,False
+tt0288477,Ghost Ship_2002,False,False,False,False,0.6307055642055233,260,False
+tt0289043,28 Days Later_2002,False,False,True,False,0.6783150337837838,179,False
+tt0289765,Red Dragon_2002,True,True,False,True,0.5739218044135331,93,False
+tt0289879,The Butterfly Effect_2004,False,False,False,False,0.5956889780958199,182,False
+tt0289992,The Life of David Gale_2003,False,False,False,False,0.562439585730725,178,False
+tt0292963,Before the Devil Knows You're Dead_2007,False,False,False,False,0.6622709605774569,157,False
+tt0293429,Mortal Kombat_2021,False,True,True,True,0.6954364592032225,63,False
+tt0293508,The Phantom of the Opera_2004,False,False,False,False,0.5655397824284112,181,False
+tt0295297,Harry Potter and the Chamber of Secrets_2002,True,True,True,True,0.4882625452563554,116,False
+tt0295701,xXx_2002,False,False,True,False,0.602891645444837,128,False
+tt0304141,Harry Potter and the Prisoner of Azkaban_2004,True,True,True,True,0.5499442681985767,125,False
+tt0307901,25th Hour_2002,False,False,True,False,0.5325435851586947,60,False
+tt0307987,Bad Santa_2003,False,False,False,False,0.5663970780067832,124,False
+tt0309593,Final Destination 2_2003,True,False,True,True,0.6557054032752431,101,False
+tt0315327,Bruce Almighty_2003,False,False,False,False,0.48623853211009177,135,False
+tt0316654,Spider-Man 2_2004,True,False,True,True,0.5964401004304161,146,False
+tt0317740,The Italian Job_2003,False,False,False,False,0.6029858173675043,270,False
+tt0317919,Mission: Impossible III_2006,True,True,True,True,0.5828299911411774,254,False
+tt0319061,Big Fish_2003,False,False,False,False,0.5576537235925882,193,False
+tt0320661,Kingdom of Heaven_2005,False,False,False,False,0.6133647293874201,179,False
+tt0320691,Underworld_2003,True,False,True,True,0.5068704197201865,91,False
+tt0322259,2 Fast 2 Furious_2003,True,False,True,True,0.6531509284867641,223,False
+tt0325710,The Last Samurai_2003,False,False,False,False,0.6483998561668465,182,False
+tt0325805,Matchstick Men_2003,False,False,False,False,0.4563081695966908,172,False
+tt0325980,Pirates of the Caribbean: The Curse of the Black Pearl_2003,False,True,True,True,0.5759027557808045,138,False
+tt0327056,Mystic River_2003,False,False,False,False,0.41589575251168803,83,False
+tt0327554,Catwoman_2004,False,False,False,False,0.6966595255097993,155,False
+tt0327597,Coraline_2009,False,True,False,True,0.7104197741316854,122,False
+tt0328107,Man on Fire_2004,False,False,False,False,0.611726516534794,183,False
+tt0329101,Freddy vs. Jason_2003,True,False,True,True,0.6401515151515151,131,False
+tt0332452,Troy_2004,False,False,False,False,0.6517603216632343,197,False
+tt0333766,Garden State_2004,False,False,False,False,0.22431149940130382,31,False
+tt0335245,The Ladykillers_2004,False,False,False,False,0.5079654266587578,133,False
+tt0335266,Lost in Translation_2003,False,False,True,False,0.6568543689320389,118,False
+tt0337741,Something's Gotta Give_2003,False,False,False,False,0.39422360004709023,74,False
+tt0337921,Cellular_2004,False,False,False,False,0.6418587391250566,174,False
+tt0338013,Eternal Sunshine of the Spotless Mind_2004,False,False,True,False,0.4015444015444015,163,False
+tt0338526,Van Helsing_2004,False,False,True,False,0.7286989344552354,183,False
+tt0338751,The Aviator_2004,False,False,False,False,0.5192686551688384,84,False
+tt0340163,Hostage_2005,False,False,False,False,0.5725769117461387,155,False
+tt0343660,50 First Dates_2004,False,False,False,False,0.529365734904143,168,False
+tt0343818,"I, Robot_2004",False,False,False,False,0.622114739967436,163,False
+tt0348836,Gothika_2003,False,False,False,False,0.5933891689705644,155,False
+tt0349903,Ocean's Twelve_2004,True,False,True,True,0.46443991080324526,176,False
+tt0351977,Walking Tall_2004,False,False,False,False,0.2895280470363896,59,False
+tt0352248,Cinderella Man_2005,False,False,False,False,0.5961357210179077,185,False
+tt0356910,Mr. & Mrs. Smith_2005,False,False,False,False,0.6234185733512786,81,False
+tt0357413,Anchorman: The Legend of Ron Burgundy_2004,False,False,True,False,0.45774233260183056,33,False
+tt0359013,Blade: Trinity_2004,False,False,True,False,0.0018488231529545616,107,True
+tt0360486,Constantine_2005,False,False,False,False,0.7055432183122651,150,False
+tt0360717,King Kong_2005,False,True,False,True,0.7277080638959768,252,False
+tt0361748,Inglourious Basterds_2009,False,False,True,False,0.46678426307997606,20,False
+tt0364045,Taking Lives_2004,False,False,False,False,0.5054323779558527,186,False
+tt0365748,Shaun of the Dead_2004,False,False,True,False,0.487362413371382,91,False
+tt0366548,Happy Feet_2006,False,False,False,False,0.5225511183287813,2,True
+tt0366551,Harold & Kumar Go to White Castle_2004,False,False,True,False,0.5157837747792771,152,False
+tt0366627,The Jacket_2005,False,False,False,False,0.5331294597349643,180,False
+tt0367594,Charlie and the Chocolate Factory_2005,False,False,False,False,0.5330521683322637,113,False
+tt0367882,Indiana Jones and the Kingdom of the Crystal Skull_2008,True,True,True,True,0.8103904054317278,124,False
+tt0368008,The Manchurian Candidate_2004,False,False,False,False,0.5271417332615627,144,False
+tt0368447,The Village_2004,False,False,False,False,0.6943075287522954,118,False
+tt0368891,National Treasure_2004,False,False,True,False,0.6032203707170942,297,False
+tt0369339,Collateral_2004,False,False,False,False,0.569385638987298,170,False
+tt0371724,The Hitchhiker's Guide to the Galaxy_2005,False,True,False,True,0.4370651486401012,119,False
+tt0371746,Iron Man_2008,False,False,True,False,0.5303010612952134,148,False
+tt0372183,The Bourne Supremacy_2004,True,False,True,True,0.559722909450767,312,False
+tt0372784,Batman Begins_2005,False,False,True,False,0.597433388529279,325,False
+tt0373926,The Interpreter_2005,False,False,False,False,0.6348414335748213,231,False
+tt0375063,Sideways_2004,False,False,False,False,0.44679333920557024,177,False
+tt0379725,Capote_2005,False,False,False,False,0.4786311709506324,187,False
+tt0379786,Serenity_2005,True,True,False,True,0.5166343300616297,236,False
+tt0380510,The Lovely Bones_2009,False,False,False,False,0.35522664199814985,1,True
+tt0381849,3:10 to Yuma_2007,False,False,False,False,0.6273367651043078,176,False
+tt0382932,Ratatouille_2007,False,False,True,False,0.6100620796689085,2,True
+tt0383028,"Synecdoche, New York_2008",False,False,True,False,0.45424749756400035,178,False
+tt0383574,Pirates of the Caribbean: Dead Man's Chest_2006,True,True,True,True,0.5662462511811347,117,False
+tt0386117,Where the Wild Things Are_2009,False,False,False,False,0.6430808565036753,60,False
+tt0387808,Idiocracy_2006,False,False,False,False,0.5334816361737867,112,False
+tt0389722,30 Days of Night_2007,False,False,False,False,0.6649788637524968,188,False
+tt0389790,Bee Movie_2007,False,False,True,False,0.3813327375300229,122,False
+tt0391198,The Grudge_2004,False,False,False,False,0.7921756763440329,144,False
+tt0393109,Brick_2005,False,False,False,False,0.4781126209697638,124,False
+tt0395169,Hotel Rwanda_2004,False,False,False,False,0.5520077834777994,198,False
+tt0395699,The Pacifier_2005,False,False,False,False,0.6221237737896117,182,False
+tt0399146,A History of Violence_2005,False,False,True,False,0.46554379688975006,52,False
+tt0399201,The Island_2005,False,False,False,False,0.6542312179504571,224,False
+tt0399295,Lord of War_2005,False,False,False,False,0.5180569380848099,140,False
+tt0404390,Running Scared_2006,False,False,False,False,0.5634317862165964,137,False
+tt0405296,A Scanner Darkly_2006,False,False,False,False,0.4087918298147176,136,False
+tt0405422,The 40-Year-Old Virgin_2005,False,False,False,False,0.38132504928609834,55,False
+tt0407304,War of the Worlds_2005,False,False,False,False,0.6230917912508382,335,False
+tt0407887,The Departed_2006,False,False,False,False,0.4264107038976149,209,False
+tt0408236,Sweeney Todd: The Demon Barber of Fleet Street_2007,False,False,False,False,0.4625045012603529,111,False
+tt0408790,Flightplan_2005,False,False,False,False,0.6639095671353736,176,False
+tt0409459,Watchmen_2009,False,False,False,False,0.49731977183698717,174,False
+tt0413267,Shrek the Third_2007,True,True,True,True,0.596343601302279,88,False
+tt0415306,Talladega Nights: The Ballad of Ricky Bobby_2006,False,False,False,False,0.36950667815596727,149,False
+tt0417741,Harry Potter and the Half-Blood Prince_2009,True,True,True,True,0.5743135260787448,129,False
+tt0418279,Transformers_2007,False,True,True,True,0.5956926899979291,77,False
+tt0418819,Land of the Dead_2005,True,False,True,True,0.6880612917956264,161,False
+tt0421715,The Curious Case of Benjamin Button_2008,False,False,False,False,0.5147389859577661,306,False
+tt0424345,Clerks II_2006,True,False,False,True,0.31882858177678897,70,False
+tt0425112,Hot Fuzz_2007,True,False,True,True,0.46700967277217537,152,False
+tt0429493,The A-Team_2010,False,False,False,False,0.5797315674333353,68,False
+tt0430357,Miami Vice_2006,False,False,False,False,0.5528045679190058,168,False
+tt0431197,The Kingdom_2007,False,False,False,False,0.5815479427224941,150,False
+tt0432283,Fantastic Mr. Fox_2009,False,False,False,False,0.6439765173936247,58,False
+tt0434409,V for Vendetta_2005,False,False,False,False,0.4622011460185734,215,False
+tt0435705,Next_2007,False,False,False,False,0.6184717107465685,75,False
+tt0435761,Toy Story 3_2010,True,False,True,True,0.6208325824472878,134,False
+tt0436697,The Queen_2006,False,False,False,False,0.4745752984389348,147,False
+tt0438488,Terminator Salvation_2009,True,True,True,True,0.7488663083641249,121,False
+tt0440963,The Bourne Ultimatum_2007,True,False,True,True,0.6005809731299927,344,False
+tt0441773,Kung Fu Panda_2008,False,False,True,False,0.5450459939610982,59,False
+tt0443272,Lincoln_2012,False,False,False,False,0.3825379353722777,102,False
+tt0443649,"10,000 BC_2008",False,False,False,False,0.8491610507495531,176,False
+tt0443706,Zodiac_2007,False,False,True,False,0.38694374732202974,240,False
+tt0445934,Blades of Glory_2007,False,False,False,False,0.5303190365518698,79,False
+tt0446029,Scott Pilgrim vs. the World_2010,False,True,False,True,0.425235175738288,105,False
+tt0448134,Sunshine_2007,False,False,False,False,0.6264059030016477,95,False
+tt0448157,Hancock_2008,False,False,False,False,0.5783630023857589,40,False
+tt0449059,Little Miss Sunshine_2006,False,False,False,False,0.9729118618007507,127,False
+tt0449088,Pirates of the Caribbean: At World's End_2007,True,True,True,True,0.5255703233485419,140,False
+tt0449467,Babel_2006,False,False,True,False,0.6165870603560574,199,False
+tt0450259,Blood Diamond_2006,False,False,False,False,0.6616795181647294,49,False
+tt0450385,1408_2007,False,False,False,False,0.5968717948717949,33,False
+tt0451279,Wonder Woman_2017,True,False,True,True,0.6316066263476203,163,False
+tt0452623,Gone Baby Gone_2007,False,False,False,False,0.4160649451311549,92,False
+tt0452702,Vacancy_2007,False,False,False,False,0.6652480680927315,177,False
+tt0453562,42_2013,False,False,False,False,0.44459187776437475,127,False
+tt0454876,Life of Pi_2012,False,False,False,False,0.6092279231731867,123,False
+tt0454921,The Pursuit of Happyness_2006,False,False,False,False,0.5810849325479764,250,False
+tt0455944,The Equalizer_2014,False,True,False,True,0.6916253887800945,118,False
+tt0457939,The Holiday_2006,False,False,False,False,0.43386524099089907,87,False
+tt0458339,Captain America: The First Avenger_2011,True,False,True,True,0.6188420518029456,169,False
+tt0458525,X-Men Origins: Wolverine_2009,True,False,True,True,0.6655731377846391,134,False
+tt0462499,Rambo_2008,False,False,True,False,0.7067897995592403,238,False
+tt0463854,28 Weeks Later_2007,True,False,True,True,0.6611338100102145,172,False
+tt0465538,Michael Clayton_2007,False,False,False,False,0.43366310969024063,220,False
+tt0467197,Max Payne_2008,False,False,False,False,0.7159904534606205,99,False
+tt0467406,Juno_2007,False,False,False,False,0.38177466233544194,117,False
+tt0468569,The Dark Knight_2008,True,False,True,True,0.4848069610496386,389,False
+tt0469494,There Will Be Blood_2007,False,False,True,False,0.42627829820452773,125,False
+tt0470752,Ex Machina_2014,False,False,False,False,0.5610874372943524,142,False
+tt0471042,Tower Heist_2011,False,False,False,False,0.5302567785957981,159,False
+tt0472033,9_2009,False,False,False,False,0.8116820321062472,62,False
+tt0472181,The Smurfs_2011,False,True,True,True,0.5592419301479276,118,False
+tt0473705,State of Play_2009,False,False,False,False,0.4547442244224422,151,False
+tt0475290,"Hail, Caesar!_2016",False,False,False,False,0.4996978009205449,77,False
+tt0475394,Smokin' Aces_2006,False,False,False,False,0.5253370033171008,123,False
+tt0477348,No Country for Old Men_2007,False,False,True,False,0.6366580310880829,150,False
+tt0478311,Knocked Up_2007,False,False,False,False,0.15512048192771086,168,False
+tt0479884,Crank_2006,False,False,False,False,0.6593792308078023,33,False
+tt0480249,I Am Legend_2007,False,False,False,False,0.7676930471908842,304,False
+tt0480255,The Losers_2010,False,False,False,False,0.5242539226745975,132,False
+tt0480687,Hall Pass_2011,False,False,False,False,0.21191056910569106,92,False
+tt0481499,The Croods_2013,False,False,True,False,0.6369911618605252,24,False
+tt0482571,The Prestige_2006,False,False,False,False,0.5298465251329235,219,False
+tt0486822,Disturbia_2007,False,False,False,False,0.6515726904978123,122,False
+tt0490215,Silence_2016,False,False,False,False,0.49851831364336796,140,False
+tt0499549,Avatar_2009,False,True,True,True,0.7252338092585534,164,False
+tt0758758,Into the Wild_2007,False,False,False,False,0.6025204359673024,259,False
+tt0758774,Body of Lies_2008,False,False,False,False,0.5441409262491375,167,False
+tt0765429,American Gangster_2007,False,False,False,False,0.5747617713004485,291,False
+tt0765443,Eastern Promises_2007,False,False,False,False,0.5935064290324182,104,False
+tt0780504,Drive_2011,False,False,False,False,0.6488106843439267,168,False
+tt0780571,Mr. Brooks_2007,False,False,False,False,0.5084213871454676,162,False
+tt0783233,Atonement_2007,False,False,False,False,0.6577773371666501,61,False
+tt0790636,Dallas Buyers Club_2013,False,False,False,False,0.49986852484880356,154,False
+tt0790686,Mirrors_2008,False,False,False,False,0.6848149203892984,119,False
+tt0795351,Case 39_2009,False,False,False,False,0.6626211510421134,161,False
+tt0795368,Death at a Funeral_2007,False,False,False,False,0.44258664599712105,131,False
+tt0796366,Star Trek_2009,True,True,True,True,0.5107039122171622,256,False
+tt0800039,Forgetting Sarah Marshall_2008,False,False,False,False,0.42545877917613795,128,False
+tt0800080,The Incredible Hulk_2008,False,False,True,False,0.6908573461401637,209,False
+tt0800369,Thor_2011,False,False,True,False,0.4399006034788782,191,False
+tt0804497,It's Kind of a Funny Story_2010,False,False,False,False,0.41435323518226763,116,False
+tt0805564,Lars and the Real Girl_2007,False,False,False,False,0.5366427254814721,100,False
+tt0808151,Angels & Demons_2009,True,False,False,True,0.6588780165059024,152,False
+tt0810819,The Danish Girl_2015,False,False,False,False,0.587470740421338,143,False
+tt0815236,She's Out of My League_2010,False,False,False,False,0.4406237324800577,83,False
+tt0816462,Conan the Barbarian_2011,False,False,False,False,0.7002332643809691,83,False
+tt0816692,Interstellar_2014,False,False,False,False,0.4859106529209622,382,False
+tt0824747,Changeling_2008,False,False,False,False,0.43725859482235774,189,False
+tt0825232,The Bucket List_2007,False,False,False,False,0.45861926035094186,120,False
+tt0829150,Dracula Untold_2014,False,False,False,False,0.6580555154663973,72,False
+tt0829482,Superbad_2007,False,False,False,False,0.4256441659993405,152,False
+tt0831387,Godzilla_2014,False,True,True,True,0.7348958549008241,206,False
+tt0837563,Pet Sematary_2019,False,False,False,False,0.7488080179040576,156,False
+tt0838283,Step Brothers_2008,False,False,False,False,0.30673877668230115,120,False
+tt0840361,The Town_2010,False,False,False,False,0.4843820733363513,154,False
+tt0842926,The Kids Are All Right_2010,False,False,False,False,0.42360273421793326,108,False
+tt0844471,Cloudy with a Chance of Meatballs_2009,False,False,True,False,0.5691170232107146,117,False
+tt0848228,The Avengers_2012,False,False,True,False,0.5195327879609781,221,False
+tt0887883,Burn After Reading_2008,False,False,False,False,0.4587103184979865,150,False
+tt0887912,The Hurt Locker_2008,False,False,True,False,0.6743579035289204,18,True
+tt0890870,Saw IV_2007,True,False,True,True,0.6921926684489556,228,False
+tt0892318,Letters to Juliet_2010,False,False,False,False,0.5139941546539852,123,False
+tt0892769,How to Train Your Dragon_2010,False,True,True,True,0.22653192648734333,71,False
+tt0903624,The Hobbit: An Unexpected Journey_2012,True,False,True,True,0.5970963252717494,144,False
+tt0905372,The Thing_2011,True,True,False,True,0.7520423934643409,143,False
+tt0910936,Pineapple Express_2008,False,False,False,False,0.46501574174145954,94,False
+tt0910970,WALL·E_2008,False,False,True,False,0.8364343707713126,71,False
+tt0918927,Doubt_2008,False,False,False,False,0.31970767748152906,81,False
+tt0926084,Harry Potter and the Deathly Hallows: Part 1_2010,True,True,True,True,0.5545461399276237,166,False
+tt0929632,Precious_2009,False,False,False,False,0.4786575431736722,150,False
+tt0947798,Black Swan_2010,False,False,False,False,0.7157834431395016,113,False
+tt0959337,Revolutionary Road_2008,False,False,False,False,0.4206373292867982,119,False
+tt0970179,Hugo_2011,False,False,False,False,0.6877882152006832,105,False
+tt0974661,17 Again_2009,False,False,False,False,0.45930432786132475,117,False
+tt0976051,The Reader_2008,False,False,False,False,0.5397191767647624,196,False
+tt0985694,Machete_2010,False,False,False,False,0.5595806888682878,155,False
+tt0985699,Valkyrie_2008,False,False,False,False,0.6151778858459176,161,False
+tt0986263,Surrogates_2009,False,False,False,False,0.6534752825166892,168,False
+tt0988045,Sherlock Holmes_2009,False,False,False,False,0.6467715117084661,145,False
+tt0993842,Hanna_2011,False,False,False,False,0.6950248967953355,207,False
+tt0993846,The Wolf of Wall Street_2013,False,False,True,False,0.33593361630530383,201,False
+tt1000774,Sex and the City_2008,True,False,False,True,0.46298578886310904,10,True
+tt1001508,He's Just Not That Into You_2009,False,False,False,False,0.39188527145593016,114,False
+tt1001526,Megamind_2010,False,False,True,False,0.975417651204245,106,False
+tt10016180,The Little Things_2021,False,False,False,False,0.5637318764446312,244,False
+tt1007029,The Iron Lady_2011,False,False,False,False,0.4712018887607753,136,False
+tt1010048,Slumdog Millionaire_2008,False,False,False,False,0.5869093884229903,198,False
+tt1013743,Knight and Day_2010,False,False,False,False,0.46733277824035524,91,False
+tt1013752,Fast & Furious_2009,True,False,True,True,0.7484331797235023,103,False
+tt1013753,Milk_2008,False,False,False,False,0.36395793048153563,158,False
+tt1014759,Alice in Wonderland_2010,False,False,True,False,0.564717607973422,96,False
+tt1017460,Splice_2009,False,False,False,False,0.6959150931753671,135,False
+tt1022603,(500) Days of Summer_2009,False,False,False,False,0.4935897435897436,23,False
+tt1024648,Argo_2012,False,False,False,False,0.4431361147453603,234,False
+tt10272386,The Father_2020,False,False,False,False,0.41396712814567277,88,False
+tt10304142,Amsterdam_2022,False,False,False,False,0.29383513435184033,95,False
+tt1032755,RocknRolla_2008,False,False,False,False,0.4165490638818327,162,False
+tt1033575,The Descendants_2011,False,False,False,False,0.30098754830399316,119,False
+tt1034032,Gamer_2009,False,False,False,False,0.7074968564367168,160,False
+tt10366206,John Wick: Chapter 4_2023,True,True,True,True,0.7325,108,False
+tt1037705,The Book of Eli_2010,False,False,False,False,0.6315770067475388,100,False
+tt1038686,Legion_2010,False,False,False,False,0.6905498907501821,97,False
+tt1038919,The Bounty Hunter_2010,False,False,False,False,0.5161484152020429,175,False
+tt1041829,The Proposal_2009,False,False,False,False,0.43488638971769566,103,False
+tt1045658,Silver Linings Playbook_2012,False,False,False,False,0.2452956989247312,163,False
+tt1045772,I Love You Phillip Morris_2009,False,False,False,False,0.4717819868573637,210,False
+tt1049413,Up_2009,False,False,True,False,0.5866650414431984,182,False
+tt1054606,The Imaginarium of Doctor Parnassus_2009,False,False,False,False,0.5661848524919064,74,False
+tt1057500,Invictus_2009,False,False,False,False,0.6770520144317499,250,False
+tt1058017,The Invention of Lying_2009,False,False,False,False,0.4023546371936569,72,False
+tt1060277,Cloverfield_2008,False,False,True,False,0.6616029783045916,142,False
+tt10633456,Minari_2020,False,False,False,False,0.5154969006198761,145,False
+tt10640346,Babylon_2022,False,False,False,False,0.563780260707635,142,False
+tt1065073,Boyhood_2014,False,False,True,False,0.21776418823178462,160,False
+tt10665338,Halloween Kills_2021,True,False,False,True,0.42522996057818657,1,True
+tt1068680,Yes Man_2008,False,False,False,False,0.34885306579652264,148,False
+tt10731256,Don't Worry Darling_2022,False,False,False,False,0.5769398907103825,110,False
+tt1074638,Skyfall_2012,True,False,True,True,0.6671701466015104,205,False
+tt1083452,Eddie the Eagle_2015,False,False,False,False,0.6381961860597171,201,False
+tt10872600,Spider-Man: No Way Home_2021,False,True,True,True,0.4770286608349335,201,False
+tt1091191,Lone Survivor_2013,False,False,False,False,0.666369578134284,103,False
+tt1091722,Adventureland_2009,False,False,False,False,0.45638126009693053,162,False
+tt10954984,Nope_2022,False,False,False,False,0.555631321741107,209,False
+tt1099212,Twilight_2008,False,False,True,False,0.5963153875525009,116,False
+tt1100089,Foxcatcher_2014,False,False,False,False,0.5926038500506585,161,False
+tt1104001,TRON: Legacy_2010,True,True,True,True,0.5973658979663925,135,False
+tt11138512,The Northman_2022,False,False,False,False,0.7317200956154426,114,False
+tt11145118,Creed III_2023,True,False,True,True,0.5494144985647241,134,False
+tt1119646,The Hangover_2009,False,False,True,False,0.48506052403084937,83,False
+tt1120985,Blue Valentine_2010,False,False,False,False,0.6421217321086101,147,False
+tt11214590,House of Gucci_2021,False,False,False,False,0.4990185387131952,161,False
+tt1124035,The Ides of March_2011,False,False,False,False,0.26669557675628797,88,False
+tt11245972,Scream_2022,True,False,True,True,0.5181022611167874,98,False
+tt1125849,The Wrestler_2008,False,False,False,False,0.6402726024710728,139,False
+tt1126590,Big Eyes_2014,False,False,False,False,0.48899243973182444,120,False
+tt1127180,Drag Me to Hell_2009,False,False,False,False,0.615270662304796,66,False
+tt1131734,Jennifer's Body_2009,False,False,False,False,0.5209407216494846,101,False
+tt1133985,Green Lantern_2011,False,False,False,False,0.5788976005673535,167,False
+tt1142977,Frankenweenie_2012,False,False,False,False,0.7060937266057793,135,False
+tt1142988,The Ugly Truth_2009,False,False,False,False,0.3412133891213389,133,False
+tt1155056,"I Love You, Man_2009",False,False,False,False,0.27956204379562044,115,False
+tt1160419,Dune_2021,False,True,True,True,0.667930707575627,124,False
+tt1170358,The Hobbit: The Desolation of Smaug_2013,True,False,True,True,0.6143192882323317,130,False
+tt1174732,An Education_2009,False,False,False,False,0.41836831159009263,124,False
+tt11813216,The Banshees of Inisherin_2022,False,False,False,False,0.5327241033225926,150,False
+tt1182345,Moon_2009,False,False,False,False,0.6417887111064784,163,False
+tt1190080,2012_2009,False,False,False,False,0.575876114046054,256,False
+tt1192628,Rango_2011,False,False,False,False,0.4246336139694418,101,False
+tt1193138,Up in the Air_2009,False,False,False,False,0.3919186652763295,151,False
+tt1197624,Law Abiding Citizen_2009,False,False,False,False,0.5094756790903348,211,False
+tt1201167,Funny People_2009,False,False,False,False,0.24275946838749327,171,False
+tt1201607,Harry Potter and the Deathly Hallows: Part 2_2011,True,True,True,True,0.6774963160479966,158,False
+tt1204342,The Muppets_2011,False,False,True,False,0.4925146566164154,141,False
+tt1205489,Gran Torino_2008,False,False,False,False,0.4372701063724028,110,False
+tt1210166,Moneyball_2011,False,False,False,False,0.3288276861750317,200,False
+tt1210819,The Lone Ranger_2013,False,False,False,False,0.6565986509990243,105,False
+tt1211837,Doctor Strange_2016,False,False,True,False,0.6307155039389264,130,False
+tt1213641,First Man_2018,False,False,False,False,0.5925393334461174,150,False
+tt1213663,The World's End_2013,False,False,True,False,0.40629095674967236,80,False
+tt1216475,Cars 2_2011,True,True,True,True,0.4731730895988048,113,False
+tt1216492,Leap Year_2010,False,False,False,False,0.48439355385920274,118,False
+tt1217613,Battle Los Angeles_2011,False,False,False,False,0.8254625024865725,83,False
+tt1219289,Limitless_2011,False,False,False,False,0.5041882017465692,188,False
+tt1226229,Get Him to the Greek_2010,False,False,False,False,0.39609083069847656,116,False
+tt1228987,Let Me In_2010,False,False,False,False,0.6499830479742329,98,False
+tt1231587,Hot Tub Time Machine_2010,False,False,False,False,0.24143044544573092,69,False
+tt1232200,That's My Boy_2012,False,False,False,False,0.2754361150400754,68,False
+tt1232829,21 Jump Street_2012,False,False,True,False,0.48676026301759373,184,False
+tt1234548,The Men Who Stare at Goats_2009,False,False,False,False,0.480838894184938,158,False
+tt1242432,I Spit on Your Grave_2010,False,False,True,False,0.3089881921824104,59,False
+tt1242460,We Need to Talk About Kevin_2011,False,False,False,False,0.6621853120810368,221,False
+tt1243957,The Tourist_2010,False,False,False,False,0.6658512720156555,131,False
+tt1245526,RED_2010,False,False,True,False,0.8558153148209124,189,False
+tt1250777,Kick-Ass_2010,False,False,True,False,0.5418060200668896,184,False
+tt1259521,The Cabin in the Woods_2011,False,False,False,False,0.6188655502855483,98,False
+tt1259528,Den of Thieves_2018,False,False,True,False,0.6632577291751046,166,False
+tt1259571,The Twilight Saga: New Moon_2009,True,False,True,True,0.5601262926695342,122,False
+tt1272878,2 Guns_2013,False,False,False,False,0.47093250097541944,149,False
+tt1276104,Looper_2012,False,False,False,False,0.6456797050336647,318,False
+tt12789558,Belfast_2021,False,False,False,False,0.3926421815501781,164,False
+tt12801262,Luca_2021,False,False,True,False,0.5605515909212856,99,False
+tt1282140,Easy A_2010,False,False,False,False,0.36879432624113473,108,False
+tt1284575,Bad Teacher_2011,False,False,False,False,0.2353335050218903,131,False
+tt1285016,The Social Network_2010,False,False,True,False,0.3321530006270518,188,False
+tt1288558,Evil Dead_2013,False,False,True,False,0.7209889911568309,1,True
+tt1291584,Warrior_2011,False,False,False,False,0.526519601444546,168,False
+tt1298650,Pirates of the Caribbean: On Stranger Tides_2011,True,True,True,True,0.5775843495497048,99,False
+tt1306980,50_50_2011,False,False,False,False,0.5032647650841966,96,False
+tt1315981,A Single Man_2009,False,False,False,False,0.5736809505039698,97,False
+tt1318514,Rise of the Planet of the Apes_2011,False,True,False,True,0.4053775068816359,126,False
+tt1320253,The Expendables_2010,False,False,True,False,0.6535013447554537,123,False
+tt1322269,August: Osage County_2013,False,False,False,False,0.28551572363467886,76,False
+tt1323594,Despicable Me_2010,False,True,True,True,0.6667658612069992,3,True
+tt1327773,The Butler_2013,False,False,False,False,0.5153027148076847,265,False
+tt1334260,Never Let Me Go_2010,False,False,False,False,0.5188585607940447,127,False
+tt1340138,Terminator Genisys_2015,True,True,True,True,0.6669493022434199,117,False
+tt1340800,Tinker Tailor Soldier Spy_2011,False,False,False,False,0.6181182402211921,251,False
+tt1343092,The Great Gatsby_2013,False,False,False,False,0.45083565459610025,175,False
+tt1343727,Dredd_2012,True,False,False,True,0.6903320877848534,156,False
+tt1345836,The Dark Knight Rises_2012,True,False,True,True,0.49373223525982074,323,False
+tt1355644,Passengers_2016,False,False,False,False,0.6575499580925493,63,False
+tt1375666,Inception_2010,False,False,True,False,0.5013895762744127,285,False
+tt13833688,The Whale_2022,False,False,False,False,0.5088852988691438,48,False
+tt1386588,The Other Guys_2010,False,False,False,False,0.4042601715015508,165,False
+tt1386697,Suicide Squad_2016,False,False,True,False,0.6852585487906588,160,False
+tt1389072,Downsizing_2017,False,False,False,False,0.3599917252792718,209,False
+tt1392214,Prisoners_2013,False,False,False,False,0.642982529465853,207,False
+tt1396484,It_2017,False,False,True,False,0.7023107067249224,118,False
+tt1398426,Straight Outta Compton_2015,False,False,False,False,0.5120588727211909,146,False
+tt1399683,Winter's Bone_2010,False,False,False,False,0.43481840636721253,91,False
+tt1403865,True Grit_2010,False,False,False,False,0.5009618139401629,72,False
+tt1403981,Remember Me_2010,False,False,False,False,0.5796787488111592,130,False
+tt1409024,Men in Black 3_2012,True,True,True,True,0.23723706968699437,21,False
+tt1411238,No Strings Attached_2011,False,False,False,False,0.23960066555740434,69,False
+tt1412386,The Best Exotic Marigold Hotel_2011,False,False,False,False,0.2779028626568028,202,False
+tt1413492,12 Strong_2018,False,False,False,False,0.6368131324784916,178,False
+tt14208870,The Fabelmans_2022,False,False,False,False,0.6000479846449136,89,False
+tt14230388,Asteroid City_2023,False,False,False,False,0.5842667361292003,49,False
+tt1424381,Predators_2010,True,True,True,True,0.8147225509123747,149,False
+tt1430132,The Wolverine_2013,True,False,True,True,0.6561077735299472,131,False
+tt1431045,Deadpool_2016,True,False,True,True,0.6333700126339813,105,False
+tt1440292,Submarine_2010,False,False,False,False,0.4896895406117539,186,False
+tt1440728,The American_2010,False,False,False,False,0.7142857142857143,168,False
+tt1441395,Under the Skin_2013,False,False,True,False,0.44481127866512,82,False
+tt1446714,Prometheus_2012,True,True,True,True,0.7369390763183754,136,False
+tt1453405,Monsters University_2013,True,True,True,True,0.5757759930540481,132,False
+tt1454468,Gravity_2013,False,False,False,False,0.38664762584791146,86,False
+tt1457767,The Conjuring_2013,False,False,False,False,0.6931882078881838,190,False
+tt1458175,The Next Three Days_2010,False,False,False,False,0.0,168,True
+tt1462758,Buried_2010,False,False,False,False,0.5830820964749536,3,True
+tt1464540,I Am Number Four_2011,False,False,False,False,0.31621533136897245,136,False
+tt1469304,Baywatch_2017,False,False,False,False,0.5823051948051948,29,False
+tt1478338,Bridesmaids_2011,False,False,False,False,0.3385611818863077,95,False
+tt1478964,Attack the Block_2011,False,False,False,False,0.5914619883040936,130,False
+tt1482459,The Lorax_2012,False,False,True,False,0.6652330466093218,6,True
+tt14849194,The Holdovers_2023,False,False,False,False,0.3558338599414029,142,False
+tt1485796,The Greatest Showman_2017,False,False,False,False,0.5778602620087336,135,False
+tt1489887,Booksmart_2019,False,False,False,False,0.47524092679926183,144,False
+tt1490017,The Lego Movie_2014,False,True,True,True,0.46473160195964813,125,False
+tt1499658,Horrible Bosses_2011,False,False,True,False,0.3395747381783561,119,False
+tt1502397,Bad Boys for Life_2020,True,False,True,True,0.5437522186723465,268,False
+tt1502404,Drive Angry_2011,False,False,False,False,0.28227945076315636,95,False
+tt1502407,Halloween_2018,True,False,False,True,0.5855981168414295,121,False
+tt1504320,The King's Speech_2010,False,False,False,False,0.3370253979702231,88,False
+tt1517268,Barbie_2023,False,False,False,False,0.4483812151973587,87,False
+tt1517451,A Star Is Born_2018,False,False,False,False,0.4625,122,False
+tt1524930,Vacation_2015,True,False,False,True,0.46876340243030734,124,False
+tt1535109,Captain Phillips_2013,False,False,False,False,0.5612498962569508,249,False
+tt15398776,Oppenheimer_2023,False,False,False,False,0.2800283812548569,192,False
+tt1542344,127 Hours_2010,False,False,False,False,0.7455736362705967,231,False
+tt1560220,Zombieland: Double Tap_2019,True,False,False,True,0.5111905578138008,109,False
+tt1568338,Man on a Ledge_2012,False,False,False,False,0.5457875457875457,271,False
+tt1568346,The Girl with the Dragon Tattoo_2011,False,False,False,False,0.5673311635475997,326,False
+tt1568911,War Horse_2011,False,False,False,False,0.6229886020784445,95,False
+tt1570728,"Crazy, Stupid, Love._2011",False,False,False,False,0.3891159389115939,84,False
+tt1571222,A Dangerous Method_2011,False,False,False,False,0.3899325307580368,89,False
+tt15789038,Elemental_2023,False,False,True,False,0.6597504981373993,122,False
+tt15791034,Barbarian_2022,False,False,False,False,0.6158544986910394,64,False
+tt1587310,Maleficent_2014,False,False,False,False,0.6117502513124092,177,False
+tt1591095,Insidious_2010,False,False,True,False,0.6103646833013435,160,False
+tt1596363,The Big Short_2015,False,False,False,False,0.3112923089990232,155,False
+tt1599348,Safe House_2012,False,False,False,False,0.6629236013635452,277,False
+tt1602613,Only God Forgives_2013,False,False,False,False,0.633096198768316,164,False
+tt1602620,Amour_2012,False,False,True,False,0.5034013605442177,59,False
+tt1605783,Midnight in Paris_2011,False,False,False,False,0.11372427665170973,70,True
+tt1615147,Margin Call_2011,False,False,False,False,0.3972602739726027,75,False
+tt1622547,30 Minutes or Less_2011,False,False,False,False,0.42455802555575006,110,False
+tt1623205,Oz the Great and Powerful_2013,False,False,False,False,0.5371046228710462,128,False
+tt1623288,ParaNorman_2012,False,False,False,False,0.6803512213348278,114,False
+tt1631867,Edge of Tomorrow_2014,False,False,False,False,0.6194983235007003,105,False
+tt1632708,Friends with Benefits_2011,False,False,False,False,0.363807847082495,103,False
+tt1637725,Ted_2012,False,True,False,True,0.4598834951456311,228,False
+tt1638355,The Man from U.N.C.L.E._2015,False,False,False,False,0.49579318448883664,147,False
+tt1646971,How to Train Your Dragon 2_2014,True,True,True,True,0.6545611293711946,43,False
+tt1650062,Super 8_2011,False,False,False,False,0.6078818926223226,163,False
+tt1657507,Colombiana_2011,False,False,False,False,0.6685004651915376,279,False
+tt1659337,The Perks of Being a Wallflower_2012,False,False,False,False,0.4965468210440788,186,False
+tt1663202,The Revenant_2015,False,False,False,False,0.719690842095803,199,False
+tt1663662,Pacific Rim_2013,False,False,True,False,0.6708461825205869,267,False
+tt1675192,Take Shelter_2011,False,False,False,False,0.6911376687878318,131,False
+tt1677720,Ready Player One_2018,False,False,False,False,0.5865551452595987,181,False
+tt1682180,Stoker_2013,False,False,False,False,0.6730338684323346,97,False
+tt1690953,Despicable Me 2_2013,True,True,True,True,0.6934193686006825,2,True
+tt1692486,Carnage_2011,False,False,False,False,0.4235351836276983,22,False
+tt17009710,Anatomy of a Fall_2023,False,False,False,False,0.5616767588488669,23,False
+tt1706593,Chronicle_2012,False,False,False,False,0.546858485026424,79,False
+tt1706620,Snowpiercer_2013,False,False,False,False,0.690856892220583,73,False
+tt1707386,Les Misérables_2012,False,False,False,False,0.4783711325266285,133,False
+tt1714915,Only Lovers Left Alive_2013,False,False,True,False,0.6120194858438238,73,False
+tt1723811,Shame_2011,False,False,True,False,0.5983856745574171,114,False
+tt1727824,Bohemian Rhapsody_2018,False,False,False,False,0.4795776500206666,199,False
+tt1731141,Ender's Game_2013,False,False,False,False,0.7151678888460054,1,True
+tt1735898,Snow White and the Huntsman_2012,False,False,False,False,0.6826505725269728,142,False
+tt1745960,Top Gun: Maverick_2022,True,True,True,True,0.48700861100711346,343,False
+tt1748122,Moonrise Kingdom_2012,False,False,True,False,0.693499100004186,68,False
+tt1758830,This Is 40_2012,True,False,False,True,0.1940608060334669,153,False
+tt17663992,Scream VI_2023,True,False,True,True,0.5019863651969199,96,False
+tt1781769,Anna Karenina_2012,False,False,False,False,0.57574294205052,265,False
+tt1790809,Pirates of the Caribbean: Dead Men Tell No Tales_2017,True,True,True,True,0.5966098997294286,94,False
+tt1790864,The Maze Runner_2014,False,False,True,False,0.6740126554658521,155,False
+tt1790885,Zero Dark Thirty_2012,False,False,True,False,0.4464337559276106,229,False
+tt1791528,Inherent Vice_2014,False,False,True,False,0.20969166887534235,94,False
+tt1798709,Her_2013,False,False,True,False,0.3185611510791367,87,False
+tt1800241,American Hustle_2013,False,False,False,False,0.33096580508164314,146,False
+tt1809398,Unbroken_2014,False,False,False,False,0.7941192024961659,179,False
+tt1817273,The Place Beyond the Pines_2012,False,False,False,False,0.5231788079470199,217,False
+tt1821549,Nebraska_2013,False,False,False,False,0.3073806717737183,107,False
+tt1825683,Black Panther_2018,False,False,True,False,0.5719305856832971,231,False
+tt1832382,A Separation_2011,False,False,True,False,0.474136796384855,120,False
+tt1840309,Divergent_2014,False,False,True,False,0.5303265940902022,31,False
+tt1853739,You're Next_2011,False,False,False,False,0.7367913148371532,137,False
+tt1856101,Blade Runner 2049_2017,True,True,False,True,0.7075212501073238,170,False
+tt1862079,Safety Not Guaranteed_2012,False,False,False,False,0.5018202502844141,149,False
+tt1877830,The Batman_2022,False,False,True,False,0.5778738499057754,81,False
+tt1877832,X-Men: Days of Future Past_2014,True,False,True,True,0.6269965277777778,208,False
+tt1878870,The Edge of Seventeen_2016,False,False,False,False,0.3710283159463487,103,False
+tt1895587,Spotlight_2015,False,False,True,False,0.3229635513193893,183,False
+tt1907668,Flight_2012,False,False,False,False,0.5256297100957296,119,False
+tt1935179,Mud_2012,False,False,False,False,0.6448976639907428,155,False
+tt1939659,Carrie_2013,True,False,False,True,0.5453787779093741,162,False
+tt1959563,The Hitman's Bodyguard_2017,False,False,False,False,0.6265494137353433,157,False
+tt1979320,Rush_2013,False,False,False,False,0.5450448194701788,188,False
+tt1979376,Toy Story 4_2019,True,False,True,True,0.5476400643854821,55,False
+tt1979388,The Good Dinosaur_2015,False,False,True,False,0.768706995412844,69,False
+tt1981128,Geostorm_2017,False,False,False,False,0.5917581134718655,217,False
+tt1981677,Pitch Perfect_2012,False,False,True,False,0.4154565989028719,84,False
+tt2024432,Identity Thief_2013,False,False,False,False,0.4735820347342463,114,False
+tt2024544,12 Years a Slave_2013,False,False,True,False,0.6025681177575948,138,False
+tt2042568,Inside Llewyn Davis_2013,False,False,True,False,0.8338332673043183,10,True
+tt2053463,Side Effects_2013,False,False,False,False,0.35282085434306915,156,False
+tt2066051,Rocketman_2019,False,False,False,False,0.5446042011865947,168,False
+tt2080374,Steve Jobs_2015,False,False,False,False,0.20456442073945066,103,False
+tt2084970,The Imitation Game_2014,False,False,False,False,0.42551143200962693,127,False
+tt2096673,Inside Out_2015,False,True,True,True,0.4051558073654391,381,False
+tt2103281,Dawn of the Planet of the Apes_2014,True,True,False,True,0.7301829797576473,160,False
+tt21064584,The Iron Claw_2023,False,False,False,False,0.541770459930737,137,False
+tt2119532,Hacksaw Ridge_2016,False,False,False,False,0.6703619031186645,162,False
+tt2120120,Pixels_2015,False,False,False,False,0.47184069198232026,132,False
+tt2140373,Saving Mr. Banks_2013,False,False,False,False,0.4940731284763381,149,False
+tt2140479,The Accountant_2016,False,False,False,False,0.5292739048917675,159,False
+tt2170439,Horrible Bosses 2_2014,True,False,True,True,0.41060520507160825,111,False
+tt2179136,American Sniper_2014,False,False,False,False,0.47726943330595684,123,False
+tt2184339,The Purge_2013,False,False,True,False,0.7362173217143874,76,False
+tt2203939,The Other Woman_2014,False,False,False,False,0.34401408450704224,126,False
+tt2209418,Before Midnight_2013,False,False,True,False,0.06839327493334785,24,True
+tt2226417,Insidious: Chapter 2_2013,False,False,True,False,0.6389263685427911,203,False
+tt2234155,The Internship_2013,False,False,False,False,0.3996981940320304,72,False
+tt2267998,Gone Girl_2014,False,False,False,False,0.4351753453772582,289,False
+tt22687790,A Haunting in Venice_2023,True,False,True,True,0.4641771138970392,134,False
+tt2274648,Hellboy_2019,False,False,True,False,0.5786316114517623,94,False
+tt2278388,The Grand Budapest Hotel_2014,False,False,True,False,0.6524067964953354,93,False
+tt2283362,Jumanji: Welcome to the Jungle_2017,True,True,False,True,0.5560518479593624,70,False
+tt2293640,Minions_2015,False,True,True,True,0.7054790172052569,3,True
+tt2294449,22 Jump Street_2014,True,False,True,True,0.425246508834276,117,False
+tt2294629,Frozen_2013,False,False,True,False,0.6381692094313454,62,False
+tt2302755,Olympus Has Fallen_2013,False,False,True,False,0.7463311199151833,230,False
+tt2316204,Alien: Covenant_2017,True,True,True,True,0.6592026736691334,160,False
+tt2321549,The Babadook_2014,False,False,False,False,0.689989577196719,120,False
+tt2334879,White House Down_2013,False,False,False,False,0.4925271466923108,285,False
+tt2345759,The Mummy_2017,False,False,True,False,0.7364978693885641,182,False
+tt2347569,Frances Ha_2012,False,False,False,False,0.3783935068569829,106,False
+tt2361509,The Intern_2015,False,False,False,False,0.35561664375859053,96,False
+tt2380307,Coco_2017,False,True,True,True,0.5944823768222919,93,False
+tt2381111,Brooklyn_2015,False,False,True,False,0.4898347876157151,153,False
+tt2381249,Mission: Impossible - Rogue Nation_2015,True,True,True,True,0.5903444381705252,318,False
+tt2381941,Focus_2015,False,False,False,False,0.4921574831623198,104,False
+tt2382320,No Time to Die_2021,True,False,True,True,0.5495060183787048,237,False
+tt2386490,How to Train Your Dragon: The Hidden World_2019,True,True,True,True,0.6916587225929457,60,False
+tt2388715,Oculus_2013,False,False,False,False,0.6468372000793179,184,False
+tt2400463,The Invitation_2015,False,False,False,False,0.5621076101625301,35,False
+tt2402927,Carol_2015,False,False,True,False,0.5918182938349694,165,False
+tt2404233,Gods of Egypt_2016,False,False,False,False,0.6322148898596524,62,False
+tt2406566,Atomic Blonde_2017,False,False,False,False,0.6162890327494288,131,False
+tt2431286,Philomena_2013,False,False,False,False,0.48549299970211496,134,False
+tt2446980,Joy_2015,False,False,False,False,0.42231246827287283,144,False
+tt2488496,Star Wars: Episode VII - The Force Awakens_2015,True,True,True,True,0.6470637583892618,266,False
+tt2510894,Hotel Transylvania 2_2015,True,False,True,True,0.5027104591836735,79,False
+tt2554274,Crimson Peak_2015,False,False,False,False,0.5415997733497026,136,False
+tt2562232,Birdman or (The Unexpected Virtue of Ignorance)_2014,False,False,False,False,0.4238589506611688,57,False
+tt2582496,Me and Earl and the Dying Girl_2015,False,False,False,False,0.34493944636678203,82,False
+tt2582782,Hell or High Water_2016,False,False,False,False,0.4820603015075377,83,False
+tt2582802,Whiplash_2014,False,False,False,False,0.5684443012929646,120,False
+tt2582846,The Fault in Our Stars_2014,False,False,False,False,0.49294070189592576,111,False
+tt2584384,Jojo Rabbit_2019,False,False,False,False,0.4415488059355437,86,False
+tt2671706,Fences_2016,False,False,False,False,0.9698288159771755,40,False
+tt2692904,Locke_2013,False,False,False,False,0.2900585733771965,21,False
+tt2704998,Game Night_2018,False,False,False,False,0.4083472814642838,75,False
+tt2709768,The Secret Life of Pets_2016,False,False,True,False,0.5563612392880686,43,False
+tt2713180,Fury_2014,False,False,False,False,0.6569007055584237,111,False
+tt2771200,Beauty and the Beast_2017,False,True,False,True,0.5904964801778436,135,False
+tt2788710,The Interview_2014,False,False,False,False,0.3737004235656527,134,False
+tt2802144,Kingsman: The Secret Service_2014,False,True,True,True,0.5103933156714897,190,False
+tt2823054,Mike and Dave Need Wedding Dates_2016,False,False,False,False,0.31353006952209633,72,False
+tt2848292,Pitch Perfect 2_2015,True,False,True,True,0.3534584653207886,111,False
+tt2870612,"As Above, So Below_2014",False,False,False,False,0.5820427839710757,91,False
+tt2872718,Nightcrawler_2014,False,False,False,False,0.40861987753179463,1,True
+tt2873282,Red Sparrow_2018,False,False,False,False,0.563497571131159,215,False
+tt2883512,Chef_2014,False,False,False,False,0.3274776955529428,77,False
+tt2911666,John Wick_2014,False,True,True,True,0.7171806167400882,236,False
+tt2935510,Ad Astra_2019,False,False,False,False,0.5715937903118189,151,False
+tt2948356,Zootopia_2016,False,True,True,True,0.4144373203625912,79,False
+tt2948372,Soul_2020,False,False,True,False,0.48796542887292094,1,True
+tt2953050,Encanto_2021,False,True,True,True,0.669325489805075,65,False
+tt2975590,Batman v Superman: Dawn of Justice_2016,True,False,True,True,0.5634255846679622,104,False
+tt2980516,The Theory of Everything_2014,False,False,False,False,0.5981601731601731,144,False
+tt2980592,The Guest_2014,False,False,False,False,0.6280267676322973,148,False
+tt3062096,Inferno_2016,True,False,False,True,0.7544942729567075,2,True
+tt3076658,Creed_2015,True,False,True,True,0.554877251122836,178,False
+tt3104988,Crazy Rich Asians_2018,False,True,False,True,0.4200940070505288,112,False
+tt3152624,Trainwreck_2015,False,False,False,False,0.1734423586318093,115,False
+tt3170832,Room_2015,False,False,False,False,0.5482276165521333,130,False
+tt3183660,Fantastic Beasts and Where to Find Them_2016,True,True,True,True,0.5958523778944586,9,True
+tt3235888,It Follows_2014,False,False,False,False,0.8005767118271695,130,False
+tt3263904,Sully_2016,False,False,False,False,0.489253486464315,166,False
+tt3281548,Little Women_2019,False,False,False,False,0.4423795167169149,132,False
+tt3315342,Logan_2017,True,False,True,True,0.6836453549982339,161,False
+tt3316948,American Ultra_2015,False,False,False,False,0.45999289664620224,76,False
+tt3316960,Still Alice_2014,False,False,False,False,0.35688067040653787,111,False
+tt3322364,Concussion_2015,False,False,False,False,0.46354797141629894,130,False
+tt3322940,Annabelle_2014,False,False,True,False,0.6368906857883897,120,False
+tt3397884,Sicario_2015,False,False,False,False,0.5863475083408357,77,False
+tt3402236,Murder on the Orient Express_2017,False,False,True,False,0.39314649601210555,159,False
+tt3416532,A Monster Calls_2016,False,False,False,False,0.8099871488892969,4,True
+tt3416742,What We Do in the Shadows_2014,False,True,False,True,0.8712379540400297,101,False
+tt3450958,War for the Planet of the Apes_2017,True,True,False,True,0.8286525397951942,59,False
+tt3464902,The Lobster_2015,False,False,False,False,0.45792460088478554,124,False
+tt3470600,Sing_2016,False,True,False,True,0.49337061858155346,153,False
+tt3501632,Thor: Ragnarok_2017,False,False,True,False,0.5693765543263871,132,False
+tt3513548,Richard Jewell_2019,False,False,False,False,0.4681960375391032,169,False
+tt3521126,The Disaster Artist_2017,False,False,False,False,0.544676566826076,4,True
+tt3531824,Nerve_2016,False,False,False,False,0.4602249899558055,96,False
+tt3544112,Sing Street_2016,False,False,False,False,0.5182030439294362,141,False
+tt3553976,Captain Fantastic_2016,False,False,False,False,0.5846880492091389,117,False
+tt3569230,Legend_2015,False,False,False,False,0.4694067708872554,112,False
+tt3581652,West Side Story_2021,False,False,False,False,0.5718236819360415,88,False
+tt3631112,The Girl on the Train_2016,False,False,False,False,0.5447727012481393,154,False
+tt3659388,The Martian_2015,False,False,False,False,0.45354953701691086,298,False
+tt3682448,Bridge of Spies_2015,False,False,False,False,0.41271088756156343,3,True
+tt3691740,The BFG_2016,False,False,False,False,0.6151825912956478,134,False
+tt3704428,Elvis_2022,False,False,False,False,0.36518289200805504,4,True
+tt3741834,Lion_2016,False,False,False,False,0.7467243406685705,227,False
+tt3783958,La La Land_2016,False,False,False,False,0.6381793397736027,113,False
+tt3829266,The Predator_2018,True,True,True,True,0.7072650449193912,215,False
+tt3882082,The Boy_2016,False,False,False,False,0.6891315697876784,78,False
+tt3890160,Baby Driver_2017,False,False,False,False,0.68146420240445,104,False
+tt3896198,Guardians of the Galaxy Vol. 2_2017,False,False,True,False,0.5765073170731707,265,False
+tt4052882,The Shallows_2016,False,False,False,False,0.6768488745980707,1,True
+tt4062536,Green Room_2015,False,False,False,False,0.48663068039166457,138,False
+tt4123430,Fantastic Beasts: The Crimes of Grindelwald_2018,True,True,True,True,0.5025821956332771,19,True
+tt4123432,Fantastic Beasts: The Secrets of Dumbledore_2022,True,True,True,True,0.6478058904921922,106,False
+tt4154796,Avengers: Endgame_2019,False,False,True,False,0.5000836400133823,170,False
+tt4209788,Molly's Game_2017,False,False,False,False,0.4272084409024582,191,False
+tt4263482,The Witch_2015,False,False,False,False,0.6375319732983966,85,False
+tt4276820,The Founder_2016,False,False,False,False,0.4498958447538647,128,False
+tt4302938,Kubo and the Two Strings_2016,False,False,False,False,0.5148560578847436,13,True
+tt4364194,The Peanut Butter Falcon_2019,False,False,False,False,0.5713641996169877,94,False
+tt4468740,Paddington 2_2017,True,False,True,True,0.552798260540745,192,False
+tt4530422,Overlord_2018,False,False,False,False,0.7496040016673614,117,False
+tt4550098,Nocturnal Animals_2016,False,False,False,False,0.46581436972641266,95,False
+tt4555426,Darkest Hour_2017,False,False,False,False,0.43654936296795194,125,False
+tt4633694,Spider-Man: Into the Spider-Verse_2018,False,False,True,False,0.5588524443650014,113,False
+tt4651520,Bad Moms_2016,False,False,False,False,0.44911239772237904,94,False
+tt4779682,The Meg_2018,False,False,False,False,0.6362455342643716,331,False
+tt4786282,Lights Out_2016,False,False,False,False,0.7230015471892728,111,False
+tt4846340,Hidden Figures_2016,False,False,False,False,0.532354163779964,141,False
+tt4912910,Mission: Impossible - Fallout_2018,True,True,True,True,0.5668966677886234,293,False
+tt4925292,Lady Bird_2017,False,False,False,False,0.42784552845528456,123,False
+tt4975722,Moonlight_2016,False,False,False,False,0.6696451365841205,108,False
+tt4998632,Ambulance_2022,False,False,False,False,0.574454631678786,266,False
+tt5013056,Dunkirk_2017,False,False,False,False,0.8551566715086117,198,False
+tt5027774,"Three Billboards Outside Ebbing, Missouri_2017",False,False,False,False,0.4089243889255901,126,False
+tt5028340,Mary Poppins Returns_2018,True,False,True,True,0.973227855500565,96,False
+tt5052448,Get Out_2017,False,False,False,False,0.517707918822125,126,False
+tt5052474,Sicario: Day of the Soldado_2018,True,False,False,True,0.6419115396388123,126,False
+tt5083738,The Favourite_2018,False,False,False,False,0.49176151761517617,5,True
+tt5104604,Isle of Dogs_2018,False,False,False,False,0.7724492132552586,60,False
+tt5109280,Raya and the Last Dragon_2021,False,False,True,False,0.5350003173192867,80,False
+tt5164214,Ocean's Eight_2018,True,False,False,True,0.5647594085356807,185,False
+tt5164432,"Love, Simon_2018",False,False,False,False,0.48742755879112987,167,False
+tt5308322,Happy Death Day_2017,False,False,False,False,0.6528392428685684,107,False
+tt5362988,Wind River_2017,False,False,False,False,0.5902751778360165,72,False
+tt5503686,Hustlers_2019,False,False,False,False,0.5154047294224647,209,False
+tt5580036,"I, Tonya_2017",False,False,False,False,0.4113151810942718,204,False
+tt5580390,The Shape of Water_2017,False,False,False,False,0.5113023113735872,181,False
+tt5606664,Doctor Sleep_2019,True,False,False,True,0.5625793443357479,192,False
+tt5649144,The Florida Project_2017,False,False,False,False,0.4762729691270185,194,False
+tt5726616,Call Me by Your Name_2017,False,False,False,False,0.6106001071619932,141,False
+tt5758778,Skyscraper_2018,False,False,False,False,0.6874237834860941,96,False
+tt5776858,Phantom Thread_2017,False,False,False,False,0.4086845466155811,72,False
+tt5814060,The Nun_2018,False,False,False,False,0.6576814856499719,43,False
+tt6166392,Wonka_2023,False,False,False,False,0.4341606880263803,124,False
+tt6264654,Free Guy_2021,False,False,False,False,0.5861540742204873,158,False
+tt6266538,Vice_2018,False,False,False,False,0.3575169954307367,177,False
+tt6294822,The Post_2017,False,False,False,False,0.37352894611852866,79,False
+tt6343314,Creed II_2018,True,False,True,True,0.5008611955420466,201,False
+tt6394270,Bombshell_2019,False,False,False,False,0.44789436117059245,167,False
+tt6499752,Upgrade_2018,False,False,False,False,0.5858627858627858,147,False
+tt6628394,Bad Times at the El Royale_2018,False,False,False,False,0.5810631229235881,76,False
+tt6644200,A Quiet Place_2018,False,True,True,True,0.7988845299428086,134,False
+tt6710474,Everything Everywhere All at Once_2022,False,False,False,False,0.6152135751901697,206,False
+tt6723592,Tenet_2020,False,False,False,False,0.5286442933175636,276,False
+tt6751668,Parasite_2019,False,False,False,False,0.5113248377013705,143,False
+tt6857112,Us_2019,False,False,False,False,0.637280625036441,200,False
+tt6924650,Midway_2019,False,False,False,False,0.6487038731320525,235,False
+tt6966692,Green Book_2018,False,False,False,False,0.4870726442090466,139,False
+tt6998518,Mandy_2018,False,False,False,False,0.7367806166505816,83,False
+tt7040874,A Simple Favor_2018,False,False,False,False,0.4383281713975542,184,False
+tt7146812,Onward_2020,False,False,True,False,0.5575225394440271,117,False
+tt7286456,Joker_2019,False,False,False,False,0.6351732395998301,126,False
+tt7322224,Triangle of Sadness_2022,False,False,False,False,0.5662783636062496,91,False
+tt7349662,BlacKkKlansman_2018,False,False,False,False,0.4034106412005457,156,False
+tt7405458,A Man Called Otto_2022,False,False,False,False,0.5631644223954642,142,False
+tt7668870,Searching_2018,False,False,False,False,0.4546654482688598,133,False
+tt7740496,Nightmare Alley_2021,False,False,False,False,0.3953488372093023,162,False
+tt7752126,Brightburn_2019,False,False,False,False,0.7270916334661355,60,False
+tt7784604,Hereditary_2018,False,False,False,False,0.6684189565909996,155,False
+tt7798634,Ready or Not_2019,False,False,False,False,0.6311836991912614,86,False
+tt7888964,Nobody_2021,False,False,False,False,0.6487553286669123,172,False
+tt7984734,The Lighthouse_2019,False,False,False,False,0.6304112943888208,115,False
+tt8079248,Yesterday_2019,False,False,False,False,0.4240647228104469,65,False
+tt8244784,The Hunt_2020,False,False,False,False,0.6973504830774702,47,False
+tt8267604,Capernaum_2018,False,False,False,False,0.5617587157062418,284,False
+tt8364368,Crawl_2019,False,False,False,False,0.841659139859654,62,False
+tt8367814,The Gentlemen_2019,False,False,False,False,0.3294932093219891,120,False
+tt8579674,1917_2019,False,False,False,False,0.7421664342166434,62,False
+tt8772262,Midsommar_2019,False,False,False,False,0.6517848458321175,119,False
+tt8847712,The French Dispatch_2021,False,False,False,False,0.6513140341515475,58,False
+tt8946378,Knives Out_2019,False,False,True,False,0.39069965870307166,196,False
+tt9114286,Black Panther: Wakanda Forever_2022,False,False,True,False,0.47857505786710325,339,False
+tt9243804,The Green Knight_2021,False,False,False,False,0.7668232566652431,127,False
+tt9362722,Spider-Man: Across the Spider-Verse_2023,True,False,True,True,0.46546659953004366,57,False
+tt9411972,Where the Crawdads Sing_2022,False,False,False,False,0.5582727196722682,38,False
+tt9620292,Promising Young Woman_2020,False,False,False,False,0.42895193977996526,85,False
+tt9639470,Last Night in Soho_2021,False,False,False,False,0.6546163849154747,124,False
+tt9764362,The Menu_2022,False,False,False,False,0.44771059954464965,59,False
+tt9770150,Nomadland_2020,False,False,False,False,0.4525815647766867,167,False
+tt9784798,Judas and the Black Messiah_2021,False,False,False,False,0.4166370423035905,107,False

@@ -1,0 +1,6 @@
+variant,n_high,n_low,terms,words_high,words_low,above_threshold,above_high,above_low,jaccard_high_vs_primary,jaccard_low_vs_primary,top10_high,top10_low
+primary,290,236,18719,2437561,2111709,210,124,86,1.0,1.0,"je, pas, rocky, c'est, balboa, il, parker, yah, chancellor, vous","jerry, eddie, piper, padre, jake, gem, sparky, jimmy, bloom, films"
+names kept,290,236,19137,2500405,2163462,435,227,208,0.42857142857142855,0.20481927710843373,"rocky, jedi, caesar, je, pas, tre, barbie, elizabeth, creed, bella","kane, milton, susie, jennifer, lindsey, brennan, adam, fred, piper, craig"
+names removed with NER too,290,236,17844,2394277,2075383,137,72,65,0.3157894736842105,0.47058823529411764,"rocky, ll, yah, chancellor, ce, tu, bender, tout, woody, de","rick, piper, abigail, steven, saudi, earl, ie, mop, gem, jerry"
+stopwords removed,290,236,18431,1148609,995784,644,336,308,0.6666666666666666,0.7241379310344828,"je, pas, balboa, c'est, chancellor, rocky, parker, dans, il, sparrow","padre, eddie, piper, jerry, sparky, gem, sal, rico, ie, saudi"
+lemmatised,290,236,14351,2387622,2068299,227,135,92,0.8518518518518519,0.639344262295082,"je, pas, rocky, balboa, c'est, chancellor, parker, il, yah, vous","jerry, orchid, piper, padre, eddie, shaw, sparky, gem, mop, jake"

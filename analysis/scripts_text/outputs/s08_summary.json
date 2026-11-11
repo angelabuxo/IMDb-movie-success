@@ -1,0 +1,9 @@
+{
+ "terms": 30,
+ "windows": 150,
+ "window_words_max": 15,
+ "terms_that_are_names_somewhere": 14,
+ "name_rule_scripts": 3,
+ "terms_mostly_one_script": 20,
+ "human_categories_filled": 0
+}
