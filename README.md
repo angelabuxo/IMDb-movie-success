@@ -110,17 +110,39 @@ collaborators on hover, run:
 python3 scripts/imdb/build_actor_network_interactive.py
 ```
 
-This writes `actor_network_interactive.html` alongside the static outputs.
-It has no external JavaScript or network dependency, so it can be opened
-directly as a local file. The layout selector starts with a force-directed
-layout and also offers radial, grid and ring layouts; changing it moves the
-nodes and edges while preserving the hover highlighting.
-The community selector can colour the graph using Louvain, link communities,
-or connected components. It reports Newman-Girvan modularity for each node
-partition; link communities additionally report partition density and the
-modularity of their strongest-link node projection. These metrics are not
-directly interchangeable: link communities can overlap, while the displayed
-node projection assigns each actor to one strongest incident link community.
+```bash
+../../.venv/bin/python ../../scripts/network/wiki_producers.py
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/build_graph.py
+```
+
+`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. About 1% of company names arrive run together from the infobox parser ("Madras TalkiesLyca Productions"); they are split only when every piece is a Wikipedia article, and otherwise stay unmerged. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 1,800 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
+
+The actor network's ROI details use the extracted Wikipedia infoboxes:
+
+```bash
+python scripts/network/actor_roi.py
+```
+
+This writes per-movie and per-actor ROI tables under `build/actor-network/` and updates the generated network page's actor details. ROI is `(gross - budget) / budget`, using only positive budget and gross values reported in USD; it is a gross-minus-budget proxy, not true profit, because marketing costs and cinema revenue shares are not included.
+
+The generated page also offers director-by-shared-actor and movie-by-shared-actor-or-director projections. Each projection keeps the same layouts, community methods, centrality summaries, ROI summaries and community sorting controls.
+
+## What predicts profit
+
+[`notebooks/what_predicts_profit.ipynb`](notebooks/what_predicts_profit.ipynb) puts every predictor side by side: budget, year and genre; release month; franchise; network measures; critic scores; audience ratings and review sentiment. It trains on films up to 2010 and tests on 2011 to 2017. It also asks why a studio's track record predicts profit, whether network centrality adds to plain experience, whether alliances of companies differ in profit, and which films critics loved but lost money (and the reverse). Two more scripts build its inputs, after the graph:
+
+```bash
+../../.venv/bin/python ../../scripts/network/franchise_flag.py
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/film_features.py
+```
+
+`franchise_flag.py` flags films in a series or franchise from Wikidata (follows, followed by, or part of a film series), which takes about 15 minutes the first time and is cached. `film_features.py` builds every network measure from films released before the one it describes, including PageRank in a collaboration network rebuilt for each release year, in about 10 seconds.
 
 ## Collection rules
 
