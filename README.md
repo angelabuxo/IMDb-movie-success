@@ -50,29 +50,40 @@ Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with
 
 ## Get the data
 
-The data isn't in git. If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
+Everything the code reads lives in `data/raw/`, which git ignores. There are two ways to fill it.
+
+### Data bundles (in the repo)
+
+[`data/bundles/`](data/bundles/) holds compressed archives that come with every clone, so most of the data needs no download:
+
+| Archive | Size | What it is |
+|---|---:|---|
+| `wikipedia-wikidata-2026-11-11.tar.zst` | 97 MB | Wikipedia article text for the 10,000+ vote movies (the hour-long pull), IMDb-to-Wikipedia links, Wikidata tables and the parsed infoboxes (budget, gross, studios, scores) |
+| `moviesum-screenplays-2026-11-11.tar.zst` | 90 MB | The MovieSum screenplays with IMDb IDs |
+| `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay |
+| `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
+
+Unpack them from the repo root:
+
+```bash
+mkdir -p data/raw && for f in data/bundles/*.tar.zst; do tar --zstd -xf "$f" -C data/raw; done
+```
+
+[`data/bundles/README.md`](data/bundles/README.md) lists each archive's licence: Wikipedia text is CC BY-SA, and MovieSum and the Tag Genome are non-commercial. The same archives are also on the [data-2026-11-11 release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11).
+
+### Everything else (download)
+
+IMDb's files and the Tag Genome reviews aren't bundled: IMDb's terms don't allow republishing, and the reviews (1.9 GB) are over GitHub's file limit. The movie graph is built from IMDb's files, so rebuild it after downloading them (see [The movie graph](#the-movie-graph)). If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
 
 ```bash
 python3 scripts/get_data.py --list
 ```
 
 ```bash
-python3 scripts/get_data.py --all
+python3 scripts/get_data.py imdb genome
 ```
 
-`--all` needs about 4.5 GB. Wikipedia articles are a separate step of about an hour: `python3 scripts/get_data.py wikipedia`. Everything goes in `data/raw/`, which git ignores.
-
-To skip the Wikipedia pull, download the [data release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11) instead. It has the Wikipedia articles, Wikidata tables and parsed infoboxes (92 MB), and the screenplay and review features with their embeddings (15 MB). IMDb's files aren't in it, because IMDb's terms don't allow republishing, so still fetch those with `get_data.py imdb`:
-
-```bash
-gh release download data-2026-11-11 -R angelabuxo/IMDb-movie-success -D data/raw
-```
-
-```bash
-cd data/raw && for f in *.tar.zst; do tar --zstd -xf "$f"; done
-```
-
-Each archive has a README with its file list and licences. The Wikipedia part is CC BY-SA, and the features are non-commercial because MovieSum and the Tag Genome are.
+`--all` fetches every dataset (about 4.5 GB), and `python3 scripts/get_data.py wikipedia` redoes the Wikipedia pull (about an hour) if you need fresher articles than the bundle's.
 
 ## Scripts and reviews
 
