@@ -62,6 +62,18 @@ python3 scripts/get_data.py --all
 
 `--all` needs about 4.5 GB. Wikipedia articles are a separate step of about an hour: `python3 scripts/get_data.py wikipedia`. Everything goes in `data/raw/`, which git ignores.
 
+To skip the Wikipedia pull, download the [data release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11) instead. It has the Wikipedia articles, Wikidata tables and parsed infoboxes (92 MB), and the screenplay and review features with their embeddings (15 MB). IMDb's files aren't in it, because IMDb's terms don't allow republishing, so still fetch those with `get_data.py imdb`:
+
+```bash
+gh release download data-2026-11-11 -R angelabuxo/IMDb-movie-success -D data/raw
+```
+
+```bash
+cd data/raw && for f in *.tar.zst; do tar --zstd -xf "$f"; done
+```
+
+Each archive has a README with its file list and licences. The Wikipedia part is CC BY-SA, and the features are non-commercial because MovieSum and the Tag Genome are.
+
 ## In this repo
 
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
