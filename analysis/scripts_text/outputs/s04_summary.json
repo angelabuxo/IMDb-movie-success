@@ -1,0 +1,12 @@
+{
+ "treated": 67,
+ "matched": 67,
+ "unmatched_dropped": 0,
+ "caliper_sd": 0.5,
+ "caliper_log_units": 0.6598983942531518,
+ "median_budget_gap_log": 0.02047853134353872,
+ "max_abs_smd_before": 0.268,
+ "max_abs_smd_after": 0.03,
+ "smd_votes_before": -1.058,
+ "smd_votes_after": -1.057
+}

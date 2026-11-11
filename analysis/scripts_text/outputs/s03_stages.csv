@@ -1,0 +1,7 @@
+stage,tokens,types,hapax,min_length_rule
+0 raw dialogue (Step 2),10036412,109566,46609,tokens shorter than 2 letters dropped from stage 2 on
+"1 contractions joined, technical directions and artefact lines removed",9969219,109585,46621,tokens shorter than 2 letters dropped from stage 2 on
+2 character names removed (labels),9186469,104055,45818,tokens shorter than 2 letters dropped from stage 2 on
+"2b names removed (labels + NER), check only",9030034,92076,40692,tokens shorter than 2 letters dropped from stage 2 on
+3a + stopwords removed (variant),4322216,103754,45817,tokens shorter than 2 letters dropped from stage 2 on
+3b + lemmatised (variant),8999645,87442,40646,tokens shorter than 2 letters dropped from stage 2 on

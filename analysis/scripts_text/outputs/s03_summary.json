@@ -1,0 +1,17 @@
+{
+ "scripts": 1095,
+ "scripts_pretokenised": 483,
+ "pretokenised_rule": "20 or more split contractions joined",
+ "contraction_joins": 339595,
+ "technical_tokens_removed": 167248,
+ "artefact_tokens_removed": 10146,
+ "heading_tokens_removed_full": 713381,
+ "median_label_names": 55.0,
+ "label_names_total": 74915,
+ "label_names_dictionary_words": 48294,
+ "median_ner_names": 74.0,
+ "median_ner_not_in_labels": 58.0,
+ "dialogue_name_tokens_removed": 233914,
+ "dialogue_name_tokens_removed_with_ner": 390349,
+ "dialogue_tokens_primary": 9186469
+}
