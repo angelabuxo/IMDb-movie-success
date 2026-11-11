@@ -1,7 +1,7 @@
 """The movie graph: movies, the people who made them, and their studios and
 distributors, as one network to load and analyse.
 
-Run from the data folder after graph_tables.sql:
+Run from the data folder after graph_tables.sql and resolve_companies.py:
 
     cd data/raw && ../../.venv/bin/python ../../scripts/network/build_graph.py
 
@@ -12,12 +12,15 @@ Nodes (features/graph/nodes.csv), one row each, keyed by "id":
   theatrical rule in scripts/imdb/genome_stats.py).
 - person: IMDb ID (nm...), with name, birth and death year, and the roles they
   hold anywhere in the graph.
-- studio and distributor: "studio:<name>" or "distributor:<name>", from the
-  Wikipedia infobox strings. Names aren't merged, so "Warner Bros." and
-  "Warner Bros. Pictures" are two nodes.
+- company: a studio or distributor, "company:<Wikidata ID>" when
+  resolve_companies.py gave its name an ID, else "company:name:<name>". Name
+  variants share a node only when they share an ID, so "Miramax Films" and
+  "Miramax" are one node, and a label such as "Magnet Releasing" stays apart
+  from its parent. A company that both produced and distributed films is one
+  node with both roles. Fields: qid, the names it appears under, and roles.
 
-Edges (features/graph/edges.csv) always run from a person, studio or
-distributor to a movie: role (actor, director, writer, producer, composer,
+Edges (features/graph/edges.csv) always run from a person or company to a
+movie: role (actor, director, writer, producer, composer,
 cinematographer, editor, studio, distributor), ordering (billing order, actors
 only) and year (the movie's). Someone who both wrote and directed a film has
 two edges to it.
@@ -42,6 +45,7 @@ import networkx as nx
 
 MOVIES = "features/movies_features_10k.csv"
 CREDITS = "features/graph/credits.csv"
+COMPANIES = "features/graph/companies.csv"
 PEOPLE = "features/graph/people.csv"
 NODES = "features/graph/nodes.csv"
 EDGES = "features/graph/edges.csv"
@@ -68,6 +72,19 @@ def main():
     nodes, edges = {}, []
     with open(MOVIES, newline="") as f:
         movies = list(csv.DictReader(f))
+    company = {}
+    variants, croles = defaultdict(set), defaultdict(set)
+    with open(COMPANIES, newline="", encoding="utf8") as f:
+        for r in csv.DictReader(f):
+            key = f"company:{r['qid']}" if r["qid"] else f"company:name:{r['name']}"
+            company[(r["tconst"], r["role"], r["name"])] = key
+            variants[key].add(r["name"])
+            croles[key].add(r["role"])
+            if key not in nodes or r["label"] < nodes[key]["label"]:
+                nodes[key] = {"type": "company", "label": r["label"], "qid": r["qid"] or None}
+    for key in variants:
+        nodes[key]["names"] = "|".join(sorted(variants[key]))
+        nodes[key]["roles"] = "|".join(sorted(croles[key]))
     year = {}
     for r in movies:
         usd = r["budget_cur"] == "USD" and r["gross_cur"] == "USD"
@@ -80,9 +97,8 @@ def main():
             "tier": r["tier"], "clean": int(clean(r)),
         }
         for kind, field in (("studio", "studios"), ("distributor", "distributors")):
-            for name in sorted({s.strip() for s in (r[field] or "").split("|") if s.strip()}):
-                key = f"{kind}:{name}"
-                nodes.setdefault(key, {"type": kind, "label": name})
+            keys = {company[(r["tconst"], kind, n)] for n in {s.strip() for s in (r[field] or "").split("|") if s.strip()}}
+            for key in sorted(keys):  # two names of one company on one film give one edge
                 edges.append((key, r["tconst"], kind, None, year[r["tconst"]]))
 
     roles = defaultdict(set)
@@ -100,7 +116,7 @@ def main():
         nodes[n] = {"type": "person", "label": n, "roles": "|".join(sorted(roles[n]))}
 
     cols = ["type", "label", "year", "genres", "votes", "rating", "budget_usd", "gross_usd", "multiple", "rt",
-            "mc", "tier", "clean", "birth_year", "death_year", "roles"]
+            "mc", "tier", "clean", "birth_year", "death_year", "roles", "qid", "names"]
     with open(NODES, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["id"] + cols)
