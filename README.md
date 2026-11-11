@@ -62,6 +62,7 @@ Everything the code reads lives in `data/raw/`, which git ignores. There are two
 | `moviesum-screenplays-2026-11-11.tar.zst` | 90 MB | The MovieSum screenplays with IMDb IDs |
 | `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay |
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
+| `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph: node and edge tables, GraphML, credits, people, the company IDs and the Wikipedia producer matches |
 
 Unpack them from the repo root:
 
@@ -73,7 +74,7 @@ mkdir -p data/raw && for f in data/bundles/*.tar.zst; do tar --zstd -xf "$f" -C 
 
 ### Everything else (download)
 
-IMDb's files and the Tag Genome reviews aren't bundled: IMDb's terms don't allow republishing, and the reviews (1.9 GB) are over GitHub's file limit. The movie graph is built from IMDb's files, so rebuild it after downloading them (see [The movie graph](#the-movie-graph)). If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
+IMDb's raw files and the Tag Genome reviews aren't bundled: the IMDb files are 1.9 GB, and so are the reviews, over GitHub's file limit. The movie graph built from IMDb's files is bundled; rebuild it after downloading them only if you change the graph scripts (see [The movie graph](#the-movie-graph)). If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
 
 ```bash
 python3 scripts/get_data.py --list
