@@ -62,6 +62,18 @@ python3 scripts/get_data.py --all
 
 `--all` needs about 4.5 GB. Wikipedia articles are a separate step of about an hour: `python3 scripts/get_data.py wikipedia`. Everything goes in `data/raw/`, which git ignores.
 
+To skip the Wikipedia pull, download the [data release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11) instead. It has the Wikipedia articles, Wikidata tables and parsed infoboxes (92 MB), and the screenplay and review features with their embeddings (15 MB). IMDb's files aren't in it, because IMDb's terms don't allow republishing, so still fetch those with `get_data.py imdb`:
+
+```bash
+gh release download data-2026-11-11 -R angelabuxo/IMDb-movie-success -D data/raw
+```
+
+```bash
+cd data/raw && for f in *.tar.zst; do tar --zstd -xf "$f"; done
+```
+
+Each archive has a README with its file list and licences. The Wikipedia part is CC BY-SA, and the features are non-commercial because MovieSum and the Tag Genome are.
+
 ## Scripts and reviews
 
 [`notebooks/scripts_and_reviews.ipynb`](notebooks/scripts_and_reviews.ipynb) works through the group's notes on screenplays and reviews: hits against flops on character networks and text measures, sentiment arcs, distinctive words, script and review embeddings against profit, and how review sentiment lines up with ratings and money. Two scripts build its inputs. Run them from the data folder after downloading the data:
@@ -89,6 +101,24 @@ The first reads MovieSum and the second the Tag Genome reviews. Both write only 
 - [`notebooks/`](notebooks/): analysis notebooks.
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
+
+## The movie graph
+
+One network of the 12,673 movies with 10,000+ votes, the people who made them (actors with billing order, directors, writers, producers, composers, cinematographers, editors) and the companies that produced and distributed them. Build it from the data folder after downloading the IMDb files and parsing the infoboxes:
+
+```bash
+cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_tables.sql
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/resolve_companies.py
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/build_graph.py
+```
+
+`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. About 1% of company names arrive run together from the infobox parser ("Madras TalkiesLyca Productions") and stay unmerged.
 
 ## Collection rules
 

@@ -1,5 +1,6 @@
 mwparserfromhell==0.7.2
-# scripts/screenplays, scripts/reviews and notebooks/
+# scripts/screenplays, scripts/reviews, scripts/network and notebooks/
+# (scripts/network/graph_tables.sql needs the duckdb command-line tool)
 igraph==1.0.0
 matplotlib==3.11.2
 networkx==3.6.1
