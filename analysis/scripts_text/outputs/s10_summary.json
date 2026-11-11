@@ -1,0 +1,26 @@
+{
+ "labelled_films": 526,
+ "likely_franchise": 93,
+ "sequel_follows": 63,
+ "named_franchise": 53,
+ "series_noisy": 142,
+ "possible_transcripts": 24,
+ "franchise_share_successful": 0.2655172413793103,
+ "franchise_share_unsuccessful": 0.06779661016949153,
+ "null_shuffles": 200,
+ "logreg_without_franchise": {
+  "auc_text": 0.5759575078954924,
+  "auc_baseline": 0.6620282280166001,
+  "auc_text_plus_baseline": 0.6618082075834013
+ },
+ "random_drop": {
+  "replicates": 50,
+  "dropped_successful": 77,
+  "dropped_unsuccessful": 16,
+  "z_median": 2.938519725258267,
+  "z_p05": 1.7532897212442475,
+  "z_p95": 4.358053326885947,
+  "share_p_below_0_05": 0.94,
+  "share_z_at_or_below_franchise_drop": 0.0
+ }
+}

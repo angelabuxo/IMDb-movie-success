@@ -74,6 +74,20 @@ cd data/raw && for f in *.tar.zst; do tar --zstd -xf "$f"; done
 
 Each archive has a README with its file list and licences. The Wikipedia part is CC BY-SA, and the features are non-commercial because MovieSum and the Tag Genome are.
 
+## Scripts and reviews
+
+[`notebooks/scripts_and_reviews.ipynb`](notebooks/scripts_and_reviews.ipynb) works through the group's notes on screenplays and reviews: hits against flops on character networks and text measures, sentiment arcs, distinctive words, script and review embeddings against profit, and how review sentiment lines up with ratings and money. Two scripts build its inputs. Run them from the data folder after downloading the data:
+
+```bash
+cd data/raw && ../../.venv/bin/python ../../scripts/screenplays/screenplay_features.py
+```
+
+```bash
+cd data/raw && ../../.venv/bin/python ../../scripts/reviews/review_features.py
+```
+
+The first reads MovieSum and the second the Tag Genome reviews. Both write only numbers to `data/raw/features/`. The notebook also reads the screenplay embeddings in `features/embeddings_hpc/`.
+
 ## In this repo
 
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
@@ -83,6 +97,8 @@ Each archive has a README with its file list and licences. The Wikipedia part is
 - [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.
 - [`data/movie_links.csv`](data/movie_links.csv): IMDb, Wikipedia and Wikidata links for 12,673 movies.
 - [`scripts/imdb/`](scripts/imdb/): the code behind the numbers.
+- [`scripts/screenplays/`](scripts/screenplays/) and [`scripts/reviews/`](scripts/reviews/): screenplay and review features for the notebook.
+- [`notebooks/`](notebooks/): analysis notebooks.
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
 

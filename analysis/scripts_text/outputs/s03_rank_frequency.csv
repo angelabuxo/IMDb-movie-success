@@ -1,0 +1,502 @@
+version,rank,frequency
+raw,1,349520
+raw,2,344240
+raw,3,283584
+raw,4,243175
+raw,5,219285
+raw,6,157954
+raw,7,131784
+raw,8,128875
+raw,9,109135
+raw,10,101671
+raw,11,101395
+raw,12,88604
+raw,13,88146
+raw,14,83503
+raw,15,81579
+raw,16,72345
+raw,17,71509
+raw,18,66728
+raw,20,65652
+raw,21,64385
+raw,22,63928
+raw,23,63408
+raw,25,58836
+raw,26,58782
+raw,28,56722
+raw,29,55486
+raw,31,53990
+raw,33,51343
+raw,35,44637
+raw,37,42293
+raw,39,40197
+raw,42,38030
+raw,44,36554
+raw,47,35631
+raw,50,31908
+raw,53,31648
+raw,56,29629
+raw,59,28345
+raw,63,26925
+raw,67,24043
+raw,71,22363
+raw,75,21521
+raw,79,20307
+raw,84,19066
+raw,89,17767
+raw,94,16840
+raw,100,16476
+raw,106,14842
+raw,113,13668
+raw,119,12233
+raw,126,11172
+raw,134,10354
+raw,142,9622
+raw,151,8970
+raw,160,8531
+raw,169,8085
+raw,179,7697
+raw,190,7305
+raw,202,6781
+raw,214,6162
+raw,227,5619
+raw,240,5244
+raw,255,4860
+raw,270,4553
+raw,286,4107
+raw,303,3839
+raw,321,3636
+raw,341,3394
+raw,361,3195
+raw,383,3013
+raw,406,2767
+raw,430,2622
+raw,456,2460
+raw,484,2316
+raw,513,2131
+raw,543,1961
+raw,576,1816
+raw,611,1686
+raw,647,1547
+raw,686,1406
+raw,727,1269
+raw,771,1158
+raw,817,1062
+raw,866,994
+raw,918,935
+raw,974,867
+raw,1032,801
+raw,1094,755
+raw,1160,700
+raw,1229,650
+raw,1303,610
+raw,1381,566
+raw,1464,528
+raw,1552,489
+raw,1645,454
+raw,1744,425
+raw,1849,394
+raw,1960,367
+raw,2078,342
+raw,2202,316
+raw,2335,294
+raw,2475,275
+raw,2623,256
+raw,2781,234
+raw,2948,219
+raw,3125,203
+raw,3313,186
+raw,3512,172
+raw,3722,159
+raw,3946,148
+raw,4183,137
+raw,4434,128
+raw,4700,118
+raw,4983,109
+raw,5282,101
+raw,5599,93
+raw,5935,85
+raw,6291,78
+raw,6669,72
+raw,7070,66
+raw,7494,61
+raw,7944,56
+raw,8421,51
+raw,8927,47
+raw,9463,43
+raw,10031,39
+raw,10633,36
+raw,11272,33
+raw,11949,30
+raw,12666,28
+raw,13427,25
+raw,14233,23
+raw,15088,21
+raw,15994,19
+raw,16954,18
+raw,17972,16
+raw,19051,15
+raw,20195,13
+raw,21408,12
+raw,22693,11
+raw,24056,10
+raw,25501,9
+raw,27032,8
+raw,28655,7
+raw,30376,7
+raw,32200,6
+raw,34133,5
+raw,36183,5
+raw,38355,4
+raw,40658,4
+raw,43100,3
+raw,45688,3
+raw,48431,3
+raw,51339,2
+raw,54422,2
+raw,57690,2
+raw,61154,2
+raw,64826,1
+raw,68719,1
+raw,72845,1
+raw,77219,1
+raw,81856,1
+raw,86771,1
+raw,91982,1
+raw,97505,1
+raw,103360,1
+raw,109566,1
+primary,1,348477
+primary,2,344190
+primary,3,242343
+primary,4,157950
+primary,5,131424
+primary,6,128873
+primary,7,108604
+primary,8,101190
+primary,9,98716
+primary,10,87973
+primary,11,83275
+primary,12,81448
+primary,13,72148
+primary,14,71398
+primary,15,65950
+primary,16,65900
+primary,17,65543
+primary,18,62428
+primary,19,61674
+primary,20,60461
+primary,22,58752
+primary,23,58556
+primary,24,57872
+primary,26,55944
+primary,27,54477
+primary,29,53777
+primary,31,51273
+primary,33,44468
+primary,35,42215
+primary,37,40018
+primary,39,38565
+primary,41,36648
+primary,44,36009
+primary,46,34735
+primary,49,31729
+primary,52,29597
+primary,55,28293
+primary,58,27271
+primary,62,24704
+primary,65,22715
+primary,69,21901
+primary,73,20557
+primary,78,19778
+primary,82,17922
+primary,87,17422
+primary,93,16592
+primary,98,16106
+primary,104,14837
+primary,110,13864
+primary,117,12457
+primary,124,11475
+primary,131,10504
+primary,139,9618
+primary,147,9060
+primary,156,8542
+primary,165,7954
+primary,175,7549
+primary,186,7116
+primary,197,6781
+primary,209,6208
+primary,221,5736
+primary,234,5274
+primary,248,4867
+primary,263,4566
+primary,279,4288
+primary,296,3888
+primary,313,3694
+primary,332,3429
+primary,352,3260
+primary,373,3072
+primary,395,2780
+primary,419,2609
+primary,444,2455
+primary,470,2313
+primary,499,2125
+primary,528,1954
+primary,560,1791
+primary,593,1678
+primary,629,1508
+primary,666,1376
+primary,706,1252
+primary,749,1125
+primary,793,1043
+primary,841,971
+primary,891,905
+primary,944,842
+primary,1001,780
+primary,1060,736
+primary,1124,676
+primary,1191,632
+primary,1262,593
+primary,1338,551
+primary,1418,515
+primary,1502,476
+primary,1592,438
+primary,1687,404
+primary,1788,377
+primary,1895,349
+primary,2008,326
+primary,2128,305
+primary,2256,284
+primary,2390,264
+primary,2533,242
+primary,2685,226
+primary,2845,208
+primary,3015,193
+primary,3195,175
+primary,3386,162
+primary,3589,151
+primary,3803,140
+primary,4031,130
+primary,4272,120
+primary,4527,110
+primary,4797,102
+primary,5084,94
+primary,5388,86
+primary,5710,79
+primary,6051,72
+primary,6413,66
+primary,6796,61
+primary,7203,56
+primary,7633,51
+primary,8089,47
+primary,8573,43
+primary,9085,39
+primary,9628,36
+primary,10204,33
+primary,10814,30
+primary,11460,28
+primary,12145,25
+primary,12871,23
+primary,13640,21
+primary,14456,19
+primary,15320,18
+primary,16236,16
+primary,17206,15
+primary,18234,13
+primary,19324,12
+primary,20479,11
+primary,21703,10
+primary,23001,9
+primary,24376,8
+primary,25832,7
+primary,27377,7
+primary,29013,6
+primary,30747,5
+primary,32585,5
+primary,34532,4
+primary,36597,4
+primary,38784,3
+primary,41102,3
+primary,43559,3
+primary,46163,2
+primary,48922,2
+primary,51846,2
+primary,54945,2
+primary,58229,2
+primary,61709,1
+primary,65398,1
+primary,69307,1
+primary,73449,1
+primary,77840,1
+primary,82492,1
+primary,87423,1
+primary,92648,1
+primary,98186,1
+primary,104055,1
+stopwords removed,1,61674
+stopwords removed,2,57872
+stopwords removed,3,54477
+stopwords removed,4,53777
+stopwords removed,5,42765
+stopwords removed,6,36648
+stopwords removed,7,31591
+stopwords removed,8,29597
+stopwords removed,9,28293
+stopwords removed,10,27845
+stopwords removed,11,26915
+stopwords removed,12,24704
+stopwords removed,13,22715
+stopwords removed,14,21889
+stopwords removed,15,21477
+stopwords removed,16,20296
+stopwords removed,17,19812
+stopwords removed,18,19042
+stopwords removed,19,17854
+stopwords removed,20,17652
+stopwords removed,22,16823
+stopwords removed,23,16755
+stopwords removed,24,16625
+stopwords removed,26,16106
+stopwords removed,27,15760
+stopwords removed,29,14449
+stopwords removed,31,12540
+stopwords removed,33,12051
+stopwords removed,34,11977
+stopwords removed,37,11475
+stopwords removed,39,10960
+stopwords removed,41,10703
+stopwords removed,43,10223
+stopwords removed,46,9085
+stopwords removed,49,8787
+stopwords removed,52,8559
+stopwords removed,55,8343
+stopwords removed,58,7895
+stopwords removed,62,7549
+stopwords removed,65,7404
+stopwords removed,69,7222
+stopwords removed,73,7054
+stopwords removed,78,6781
+stopwords removed,82,6474
+stopwords removed,87,6136
+stopwords removed,92,5878
+stopwords removed,98,5713
+stopwords removed,104,5285
+stopwords removed,110,5076
+stopwords removed,117,4859
+stopwords removed,124,4613
+stopwords removed,131,4462
+stopwords removed,139,4299
+stopwords removed,147,4041
+stopwords removed,156,3818
+stopwords removed,165,3715
+stopwords removed,175,3511
+stopwords removed,186,3325
+stopwords removed,197,3195
+stopwords removed,208,3082
+stopwords removed,221,2845
+stopwords removed,234,2709
+stopwords removed,248,2595
+stopwords removed,263,2494
+stopwords removed,279,2413
+stopwords removed,295,2313
+stopwords removed,313,2199
+stopwords removed,332,2042
+stopwords removed,351,1898
+stopwords removed,372,1792
+stopwords removed,395,1703
+stopwords removed,418,1596
+stopwords removed,443,1489
+stopwords removed,470,1365
+stopwords removed,498,1267
+stopwords removed,528,1173
+stopwords removed,559,1089
+stopwords removed,592,1034
+stopwords removed,628,977
+stopwords removed,665,928
+stopwords removed,705,870
+stopwords removed,747,820
+stopwords removed,792,775
+stopwords removed,839,736
+stopwords removed,889,691
+stopwords removed,943,643
+stopwords removed,999,608
+stopwords removed,1059,574
+stopwords removed,1122,542
+stopwords removed,1189,508
+stopwords removed,1260,475
+stopwords removed,1335,441
+stopwords removed,1415,410
+stopwords removed,1500,388
+stopwords removed,1589,364
+stopwords removed,1684,341
+stopwords removed,1785,320
+stopwords removed,1891,300
+stopwords removed,2004,283
+stopwords removed,2124,265
+stopwords removed,2251,245
+stopwords removed,2386,229
+stopwords removed,2528,214
+stopwords removed,2679,198
+stopwords removed,2839,183
+stopwords removed,3009,170
+stopwords removed,3189,158
+stopwords removed,3379,148
+stopwords removed,3581,138
+stopwords removed,3795,128
+stopwords removed,4022,120
+stopwords removed,4263,110
+stopwords removed,4517,103
+stopwords removed,4787,94
+stopwords removed,5073,87
+stopwords removed,5376,80
+stopwords removed,5698,74
+stopwords removed,6038,68
+stopwords removed,6399,62
+stopwords removed,6781,58
+stopwords removed,7187,53
+stopwords removed,7616,49
+stopwords removed,8071,45
+stopwords removed,8554,41
+stopwords removed,9065,37
+stopwords removed,9606,34
+stopwords removed,10180,32
+stopwords removed,10789,29
+stopwords removed,11433,27
+stopwords removed,12117,24
+stopwords removed,12841,23
+stopwords removed,13608,21
+stopwords removed,14421,19
+stopwords removed,15283,17
+stopwords removed,16196,16
+stopwords removed,17164,14
+stopwords removed,18190,13
+stopwords removed,19277,12
+stopwords removed,20428,11
+stopwords removed,21649,10
+stopwords removed,22943,9
+stopwords removed,24314,8
+stopwords removed,25767,7
+stopwords removed,27306,6
+stopwords removed,28938,6
+stopwords removed,30667,5
+stopwords removed,32500,5
+stopwords removed,34442,4
+stopwords removed,36500,4
+stopwords removed,38681,3
+stopwords removed,40993,3
+stopwords removed,43442,3
+stopwords removed,46038,2
+stopwords removed,48789,2
+stopwords removed,51705,2
+stopwords removed,54795,2
+stopwords removed,58069,1
+stopwords removed,61539,1
+stopwords removed,65216,1
+stopwords removed,69113,1
+stopwords removed,73243,1
+stopwords removed,77620,1
+stopwords removed,82258,1
+stopwords removed,87174,1
+stopwords removed,92383,1
+stopwords removed,97904,1
+stopwords removed,103754,1

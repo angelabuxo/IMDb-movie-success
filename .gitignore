@@ -3,3 +3,6 @@ __pycache__/
 .venv/
 build/
 .DS_Store
+# Screenplay text analysis: anything that holds script text (layers, token caches, KWIC lines,
+# Scattertext explorers, validation previews) stays local. See docs/scripts-text.md.
+analysis/scripts_text/private/

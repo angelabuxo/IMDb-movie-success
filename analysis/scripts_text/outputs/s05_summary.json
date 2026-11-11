@@ -1,0 +1,25 @@
+{
+ "primary": {
+  "n_high": 290,
+  "n_low": 236,
+  "terms": 18719,
+  "words_high": 2437561,
+  "words_low": 2111709,
+  "above_threshold": 210,
+  "above_high": 124,
+  "above_low": 86
+ },
+ "explorers": [
+  "dialogue_C.html",
+  "dialogue_A.html",
+  "dialogue_B.html",
+  "dialogue_matched.html"
+ ],
+ "explorer_text_check": {
+  "dialogue_C.html": 0,
+  "dialogue_A.html": 0,
+  "dialogue_B.html": 0,
+  "dialogue_matched.html": 0,
+  "probes": 117
+ }
+}

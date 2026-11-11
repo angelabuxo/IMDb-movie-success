@@ -1,0 +1,37 @@
+{
+ "checks": {
+  "clean_movies": {
+   "got": 2446,
+   "expected": 2446,
+   "match": true
+  },
+  "clean_with_usable_script": {
+   "got": 1095,
+   "expected": 1095,
+   "match": true
+  },
+  "gross_below_budget": {
+   "got": 67,
+   "expected": 67,
+   "match": true
+  },
+  "global_quartile_bottom": {
+   "got": 243,
+   "expected": 243,
+   "match": true
+  },
+  "global_quartile_top": {
+   "got": 306,
+   "expected": 306,
+   "match": true
+  }
+ },
+ "moviesum_ids": 2188,
+ "moviesum_usable": 2182,
+ "moviesum_duplicate_ids": 12,
+ "scripts_under_min_scenes": 44,
+ "cells_total": 47,
+ "cells_ok": 32,
+ "scripts_in_dropped_cells": 76,
+ "primary_vs_first_listed_agree": 0.4885844748858447
+}
