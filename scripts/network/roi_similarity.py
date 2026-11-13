@@ -70,7 +70,8 @@ def load():
             labels[r["id"]] = r["label"]
             if r["type"] == "movie" and r["clean"] == "1" and r["multiple"]:
                 movies[r["id"]] = {"y": math.log(float(r["multiple"])), "budget": float(r["budget_usd"]),
-                                   "year": int(r["year"]), "genres": [g for g in r["genres"].split(",") if g]}
+                                   "year": int(r["year"]), "tier": r["tier"],
+                                   "genres": [g for g in r["genres"].split(",") if g]}
     members = defaultdict(set)  # (role, entity) -> movie ids
     with open(EDGES, newline="") as f:
         for r in csv.DictReader(f):
@@ -89,14 +90,21 @@ def load():
     return movies, labels, members, franchise
 
 
-def residuals(ids, movies):
-    """y minus its OLS fit on ln(budget), release decade and genre dummies."""
+def normal_scores(y):
+    """Ranks mapped to standard normal quantiles, so no single film's value dominates."""
+    from scipy.stats import norm, rankdata
+    return norm.ppf((rankdata(y) - 0.5) / len(y))
+
+
+def residuals(ids, movies, y=None):
+    """y (ln multiple unless given) minus its OLS fit on ln(budget), release decade and genre dummies."""
     genres = sorted({g for i in ids for g in movies[i]["genres"]})
     decades = sorted({movies[i]["year"] // 10 for i in ids})[1:]  # first decade is the baseline
     x = np.array([[1.0, math.log(movies[i]["budget"])]
                   + [float(movies[i]["year"] // 10 == d) for d in decades]
                   + [float(g in movies[i]["genres"]) for g in genres] for i in ids])
-    y = np.array([movies[i]["y"] for i in ids])
+    if y is None:
+        y = np.array([movies[i]["y"] for i in ids])
     beta, *_ = np.linalg.lstsq(x, y, rcond=None)
     return y - x @ beta
 
@@ -121,19 +129,44 @@ class Role:
         return similarity, loo
 
 
-def test(ids, y, members, role, min_films, shuffles, rng):
+def shuffle(y, strata, rng):
+    """y permuted across all films, or only among films of the same stratum."""
+    if strata is None:
+        return y[rng.permutation(len(y))]
+    base = np.argsort(strata, kind="stable")
+    mixed = np.lexsort((rng.random(len(y)), strata))
+    out = np.empty_like(y)
+    out[base] = y[mixed]
+    return out
+
+
+def main_studio(ids, members):
+    """Each film's studio with the most sample films (ties by ID); a film without one is its own stratum."""
+    ids_set, size, of = set(ids), {}, defaultdict(list)
+    for (role, e), m in members.items():
+        if role == "studio":
+            size[e] = len(m & ids_set)
+            for i in m & ids_set:
+                of[i].append(e)
+    names = [min(of[i], key=lambda e: (-size[e], e)) if of[i] else f"none:{i}" for i in ids]
+    codes = {n: k for k, n in enumerate(sorted(set(names)))}
+    return np.array([codes[n] for n in names])
+
+
+def test(ids, y, members, role, min_films, shuffles, rng, strata=None):
     index = {i: k for k, i in enumerate(ids)}
     keys = [key for key, m in members.items() if key[0] == role and len(m & index.keys()) >= min_films]
     groups = [members[key] & index.keys() for key in keys]
     r = Role(groups, index)
     sim, loo = r.stats(y)
-    null = np.array([r.stats(y[rng.permutation(len(y))]) for _ in range(shuffles)])
+    null = np.array([r.stats(shuffle(y, strata, rng)) for _ in range(shuffles)])
     return {
         "groups": r.k, "films": int(len(np.unique(r.m))), "credits": int(len(r.m)),
         "median_group_size": float(np.median(r.n)),
         "similarity": round(float(sim), 4),
         "similarity_null_mean": round(float(null[:, 0].mean()), 4),
         "similarity_null_95": round(float(np.quantile(null[:, 0], 0.95)), 4),
+        "similarity_excess": round(float(sim - null[:, 0].mean()), 4),
         "similarity_p": round(float((1 + (null[:, 0] >= sim).sum()) / (1 + shuffles)), 4),
         "loo_r": round(float(loo), 4),
         "loo_r_null_mean": round(float(null[:, 1].mean()), 4),
@@ -163,29 +196,40 @@ def main():
     movies, labels, members, franchise = load()
     ids = sorted(movies)
     no_fr = [i for i in ids if i not in franchise]
-    variants = {
-        "raw": (ids, np.array([movies[i]["y"] for i in ids])),
-        "adjusted": (ids, residuals(ids, movies)),
-        "adjusted_no_franchise": (no_fr, residuals(no_fr, movies)),
+    late = [i for i in ids if movies[i]["year"] >= 1980]
+    top = [i for i in ids if movies[i]["tier"] == "100k+"]
+    ln = np.array([movies[i]["y"] for i in ids])
+    variants = {  # name: (films, y, minimum films per group, shuffle within main studio)
+        "raw": (ids, ln, 2, False),
+        "adjusted": (ids, residuals(ids, movies), 2, False),
+        "adjusted_min5": (ids, residuals(ids, movies), 5, False),
+        "adjusted_no_franchise": (no_fr, residuals(no_fr, movies), 2, False),
+        "adjusted_rank": (ids, residuals(ids, movies, normal_scores(ln)), 2, False),
+        "adjusted_1980_on": (late, residuals(late, movies), 2, False),
+        "adjusted_100k_tier": (top, residuals(top, movies), 2, False),
+        "adjusted_within_studio": (ids, residuals(ids, movies), 2, True),
     }
     summary = {"films": len(ids), "franchise_films": len(set(ids) & franchise), "shuffles": args.shuffles,
                "seed": args.seed, "cast_top": CAST_TOP, "results": {}}
     rows = []
-    for min_films in (2, 5):
-        for name, (vids, y) in variants.items():
-            for role in ROLES:
-                res, keys, groups = test(vids, y, members, role, min_films, args.shuffles, rng)
-                summary["results"].setdefault(f"min{min_films}", {}).setdefault(name, {})[role] = res
-                print(f"min{min_films} {name:22s} {role:15s} groups {res['groups']:5d} "
-                      f"sim {res['similarity']:+.3f} (null {res['similarity_null_mean']:+.3f}, "
-                      f"p {res['similarity_p']:.3f})  loo_r {res['loo_r']:+.3f} (p {res['loo_r_p']:.3f})")
-                if min_films == 2 and name == "adjusted":
-                    index = {i: k for k, i in enumerate(vids)}
-                    raw = {i: movies[i]["y"] for i in vids}
-                    for key, m, (mean, shr) in zip(keys, groups, shrunk(groups, index, y, res["similarity"])):
-                        rows.append([role, key[1], labels.get(key[1], key[1]), len(m),
-                                     round(float(np.mean([raw[i] for i in m])), 4), round(mean, 4), round(shr, 4),
-                                     sum(i in franchise for i in m)])
+    for name, (vids, y, min_films, within) in variants.items():
+        strata = main_studio(vids, members) if within else None
+        summary["results"][name] = {"films": len(vids), "min_films": min_films, "roles": {}}
+        for role in ROLES:
+            if within and role == "studio":
+                continue  # shuffling within studio holds studio similarity fixed by construction
+            res, keys, groups = test(vids, y, members, role, min_films, args.shuffles, rng, strata)
+            summary["results"][name]["roles"][role] = res
+            print(f"{name:24s} {role:15s} groups {res['groups']:5d} "
+                  f"sim {res['similarity']:+.3f} (null {res['similarity_null_mean']:+.3f}, "
+                  f"95% {res['similarity_null_95']:+.3f}, p {res['similarity_p']:.4f})  "
+                  f"loo_r {res['loo_r']:+.3f} (null {res['loo_r_null_mean']:+.3f})")
+            if name == "adjusted":
+                index = {i: k for k, i in enumerate(vids)}
+                for key, m, (mean, shr) in zip(keys, groups, shrunk(groups, index, y, res["similarity"])):
+                    rows.append([role, key[1], labels.get(key[1], key[1]), len(m),
+                                 round(float(np.mean([movies[i]["y"] for i in m])), 4), round(mean, 4),
+                                 round(shr, 4), sum(i in franchise for i in m)])
     with open(ENTITIES, "w", newline="", encoding="utf8") as f:
         w = csv.writer(f)
         w.writerow(["role", "id", "name", "films", "mean_ln_multiple", "mean_adjusted", "shrunk_adjusted",

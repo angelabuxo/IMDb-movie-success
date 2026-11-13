@@ -150,6 +150,27 @@ cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_t
 
 `franchise_flag.py` flags films in a series or franchise from Wikidata (follows, followed by, or part of a film series), which takes about 15 minutes the first time and is cached. `film_features.py` builds every network measure from films released before the one it describes, including PageRank in a collaboration network rebuilt for each release year, in about 10 seconds.
 
+## Do films that share people have similar returns?
+
+[`scripts/network/roi_similarity.py`](scripts/network/roi_similarity.py) asks whether films with the same director, writer, producer, top-three cast member, composer, cinematographer, editor, studio or distributor have more similar returns than chance. Run it from the data folder after the graph and `franchise_flag.py`. It takes about 15 seconds:
+
+```bash
+../../.venv/bin/python ../../scripts/network/roi_similarity.py
+```
+
+It uses the 6,851 clean movies in the graph, with return as ln(gross / budget). For each role it takes every person or company credited on at least two of those films and measures how much of the variance in return group membership accounts for (`similarity`, like an intraclass correlation, 0 for random films). As a second measure it correlates each film's return with the mean of the group's other films (`loo_r`). The null shuffles returns across films 1,000 times, which keeps every group's size and every overlap between groups. Results are in [`analysis/network/roi_similarity.json`](analysis/network/roi_similarity.json).
+
+Every role clusters. After adjusting for ln(budget), release decade and genre, similarity runs from 0.09 for the top-three cast to 0.17 for producers, against a null whose 95th percentile is at most 0.02, and no shuffle reached the observed value for any role. The result holds when we drop franchise films (0.07 to 0.14), rank-transform returns so no single film dominates (0.08 to 0.16), keep only films from 1980 on (0.09 to 0.16) or keep only the 100k+ vote tier (0.03 to 0.14). The one role that weakens is distributor in the 100k+ tier, at 0.03 against 0.13 in the full sample, so distributors cluster mostly through the smaller films. Many of those had a limited or video-on-demand release and a tiny theatrical gross.
+
+The roles overlap, since a director's films often share a studio, a composer and a cast. To see how much survives the studio, the `adjusted_within_studio` variant shuffles returns only among films of the same main studio. Directors then score 0.14 against a null of 0.07, and the other people roles look similar: roughly half their similarity is beyond what their studios share. We can't rank the roles against each other from this test.
+
+What it doesn't show:
+- It's descriptive. It uses every film at once, so it says returns cluster by group, not that a group's past predicts its next film. The `*_track` features in `film_features.py` test that with earlier films only.
+- A shared data quirk clusters too. The highest returns include 1970s Hong Kong films listed with $100,000 budgets and $100 million grosses (Fist of Fury, The Way of the Dragon), and old Disney films whose gross includes decades of re-releases, so part of the top of the list is how those grosses were reported.
+- Gross over budget isn't profit. Marketing is missing and cinemas keep part of the gross.
+
+`features/roi_by_entity.csv` (local, not committed) lists each group's films, its mean return, and the mean shrunk towards zero by empirical Bayes, so a director with two lucky films doesn't top the list. Use it to look for patterns, then test any pattern you find the same way.
+
 ## Collection rules
 
 We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
