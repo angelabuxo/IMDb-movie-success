@@ -1,5 +1,6 @@
 \documentclass[10pt]{article}
 \input{preamble}
+\usepackage{xurl}
 
 \newcommand{\paper}[2]{\par\smallskip\textbf{#1}\ #2\par}
 \newcommand{\vs}[1]{\par{\color{accent}\textbf{vs ours:}} #1\par}
@@ -105,10 +106,17 @@ Several sentiment models, split-half reliability & No human validation yet (shee
 
 \section{Worth adding before the paper}
 \begin{enumerate}
-  \item Rerun Del Vecchio's single-dummy revenue test on our data, then the same test with return on budget and our controls. This is cheap, and it would make the contrast concrete.
+  \item \textbf{Done (14 Nov):} Del Vecchio's single-dummy revenue test on our 1,043 scripts. ``Man in a hole'' does not earn more even in their specification (VADER $+\$9$M, $p=0.67$; SST-2 $+\$24$M, $p=0.32$). Their specification instead flags a different shape (VADER ``Oedipus'', $-\$43$M, $p=0.015$) that disappears under return on budget and our controls. Details: \code{analysis/arcs/x01\_del\_vecchio.py} and the arcs LOG.
   \item Berger's volatility as an exploratory arc descriptor, labelled as added after pre-registration.
   \item IMDb vote count as a review-volume measure (Liu, Duan).
   \item One sentence on the Holbrook \& Addis sign flip, revenue against return.
   \item Check the \src{abstract} entries above against the papers before citing any number from them.
 \end{enumerate}
+
+\clearpage
+\section{Bibliography}
+Every paper above, grouped by strand and numbered. Links open the paper. The tag says how far it was checked.
+The same entries are in \code{paper/references.bib}, which the paper cites, and this list is generated from that
+file (\code{make\_biblist.py}), so the two never drift apart.
+\input{biblist}
 \end{document}
