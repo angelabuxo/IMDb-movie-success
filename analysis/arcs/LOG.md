@@ -408,3 +408,27 @@ p = 0.05. With a noise outcome, (a), (b) and (d) agree, as they should. Guard ho
 - Leak check: none of the 40 windows, and 0 of 20,000 sentence openings, appear in the committed files.
   Notebook 12: 0 errors, private cell has no output.
 - Status: NOT YET VALIDATED until the human columns are filled. No outcome used.
+
+## 2026-11-14 · Step 13 code written; page NOT built (the brief says build it last, after Step 7)
+
+- `s13_interpretation.py` lists what each analysis captures and misses, our limitations, the finding candidate
+  and the three paper figures. Every number is read from saved outputs. Anything not yet run shows
+  "PENDING: not run yet". The finding sentence is generated from Step 7: a negative result with its checks, or
+  an association stated as an association.
+- `make_site.py`:
+  - The real build refuses to run before `s07_primary.json` exists.
+  - `--draft PATH` writes a preview, never into `site/`.
+  - NOT YET VALIDATED banners at the top and in every section that uses sentiment scores.
+  - Private items are left out.
+- **Script-text scan, corrected before commit.** The first version probed the 8-word openings of 20,000 random
+  sentences, and a positive control (one injected sentence) was not caught. The scan is now exhaustive: every
+  8-word run of the page (visible text, table cells, Plotly labels) is checked against every 8-word run of all
+  3.1M sentences, in about 5 s.
+  - One false positive: a film's own title, which also occurs in its script. Runs inside MovieSum film names are
+    exempt, since `movie_name` is an allowed identifier.
+  - Controls caught: a whole injected sentence, 4 mid-sentence fragments in a table cell, and a sentence inside
+    Plotly label JSON.
+  - The clean draft has 0 matches.
+- Draft preview (scratchpad only): 12 sections, 20 captioned figures, 39 tables, 4 PENDING sections, no IMDb IDs.
+- `docs/scripts-arcs.md`: how to run everything, the HPC job, the primary analysis, the steps, the human
+  sheets, and what is never committed.
