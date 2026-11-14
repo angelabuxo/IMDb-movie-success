@@ -16,7 +16,7 @@ from scipy.stats import binomtest, norm
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s05_arcs
-from .common import empirical_p
+from .common import INSTRUMENT_NAMES, empirical_p, primary_instrument
 from .config import cfg, log_run
 from .paths import OUTPUTS
 
@@ -38,7 +38,8 @@ def null_for(x: np.ndarray, rng: np.random.Generator, B: int, T: int, w: int, ed
     return {"D1": d1[0], "D1_null": d1[1:], "D2": d2[0], "D2_null": d2[1:]}
 
 
-def run(inst: str = "vader") -> dict:
+def run(inst: str | None = None) -> dict:
+    inst = inst or primary_instrument()
     c = cfg()
     a, sh = c["arc"], c["scene_shuffle"]
     B = sh["shuffles"]
@@ -84,7 +85,8 @@ def run(inst: str = "vader") -> dict:
     return load(inst)
 
 
-def load(inst: str = "vader") -> dict:
+def load(inst: str | None = None) -> dict:
+    inst = inst or primary_instrument()
     csv_p, sum_p = _paths(inst)
     return {"table": pd.read_csv(csv_p, dtype={"movie_name": str}), "summary": json.loads(sum_p.read_text())}
 
@@ -149,7 +151,7 @@ def reading(res: dict) -> str:
            f"shuffled mean. ")
     txt += ("So the order of scenes does carry structure: neighbouring scenes share tone more than a random order "
             "would, and the smoothed arc keeps that. " if order else
-            "So, in VADER's scores, the scenes carry level but little arc structure: most real arcs look like "
+            f"So, in {INSTRUMENT_NAMES[res['summary']['instrument']]} scores, the scenes carry level but little arc structure: most real arcs look like "
             "shuffled ones. ")
     d2_excess = d2["share"] > 0.05 and d2["binomial p (share vs 5%)"] < 0.001
     txt += (f"For D2 (two-sided), {d2['beyond null (p < 0.05)']} scripts ({100 * d2['share']:.0f}%) lie beyond "
@@ -163,7 +165,7 @@ def reading(res: dict) -> str:
     else:
         txt += "Endings are not distinguishable from a random placement of the same scenes. "
     txt += ("This is a within-script test. It says nothing yet about differences between films, or about profit, "
-            "and it rests on VADER scores that are NOT YET VALIDATED.")
+            f"and it rests on {INSTRUMENT_NAMES[res['summary']['instrument']]} scores that are NOT YET VALIDATED.")
     return txt
 
 

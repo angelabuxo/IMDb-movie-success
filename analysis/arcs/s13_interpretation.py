@@ -69,7 +69,7 @@ def analyses(d: dict) -> pd.DataFrame:
          "Films without a public script or with fewer votes; gross/budget is not profit."),
         ("2 Text units", "Scenes in order of appearance, split into dialogue and description sentences.",
          "Headings, speaker cues and parentheticals; whether the file's scene order is the story order."),
-        ("3 Instruments", f"Sentence tone by VADER (a lexicon){' and contextual models' if d['decision'] else ''}.",
+        ("3 Instruments", f"Sentence tone by VADER (a lexicon){' and two contextual models; primary by the fallback rule: ' + d['instrument'] if d['decision'] else ''}.",
          "What a viewer feels; sarcasm, negated events (\"I didn't kill him.\"), and events told in neutral words."),
         ("4 Validation sheets", "A blind human check of 50 scenes and 25 scripts, with pre-registered scoring.",
          "Everything until the sheets are filled: " + ("filled." if _validated(d) else "NOT YET VALIDATED.")),

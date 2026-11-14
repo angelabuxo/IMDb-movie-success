@@ -16,6 +16,7 @@ from scipy.stats import spearmanr
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s03_instruments
+from .common import INSTRUMENT_NAMES, primary_instrument
 from .config import cfg, log_run
 from .paths import OUTPUTS
 
@@ -63,7 +64,8 @@ def describe(x: np.ndarray, T: int | None = None, w: int | None = None) -> dict:
             "sign_changes": np.array([int((np.diff(r[r != 0]) != 0).sum()) for r in dev]), "raw": raw, "smooth": sm}
 
 
-def scene_series(inst: str = "vader") -> dict[str, np.ndarray]:
+def scene_series(inst: str | None = None) -> dict[str, np.ndarray]:
+    inst = inst or primary_instrument()
     """Scene scores ('both' layer) per script in story order; only scenes on the timeline."""
     sc = s03_instruments.load_scores(inst, "scene").sort_values(["movie_name", "scene"])
     return {m: g[f"{inst}_both"].to_numpy(float) for m, g in sc.groupby("movie_name", sort=False)}
@@ -71,7 +73,8 @@ def scene_series(inst: str = "vader") -> dict[str, np.ndarray]:
 
 # ---------------------------------------------------------------- run
 
-def run(inst: str = "vader") -> dict:
+def run(inst: str | None = None) -> dict:
+    inst = inst or primary_instrument()
     a = cfg()["arc"]
     T = a["time_points"]
     series = scene_series(inst)
@@ -113,7 +116,8 @@ def run(inst: str = "vader") -> dict:
     return load(inst)
 
 
-def load(inst: str = "vader") -> dict:
+def load(inst: str | None = None) -> dict:
+    inst = inst or primary_instrument()
     arc_p, desc_p, sum_p = _paths(inst)
     return {"arcs": pd.read_csv(arc_p, dtype={"movie_name": str}), "desc": pd.read_csv(desc_p, dtype={"movie_name": str}),
             "summary": json.loads(sum_p.read_text())}
@@ -152,7 +156,7 @@ def figures(res: dict) -> dict:
     mean = go.Figure()
     _band(mean, ap, NEUTRAL, f"smoothed (n={len(p)})")
     _band(mean, ap, HIGH, "resampled, unsmoothed", "raw")
-    mean.update_layout(xaxis_title="story time (0 = first scene, 1 = last)", yaxis_title="mean scene score (VADER)")
+    mean.update_layout(xaxis_title="story time (0 = first scene, 1 = last)", yaxis_title=f"mean scene score ({INSTRUMENT_NAMES[s['instrument']]})")
     style(mean, "The average arc of the primary sample, with 95% bands", height=380)
 
     gen = go.Figure()
@@ -213,7 +217,7 @@ def reading(res: dict) -> str:
         f"{m.iloc[-e:].mean():+.3f} over the last 20%, and between {m.min():+.3f} and {m.max():+.3f} overall. "
         f"Individual arcs swing much more than the average, which mostly cancels out (median D1 "
         f"{p.D1.median():.3f}, median D2 {p.D2.median():+.3f}, {100 * (p.D2 < 0).mean():.0f}% of films end lower "
-        f"than they start). The scores are VADER and NOT YET VALIDATED. "
+        f"than they start). The scores are {INSTRUMENT_NAMES[s['instrument']]} and NOT YET VALIDATED. "
         f"**Proxies.** The strongest size correlate of D1 is {strongest('D1')}; of D2, {strongest('D2')}; of mean "
         f"level, {strongest('mean_level')}. "
         + ("All are weak (|ρ| < 0.3), so the descriptors are not script size in disguise. The size controls of "
@@ -254,8 +258,8 @@ scene on the timeline. Then:
 - **Reliability.** Each script is split into odd and even scenes, and every descriptor is computed on each
   half. If the halves disagree, scene noise dominates.
 
-The instrument here is VADER. The arcs are rebuilt with the contextual model once the HPC job returns, and the
-fallback rule decides which is primary. No outcome is used in this step."""),
+The instrument is the one the pre-registered fallback rule chose in Step 3 (named in every figure and reading);
+the other instruments appear in Step 9. No outcome is used in this step."""),
     Run("s05_arcs"),
     Fig("s05_arcs", "mean", "Mean arc over the primary sample. Grey: smoothed. Blue: resampled, unsmoothed. Bands: "
         "±1.96 standard errors across films."),

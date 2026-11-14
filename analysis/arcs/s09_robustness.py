@@ -17,7 +17,7 @@ from plotly.subplots import make_subplots
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s03_instruments, s05_arcs, s07_primary
-from .common import pooled_cells, r_min
+from .common import pooled_cells, primary_instrument, r_min
 from .config import cfg, config_hash, log_run
 from .paths import OUTPUTS
 
@@ -27,11 +27,12 @@ META = OUTPUTS / "s09_meta.json"
 
 # ---------------------------------------------------------------- descriptors under a variant
 
-def descriptors(inst: str = "vader", layer: str = "both", T: int | None = None, w: int | None = None,
+def descriptors(inst: str | None = None, layer: str = "both", T: int | None = None, w: int | None = None,
                 context: bool = False, min_scenes: int = 20) -> pd.DataFrame:
     """D1, D2 per script for one arc configuration. layer 'dialogue'/'action' uses only scenes that have
     sentences in that layer; scripts with fewer than `min_scenes` such scenes are dropped (counted).
     context=True uses the scene-in-context scores from the HPC job (Step 3 amendment (a))."""
+    inst = inst or primary_instrument()
     if context:
         sc = pd.read_csv(OUTPUTS / f"s03_scene_context_{inst}.csv.gz", dtype={"movie_name": str})
         col = f"{inst}_scene"

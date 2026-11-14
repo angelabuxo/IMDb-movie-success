@@ -6,6 +6,18 @@ import pandas as pd
 from scipy import stats
 
 from .config import cfg
+from .paths import OUTPUTS
+
+INSTRUMENT_NAMES = {"vader": "VADER", "sst2": "DistilBERT SST-2", "roberta3": "Twitter-RoBERTa (3-class)"}
+
+
+def primary_instrument() -> str:
+    """The instrument the fallback rule chose (Step 3), or VADER until the rule has been applied."""
+    p = OUTPUTS / "s03_instrument_decision.json"
+    if p.exists():
+        import json
+        return json.loads(p.read_text())["primary_instrument"]
+    return "vader"
 
 
 def primary_genre(genres: str) -> str:
