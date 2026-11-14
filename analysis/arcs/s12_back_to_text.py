@@ -79,7 +79,7 @@ def run() -> dict:
     sents = s02_units.load_sentences()
     sc_scores = s03_instruments.load_scores(inst, "sentence")
     sents = sents.assign(score=sc_scores[inst].to_numpy())
-    others = {i: s03_instruments.load_scores(i, "scene") for i in ("vader", "sst2", "roberta3")
+    others = {i: s03_instruments.load_scores(i, "scene") for i in ("vader", "sst2", "roberta3", "modernbert3")
               if i != inst and (OUTPUTS / f"s03_scene_{i}.csv.gz").exists()}
     lex = s03_instruments._vader().lexicon
     rows, priv, words = [], [], {"arc minimum": Counter(), "arc maximum": Counter()}

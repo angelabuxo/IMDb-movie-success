@@ -38,6 +38,12 @@ def _complete(d) -> bool:
 
 
 CONTEXTUAL = LOCAL_RUN
+MODERNBERT_RUN = PRIVATE / "contextual_modernbert"     # amendment (d): robustness instrument, its own local run
+THREE_CLASS = ("roberta3", "modernbert3")
+
+
+def _source(key: str):
+    return MODERNBERT_RUN if key == "modernbert3" else CONTEXTUAL
 KEYS = ["movie_name", "scene", "pos"]
 LAYERS = ("both", "dialogue", "action")
 
@@ -183,8 +189,11 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
     out = {"status": "done", "meta": meta, "decision": decision}
     sc = s[KEYS + ["layer", "words", "text", "vader"]]
     band = c["instruments"]["lexicon"]["neutral_band"]
-    for key in ("sst2", "roberta3"):
-        p = CONTEXTUAL / f"sentence_{key}.csv.gz"
+    for key in ("sst2", "roberta3", "modernbert3"):
+        p = _source(key) / f"sentence_{key}.csv.gz"
+        if key == "modernbert3" and not (_source(key) / "meta.json").exists():
+            out[key] = "not run yet"
+            continue
         if not p.exists():
             out[key] = "not run (over the runtime limit or missing)"
             continue
@@ -195,11 +204,12 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
         sc = sc.drop(columns=[f"layer_{key}"])
         sc[KEYS + ["layer", key]].to_parquet(_sentence_path(key), index=False)
         _scene_means(sc, key).to_csv(_scene_path(key), index=False, compression="gzip")
-        ctx = CONTEXTUAL / f"scene_{key}.csv.gz"
+        ctx = _source(key) / f"scene_{key}.csv.gz"
         if ctx.exists():
             pd.read_csv(ctx, dtype={"movie_name": str}).to_csv(OUTPUTS / f"s03_scene_context_{key}.csv.gz",
                                                                index=False, compression="gzip")
     out["agreement"] = _agreement(sc, prim, band)
+    out["matrix"] = _matrix(sc, prim)
     out["disagreements_available"] = "sst2" in sc
     if "sst2" in sc:   # private: kept on disk for the notebook's private cell only
         d = sc[(_label(sc.vader.to_numpy(), band) * np.sign(sc.sst2.to_numpy()) < 0) & sc.words.between(3, 15)]
@@ -212,14 +222,15 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
 def _agreement(sc: pd.DataFrame, prim: set, band: float) -> list[dict]:
     rows = []
     vl = _label(sc.vader.to_numpy(), band)
-    if "roberta3" in sc:
-        p_neu = sc["roberta3_neutral"].to_numpy()
-        sp = sc["roberta3"].to_numpy()
-        probs = np.stack([(1 - p_neu - sp) / 2, p_neu, (1 - p_neu + sp) / 2], 1)   # neg, neu, pos
-        sc = sc.assign(roberta3_label=probs.argmax(1) - 1)
+    for k3 in THREE_CLASS:
+        if k3 in sc:
+            p_neu = sc[f"{k3}_neutral"].to_numpy()
+            sp = sc[k3].to_numpy()
+            probs = np.stack([(1 - p_neu - sp) / 2, p_neu, (1 - p_neu + sp) / 2], 1)   # neg, neu, pos
+            sc = sc.assign(**{f"{k3}_label": probs.argmax(1) - 1})
     for sample, keep in (("primary 834", sc.movie_name.isin(prim).to_numpy()), ("all 1,087", np.ones(len(sc), bool))):
         nn = keep & (vl != 0)
-        for key in ("sst2", "roberta3"):
+        for key in ("sst2",) + THREE_CLASS:
             if key not in sc:
                 continue
             x = sc[keep]
@@ -228,15 +239,24 @@ def _agreement(sc: pd.DataFrame, prim: set, band: float) -> list[dict]:
             r = {"sample": sample, "instrument": key,
                  "sign agreement on VADER-non-neutral sentences": float(
                      (np.sign(sc[key].to_numpy()[nn]) == vl[nn]).mean()) if key == "sst2" else float(
-                     (sc.roberta3_label.to_numpy()[nn] == vl[nn]).mean()),
+                     (sc[f"{key}_label"].to_numpy()[nn] == vl[nn]).mean()),
                  "Spearman, sentences": float(spearmanr(x.vader, x[key]).statistic),
                  "Spearman, scenes": float(spearmanr(scene.vader, scene[key]).statistic),
                  "Spearman, films": float(spearmanr(film.vader, film[key]).statistic)}
-            if key == "roberta3":
-                r["Cohen's kappa, 3 classes"] = float(cohen_kappa_score(vl[keep], sc.roberta3_label.to_numpy()[keep]))
-                r["roberta3 neutral share"] = float((sc.roberta3_label.to_numpy()[keep] == 0).mean())
+            if key in THREE_CLASS:
+                r["Cohen's kappa, 3 classes"] = float(cohen_kappa_score(vl[keep], sc[f"{key}_label"].to_numpy()[keep]))
+                r["neutral share"] = float((sc[f"{key}_label"].to_numpy()[keep] == 0).mean())
             rows.append(r)
     return rows
+
+
+def _matrix(sc: pd.DataFrame, prim: set) -> dict:
+    """Pairwise Spearman between every instrument that ran, primary 834: sentences, scenes, films."""
+    inst = [k for k in ("vader", "sst2", "roberta3", "modernbert3") if k in sc]
+    x = sc[sc.movie_name.isin(prim)]
+    scene = x.groupby(["movie_name", "scene"])[inst].mean()
+    film = scene.groupby("movie_name").mean()
+    return {lvl: d.rank().corr().round(4).to_dict() for lvl, d in (("sentences", x[inst]), ("scenes", scene), ("films", film))}
 
 
 def load() -> dict:
@@ -280,8 +300,11 @@ def tables(res: dict) -> dict:
         st["sst2"] = st["roberta3"] = PENDING
     if ctx["status"] == "pending":
         agree = pd.DataFrame([{"comparison": "VADER vs sst2, VADER vs roberta3", "result": PENDING}])
+        matrix = pd.DataFrame([{"result": PENDING}])
     else:
         agree = pd.DataFrame(ctx["agreement"]).round(3)
+        matrix = pd.concat({lvl: pd.DataFrame(m) for lvl, m in ctx["matrix"].items()}, names=["level", "instrument"]
+                           ).round(3).reset_index()
     sc = res["scenes"]
     prim = set(res["table"].movie_name[res["table"].in_primary])
     sc = sc[sc.movie_name.isin(prim)]
@@ -294,7 +317,7 @@ def tables(res: dict) -> dict:
     film = sc.groupby("movie_name").vader_both.agg(["mean", "std"])
     films = film.describe(percentiles=[.1, .5, .9]).T.round(3)
     films.index = ["mean scene score per film", "SD of scene scores per film"]
-    return {"scoring": scoring, "distribution": dist, "contraction": con, "contraction_forms": forms, "stress": st.round(3), "agreement": agree,
+    return {"scoring": scoring, "distribution": dist, "contraction": con, "contraction_forms": forms, "matrix": matrix, "stress": st.round(3), "agreement": agree,
             "scenes": pd.DataFrame(rows), "films": films.reset_index(names="per film (primary 834)")}
 
 
@@ -419,12 +442,18 @@ def reading(res: dict) -> str:
                 f"sign on {100 * s2['sign agreement on VADER-non-neutral sentences']:.0f}% of the sentences VADER calls "
                 f"non-neutral, and the Spearman correlation is {s2['Spearman, sentences']:.2f} for sentences, "
                 f"{s2['Spearman, scenes']:.2f} for scenes and {s2['Spearman, films']:.2f} for films. The three-class "
-                f"RoBERTa calls {100 * r3['roberta3 neutral share']:.0f}% of sentences neutral (κ = "
+                f"RoBERTa calls {100 * r3['neutral share']:.0f}% of sentences neutral (κ = "
                 f"{r3["Cohen's kappa, 3 classes"]:.2f} with VADER's three labels), and correlates "
                 f"{r3['Spearman, scenes']:.2f} with VADER for scenes and {r3['Spearman, films']:.2f} for films. "
                 f"By the pre-registered fallback rule (projected {ctx['decision']['projected_hours_sentence_all']:.2f} h "
                 f"≤ {ctx['decision']['limit_hours']:.0f} h) the primary instrument is DistilBERT SST-2 "
                 f"({ctx['decision']['primary_instrument']}); VADER and RoBERTa are robustness instruments (Step 9).")
+        if ("primary 834", "modernbert3") in ag:
+            mb, mx = ag[("primary 834", "modernbert3")], ctx["matrix"]["films"]
+            txt += (f" The ModernBERT-large model added later (amendment (d), robustness only) calls "
+                    f"{100 * mb['neutral share']:.0f}% of sentences neutral (κ = {mb["Cohen's kappa, 3 classes"]:.2f} "
+                    f"with VADER). At film level it correlates {mx['modernbert3']['sst2']:.2f} with SST-2, "
+                    f"{mx['modernbert3']['roberta3']:.2f} with RoBERTa and {mx['modernbert3']['vader']:.2f} with VADER.")
     return txt
 
 
@@ -480,6 +509,8 @@ No outcome is used in this step."""),
           "version of D1 before smoothing; no outcome is shown."),
     Table("s03_instruments", "agreement", "Agreement between VADER and the contextual models, using the rules "
           "pre-registered in `instruments.agreement`."),
+    Table("s03_instruments", "matrix", "Spearman correlation between every pair of instruments that ran, primary 834: "
+          "per sentence, per scene (mean of its sentences) and per film (mean of its scenes)."),
     Fig("s03_instruments", "agreement", "Scene scores from VADER (x) against DistilBERT SST-2 (y), primary sample."),
     Private("s03_instruments", "disagreements", "20 sentences where VADER and SST-2 have opposite signs, drawn by the "
             "pre-registered rule (notebook only)."),

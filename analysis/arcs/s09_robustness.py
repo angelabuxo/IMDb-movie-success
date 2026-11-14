@@ -71,10 +71,10 @@ def variants(primary_inst: str) -> list[dict]:
     r = cfg()["robustness"]
     out = [{"group": "primary", "label": f"primary ({primary_inst}, both layers, window {a['smoothing_window']}, "
             f"{a['time_points']} points)", "desc": {"inst": primary_inst}, "mask": "primary"}]
-    for inst in ("vader", "sst2", "roberta3"):
+    for inst in ("vader", "sst2", "roberta3", "modernbert3"):
         if inst != primary_inst and (OUTPUTS / f"s03_scene_{inst}.csv.gz").exists():
             out.append({"group": "instrument", "label": f"instrument: {inst}", "desc": {"inst": inst}, "mask": "primary"})
-    for inst in ("sst2", "roberta3"):
+    for inst in ("sst2", "roberta3", "modernbert3"):
         if (OUTPUTS / f"s03_scene_context_{inst}.csv.gz").exists():
             out.append({"group": "instrument", "label": f"instrument: {inst}, scene in context",
                         "desc": {"inst": inst, "context": True}, "mask": "primary"})
@@ -210,8 +210,8 @@ SECTION = [
 
 One run is not *the* answer. We repeat the Step 7 statistic, with the same controls and the same
 within-cell null, while changing one choice at a time:
-- **Instrument:** VADER, DistilBERT SST-2, the three-class RoBERTa, and both contextual models reading whole
-  scenes in context. Each runs only if it is available.
+- **Instrument:** VADER, DistilBERT SST-2, the three-class RoBERTa, the ModernBERT-large model added as
+  amendment (d), and the contextual models reading whole scenes in context. Each runs only if it is available.
 - **Layer:** dialogue only, and action lines only.
 - **Arc:** smoothing windows 5 and 21, and grids of 50 and 200 points.
 - **Sample:** all scripts with franchise films included, each single-source franchise cut, the strict and

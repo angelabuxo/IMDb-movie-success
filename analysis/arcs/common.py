@@ -8,7 +8,8 @@ from scipy import stats
 from .config import cfg
 from .paths import OUTPUTS
 
-INSTRUMENT_NAMES = {"vader": "VADER", "sst2": "DistilBERT SST-2", "roberta3": "Twitter-RoBERTa (3-class)"}
+INSTRUMENT_NAMES = {"vader": "VADER", "sst2": "DistilBERT SST-2", "roberta3": "Twitter-RoBERTa (3-class)",
+                    "modernbert3": "ModernBERT-large (3-class)"}
 
 
 def primary_instrument() -> str:

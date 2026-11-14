@@ -30,7 +30,7 @@ SCENES = VAL / "scenes_sheet.csv"
 SCRIPTS = VAL / "scripts_sheet.csv"
 PREVIEW = PRIVATE / "validation"
 RESULTS = OUTPUTS / "s04_validation_results.json"
-INSTRUMENTS = ("vader", "sst2", "roberta3")
+INSTRUMENTS = ("vader", "sst2", "roberta3", "modernbert3")
 SCENE_HUMAN = ["rater1_label", "rater1_error", "rater2_label", "rater2_error", "adjudicated_label", "notes"]
 SCRIPT_HUMAN = ["markup_ok", "kind", "id_mapping_ok", "rater", "notes"]
 NOT_VALIDATED = "NOT YET VALIDATED: the sheets have not been filled"
@@ -92,7 +92,7 @@ def refresh_scores() -> pd.DataFrame:
         sc["scene"] = sc.scene.astype(str)
         m = s[["movie_name", "scene"]].merge(sc, on=["movie_name", "scene"], how="left", validate="one_to_one")
         s[col] = m[f"{inst}_both"].round(4).astype(str).replace("nan", "")
-    for key in ("sst2", "roberta3"):   # scene-in-context configuration (Step 9 robustness), when present
+    for key in ("sst2", "roberta3", "modernbert3"):   # scene-in-context configuration (Step 9 robustness), when present
         p = OUTPUTS / f"s03_scene_context_{key}.csv.gz"
         col = f"{key}_scene_context"
         if p.exists():

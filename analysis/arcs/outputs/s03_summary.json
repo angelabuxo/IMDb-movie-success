@@ -1,7 +1,7 @@
 {
  "sentences": 3149729,
  "sentences_primary": 2411761,
- "vader_seconds": 25.5,
+ "vader_seconds": 32.0,
  "vader_version": "3.3.2",
  "neutral_band": 0.05,
  "contraction_roundtrip": {
@@ -306,6 +306,7 @@
    "primary_instrument": "sst2",
    "reading": "availability read as met: the user allowed the download and the run completed on the hardware named here (LOG.md, 2026-11-14 entries on amendment (b) and the local run)"
   },
+  "modernbert3": "not run (over the runtime limit or missing)",
   "agreement": [
    {
     "sample": "primary 834",
@@ -323,7 +324,7 @@
     "Spearman, scenes": 0.5516698710927076,
     "Spearman, films": 0.7457419257712994,
     "Cohen's kappa, 3 classes": 0.36994978917777754,
-    "roberta3 neutral share": 0.7180869082798834
+    "neutral share": 0.7180869082798834
    },
    {
     "sample": "all 1,087",
@@ -341,9 +342,62 @@
     "Spearman, scenes": 0.54138417083119,
     "Spearman, films": 0.7099757519286489,
     "Cohen's kappa, 3 classes": 0.36283987473183943,
-    "roberta3 neutral share": 0.7195076147820971
+    "neutral share": 0.7195076147820971
    }
   ],
+  "matrix": {
+   "sentences": {
+    "vader": {
+     "vader": 1.0,
+     "sst2": 0.429,
+     "roberta3": 0.4751
+    },
+    "sst2": {
+     "vader": 0.429,
+     "sst2": 1.0,
+     "roberta3": 0.6565
+    },
+    "roberta3": {
+     "vader": 0.4751,
+     "sst2": 0.6565,
+     "roberta3": 1.0
+    }
+   },
+   "scenes": {
+    "vader": {
+     "vader": 1.0,
+     "sst2": 0.3923,
+     "roberta3": 0.5517
+    },
+    "sst2": {
+     "vader": 0.3923,
+     "sst2": 1.0,
+     "roberta3": 0.5669
+    },
+    "roberta3": {
+     "vader": 0.5517,
+     "sst2": 0.5669,
+     "roberta3": 1.0
+    }
+   },
+   "films": {
+    "vader": {
+     "vader": 1.0,
+     "sst2": 0.5403,
+     "roberta3": 0.7457
+    },
+    "sst2": {
+     "vader": 0.5403,
+     "sst2": 1.0,
+     "roberta3": 0.6852
+    },
+    "roberta3": {
+     "vader": 0.7457,
+     "sst2": 0.6852,
+     "roberta3": 1.0
+    }
+   }
+  },
   "disagreements_available": true
  }
 }
