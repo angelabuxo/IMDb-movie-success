@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import platform
 import time
 from pathlib import Path
 
@@ -37,7 +38,7 @@ class Scorer:
     def __init__(self, name: str, device: str):
         self.tok = AutoTokenizer.from_pretrained(name)
         self.model = AutoModelForSequenceClassification.from_pretrained(name).to(device).eval()
-        if device == "cuda":
+        if device in ("cuda", "mps"):     # fp16 on a GPU (CUDA on HPC, Apple MPS on a Mac)
             self.model.half()
         self.device = device
         lab = {v.lower(): int(k) for k, v in self.model.config.id2label.items()}
@@ -131,12 +132,13 @@ def main() -> None:
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    dev = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
     s = pd.read_json(a.sentences, lines=True, compression="gzip", dtype={"movie_name": str, "text": str})
     rng = np.random.default_rng(SEED)
     bench = s.text.to_numpy()[rng.choice(len(s), 200, replace=False)].tolist()
     scenes = s.groupby(["movie_name", "scene"], sort=False).text.apply(list)
-    meta = {"device": dev, "gpu": torch.cuda.get_device_name(0) if dev == "cuda" else None,
+    gpu = torch.cuda.get_device_name(0) if dev == "cuda" else (platform.processor() or "Apple GPU") if dev == "mps" else None
+    meta = {"device": dev, "gpu": gpu,
             "torch": torch.__version__, "sentences": int(len(s)), "scenes": int(len(scenes)), "models": {}}
     for key in a.models.split(","):
         name = MODELS[key]

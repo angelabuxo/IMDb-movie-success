@@ -22,8 +22,22 @@ from .paths import OUTPUTS, PRIVATE
 SUMMARY = OUTPUTS / "s03_summary.json"
 DECISION = OUTPUTS / "s03_instrument_decision.json"   # written only once the fallback rule can be applied
 STRESS_CTX = OUTPUTS / "s03_stress_contextual.csv"    # constructed sentences scored on HPC (no script text)
-CONTEXTUAL = PRIVATE / "contextual"                   # HPC job outputs, copied back as-is
-JOB = "30053002"
+LOCAL_RUN = PRIVATE / "contextual_local"              # run of record: the same job on this Mac (MPS), LOG 2026-11-14
+HPC_RUN = PRIVATE / "contextual"                      # HPC job outputs as fetched by the watcher: reproducibility check only
+JOB = "local MPS run (HPC jobs 30053002 / 30053443 kept as a check)"
+
+
+def _complete(d) -> bool:
+    """A run counts only once every model has finished both passes."""
+    m = d / "meta.json"
+    if not m.exists():
+        return False
+    models = json.loads(m.read_text())["models"]
+    return all(k in models and "scene_seconds" in models[k] for k in ("sst2", "roberta3")) or \
+        any(not v.get("within_limit", True) for v in models.values())
+
+
+CONTEXTUAL = LOCAL_RUN
 KEYS = ["movie_name", "scene", "pos"]
 LAYERS = ("both", "dialogue", "action")
 
@@ -149,7 +163,7 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
     """Bring in the HPC job's scores if they are present; apply the fallback rule; compute agreement.
     Returns {"status": "pending"} until the job's files are in private/contextual/."""
     meta_p = CONTEXTUAL / "meta.json"
-    if not meta_p.exists():
+    if not _complete(CONTEXTUAL):
         return {"status": "pending", "job": JOB}
     c = cfg()
     meta = json.loads(meta_p.read_text())
@@ -237,7 +251,7 @@ def load_scores(instrument: str = "vader", level: str = "scene") -> pd.DataFrame
 
 # ---------------------------------------------------------------- tables
 
-PENDING = f"NOT YET AVAILABLE: HPC job {JOB} has not returned"
+PENDING = "NOT YET AVAILABLE: the contextual run has not finished"
 
 
 def tables(res: dict) -> dict:
@@ -393,7 +407,7 @@ def reading(res: dict) -> str:
                 f"No instrument is right on every case; this is why Step 4 validates against human labels. ")
     ctx = s["contextual"]
     if ctx["status"] == "pending":
-        txt += (f"Contextual scores for the scripts: NOT YET AVAILABLE (HPC job {JOB} has not returned). Until they are, "
+        txt += (f"Contextual scores for the scripts: NOT YET AVAILABLE (the contextual run has not finished). Until they are, "
                 f"the fallback rule cannot be applied "
                 f"and Step 7 does not run.")
     else:

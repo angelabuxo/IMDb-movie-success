@@ -432,3 +432,22 @@ p = 0.05. With a noise outcome, (a), (b) and (d) agree, as they should. Guard ho
 - Draft preview (scratchpad only): 12 sections, 20 captioned figures, 39 tables, 4 PENDING sections, no IMDb IDs.
 - `docs/scripts-arcs.md`: how to run everything, the HPC job, the primary analysis, the steps, the human
   sheets, and what is never committed.
+
+## 2026-11-14 · Contextual scoring moved to this Mac; HPC jobs kept (decided before any contextual score)
+
+Both HPC copies had waited about an hour in the queue. The user allowed the two models to be downloaded to this
+Mac (268 MB and 502 MB; plain HTTP, because Hugging Face's xet backend returned 404) and the same job to run
+here. The user asked to keep the HPC jobs.
+
+- `score_contextual.py` now also uses Apple MPS in fp16. The CUDA path is unchanged, so the queued HPC
+  jobs run exactly as submitted.
+- **Check before the run.** On the 17 stress sentences, MPS fp16 matches the HPC CPU fp32 scores within 0.0010
+  (SST-2) and 0.0027 (RoBERTa), with 17/17 signs equal, and the input wrapping matches the tokenizer.
+- **Measured throughput on 20,000 sentences (M5):** SST-2 5,903/s, so the sentence pass takes about 9 min;
+  RoBERTa 3,076/s, about 17 min. The job re-measures this itself and applies the 3.0 h rule.
+- **Which run counts, fixed now:** the local run (`private/contextual_local/`) is the run of record. It counts
+  once both models have finished both passes, or once the job stops on the runtime rule. HPC results,
+  if they arrive in `private/contextual/`, are used only as a reproducibility check (agreement of scores).
+  They are never mixed with the local run, and never substituted for it after its results are seen.
+- Amendment (a) named the HPC GPU as the hardware for the runtime projection. That projection is now measured
+  on this Mac; this note records the change.
