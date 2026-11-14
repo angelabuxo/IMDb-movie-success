@@ -1,0 +1,61 @@
+\documentclass[10pt]{article}
+\input{preamble}
+
+\begin{document}
+\doctitle{What makes a movie profitable? Project overview}{Log-Log Legends: Àngela Buxó, Gyula Kürthy, Niklas Johansen · DTU 02805, autumn 2026 · state on 14 November · paper due 27 November, presentation 2 December · more detail in \gh{docs/overview/project-details.pdf}{project-details.pdf} · \gh{}{GitHub repo}}
+
+\textbf{Question.} What makes a movie highly profitable, and does making money agree with being liked?
+
+\textbf{Profit} is $\ln(\text{worldwide gross}/\text{budget})$, ``the multiple''. It leaves out marketing and the cinemas' share, so
+it's a return on the reported budget, not real profit. \textbf{Sample:} 2,446 clean films with 100,000+ IMDb votes, or
+6,851 with 10,000+.
+
+\section{Three strands, one model}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw=accent, fill=soft, rounded corners=3pt, align=center, font=\small, inner sep=5pt, text width=4.6cm, minimum height=1.7cm},
+  head/.style={font=\sffamily\bfseries\small},
+  arr/.style={-{Stealth[length=5pt]}, accent, thick},
+  node distance=6mm and 5mm]
+  \node[box, text width=15.6cm, minimum height=0pt] (data) {\textbf{Data}: IMDb · Wikipedia · Wikidata · MovieSum screenplays · MovieLens Tag Genome reviews};
+  \node[box, below=of data] (text) {{\sffamily\bfseries What it says}\\ word comparison (Scattertext)\\ emotional arcs\\ script features};
+  \node[box, left=of text] (net) {{\sffamily\bfseries Who made it}\\ movie graph\\ actor network\\ shared-people returns};
+  \node[box, right=of text] (rec) {{\sffamily\bfseries How it was received}\\ critics vs audience vs money\\ review tone and words};
+  \node[box, below=of text, text width=15.6cm, minimum height=0pt] (model) {\textbf{What predicts profit}: every block side by side, trained on films up to 2010, tested on 2011 to 2017};
+  \foreach \n in {net,text,rec} {\draw[arr] (data.south -| \n) -- (\n.north); \draw[arr] (\n.south) -- (model.north -| \n);}
+\end{tikzpicture}
+\end{center}
+
+\section{What we've found}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}p{3.2cm}L@{}}
+\toprule
+Who made it & The best predictor known before release. Studio and people track records lift out-of-sample $R^2$ from $-0.01$ to $0.20$. Films that share people have similar returns. \\
+\midrule
+What it says & Almost nothing once budget, genre and era are fixed. The word difference vanishes without franchise films, and the arcs show no clear link (one near miss). \\
+\midrule
+How it was received & Money and liking agree only moderately ($\rho$ 0.27 to 0.33). Reviews add to the model (\mbox{$R^2$ 0.24 to 0.31}), but they come after release. \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+\textbf{Possible one story:} who makes a film predicts its return, what's in the script doesn't, and audiences
+only partly reward what earns.
+
+\section{Rules every strand follows}
+\begin{itemize}
+  \item Network measures use only earlier films.
+  \item Every result gets a check: a shuffle null, a second method, or hand labels.
+  \item Budget, era and genre are controlled, and franchise films get a separate check.
+  \item No script text, review text or IMDb fields go into git.
+\end{itemize}
+
+\section{Open}
+\begin{itemize}
+  \item Agree on the one story for the paper.
+  \item Fill the human validation sheets (Scattertext, arcs, reviews).
+  \item Merge Àngela's \gh[reviews-exploration]{analysis/reviews}{reviews branch} and Niklas's \gh[initial_actor_network]{scripts/network/actor_roi.py}{actor-network branch}.
+  \item Arcs Step 11 (script tone vs review tone) needs the group to decide whether whole-review VADER counts as the same instrument.
+\end{itemize}
+\end{document}
