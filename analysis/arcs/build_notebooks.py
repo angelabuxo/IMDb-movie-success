@@ -30,19 +30,26 @@ STEPS = [("01", "s01_sample", "sample_outcome"), ("02", "s02_units", "text_units
          ("12", "s12_back_to_text", "back_to_text"),
          ("13", "s13_interpretation", "interpretation")]
 
+from analysis.static_figures import drop_noise, number_cells, pngify_file
+
 SETUP = """import sys
 from pathlib import Path
 
 REPO = Path.cwd().resolve().parents[1]   # notebooks/arcs -> repo root
 sys.path.insert(0, str(REPO))
 
+import warnings
+
 import pandas as pd
 import plotly.io as pio
 from IPython.display import Markdown, display
 
+from analysis.static_figures import use_static_figures
+
 from analysis.arcs import {module} as step
 
-pio.renderers.default = "notebook_connected"
+use_static_figures()   # figures become static PNGs (they show on GitHub); interactive ones are on the static page
+warnings.filterwarnings("ignore", category=RuntimeWarning)   # known 0/0 on very short arcs, handled downstream
 pd.set_option("display.max_columns", 30)
 pd.set_option("display.width", 200)
 pd.set_option("display.max_colwidth", 120)"""
@@ -96,14 +103,11 @@ def main(argv: list[str]) -> None:
             strip = TagRemovePreprocessor(remove_all_outputs_tags={"private"})
             strip.enabled = True
             nb, _ = strip.preprocess(nb, {})
-            for c in nb.cells:   # execution counts and timing metadata make diffs noisy
-                if c.cell_type == "code":
-                    c.execution_count = None
-                    c.metadata.pop("execution", None)
-                    for o in c.get("outputs", []):
-                        if "execution_count" in o:
-                            o["execution_count"] = None
+            drop_noise(nb)
+            number_cells(nb)   # sequential counts; timing metadata dropped so diffs stay quiet
         nbf.write(nb, path)
+        if run:
+            print(f"  {pngify_file(path)} figures drawn as PNG", flush=True)
         print(f"wrote {path.relative_to(REPO)}", flush=True)
 
 
