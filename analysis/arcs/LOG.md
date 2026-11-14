@@ -508,3 +508,55 @@ r_min is 0.097 (α 0.05) and 0.107 (α 0.025). D2 is a near miss: the CI exclude
 pre-registered 0.025. Per the decision rule it is not a finding. The first generated reading said its CI "rules
 out associations stronger than 0.15 in either direction", which hid that the interval is entirely positive. It
 was rewritten before commit. Steps 9 and 10 will show whether the near miss is stable.
+
+## 2026-11-14 · Steps 8–10 run; all notebooks rebuilt; site built
+
+- **Step 8:** baseline out-of-fold R² 0.148 [0.140, 0.158]; plus D1 and D2 0.146; gain −0.0021
+  [−0.0042, +0.0005]. Outcome-permutation p 0.224; descriptor-permutation p 0.358. **The arc does not add
+  predictive value.**
+- **Step 9:**
+  - **D1:** 17 variants change ρ (range −0.045 to +0.089); 15 keep the sign. Only "dialogue only" reaches p < 0.05.
+  - **D2:** 13 variants change ρ (range −0.003 to +0.090); 12 keep the sign, and 6 reach p < 0.05 (both
+    RoBERTa variants and four sample variants). Not with VADER (ρ −0.003) nor with SST-2 scene-in-context
+    (ρ +0.065, p 0.072).
+  - Five D2 rows equal the primary by construction: windows, grids and log_gross. D2 uses the unsmoothed
+    first and last fifths, and log budget is a control. The first reading counted them as support ("15 of 22")
+    and was rewritten before commit. The same goes for D1's log_gross row.
+  - Seed rows: D2 p ranges 0.014–0.038 over four other seeds, so **the primary D2 p (0.028) sits on the
+    α = 0.025 threshold within Monte Carlo error.** The pre-registered decision (config seed) stands: not a
+    finding.
+- **Step 10:**
+  - ρ for D1 / D2: (a) all scripts +0.046 / +0.059; (b) primary +0.035 / +0.078; (c) without transcripts
+    +0.033 / +0.075.
+  - Random drops (d): medians +0.049 / +0.054, 5th–95th percentile [+0.021, +0.069] / [+0.025, +0.082].
+  - The franchise exclusion moves ρ less than 0.02 and stays inside the random-drop range.
+- **Notebooks 01–13** (11 not built) re-executed from raw data in 2 min. 0 errors; private cells have no output.
+  Step 7 is identical after the rebuild (seeded).
+- **Site** `site/arcs/index.html` built from the same outputs: 5.7 MB, 12 sections, 28 captioned figures, 11 NOT
+  YET VALIDATED banners. The exhaustive script-text scan found 0 runs. Step 7's ρ values on the page match the notebook.
+
+### Final checklist (brief section 4)
+
+1. **Preprocessing stated?** Yes. Steps 2 and 5: contraction join, layers, scene as the time unit, 100-point
+   overlap-weighted resampling, window 11.
+2. **Did anyone read the text underneath?** Partly. The extremes (Step 12) and the 20 SST-2/VADER
+   disagreements (Step 3) are extracted, and the agent read the stress sentences. **No group member has filled
+   the sheets yet.**
+3. **Compared to what?** Yes: the scene-shuffle null (Step 6), the within-cell permutation null (Step 7), the
+   baseline model and permutation nulls (Step 8), and second and third instruments (Steps 3 and 9).
+4. **Validated on our own sample?** **No: NOT YET VALIDATED.** The sheets are drawn and empty; banners are on
+   the page.
+5. **Claims match definitions?** Yes. Readings say "association", "not an effect of the script", and "script
+   tone, not viewer emotion".
+6. **One run or one instrument presented as the answer?** No. Step 9 shows the instruments; the instrument
+   dependence of D2 and of the Step 6 ending pattern is stated.
+7. **Can this representation answer the question?** Partly. It drops within-scene order, image, music and
+   performance, and about half the between-film variance of D1/D2 is noise (reliability 0.43/0.45).
+8. **Config committed before results, primary family unchanged?** Yes. `ac3d2e0` came before any score.
+   Amendments (a)–(d) are dated and were each made before the results they concern. The primary section is
+   unchanged.
+9. **Site numbers equal notebook numbers, no script text?** Yes. Both come from the same saved outputs, and the
+   exhaustive 8-gram scan found 0 runs.
+
+**Not done:** Step 11 (instrument-match question with the group); human sheets (Steps 4 and 12); ModernBERT
+robustness run (amendment (d), next).

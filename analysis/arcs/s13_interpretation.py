@@ -152,8 +152,17 @@ def finding(d: dict) -> str:
     tail = (" Adding the arc to a baseline model " + ("does" if pred and pred["adds_predictive_value"] else "does not")
             + " improve out-of-sample prediction." if pred else "")
     near = [k for k in ("D1", "D2") if not r[k]["significant"] and (r[k]["ci_low"] > 0 or r[k]["ci_high"] < 0)]
+    rob = ""
+    if d["s09"] is not None and near:
+        q = d["s09"][(d["s09"].descriptor == near[0]) & ~d["s09"].group.isin(["primary", "seed"])]
+        p0 = r[near[0]]["rho"]
+        q = q[(q.rho - d["s09"][(d["s09"].descriptor == near[0]) & (d["s09"].group == "primary")].rho.iloc[0]).abs() >= 1e-9]
+        rob = (f" Across {len(q)} robustness variants that change it, it keeps its sign in "
+               f"{int((np.sign(q.rho) == np.sign(p0)).sum())} and reaches p < 0.05 in {int((q.p < 0.05).sum())}, but "
+               f"not with VADER (ρ = {q[q.variant == 'instrument: vader'].rho.iloc[0]:+.3f}).") \
+            if (q.variant == "instrument: vader").any() else ""
     note = "".join(f" {'Volatility' if k == 'D1' else 'Ending minus start'} is a near miss ({_primary(d, k)}, above the "
-                   f"pre-registered α = {d['s07']['alpha']}), not a finding." for k in near)
+                   f"pre-registered α = {d['s07']['alpha']}), not a finding." for k in near) + rob
     if not sig:
         return (f"**Finding (negative):** screenplays have an emotional order ({order} of scripts are more volatile "
                 f"than shuffled versions of themselves), but once genre, decade, budget and scene length are held fixed, "

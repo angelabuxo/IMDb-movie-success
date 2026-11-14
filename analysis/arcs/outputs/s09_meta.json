@@ -1,0 +1,1 @@
+{"instrument": "sst2", "config": "605801c43e", "robustness": {"smoothing_windows": [5, 11, 21], "time_points": [50, 100, 200], "bootstrap_resamples": 100, "permutations_per_variant": 500}}

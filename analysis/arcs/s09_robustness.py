@@ -177,21 +177,32 @@ def figures(res: dict) -> dict:
 
 
 def reading(res: dict) -> str:
+    """Counts only variants that change rho: rows identical to the primary by construction (D2 does not depend on
+    smoothing or grid; log gross equals log(gross/budget) once log budget is a control) and the seed rows (same
+    rho, new permutations) are reported separately, so they are not counted as independent support."""
     t = res["table"]
     out = []
     for k, label in (("D1", "volatility (D1)"), ("D2", "ending minus start (D2)")):
         q = t[t.descriptor == k]
         p0 = q[q.group == "primary"].iloc[0]
-        rest = q[q.group != "primary"]
-        same = int((np.sign(rest.rho) == np.sign(p0.rho)).sum())
-        sig = rest[rest.p < 0.05]
-        out.append(f"For {label}, the primary ρ is {p0.rho:+.3f}. Across {len(rest)} variants ρ ranges from "
-                   f"{rest.rho.min():+.3f} to {rest.rho.max():+.3f}; {same} of {len(rest)} have the same sign, and "
-                   f"{len(sig)} {'reaches' if len(sig) == 1 else 'reach'} p < 0.05"
-                   + (f" ({'; '.join(sig.variant)})" if len(sig) else "") + ".")
-    return (" ".join(out) + " These rows are exploratory: about 1 in 20 would pass p < 0.05 by chance, so a lone "
-            "significant variant is not a finding. What matters is whether the sign and size hold across "
-            "choices. The primary decision stays the one in Step 7.")
+        seeds = q[q.group == "seed"]
+        same = q[(q.group != "primary") & (q.group != "seed") & ((q.rho - p0.rho).abs() < 1e-9)]
+        real = q[(q.group != "primary") & (q.group != "seed") & ((q.rho - p0.rho).abs() >= 1e-9)]
+        sig = real[real.p < 0.05]
+        out.append(
+            f"For {label}, the primary ρ is {p0.rho:+.3f}. {len(real)} variants change ρ: it ranges from "
+            f"{real.rho.min():+.3f} to {real.rho.max():+.3f}, {int((np.sign(real.rho) == np.sign(p0.rho)).sum())} of "
+            f"{len(real)} have the same sign, and {len(sig)} {'reaches' if len(sig) == 1 else 'reach'} p < 0.05"
+            + (f" ({'; '.join(sig.variant)})" if len(sig) else "") + ". "
+            + (f"{len(same)} {'variant leaves' if len(same) == 1 else 'variants leave'} ρ unchanged by construction ({'; '.join(same.variant)}). " if len(same) else "")
+            + f"Re-running the permutations and bootstrap with {len(seeds)} other seeds gives p from "
+              f"{seeds.p.min():.3f} to {seeds.p.max():.3f}.")
+    return (" ".join(out) + " D2 does not depend on smoothing or on the grid, because it compares the first and "
+            "last fifths of story time on the unsmoothed arc; and with log budget as a control, log gross and "
+            "log(gross/budget) leave the same residuals. The seed rows show that the D2 p-value sits on the "
+            "pre-registered threshold: with 1,000 permutations a p near 0.025 carries a Monte Carlo error of about "
+            "±0.005. These rows are exploratory. The primary decision stays the one in Step 7, run once with the "
+            "config seed.")
 
 
 SECTION = [

@@ -1,6 +1,6 @@
 {
  "s01_sample": {
-  "config": "03e51e86b0",
+  "config": "605801c43e",
   "date": "2026-11-14",
   "outputs": [
    "s01_films.csv",
@@ -102,7 +102,7 @@
   }
  },
  "s02_units": {
-  "config": "03e51e86b0",
+  "config": "605801c43e",
   "date": "2026-11-14",
   "outputs": [
    "analysis_table.csv",
@@ -498,6 +498,91 @@
     "z": "(rho_real - mean(null)) / sd(null)"
    },
    "seed": 20261114
+  }
+ },
+ "s08_prediction": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s08_prediction.json"
+  ],
+  "params": {
+   "instrument": "sst2",
+   "prediction": {
+    "baseline": [
+     "cell one-hot (genre x decade)",
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "folds": 5,
+    "metric": "out-of-fold R2 of log_mult",
+    "model": "OLS",
+    "permutations": 200,
+    "plus": [
+     "D1_volatility",
+     "D2_ending_minus_start"
+    ],
+    "repeat_interval": "min-max of the 10 repeat means",
+    "repeats": 10,
+    "stratify": "cell"
+   },
+   "seed": 20261114
+  }
+ },
+ "s09_robustness": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s09_meta.json",
+   "s09_robustness.csv"
+  ],
+  "params": {
+   "instrument": "sst2",
+   "robustness": {
+    "bootstrap_resamples": 100,
+    "permutations_per_variant": 500,
+    "smoothing_windows": [
+     5,
+     11,
+     21
+    ],
+    "time_points": [
+     50,
+     100,
+     200
+    ]
+   },
+   "seed": 20261114
+  }
+ },
+ "s10_checks": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s10_checks.csv",
+   "s10_meta.json",
+   "s10_random_drops.csv"
+  ],
+  "params": {
+   "franchise_check": {
+    "permutations_per_drop": 200,
+    "random_drops": 50
+   },
+   "instrument": "sst2",
+   "robustness": {
+    "bootstrap_resamples": 100,
+    "permutations_per_variant": 500,
+    "smoothing_windows": [
+     5,
+     11,
+     21
+    ],
+    "time_points": [
+     50,
+     100,
+     200
+    ]
+   }
   }
  },
  "s12_back_to_text": {
