@@ -167,3 +167,18 @@ contextual instrument of the fallback rule, and the primary family is unchanged.
   of them longer than 510 pieces, ran with no NaN, with chunking and scene packing working.
 - Job 30053002 is in queue gpua40 (one A40, walltime 6 h). It benchmarks first and skips the full run if the
   projection exceeds 3.0 h. No contextual score has been read back yet.
+
+## 2026-11-14 · Config amendment (b): agreement rules for Step 3 (before any contextual score was read)
+
+Added `instruments.agreement` while HPC job 30053002 was still queued, so nothing from it had been seen:
+- labels for each instrument (SST-2 has no neutral class, so it is compared only on VADER-non-neutral sentences);
+- the agreement statistics;
+- the rule for the 20 private disagreement sentences.
+
+Step 3 uses no outcome.
+
+**Reading of the fallback rule's availability condition.** The config says contextual is primary only if it is
+"available locally after the user answers the compute check". The model is not on this Mac. The user allowed it
+on DTU HPC, and amendment (a) measures the runtime on the HPC GPU. We read a completed HPC run, within 3.0 h
+projected, as meeting the availability condition. This is stated here rather than applied silently. The
+decision is written to `outputs/s03_instrument_decision.json`, and Step 7 does not run without that file.

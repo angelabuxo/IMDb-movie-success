@@ -130,6 +130,22 @@ instruments:
   # Step 11 must match the reviews branch: VADER compound. Step 11 therefore uses VADER on the scripts,
   # whatever instrument is primary in Step 7.
   step11_instrument: "vader"
+  # AMENDMENT 2026-11-14 (b), committed while HPC job 30053002 was queued and before any contextual score was
+  # read (see LOG.md). Step 3 instrument-agreement rules. Descriptive only; no outcome is used in Step 3.
+  agreement:
+    labels:
+      vader: "sign with neutral band: |compound| < 0.05 -> 0"
+      sst2: "sign of P(pos) - P(neg); the model has no neutral class, so it is compared on VADER-non-neutral sentences only"
+      roberta3: "argmax of the three classes (negative / neutral / positive)"
+    statistics:
+      - "% sign agreement on sentences VADER calls non-neutral (all three instruments)"
+      - "Cohen's kappa on three classes, VADER vs roberta3"
+      - "Spearman correlation of raw scores at sentence, scene (mean, 'both' layer) and film (mean of scene means) level"
+    sample: "primary 834 first, all 1,087 scripts second"
+    disagreements:
+      n: 20
+      rule: "sentences where VADER and sst2 have opposite non-zero signs, 3 to 15 words, drawn at random with `seed`"
+      storage: "private only; shown in the notebook with output cleared, never on the site"
 
 scene_score:
   aggregate: "mean"               # mean sentence score in the scene, neutral (zero) sentences included
