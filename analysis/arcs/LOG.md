@@ -364,3 +364,24 @@ in Step 10; it is also shown here as a row), and the ≥ 20-scene rule for singl
   chance predicts.
 
 Guard: no run without `s03_instrument_decision.json`.
+
+## 2026-11-14 · Step 10 code written, NOT run (franchise, transcript, leakage)
+
+`s10_checks.py` applies the same Step 7 statistic to four samples:
+- (a) all arc-ready scripts (1,043, of which 209 likely franchise);
+- (b) the primary sample (834);
+- (c) the primary sample without possible transcripts (825);
+- (d) all scripts minus 209 random non-franchise films, 50 times (config `franchise_check`, 200 permutations per drop).
+
+(d) separates "franchise films carry it" from "fewer films". (a)–(c) use Step 9's 500 permutations and 100
+bootstrap resamples; the config does not set them for this step, and they are fixed here.
+
+**Reading rule, fixed before any result:**
+- If ρ(b) lies inside the 5th–95th percentile of the drops, the (a)/(b) difference is attributed to sample
+  size; otherwise, to the franchise films.
+- If |ρ(b) − ρ(a)| < 0.02, the text says there is little to separate.
+
+The leakage statement (scripts precede release; final-draft status unverified) is in the text.
+
+**Dry run** on a fixed synthetic noise outcome per film, nothing saved: 4 s; 0 and 9 of 50 drops below
+p = 0.05. With a noise outcome, (a), (b) and (d) agree, as they should. Guard holds.

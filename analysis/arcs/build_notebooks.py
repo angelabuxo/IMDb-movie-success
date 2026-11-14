@@ -25,7 +25,8 @@ STEPS = [("01", "s01_sample", "sample_outcome"), ("02", "s02_units", "text_units
          ("03", "s03_instruments", "instruments"), ("04", "s04_validation", "validation"),
          ("05", "s05_arcs", "arcs"), ("06", "s06_shuffle", "order_null"),
          ("07", "s07_primary", "primary"), ("08", "s08_prediction", "prediction"),
-         ("09", "s09_robustness", "robustness")]
+         ("09", "s09_robustness", "robustness"),
+         ("10", "s10_checks", "franchise_checks")]
 
 SETUP = """import sys
 from pathlib import Path
