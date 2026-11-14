@@ -214,3 +214,15 @@ decision is written to `outputs/s03_instrument_decision.json`, and Step 7 does n
 - Notebook 03 runs with 0 errors. Private cells have no output. Leak check: 0 of 19,995 eight-word openings
   found in the committed outputs, the notebook or the code.
 - No outcome was used in this step.
+
+## 2026-11-14 · Config amendment (c): how the validation sheets are drawn and scored (before any draw)
+
+The config already fixed the sample sizes, labels and error categories. Added `validation.draw` and
+`validation.scoring` before any sheet was drawn or any label existed:
+- proportional genre allocation;
+- blind labelling: the preview shows no scores;
+- one neutral band for every instrument;
+- the reference-label rule for two raters;
+- accuracy with and without "mixed";
+- kappa;
+- the error table.

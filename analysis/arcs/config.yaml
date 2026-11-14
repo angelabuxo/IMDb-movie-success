@@ -240,6 +240,18 @@ validation:
   scripts: 25
   error_categories: ["negation", "sarcasm", "event-not-tone", "tokenisation/markup", "other"]
   labels: ["positive", "negative", "neutral", "mixed"]
+  # AMENDMENT 2026-11-14 (c), before any sheet was drawn or labelled (see LOG.md): how the sheets are drawn and scored.
+  draw:
+    scenes_from: "primary 834, scenes on the timeline (>= 1 dialogue or action sentence)"
+    allocation: "proportional to each genre bin's share of those scenes, largest remainder, at least 1 per bin; uniform within bin; `seed`"
+    scripts_from: "all 1,087 scripts after Step 1's exclusions, uniform, `seed`"
+    blind: "raters label from the private preview, which shows the scene text but no instrument score"
+  scoring:
+    instrument_label: "scene score -> positive / negative / neutral with the same band for every instrument: |score| < 0.05 -> neutral"
+    reference_label: "adjudicated label if filled; else rater 1 if rater 2 is empty or agrees; else the scene is counted as unresolved and left out of accuracy"
+    accuracy: "share of scenes where the instrument's label equals the reference label; reported on all resolved scenes (a 'mixed' reference always counts as a miss) and on resolved non-mixed scenes"
+    rater_agreement: "Cohen's kappa on the four labels over scenes both raters labelled"
+    error_table: "count of each error category, overall and among scenes the primary instrument got wrong"
 back_to_text:
   extreme_scripts_per_descriptor: 10
   window_words: 15                # maximum; windows stay in private/
