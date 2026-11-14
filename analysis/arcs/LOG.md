@@ -573,3 +573,8 @@ robustness run (amendment (d), next).
   *finishes first* is the one used. The other, if it completes, is used only as a reproducibility check. Finish
   time is the write time of the run's scene file: on this Mac for the local run, and the LSF finish time
   recorded by the watcher for HPC.
+- Race copy submitted: job **30053931** (gpua10, 4 h walltime, `hpc/score_modernbert.lsf`), writing to
+  `out_modernbert/`. The HPC script is identical to the local one (SHA-256 prefix 336acffc693ac48a). The
+  model was downloaded to scratch and smoke-tested on 20 sentences on the login node CPU (labels
+  negative/neutral/positive, no NaN). `hpc/watch_job.sh` fetches it to `private/contextual_modernbert_hpc/`
+  together with the LSF finish time. Step 3's `modernbert_run()` picks the run that finished first.

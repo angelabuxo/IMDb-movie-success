@@ -38,12 +38,32 @@ def _complete(d) -> bool:
 
 
 CONTEXTUAL = LOCAL_RUN
-MODERNBERT_RUN = PRIVATE / "contextual_modernbert"     # amendment (d): robustness instrument, its own local run
+# Amendment (d), robustness only. Two runs race (LOG 2026-11-14): the local MPS run and an HPC gpua10 copy. The run
+# that FINISHED FIRST is used; the other is only a reproducibility check.
+MODERNBERT_RUNS = {"local MPS": PRIVATE / "contextual_modernbert", "HPC gpua10": PRIVATE / "contextual_modernbert_hpc"}
 THREE_CLASS = ("roberta3", "modernbert3")
 
 
+def _finished_at(d) -> float | None:
+    """Epoch seconds at which a ModernBERT run finished both passes, or None if it has not."""
+    m = d / "meta.json"
+    if not m.exists() or "scene_seconds" not in json.loads(m.read_text())["models"].get("modernbert3", {}):
+        return None
+    f = d / "finished_at.txt"                       # HPC: LSF finish time, written by the watcher
+    return float(f.read_text()) if f.exists() else (d / "scene_modernbert3.csv.gz").stat().st_mtime
+
+
+def modernbert_run() -> tuple[str | None, object]:
+    done = {k: _finished_at(d) for k, d in MODERNBERT_RUNS.items()}
+    done = {k: v for k, v in done.items() if v is not None}
+    if not done:
+        return None, None
+    k = min(done, key=done.get)
+    return k, MODERNBERT_RUNS[k]
+
+
 def _source(key: str):
-    return MODERNBERT_RUN if key == "modernbert3" else CONTEXTUAL
+    return modernbert_run()[1] if key == "modernbert3" else CONTEXTUAL
 KEYS = ["movie_name", "scene", "pos"]
 LAYERS = ("both", "dialogue", "action")
 
@@ -191,9 +211,12 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
     band = c["instruments"]["lexicon"]["neutral_band"]
     for key in ("sst2", "roberta3", "modernbert3"):
         p = _source(key) / f"sentence_{key}.csv.gz"
-        if key == "modernbert3" and not (_source(key) / "meta.json").exists():
-            out[key] = "not run yet"
-            continue
+        if key == "modernbert3":
+            which, _ = modernbert_run()
+            if which is None:
+                out[key] = "not finished yet"
+                continue
+            out["modernbert3_run"] = which
         if not p.exists():
             out[key] = "not run (over the runtime limit or missing)"
             continue
