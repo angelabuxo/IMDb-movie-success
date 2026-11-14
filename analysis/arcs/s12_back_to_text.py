@@ -79,7 +79,7 @@ def run() -> dict:
     sents = s02_units.load_sentences()
     sc_scores = s03_instruments.load_scores(inst, "sentence")
     sents = sents.assign(score=sc_scores[inst].to_numpy())
-    others = {i: s03_instruments.load_scores(i, "scene") for i in ("vader", "sst2", "roberta3")
+    others = {i: s03_instruments.load_scores(i, "scene") for i in ("vader", "sst2", "roberta3", "modernbert3")
               if i != inst and (OUTPUTS / f"s03_scene_{i}.csv.gz").exists()}
     lex = s03_instruments._vader().lexicon
     rows, priv, words = [], [], {"arc minimum": Counter(), "arc maximum": Counter()}
@@ -174,32 +174,52 @@ def reading(res: dict) -> str:
             f"sentences driving an arc minimum are action lines. So the most extreme arcs are shaped by short "
             f"scenes, where one strongly scored line becomes the whole scene score. That fits the split-half "
             f"reliability of Step 5. For the {len(neg)} scripts that end darkest, the arc minimum falls in the last "
-            f"fifth of the story for {int((neg.story_time >= .8).sum())} of them. The VADER-lexicon words in those sentences most often "
-            f"pulling arc minima are {top('word pulling the arc minimum')}; those lifting arc maxima are "
-            f"{top('word pulling the arc maximum')}. Whether these are described events (a death on the page), "
-            f"artefacts or tone is for a human reader to decide from the private windows. Until then the sheet "
-            f"reads NOT YET VALIDATED.")
+            f"fifth of the story for {int((neg.story_time >= .8).sum())} of them. Across all the driving sentences, the "
+            f"VADER-lexicon words that most often pull arc minima down are {top('word pulling the arc minimum')}, "
+            f"and the ones that most often lift arc maxima are {top('word pulling the arc maximum')}. Whether these "
+            f"are described events (a death on the page), artefacts or tone is for a human reader to decide from the "
+            f"private windows. " + ("The sheet has been filled in." if _sheet_filled(res) else
+                                    "Until then the sheet reads NOT YET VALIDATED."))
+
+
+def _sheet_filled(res: dict) -> bool:
+    s = res["sheet"]
+    cols = [c for c in ("score_matches_text", "driver") if c in s.columns]
+    return bool(cols) and bool((s[cols].fillna("").astype(str) != "").all(axis=None))
+
+
+def takeaway(res: dict) -> str:
+    s = res["sheet"]
+    one = (s.sentences_in_scene == 1).mean()
+    mn = s[s.point == "arc minimum"]
+    return (f"The most extreme arcs are shaped by short scenes: {one:.0%} of the scenes at an arc extreme hold a "
+            f"single sentence, and {int((mn.sentence_layer == 'action').sum())} of {len(mn)} sentences driving an "
+            f"arc minimum are action lines. " + ("A human reader has checked the sheet." if _sheet_filled(res) else
+                                                 "Whether the scores match the text is NOT YET VALIDATED by a human "
+                                                 "reader."))
 
 
 SECTION = [
     Md("""## Step 12 · Back to the text
 
-Numbers about arcs are only as good as what they point at in the scripts. Here we take the extremes:
-- the **10 most volatile scripts** (D1);
-- the **5 scripts that end darkest and the 5 that end lightest** relative to their start (D2).
+When an arc hits an extreme, what in the script is actually driving it?
 
-For each, we find the scene at the arc's lowest and highest point, and the sentence in that scene that pushes
-the score hardest. The sentence is cut to at most 15 words and kept in `private/`.
+Numbers about arcs are only as good as what they point at in the scripts. Here we take the extremes:
+- the **10 most volatile scripts** (D1)
+- the **5 scripts that end darkest and the 5 that end lightest** compared with their start (D2).
+
+For each one, we find the scene at the arc's lowest and highest point, and the sentence in that scene that
+pushes the score hardest. We cut that sentence to at most 15 words and keep it in `private/`.
 
 A human then checks two things:
 - **Does the score match the text?**
-- **What drives the extreme?** A described event (a death, a killing), a tokenisation or markup artefact, or
-  genuine tone.
+- **What drives the extreme?** It could be a described event (a death, a killing), a tokenisation or markup
+  artefact, or genuine tone.
 
 A lexicon scores "He is dead." as strongly negative whether the scene is a tragedy or a joke. This step finds
-out which it is. **If the code and the text disagree, the text wins.**
+out which it is. If the code and the text disagree, the text wins.
 
-No outcome is used here."""),
+This step doesn't use the outcome."""),
     Run("s12_back_to_text"),
     Table("s12_back_to_text", "status", "What this sheet is built from and how far the human check has got."),
     Table("s12_back_to_text", "positions", "Where the extremes sit in story time, and whether action lines or dialogue "
@@ -207,6 +227,6 @@ No outcome is used here."""),
     Table("s12_back_to_text", "words", "Lexicon words in the driving sentences that pull an arc minimum down or lift an "
           "arc maximum (single words, counted over all rows)."),
     Table("s12_back_to_text", "sheet", "The check sheet as committed: keys, scores and empty human columns. No text."),
-    Private("s12_back_to_text", "windows", "the ≤ 15-word windows (notebook only; outputs cleared before commit)."),
+    Private("s12_back_to_text", "windows", "the ≤ 15-word windows (notebook only, with outputs cleared before commit)."),
     Reading("s12_back_to_text"),
 ]

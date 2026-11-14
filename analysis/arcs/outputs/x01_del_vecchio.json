@@ -1,0 +1,105 @@
+{
+ "note": "exploratory, not pre-registered; replication of Del Vecchio et al. (2021)",
+ "instruments": {
+  "vader": {
+   "template_match_r": {
+    "Icarus": 0.874,
+    "Riches to rags": 0.776,
+    "Man in a hole": 0.688,
+    "Rags to riches": 0.858,
+    "Cinderella": 0.778,
+    "Oedipus": 0.558,
+    "films_dropped_missing_or_flat": 5
+   },
+   "cluster_sizes": {
+    "Oedipus": 193,
+    "Man in a hole": 191,
+    "Cinderella": 186,
+    "Riches to rags": 183,
+    "Rags to riches": 152,
+    "Icarus": 138
+   },
+   "kruskal_wallis_log_mult_p": 0.583639854466661
+  },
+  "sst2": {
+   "template_match_r": {
+    "Icarus": 0.933,
+    "Man in a hole": 0.664,
+    "Rags to riches": 0.801,
+    "Riches to rags": 0.521,
+    "Cinderella": 0.524,
+    "Oedipus": 0.623,
+    "films_dropped_missing_or_flat": 1
+   },
+   "cluster_sizes": {
+    "Cinderella": 203,
+    "Oedipus": 191,
+    "Riches to rags": 176,
+    "Man in a hole": 174,
+    "Icarus": 167,
+    "Rags to riches": 132
+   },
+   "kruskal_wallis_log_mult_p": 0.9811316459180409
+  }
+ },
+ "man_in_a_hole": {
+  "vader | S1 their test: gross ~ dummy": {
+   "n": 1043,
+   "n_in_shape": 191,
+   "coef": 9.1903,
+   "p": 0.6675
+  },
+  "vader | S2 + budget": {
+   "n": 1043,
+   "n_in_shape": 191,
+   "coef": 5.541,
+   "p": 0.7229
+  },
+  "vader | S3 our outcome: ln(gross/budget) ~ dummy + ln budget": {
+   "n": 1043,
+   "n_in_shape": 191,
+   "coef": 0.1013,
+   "p": 0.1188
+  },
+  "vader | S4 + genre x decade, scene length, no franchise": {
+   "n": 834,
+   "n_in_shape": 150,
+   "coef": 0.0783,
+   "p": 0.2894
+  },
+  "sst2 | S1 their test: gross ~ dummy": {
+   "n": 1043,
+   "n_in_shape": 174,
+   "coef": 23.5871,
+   "p": 0.3169
+  },
+  "sst2 | S2 + budget": {
+   "n": 1043,
+   "n_in_shape": 174,
+   "coef": 17.0294,
+   "p": 0.312
+  },
+  "sst2 | S3 our outcome: ln(gross/budget) ~ dummy + ln budget": {
+   "n": 1043,
+   "n_in_shape": 174,
+   "coef": 0.0243,
+   "p": 0.755
+  },
+  "sst2 | S4 + genre x decade, scene length, no franchise": {
+   "n": 834,
+   "n_in_shape": 130,
+   "coef": -0.0728,
+   "p": 0.4493
+  }
+ },
+ "shapes_p_below_05": {
+  "vader | S1 their test: gross ~ dummy": 1,
+  "vader | S2 + budget": 1,
+  "vader | S3 our outcome: ln(gross/budget) ~ dummy + ln budget": 0,
+  "vader | S4 + genre x decade, scene length, no franchise": 0,
+  "sst2 | S1 their test: gross ~ dummy": 0,
+  "sst2 | S2 + budget": 0,
+  "sst2 | S3 our outcome: ln(gross/budget) ~ dummy + ln budget": 0,
+  "sst2 | S4 + genre x decade, scene length, no franchise": 0
+ }
+}

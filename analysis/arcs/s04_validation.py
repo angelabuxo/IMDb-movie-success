@@ -30,7 +30,7 @@ SCENES = VAL / "scenes_sheet.csv"
 SCRIPTS = VAL / "scripts_sheet.csv"
 PREVIEW = PRIVATE / "validation"
 RESULTS = OUTPUTS / "s04_validation_results.json"
-INSTRUMENTS = ("vader", "sst2", "roberta3")
+INSTRUMENTS = ("vader", "sst2", "roberta3", "modernbert3")
 SCENE_HUMAN = ["rater1_label", "rater1_error", "rater2_label", "rater2_error", "adjudicated_label", "notes"]
 SCRIPT_HUMAN = ["markup_ok", "kind", "id_mapping_ok", "rater", "notes"]
 NOT_VALIDATED = "NOT YET VALIDATED: the sheets have not been filled"
@@ -92,7 +92,7 @@ def refresh_scores() -> pd.DataFrame:
         sc["scene"] = sc.scene.astype(str)
         m = s[["movie_name", "scene"]].merge(sc, on=["movie_name", "scene"], how="left", validate="one_to_one")
         s[col] = m[f"{inst}_both"].round(4).astype(str).replace("nan", "")
-    for key in ("sst2", "roberta3"):   # scene-in-context configuration (Step 9 robustness), when present
+    for key in ("sst2", "roberta3", "modernbert3"):   # scene-in-context configuration (Step 9 robustness), when present
         p = OUTPUTS / f"s03_scene_context_{key}.csv.gz"
         col = f"{key}_scene_context"
         if p.exists():
@@ -263,57 +263,73 @@ def reading(res: dict) -> str:
     s = res["scenes"]
     base = (f"The scene sheet holds {r['scenes_in_sheet']} scenes from the primary sample, drawn in proportion to "
             f"each genre bin ({s.genre_bin.nunique()} bins, {s.groupby('genre_bin').size().min()} to "
-            f"{s.groupby('genre_bin').size().max()} scenes each); the script sheet holds {r['scripts_in_sheet']} "
+            f"{s.groupby('genre_bin').size().max()} scenes each). The script sheet holds {r['scripts_in_sheet']} "
             f"scripts. Scenes range from {s.sentences.min()} to {s.sentences.max()} sentences "
             f"(median {s.sentences.median():.0f}). ")
     if r["status"] != "validated":
-        return base + (f"**{NOT_VALIDATED}.** Every human column is empty. Until it is filled, no instrument has been "
-                       f"checked against a human reader, and every result built on the sentiment scores carries "
-                       f"that caveat.")
+        return base + (f"{NOT_VALIDATED}. Every human column is still empty. Until they're filled in, no instrument "
+                       f"has been checked against a human reader, and every result built on the sentiment scores "
+                       f"carries that caveat.")
     a = {x["instrument"]: x for x in r["accuracy"]}
-    return base + "Against the human reference: " + "; ".join(
+    return base + "Against the human reference label, accuracy is " + ", ".join(
         f"{k} {v['accuracy (mixed counts as miss)']:.0%} ({v['resolved scenes']} scenes)" for k, v in a.items()) + (
-        f". Agreement between raters: Cohen's kappa {r['rater_kappa']:.2f} on {r['rater_pairs']} scenes."
-        if r.get("rater_kappa") is not None else ". Only one rater so far: no between-rater agreement.")
+        f". The two raters agree with Cohen's kappa {r['rater_kappa']:.2f} on {r['rater_pairs']} scenes."
+        if r.get("rater_kappa") is not None else ". Only one rater has filled in the sheet so far, so there's no "
+        "agreement between raters yet.")
+
+
+def takeaway(res: dict) -> str:
+    r = res["results"]
+    if r["status"] != "validated":
+        return (f"{NOT_VALIDATED}. The {r['scenes_in_sheet']} scenes and {r['scripts_in_sheet']} scripts are "
+                f"drawn, but no sentiment score has been checked against a human reader yet.")
+    a = {x["instrument"]: x for x in r["accuracy"]}
+    return ("Against the human labels, accuracy is " + ", ".join(
+        f"{k} {v['accuracy (mixed counts as miss)']:.0%}" for k, v in a.items()) + " (mixed scenes count as misses).")
 
 
 SECTION = [
     Md("""## Step 4 · Human validation sheets
 
-**What we do.** We draw two sheets for people to fill in. The code never fills them in.
+Do the sentiment scores match what a human reader sees in the scene?
+
+We draw two sheets for people to fill in. The code never fills them in itself.
 - **50 scenes** from the primary sample, drawn at random in proportion to each genre bin. Each row carries the
-  instrument scene scores and empty columns for two raters: a label (positive / negative / neutral / mixed)
+  instruments' scene scores and empty columns for two raters: a label (positive / negative / neutral / mixed)
   and, where a tool would go wrong, an error category (negation, sarcasm, event-not-tone, tokenisation/markup,
   other).
-- **25 scripts** drawn at random from all 1,087. Each row has empty columns: is the markup right, is it a final
-  script, a draft or a transcript, and does the MovieSum script belong to the IMDb film we joined it to.
+- **25 scripts** drawn at random from all 1,087. Each row has empty columns for three questions: is the markup
+  right, is it a final script, a draft or a transcript, and does the MovieSum script belong to the IMDb film we
+  joined it to?
 
-**Labelling is blind.** Raters read a private preview with the scene text and no score, so a number can't
-anchor their judgement. The preview and the IMDb titles stay in `private/` and are never committed.
+### Labelling is blind
+Raters read a private preview with the scene text and no score, so a number can't anchor their judgement. The
+preview and the IMDb titles stay in `private/` and are never committed.
 
-**Scoring is fixed in advance** (`validation.scoring` in the config):
-- Every instrument's scene score maps to a label with the same ±0.05 band.
-- Accuracy is reported with "mixed" counted as a miss, and on non-mixed scenes only.
-- Cohen's kappa measures agreement between the two raters.
+### Scoring is fixed in advance
+The rules are in `validation.scoring` in the config:
+- Every instrument's scene score maps to a label with the same ±0.05 neutral band.
+- Accuracy is reported twice: with "mixed" counted as a miss, and on non-mixed scenes only.
+- Cohen's kappa measures how far the two raters agree beyond what chance would give.
 - The error table counts each category, overall and among the primary instrument's misses.
 
-**What this validation can and cannot show.** 50 scenes is a small sample: an accuracy of 70% has a 95%
-interval of roughly ±13 points. That is enough to show whether an instrument is usable or badly off, and not
-enough to rank two instruments that are close. A scene label is also coarser than the arc, which averages many
-scenes."""),
+### What this validation can and can't show
+50 scenes is a small sample. An accuracy of 70% has a 95% interval of roughly ±13 points. That's enough to show
+whether an instrument is usable or badly off, but not enough to rank two instruments that are close. A scene
+label is also coarser than the arc, which averages many scenes."""),
     Run("s04_validation"),
-    Table("s04_validation", "status", "Sheet status. Re-running this step refreshes only the score columns and "
+    Table("s04_validation", "status", "Sheet status. Re-running this step only refreshes the score columns and "
           "recomputes these numbers. It never redraws the sample or touches a human column."),
     Table("s04_validation", "allocation", "Scenes drawn per genre bin, against each bin's share of all scenes on "
           "the primary timeline."),
     Table("s04_validation", "scene_sheet", "The scene sheet as committed: MovieSum name, scene index, size, "
           "instrument scores and the empty rater columns. The contextual columns stay empty until the HPC job "
           "returns."),
-    Table("s04_validation", "script_sheet", "The script sheet as committed, with the Step 2 flags beside the empty "
+    Table("s04_validation", "script_sheet", "The script sheet as committed, with the Step 2 flags next to the empty "
           "check columns."),
     Private("s04_validation", "preview", "where the private rater previews were written (text stays on disk)."),
-    Table("s04_validation", "accuracy", "Per-instrument accuracy against the human reference label."),
-    Table("s04_validation", "errors", "Error categories given by the raters."),
+    Table("s04_validation", "accuracy", "Accuracy of each instrument against the human reference label."),
+    Table("s04_validation", "errors", "Error categories the raters gave."),
     Reading("s04_validation"),
 ]
 

@@ -29,7 +29,8 @@ import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 MODELS = {"sst2": "distilbert-base-uncased-finetuned-sst-2-english",
-          "roberta3": "cardiffnlp/twitter-roberta-base-sentiment-latest"}
+          "roberta3": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "modernbert3": "clapAI/modernBERT-large-multilingual-sentiment"}   # amendment (d), robustness only
 MAX_PIECES = 510
 SEED = 20261114
 

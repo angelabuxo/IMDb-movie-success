@@ -121,8 +121,26 @@ def figures(res: dict) -> dict:
                                 hovertemplate="<b>%{text}</b><br>score %{x:.2f}<br>z %{y:.1f}<extra></extra>"))
     zf.update_layout(xaxis_title="score: log10 ratio of rates (successful / unsuccessful)",
                      yaxis_title="z against that term's own shuffle distribution")
-    style(zf, "Each term's score against its own null (orange: BH q < 0.05)", height=420)
+    n_sig = int((t.q_bh < 0.05).sum())
+    style(zf, "Each term's score against its own null " + (f"(orange: BH q < 0.05, {n_sig} terms)" if n_sig
+          else "(no term passes BH q < 0.05)"), height=420)
     return {"count_null": fig, "term_z": zf}
+
+
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    ct = s["count_test"]
+    if ct["p"] > 0.05:
+        head = (f"There's no evidence that successful and unsuccessful scripts differ in vocabulary more than random "
+                f"groupings within the same genre and decade do (z = {ct['z']:.2f}, p = {ct['p']:.3f}).")
+    elif ct["p"] > 0.01:
+        head = (f"There's weak evidence that successful and unsuccessful scripts differ in vocabulary more than "
+                f"random groupings within the same genre and decade do (z = {ct['z']:.2f}, p = {ct['p']:.3f}).")
+    else:
+        head = (f"Successful and unsuccessful scripts differ in vocabulary more than random groupings within the "
+                f"same genre and decade do (z = {ct['z']:.2f}, p = {ct['p']:.3f}).")
+    return (f"{head} Word by word, {s['terms_q_below_0_05']} terms survive the Benjamini-Hochberg correction at "
+            f"q < 0.05.")
 
 
 def reading(res: dict) -> str:
@@ -130,59 +148,79 @@ def reading(res: dict) -> str:
     ct = s["count_test"]
     hi, lo = s["count_test_successful_side"], s["count_test_unsuccessful_side"]
     if ct["p"] > 0.05:
-        verdict = ("The real count sits inside the null distribution: there is **no evidence** that successful and "
+        verdict = ("The real count sits inside the null distribution. There's **no evidence** that successful and "
                    "unsuccessful scripts differ in vocabulary more than random groupings of the same scripts would, "
                    "once genre and decade are held fixed.")
     elif ct["p"] > 0.01:
-        verdict = (f"The real count sits at the upper edge of the null distribution: **weak evidence** that the two "
-                   f"groups differ in vocabulary more than random groupings within the same genre and decade cells. "
-                   f"The excess is on the successful side (z = {hi['z']:.2f}, p = {hi['p']:.3f}); the unsuccessful "
-                   f"side looks like chance (z = {lo['z']:.2f}, p = {lo['p']:.3f}). It is one test among several in "
-                   f"these notebooks, and Steps 8 and 10 check what the extra terms are.")
+        sides = (f"successful side z = {hi['z']:.2f}, p = {hi['p']:.3f}; unsuccessful side z = {lo['z']:.2f}, "
+                 f"p = {lo['p']:.3f}")
+        bigger, smaller = (("successful", "unsuccessful") if hi["z"] >= lo["z"] else ("unsuccessful", "successful"))
+        side_txt = (f"Neither side clears p < 0.05 on its own ({sides}), though the {bigger} side carries more of it."
+                    if hi["p"] > 0.05 and lo["p"] > 0.05 else
+                    f"Both sides contribute ({sides})." if hi["p"] <= 0.05 and lo["p"] <= 0.05 else
+                    f"The excess is mostly on the {bigger} side, while the {smaller} side looks like chance ({sides}).")
+        verdict = (f"The real count sits at the upper edge of the null distribution, which is **weak evidence** that "
+                   f"the two groups differ in vocabulary more than random groupings within the same genre and decade "
+                   f"cells. {side_txt} It's one test among several in these notebooks, and Steps 8 and 10 check what "
+                   f"the extra terms are.")
     else:
-        verdict = ("The real count sits well above the null distribution: the two groups differ in vocabulary more "
+        verdict = ("The real count sits well above the null distribution, so the two groups differ in vocabulary more "
                    "than random groupings of the same scripts within the same genre and decade cells.")
-    return (f"In the real comparison {ct['real']} terms are at least twice as frequent in one group. Under "
-            f"{s['shuffles']:,} label shuffles within {s['strata']} genre × decade cells, that count averages "
-            f"{ct['null_mean']:.1f} (standard deviation {ct['null_std']:.1f}; 90% of shuffles between "
-            f"{ct['null_p05']:.0f} and {ct['null_p95']:.0f}), so z = {ct['z']:.2f} and the empirical p = "
-            f"{ct['p']:.3f}. {verdict} Many terms clear the threshold under every shuffle: with "
-            f"{s['terms']:,} terms and a few hundred scripts per group, rare words cross 2× by chance. Per term, "
+    return (f"In the real comparison, {ct['real']} terms are at least twice as frequent in one group. Across "
+            f"{s['shuffles']:,} label shuffles within the {s['strata']} genre × decade cells that hold scripts from both "
+            f"compared groups (Step 1's qualifying cells, minus any left without them), that count averages "
+            f"{ct['null_mean']:.1f} (standard deviation {ct['null_std']:.1f}, and 90% of shuffles fall between "
+            f"{ct['null_p05']:.0f} and {ct['null_p95']:.0f}). That gives z = {ct['z']:.2f} and an empirical p = "
+            f"{ct['p']:.3f}. {verdict} Many terms clear the threshold in every shuffle, because with "
+            f"{s['terms']:,} terms and a few hundred scripts per group, rare words cross 2× by chance. Term by term, "
             f"{s['terms_q_below_0_05']} pass a Benjamini-Hochberg q < 0.05 and {s['terms_familywise_below_0_05']} "
-            f"beat the null of the largest score at p < 0.05 (the smallest p possible with "
-            f"{s['shuffles']:,} shuffles is {s['smallest_p_possible']:.4f}). A single real value is not a finding; "
-            f"it only means something next to this histogram.")
+            f"beat the null of the largest score at p < 0.05 (with {s['shuffles']:,} shuffles the smallest possible p "
+            f"is {s['smallest_p_possible']:.4f}). A single real value isn't a finding. It only means something next "
+            f"to this histogram.")
 
 
 SECTION = [
     Md("""## Step 6 · Compared to what? A shuffle null
 
-**What we do.** We keep every script and its words, but shuffle the success labels 1,000 times and redo the
-Scattertext each time. The shuffle is **stratified**: labels are only swapped between films in the same genre ×
-decade cell, so each shuffled world has the same genre and era mix in each group as the real one. For each
-shuffle we record (i) every term's score and (ii) how many terms clear the 2× threshold.
+This step asks whether the real groups differ in vocabulary more than random groups of the same scripts
+would.
 
-**Why.** Step 5 always finds "distinctive" words: with thousands of words and a few hundred scripts, some will
+### What we do
+
+We keep every script and its words, but shuffle the success labels 1,000 times and redo the Scattertext each
+time. The shuffle is **stratified**, meaning labels are only swapped between films in the same genre × decade
+cell, so every shuffled world has the same genre and era mix in each group as the real one. For each shuffle
+we record (i) every term's score and (ii) how many terms clear the 2× threshold. Together the shuffles give
+the null distribution, the spread of results we'd see if the labels meant nothing.
+
+### Why
+
+Step 5 always finds "distinctive" words, because with thousands of words and a few hundred scripts some will
 be twice as frequent in one group by luck. The question is whether the real comparison finds *more*, or more
-extreme, differences than random groupings do. This is the course's "compared to what" (weeks 2-4 null
+extreme, differences than random groupings do. This is the course's "compared to what?" (weeks 2-4, null
 models).
 
-**What it measures.** For the count: z = (real − mean of shuffles) / standard deviation of shuffles, and the
-empirical p = (1 + number of shuffles at least as extreme) / (1 + 1,000), which is never exactly 0. For each
-term: the same against that term's own shuffle distribution, corrected for testing thousands of terms
-(Benjamini-Hochberg, and a stricter family-wise test against the largest score in each shuffle).
+### What it measures
 
-**What it misses.** The null keeps genre and decade fixed but not budget, stars or anything else. It tests
-whether the vocabularies differ, not why."""),
+For the count, z = (real − mean of shuffles) / standard deviation of shuffles, and the empirical p = (1 +
+number of shuffles at least as extreme) / (1 + 1,000), which is never exactly 0. For each term we do the same
+against that term's own shuffle distribution. Since that means testing thousands of terms, we correct for it
+two ways. Benjamini-Hochberg limits the expected share of false positives among the terms we flag, and a
+stricter family-wise test compares each term with the largest score in each shuffle.
+
+### What it misses
+
+The null keeps genre and decade fixed but not budget, stars or anything else. It tests whether the
+vocabularies differ, not why."""),
     Run("s06_null"),
-    Fig("s06_null", "count_null", "Grey: the number of terms at least twice as frequent in one group, in each of "
-        "1,000 stratified shuffles. Green outline: the same under unstratified shuffles. Orange line: the real "
-        "comparison. If the line sits inside the grey histogram, the real groups are no more different than "
-        "random groups."),
-    Table("s06_null", "count_tests", "The count test, overall and per side, with the unstratified shuffle for "
-          "comparison."),
+    Fig("s06_null", "count_null", "The grey histogram counts, for each of 1,000 stratified shuffles, the terms "
+        "at least twice as frequent in one group. The green outline shows the same under unstratified shuffles, "
+        "and the orange line is the real comparison. If the line sits inside the grey histogram, the real groups "
+        "are no more different than random ones."),
+    Table("s06_null", "count_tests", "The count test overall and for each side, with the unstratified shuffle "
+          "for comparison."),
     Fig("s06_null", "term_z", "Every term's real score (x) against its z-score within its own shuffle "
-        "distribution (y). Terms in orange survive Benjamini-Hochberg correction at q < 0.05."),
-    Table("s06_null", "top_terms", "The 15 most extreme terms on each side with their null statistics."),
+        "distribution (y). Terms in orange survive the Benjamini-Hochberg correction at q < 0.05."),
+    Table("s06_null", "top_terms", "The 15 most extreme terms on each side, with their null statistics."),
     Reading("s06_null"),
 ]

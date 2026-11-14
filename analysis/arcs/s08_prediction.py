@@ -151,42 +151,55 @@ def reading(res: dict) -> str:
     g, rg = res["gain"], res["gain_range"]
     txt = (f"Out of sample, the baseline explains R² = {res['baseline_r2']:.3f} of log(gross/budget) "
            f"(range over repeats {res['baseline_r2_range'][0]:.3f} to {res['baseline_r2_range'][1]:.3f}). Adding D1 "
-           f"and D2 gives {res['plus_r2']:.3f}, a gain of {g:+.4f} (range {rg[0]:+.4f} to {rg[1]:+.4f}; permutation "
-           f"p = {res['p_outcome_permuted']:.3f} with the outcome permuted, {res['p_descriptors_permuted']:.3f} "
-           f"with the descriptors permuted). ")
+           f"and D2 gives {res['plus_r2']:.3f}, a gain of {g:+.4f} (range {rg[0]:+.4f} to {rg[1]:+.4f}). The "
+           f"permutation p is {res['p_outcome_permuted']:.3f} with the outcome permuted and "
+           f"{res['p_descriptors_permuted']:.3f} with the descriptors permuted. ")
     if res["adds_predictive_value"]:
-        txt += ("The gain is positive in every repeat and beyond the permutation null: the arc adds a little "
-                "predictive information, of the size shown. That is prediction, not a cause.")
+        txt += ("The gain is positive in every repeat and beyond the permutation null, so the arc adds a little "
+                "predictive information, of the size shown. That's prediction, not a cause.")
     else:
-        txt += ("The arc does not add predictive value beyond the baseline: the gain is "
+        txt += ("The arc doesn't add predictive value beyond the baseline, because the gain is "
                 + ("not positive in every repeat" if rg[0] <= 0 else "within the permutation null") +
-                ". We do not write that it \"beats\" the baseline.")
+                ". We don't write that it \"beats\" the baseline.")
     return txt
+
+
+def takeaway(res: dict) -> str:
+    g = res["gain"]
+    if res["adds_predictive_value"]:
+        return (f"Knowing the arc helps predict log(gross/budget) a little for films the model hasn't seen: "
+                f"out-of-sample R² goes from {res['baseline_r2']:.3f} to {res['plus_r2']:.3f} (gain {g:+.4f}).")
+    return (f"Knowing the arc doesn't help predict log(gross/budget) for films the model hasn't seen. Out-of-sample "
+            f"R² goes from {res['baseline_r2']:.3f} to {res['plus_r2']:.3f} (gain {g:+.4f}, permutation p = "
+            f"{res['p_outcome_permuted']:.3f}).")
 
 
 SECTION = [
     Md("""## Step 8 · Second method: does the arc help predict profit?
 
-Step 7 asked whether the arc is *associated* with profit once the controls are held fixed. This step asks a
-more practical question: if we already know a film's genre, decade, budget and scene length, does also
-knowing its arc help **predict** the profit of films the model has not seen?
+If we already know a film's genre, decade, budget and scene length, does also knowing its arc help **predict**
+the profit of films the model hasn't seen?
 
-**How.**
-1. We split the films into 5 folds, stratified by genre × decade cell. We fit an ordinary least-squares model
-   on 4 folds and predict the 5th, until every film has an out-of-fold prediction.
+Step 7 asked whether the arc is *associated* with profit once the controls are held fixed. This step asks the
+more practical prediction question.
+
+### How
+1. We split the films into 5 folds, stratified by genre × decade cell (each fold gets a similar mix of cells).
+   We fit an ordinary least-squares model on 4 folds and predict the 5th, until every film has an out-of-fold
+   prediction, one made by a model that never saw that film.
 2. We do that 10 times with different splits.
 3. We compare two models: the **baseline** (cells, log budget, scene length) and **baseline + D1 + D2**. The
    gain is the difference in out-of-fold R².
 4. Compared to what:
-   - the range of the gain over the 10 repeats;
-   - a permutation null of 200 runs with the outcome shuffled (pre-registered);
+   - the range of the gain over the 10 repeats
+   - a permutation null of 200 runs with the outcome shuffled (pre-registered)
    - an exploratory null that shuffles only D1 and D2 across films, keeping the baseline's own signal.
 
 We say the arc "adds predictive value" only if the gain is positive in every repeat **and** beyond the
 permutation null. A gap that sits inside the repeat range is reported as no gain."""),
     Run("s08_prediction"),
     Table("s08_prediction", "results", "Out-of-fold R² for both models, the gain, and the permutation p-values."),
-    Fig("s08_prediction", "gain", "The real gain (blue line; blue band = range over repeats) against the two "
-        "permutation nulls."),
+    Fig("s08_prediction", "gain", "The real gain (blue line, with the range over repeats as a blue band) against the "
+        "two permutation nulls."),
     Reading("s08_prediction"),
 ]

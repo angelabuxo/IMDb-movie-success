@@ -18,7 +18,7 @@ from scipy.stats import spearmanr
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s05_arcs
-from .common import design, empirical_p, pooled_cells, r_min, residualise
+from .common import design, empirical_p, pooled_cells, r_min, residualise, sentiment_validation_status
 from .config import cfg, config_hash, log_run
 from .paths import OUTPUTS
 
@@ -168,9 +168,11 @@ def figures(res: dict) -> dict:
         f = go.Figure(go.Bar(x=(e[:-1] + e[1:]) / 2, y=n, width=np.diff(e), marker_color=NEUTRAL,
                              name="1,000 within-cell permutations"))
         f.add_vline(x=r["rho"], line_color=HIGH, line_width=3, annotation_text=f"real ρ = {r['rho']:+.3f}")
-        for s in (-1, 1):
-            f.add_vline(x=s * res["r_min"]["alpha_0.025"], line_dash="dot", line_color=LOW,
-                        annotation_text="r_min" if s > 0 else None)
+        for s in (-1, 1):   # both lines labelled: an annotation with no text renders as plotly's "new text"
+            f.add_vline(x=s * res["r_min"]["alpha_0.025"], line_dash="dot", line_color=LOW, line_width=2,
+                        annotation_text="−r_min" if s < 0 else "+r_min",
+                        annotation_position="bottom left" if s < 0 else "bottom right",
+                        annotation_bgcolor="rgba(255,255,255,0.85)")
         f.update_layout(xaxis_title=f"Spearman ρ, residualised {label} vs residualised outcome",
                         yaxis_title="permutations", showlegend=False)
         out[f"null_{k}"] = style(f, f"{label}: the real correlation against its permutation null", height=360)
@@ -189,57 +191,87 @@ def reading(res: dict) -> str:
         r = res["results"][k]
         if r["significant"]:
             parts.append(f"{label}: ρ = {r['rho']:+.3f} (95% CI {r['ci_low']:+.3f} to {r['ci_high']:+.3f}), "
-                         f"p = {r['p']:.3f} < {res['alpha']}: an association, of this size, once genre, decade, "
-                         f"budget and scene length are held fixed. It is an association, not an effect of the "
+                         f"p = {r['p']:.3f} < {res['alpha']}. This is an association of this size once genre, decade, "
+                         f"budget and scene length are held fixed. It's an association, not an effect of the "
                          f"script on profit.")
         else:
             near = r["ci_low"] > 0 or r["ci_high"] < 0
             parts.append(f"{label}: ρ = {r['rho']:+.3f} (95% CI {r['ci_low']:+.3f} to {r['ci_high']:+.3f}), "
-                         f"p = {r['p']:.3f}, z = {r['z']:+.2f}: no evidence of an association at the pre-registered "
-                         f"α = {res['alpha']}. "
-                         + (f"It is a near miss: the bootstrap interval excludes zero and p is below 0.05 but above "
-                            f"{res['alpha']}. Under the rule fixed before the analysis this is not a finding; at most it "
-                            f"suggests an association no larger than about {max(abs(r['ci_low']), abs(r['ci_high'])):.2f}, "
-                            f"to be checked for stability in Steps 9 and 10. "
+                         f"p = {r['p']:.3f}, z = {r['z']:+.2f}. That's no evidence of an association at the "
+                         f"pre-registered α = {res['alpha']}. "
+                         + (f"It's a near miss: the bootstrap interval excludes zero"
+                            + (f", and p is below 0.05 but above {res['alpha']}. " if r["p"] < 0.05 else
+                               f", but p is above {res['alpha']}. ")
+                            + f"Under the rule we fixed before the analysis this isn't a finding. At most it "
+                            f"suggests an association no larger than about "
+                            f"{max(abs(r['ci_low']), abs(r['ci_high'])):.2f}, to be checked for stability in Steps 9 "
+                            f"and 10."
                             if near else
                             f"The interval runs from {r['ci_low']:+.2f} to {r['ci_high']:+.2f}, so associations "
-                            f"larger than that in either direction are unlikely; with N = {r['n']}, |ρ| ≥ {rm:.3f} "
-                            f"would be detected with 80% power. "))
-    return (f"Primary analysis on {res['n']} films, instrument {res['instrument']}. " + " ".join(parts) +
-            " Two caveats carry over: the sentiment scores are NOT YET VALIDATED against human readers (Step 4), "
-            "and the split-half reliability of D1 and D2 (Step 5) attenuates any true association towards zero.")
+                            f"larger than that in either direction are unlikely. With N = {r['n']}, an association of "
+                            f"|ρ| ≥ {rm:.3f} would be detected with 80% power."))
+    return (f"Primary analysis on {res['n']} films, instrument {res['instrument']}.\n\n" + "\n\n".join(parts) +
+            "\n\nTwo caveats carry over. The sentiment scores are "
+            + ("validated against human readers (Step 4)" if sentiment_validation_status() == "validated" else
+               "NOT YET VALIDATED against human readers (Step 4)") + ", "
+            "and the split-half reliability of D1 and D2 (Step 5) pulls any true association towards zero.")
+
+
+def takeaway(res: dict) -> str:
+    out = []
+    for k, name in (("D1", "Swing (D1)"), ("D2", "Ending lift (D2)")):
+        r = res["results"][k]
+        if r["significant"]:
+            out.append(f"{name} is associated with profit once genre, decade, budget and scene length are held fixed "
+                       f"(ρ = {r['rho']:+.3f}, p = {r['p']:.3f} < {res['alpha']}). That's an association, not an "
+                       f"effect.")
+        elif r["ci_low"] > 0 or r["ci_high"] < 0:
+            out.append(f"{name} is a near miss: ρ = {r['rho']:+.3f}, p = {r['p']:.3f}, above the pre-set "
+                       f"{res['alpha']} cut-off, so it isn't a finding.")
+        else:
+            out.append(f"There's no evidence that {name[0].lower() + name[1:]} is linked with profit "
+                       f"(ρ = {r['rho']:+.3f}, p = {r['p']:.3f}).")
+    return " ".join(out)
 
 
 SECTION = [
     Md("""## Step 7 · PRIMARY ANALYSIS. Compared to what (2): is the arc associated with profit?
 
-**The one pre-registered test.** In the primary sample (not likely franchise, arc-ready, N = 834), we relate
-each of the two primary descriptors (D1 volatility, D2 ending minus start) to the outcome,
-log(worldwide gross / budget).
+Once genre, decade, budget and scene length are held fixed, is a film's arc associated with how much it grossed
+relative to its budget?
 
-**Controls on both sides (Frisch-Waugh).** The outcome and the descriptor are each regressed on:
-- genre × decade cells (cells with fewer than 5 films pooled);
-- log budget;
+### The one pre-registered test
+This is the single test we fixed in `config.yaml` before computing any association. In the primary sample (not
+likely franchise, arc-ready, N = 834), we relate each of the two primary descriptors (D1 volatility, D2 ending
+minus start) to the outcome, log(worldwide gross / budget).
+
+### Controls on both sides (Frisch-Waugh)
+We regress the outcome on the controls, and separately regress the descriptor on the same controls:
+- genre × decade cells (cells with fewer than 5 films pooled)
+- log budget
 - mean sentences per scene.
 
-We then take the Spearman correlation of the two residuals. That is the association left once the controls
-are held fixed.
+What's left over in each (the residuals) is the part the controls can't explain. The Frisch-Waugh theorem says
+relating the two residuals is the same as relating outcome and descriptor with the controls held fixed. We
+take the Spearman (rank) correlation of the two residuals, a partial Spearman correlation. That's the
+association left once the controls are held fixed.
 
-**Compared to what.**
-- We permute the residualised outcome 1,000 times **within** genre × decade cells, which keeps the cell
-  structure, and recompute ρ each time.
-- The two-sided empirical p is compared with the Bonferroni α = 0.025, because two descriptors are tested.
-- A bootstrap of 2,000 film resamples gives the 95% CI; the residualisation is refitted in every resample.
-- We also report the minimum detectable correlation. A null result then reads "we can rule out associations
-  larger than about 0.1", not "there is none".
+### Compared to what
+- We build a permutation null: we shuffle the residualised outcome 1,000 times **within** genre × decade cells,
+  which keeps the cell structure, and recompute ρ each time. That shows what ρ looks like by chance.
+- The two-sided empirical p is the share of shuffles with a |ρ| at least as large as the real one. We compare
+  it with α = 0.025, which is 0.05 split over the two descriptors we test (the Bonferroni correction).
+- A bootstrap of 2,000 film resamples gives the 95% CI, and the residualisation is refitted in every resample.
+- We also report the minimum detectable correlation, the smallest ρ we'd catch with 80% power. A null result
+  then reads "we can rule out associations larger than about 0.1", not "there is none".
 
-Reviews are not used here: they come after release. Everything above was fixed in `config.yaml` before any
-association was computed, and this step runs once."""),
+Reviews aren't used here, because they come after release. Everything above was fixed in `config.yaml` before
+any association was computed, and this step runs once."""),
     Run("s07_primary"),
     Table("s07_primary", "setup", "Sample, controls, numbers of permutations and resamples, and power."),
     Table("s07_primary", "results", "The primary result: one row per descriptor."),
-    Fig("s07_primary", "null_D1", "D1: the 1,000 within-cell permutation correlations, the real one (blue) and ±r_min "
-        "(dotted)."),
+    Fig("s07_primary", "null_D1", "D1: the 1,000 within-cell permutation correlations, the real one (blue) and ±r_min, "
+        "the minimum detectable correlation (dotted)."),
     Fig("s07_primary", "null_D2", "D2: the same for ending minus start."),
     Fig("s07_primary", "ranks_D1", "D1: rank of the residualised descriptor against rank of the residualised outcome, "
         "one point per film (no names)."),

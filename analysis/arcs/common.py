@@ -8,7 +8,8 @@ from scipy import stats
 from .config import cfg
 from .paths import OUTPUTS
 
-INSTRUMENT_NAMES = {"vader": "VADER", "sst2": "DistilBERT SST-2", "roberta3": "Twitter-RoBERTa (3-class)"}
+INSTRUMENT_NAMES = {"vader": "VADER", "sst2": "DistilBERT SST-2", "roberta3": "Twitter-RoBERTa (3-class)",
+                    "modernbert3": "ModernBERT-large (3-class)"}
 
 
 def primary_instrument() -> str:
@@ -18,6 +19,17 @@ def primary_instrument() -> str:
         import json
         return json.loads(p.read_text())["primary_instrument"]
     return "vader"
+
+
+def sentiment_validation_status() -> str:
+    """'validated' once the Step 4 human sheets are scored, else 'NOT YET VALIDATED' (the text steps use this
+    instead of a fixed string, so they change by themselves when the sheets are filled)."""
+    p = OUTPUTS / "s04_validation_results.json"
+    if p.exists():
+        import json
+        if json.loads(p.read_text()).get("status") == "validated":
+            return "validated"
+    return "NOT YET VALIDATED"
 
 
 def primary_genre(genres: str) -> str:

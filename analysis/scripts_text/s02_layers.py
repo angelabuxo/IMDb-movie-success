@@ -171,7 +171,8 @@ def figures(res: dict) -> dict:
                                  boxpoints="outliers"), row=1, col=i)
         fig.update_xaxes(showticklabels=False, row=1, col=i)
     fig.update_yaxes(title_text="words per script", row=1, col=1)
-    style(fig, "Script length by layer and group", height=400)
+    style(fig, "Script length by layer and group", height=430)
+    fig.update_layout(legend=dict(orientation="h", yanchor="top", y=-0.08, x=0))
 
     sh = go.Figure(go.Histogram(x=rep.dialogue_words / rep.full_words, nbinsx=50, marker_color=NEUTRAL))
     sh.update_layout(xaxis_title="dialogue words ÷ all words in the script", yaxis_title="scripts")
@@ -179,54 +180,73 @@ def figures(res: dict) -> dict:
     return {"lengths": fig, "dialogue_share": sh}
 
 
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    return (f"All {s['scripts']:,} scripts parse ({s['parse_errors']} errors). {s['excluded_little_dialogue']} have "
+            f"fewer than {cfg()['text']['min_dialogue_words']} tagged dialogue words because their dialogue markup "
+            f"failed, so they're left out from Step 5 on. The median script has "
+            f"{s['median_words']['dialogue']:,} dialogue words and {s['median_words']['action']:,} action words.")
+
+
 def reading(res: dict) -> str:
     s = res["summary"]
     return (f"All {s['scripts']:,} scripts parse ({s['parse_errors']} errors). {s['empty_dialogue']} have an empty "
             f"dialogue layer and {s['empty_action']} an empty action layer. {s['under_min_scenes']} have fewer than "
-            f"{s['min_scenes_flag']} scene tags, which usually means the scene markup is missing; they stay in, "
-            f"flagged, because the dialogue is still tagged. {s['excluded_little_dialogue']} scripts have fewer than "
+            f"{s['min_scenes_flag']} scene tags, which usually means the scene markup is missing. They stay in, "
+            f"flagged, because their dialogue is still tagged. {s['excluded_little_dialogue']} scripts have fewer than "
             f"{cfg()['text']['min_dialogue_words']} tagged dialogue words, which means the dialogue markup failed "
-            f"({', '.join(s['excluded_little_dialogue_titles'])}); they are excluded from every comparison from "
-            f"Step 5 on and counted here. The median script has "
+            f"({', '.join(s['excluded_little_dialogue_titles'])}). We count them here and leave them out of every "
+            f"comparison from Step 5 on. The median script has "
             f"{s['median_words']['dialogue']:,} dialogue words, {s['median_words']['action']:,} action words and "
-            f"{s['median_words']['full']:,} words in all; dialogue is a median {s['dialogue_share_of_words_median']:.0%} "
-            f"of the words. Across all scripts that is {s['total_words']['dialogue']:,} dialogue words and "
-            f"{s['total_words']['action']:,} action words.")
+            f"{s['median_words']['full']:,} words in all, and dialogue makes up a median "
+            f"{s['dialogue_share_of_words_median']:.0%} of a script's words. Across all scripts that comes to "
+            f"{s['total_words']['dialogue']:,} dialogue words and {s['total_words']['action']:,} action words.")
 
 
 SECTION = [
     Md("""## Step 2 · Extracting text from the MovieSum markup
 
-**What we do.** MovieSum marks up each screenplay: a `<scene>` holds a heading (`<stage_direction>`, e.g. INT.
-DINER - DAY), action lines (`<scene_description>`), speaker cues (`<character>`), actors' directions
-(`<parenthetical>`) and lines of speech (`<dialogue>`). We split every script into three layers:
+This step asks how to pull apart what the characters say and what the writer describes, so the two can be
+compared separately.
 
-1. **dialogue**: only what characters say;
-2. **action**: only the descriptive prose of what we see;
-3. **full**: everything except speaker cues, in script order.
+### What we do
 
-**Why.** They answer different questions. Dialogue is how characters speak; action is how the writer tells the
-story on the page. A word can be distinctive in one layer and invisible in the other. The primary analysis uses
-dialogue because it is closest to what an audience hears.
+MovieSum marks up each screenplay. A `<scene>` holds a heading (`<stage_direction>`, e.g. INT. DINER - DAY),
+action lines (`<scene_description>`), speaker cues (`<character>`), actors' directions (`<parenthetical>`) and
+lines of speech (`<dialogue>`). We split every script into three layers:
 
-**What it measures.** Which words sit in which part of the script, as MovieSum's tagger labelled them.
+1. dialogue: only what the characters say
+2. action: only the descriptive prose of what we see
+3. full: everything except the speaker cues, in script order
 
-**What it misses.** The tagger isn't perfect: a cue it missed lands in the dialogue, a page header lands in the
-action. Extraction is not resolution: a cue like "JULES (V.O.)" is just a string here. Speaker cues are set
-aside, not lost: Step 3 uses them to find character names."""),
+### Why
+
+The layers answer different questions. Dialogue is how characters speak, and action is how the writer tells
+the story on the page. A word can be distinctive in one layer and invisible in the other. The primary analysis
+uses dialogue because it's closest to what an audience hears.
+
+### What it measures
+
+Which words sit in which part of the script, as MovieSum's tagger labelled them.
+
+### What it misses
+
+The tagger isn't perfect. A cue it missed lands in the dialogue, and a page header lands in the action.
+Extracting a cue also doesn't resolve it, so a cue like "JULES (V.O.)" is just a string here. Speaker cues are
+set aside, not lost, and Step 3 uses them to find character names."""),
     Run("s02_layers"),
-    Table("s02_layers", "sanity", "Parser sanity report on the 1,095 scripts. Nothing is dropped here; every "
-          "problem is counted."),
-    Table("s02_layers", "examples", "Before and after, as counts, for three scripts: the raw markup's size, "
+    Table("s02_layers", "sanity", "Parser sanity report on the 1,095 scripts. Nothing is dropped at this point, "
+          "and every problem is counted."),
+    Table("s02_layers", "examples", "Before and after, as counts, for three scripts: the size of the raw markup "
           "and what each layer keeps."),
     Private("s02_layers", "examples_text", "The first 12 words of each layer for the same three scripts, to check "
-            "that headings, dialogue and action land in the right layer. Notebook only, output cleared before "
-            "commit (copyright)."),
+            "that headings, dialogue and action land in the right layer. It's in the notebook only, and the output "
+            "is cleared before commit (copyright)."),
     Fig("s02_layers", "lengths", "Words per script in each layer, for the unsuccessful (orange) and successful "
-        "(blue) groups of definition (C) and the films in neither. If one group's scripts were much longer, "
-        "raw counts would mislead; this is why every comparison uses rates per 10,000 words."),
-    Fig("s02_layers", "dialogue_share", "Dialogue's share of each script's words. The spread shows why the "
-        "layers can disagree: some scripts are mostly talk, some mostly description."),
+        "(blue) groups of definition (C) and for the films in neither. If one group's scripts were much longer, "
+        "raw counts would mislead. That's why every comparison uses rates per 10,000 words."),
+    Fig("s02_layers", "dialogue_share", "Dialogue's share of each script's words. Some scripts are mostly talk "
+        "and some mostly description, and that spread is why the layers can disagree."),
     Table("s02_layers", "lengths", "Median words and scenes per script, by group and definition."),
     Reading("s02_layers"),
 ]

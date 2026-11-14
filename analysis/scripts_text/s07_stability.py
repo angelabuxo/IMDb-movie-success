@@ -119,43 +119,60 @@ def figures(res: dict) -> dict:
     return {"survival": fig, "matched": box}
 
 
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    return (f"When we subsample the {s['larger_group']} group {s['subsamples']} times, {s['terms_in_top_in_90pct_high']} "
+            f"successful-side and {s['terms_in_top_in_90pct_low']} unsuccessful-side terms stay in the top "
+            f"{s['top_n']} in at least 90% of runs. The rest come and go with the sample.")
+
+
 def reading(res: dict) -> str:
     s = res["summary"]
-    return (f"Subsampling the {s['larger_group']} group down to {s['subsample_size_per_group']} scripts, "
-            f"{s['subsamples']} times, the top-{s['top_n']} lists overlap the full-sample lists with a median "
+    return (f"We subsampled the {s['larger_group']} group down to {s['subsample_size_per_group']} scripts, "
+            f"{s['subsamples']} times. The top-{s['top_n']} lists overlap the full-sample lists with a median "
             f"Jaccard of {s['median_jaccard_high']:.2f} on the successful side and {s['median_jaccard_low']:.2f} on "
             f"the unsuccessful side. {s['terms_in_top_in_90pct_high']} successful-side and "
             f"{s['terms_in_top_in_90pct_low']} unsuccessful-side terms stay in the top {s['top_n']} in at least 90% "
-            f"of runs; the rest come and go with the sample. In the matched design, changing the caliper and the "
-            f"matching order gives a median overlap of {s['matched_median_jaccard_high']:.2f} (successful side) and "
-            f"{s['matched_median_jaccard_low']:.2f} (unsuccessful side) with the main matched result. The "
-            f"full-sample result stays the main one; this is a robustness check.")
+            f"of runs, and the rest come and go with the sample. In the matched design, changing the caliper and the "
+            f"matching order gives a median overlap with the main matched result of "
+            f"{s['matched_median_jaccard_high']:.2f} on the successful side and {s['matched_median_jaccard_low']:.2f} "
+            f"on the unsuccessful side. The full-sample result stays the main one, and this is a robustness check.")
 
 
 SECTION = [
     Md("""## Step 7 · Stability: one run is one sample, not the answer
 
-**What we do.** We draw 100 random subsamples of the larger group, each the size of the smaller group (seeds
-logged in `run_log.json`), recompute the Scattertext and record, for each term in the full-sample top 50, the
-share of runs in which it stays in the top 50. For the matched design we vary the caliper (0.25, 0.5 and 1
+This step asks whether the top word lists hold up when we change which scripts are in the sample.
+
+### What we do
+
+We draw 100 random subsamples of the larger group, each the size of the smaller group (seeds are logged in
+`run_log.json`), and recompute the Scattertext each time. For each term in the full-sample top 50 we record
+the share of runs in which it stays in the top 50. For the matched design we vary the caliper (0.25, 0.5 and 1
 standard deviations of log budget) and the order in which scripts are matched (20 orders each).
 
-**Why.** A top-50 list from one sample can depend on which particular profitable scripts happened to be
-included. If a term survives in most subsamples it isn't carried by a few scripts. Same logic as running
-Louvain with many seeds (week 4): one run is one draw.
+### Why
 
-**What it measures.** How sensitive the word lists are to the sample, as a survival share per term and a
-Jaccard overlap per run.
+A top-50 list from one sample can depend on which particular profitable scripts happened to be included. If a
+term survives in most subsamples, it isn't carried by a few scripts. It's the same logic as running Louvain
+with many seeds (week 4), where one run is one draw.
 
-**What it misses.** Stable isn't the same as meaningful: a formatting artefact used by many scripts would be
-very stable. Step 8 reads the text."""),
+### What it measures
+
+How sensitive the word lists are to the sample, as a survival share for each term and a Jaccard overlap for
+each run (the words two lists share, divided by all words on either list).
+
+### What it misses
+
+Stable isn't the same as meaningful. A formatting artefact used by many scripts would be very stable. Step 8
+reads the text."""),
     Run("s07_stability"),
     Fig("s07_stability", "survival", "For each term in the full-sample top 50 (x: its rank), the share of 100 "
         "subsamples in which it stays in the top 50 (y). A flat line near 100% would mean the list doesn't depend "
-        "on the sample; a fast drop means only the first few terms are robust."),
+        "on the sample, and a fast drop means only the first few terms are robust."),
     Table("s07_stability", "survival_top20", "The 20 highest-ranked terms on each side and how often they survive."),
-    Fig("s07_stability", "matched", "Matched design: overlap of the top-50 lists with the main matched result, "
-        "across calipers and 20 matching orders each."),
-    Table("s07_stability", "matched", "Median pairs and overlaps per caliper."),
+    Fig("s07_stability", "matched", "For the matched design, the overlap of the top-50 lists with the main matched "
+        "result, across calipers and 20 matching orders per caliper."),
+    Table("s07_stability", "matched", "Median pairs and overlaps for each caliper."),
     Reading("s07_stability"),
 ]

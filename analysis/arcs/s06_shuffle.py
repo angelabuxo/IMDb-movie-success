@@ -125,7 +125,7 @@ def figures(res: dict) -> dict:
     for k, colour in (("D1", HIGH), ("D2", LOW)):
         n, e = np.histogram(p[f"{k}_p"], bins=np.linspace(0, 1, 21))
         pv.add_trace(go.Bar(x=(e[:-1] + e[1:]) / 2, y=n, width=0.05, name=k, marker_color=colour, opacity=0.6))
-    pv.add_hline(y=len(p) / 20, line_dash="dash", annotation_text="flat if scene order carried nothing")
+    pv.add_hline(line_width=1.5, y=len(p) / 20, line_dash="dash", annotation_text="flat if scene order carried nothing")
     pv.update_layout(barmode="overlay", xaxis_title="per-script empirical p", yaxis_title="scripts")
     style(pv, "Per-script p-values", height=360)
 
@@ -143,55 +143,76 @@ def reading(res: dict) -> str:
     a = {(r["sample"], r["descriptor"]): r for r in res["summary"]["aggregate"]}
     d1, d2 = a[("primary 834", "D1")], a[("primary 834", "D2")]
     order = d1["share"] > 0.05 and d1["binomial p (share vs 5%)"] < 0.001
-    txt = (f"Shuffling each script's scenes 1,000 times: the real volatility (D1) lies beyond its own shuffle "
-           f"null (one-sided p < 0.05) for {d1['beyond null (p < 0.05)']} of {d1['scripts']} primary scripts "
-           f"({100 * d1['share']:.0f}%, against 5% expected if order carried nothing; binomial p "
-           f"{d1['binomial p (share vs 5%)']:.2g}). The median z is {d1['median z']:+.2f}, {100 * d1['share z > 0']:.0f}% of "
-           f"scripts have z > 0, and the real D1 is typically {d1['real / null mean (median)']:.2f} times the "
+    txt = (f"We shuffled each script's scenes 1,000 times. The real volatility (D1) lies beyond its own shuffle "
+           f"null (one-sided p < 0.05) for {d1['beyond null (p < 0.05)']} of {d1['scripts']} primary scripts. "
+           f"That's {100 * d1['share']:.0f}%, against the 5% we'd expect if order carried nothing (binomial p "
+           f"{d1['binomial p (share vs 5%)']:.2g}). The median z is {d1['median z']:+.2f}, {100 * d1['share z > 0']:.0f}% "
+           f"of scripts have z > 0, and the real D1 is typically {d1['real / null mean (median)']:.2f} times the "
            f"shuffled mean. ")
-    txt += ("So the order of scenes does carry structure: neighbouring scenes share tone more than a random order "
-            "would, and the smoothed arc keeps that. " if order else
-            f"So, in {INSTRUMENT_NAMES[res['summary']['instrument']]} scores, the scenes carry level but little arc structure: most real arcs look like "
-            "shuffled ones. ")
+    txt += ("So the order of scenes does carry structure: neighbouring scenes share tone more than they would in a "
+            "random order, and the smoothed arc keeps that. " if order else
+            f"So, in {INSTRUMENT_NAMES[res['summary']['instrument']]} scores, the scenes carry a level but little arc "
+            "structure. Most real arcs look like shuffled ones. ")
     d2_excess = d2["share"] > 0.05 and d2["binomial p (share vs 5%)"] < 0.001
     txt += (f"For D2 (two-sided), {d2['beyond null (p < 0.05)']} scripts ({100 * d2['share']:.0f}%) lie beyond "
-            f"the null (binomial p {d2['binomial p (share vs 5%)']:.2g}). The median z is {d2['median z']:+.2f} and "
+            f"the null (binomial p {d2['binomial p (share vs 5%)']:.2g}). The median z is {d2['median z']:+.2f}, and "
             f"only {100 * d2['share z > 0']:.0f}% of scripts have z > 0. ")
     if d2_excess and d2["median z"] < 0:
-        txt += ("So endings are darker than a random placement of the same scenes would make them, for more scripts "
-                "than chance allows. For most single films, though, the difference is within the shuffle range. ")
+        txt += ("So for more scripts than chance allows, endings are darker than a random placement of the same "
+                "scenes would make them. For most single films, though, the difference is within the shuffle range. ")
     elif d2_excess:
-        txt += "So endings differ from a random placement of the same scenes more often than chance allows. "
+        txt += ("So endings differ from a random placement of the same scenes more often than chance allows. ")
     else:
-        txt += "Endings are not distinguishable from a random placement of the same scenes. "
-    txt += ("This is a within-script test. It says nothing yet about differences between films, or about profit, "
-            f"and it rests on {INSTRUMENT_NAMES[res['summary']['instrument']]} scores that are NOT YET VALIDATED.")
+        txt += "Endings can't be told apart from a random placement of the same scenes. "
+    txt += ("This is a within-script test. It doesn't yet say anything about differences between films, or about "
+            f"profit, and it rests on {INSTRUMENT_NAMES[res['summary']['instrument']]} scores that are NOT YET "
+            "VALIDATED.")
     return txt
+
+
+def takeaway(res: dict) -> str:
+    a = {(r["sample"], r["descriptor"]): r for r in res["summary"]["aggregate"]}
+    d1, d2 = a[("primary 834", "D1")], a[("primary 834", "D2")]
+    order = d1["share"] > 0.05 and d1["binomial p (share vs 5%)"] < 0.001
+    d2_excess = d2["share"] > 0.05 and d2["binomial p (share vs 5%)"] < 0.001
+    first = (f"Scene order carries structure: {100 * d1['share']:.0f}% of scripts swing more than shuffled versions "
+             f"of themselves, against 5% by chance. " if order else
+             f"Scene order carries little arc structure: {100 * d1['share']:.0f}% of scripts swing more than "
+             f"shuffled versions of themselves, against 5% by chance. ")
+    second = (f"Endings differ from a random placement more often than chance allows ({100 * d2['share']:.0f}% of "
+              f"scripts)." if d2_excess else
+              f"Endings can't be told apart from a random placement ({100 * d2['share']:.0f}% of scripts).")
+    return first + second
 
 
 SECTION = [
     Md("""## Step 6 · Compared to what (1): is there order structure at all?
 
-**What we do.** An arc claims that the *order* of scenes matters: the story builds, turns and resolves. If
-that were false, a script's scenes put in random order would give arcs just like the real one. So for every
-script we shuffle the order of its scenes 1,000 times. We recompute D1 and D2 for each shuffle and ask where
-the real value falls in that script's own shuffle distribution. We report a z score and an empirical p:
+Does the order of a script's scenes matter for its tone, or would the same scenes in random order give the
+same arc?
+
+An arc claims that the *order* of scenes matters: the story builds, turns and resolves. If that were false, a
+script's scenes put in random order would give arcs just like the real one. So for every script we shuffle the
+order of its scenes 1,000 times and recompute D1 and D2 for each shuffle. Those 1,000 values are the script's
+own **shuffle null**, which shows what D1 and D2 look like when order carries nothing. Then we ask where the real value
+falls in that distribution. We report a z score (how many standard deviations the real value sits from the
+shuffled mean) and an empirical p (the share of shuffles at least as extreme):
 - **D1, one-sided.** In a real story neighbouring scenes tend to share a mood, so smoothing should keep more
   swing than in a random order, where neighbours cancel out.
 - **D2, two-sided.** Ending minus start could go either way.
 
 Then we count how many scripts beat their own null. With no order structure about 5% would, by chance.
 
-**What this null does and does not test.** It compares each script with itself: the same scenes, the same
-mean tone, only the order differs. It does **not** remove differences *between* scripts, such as genre,
-length or budget. That is Step 7's job. Shuffling never changes a script's mean level, so the mean level
-can't be tested here."""),
+### What this null does and doesn't test
+It compares each script with itself. The scenes and the mean tone stay the same, and only the order differs. It does
+**not** remove differences *between* scripts, such as genre, length or budget. That's Step 7's job. Shuffling
+never changes a script's mean level, so the mean level can't be tested here."""),
     Run("s06_shuffle"),
     Table("s06_shuffle", "aggregate", "How many scripts beat their own shuffle null, primary sample first. The binomial "
           "p tests that share against the 5% expected by chance."),
     Fig("s06_shuffle", "z", "z of each primary script's real D1 and D2 within its own 1,000 shuffles. Dashed: what "
         "the z values would look like if scene order carried nothing."),
-    Fig("s06_shuffle", "p", "Per-script p-values. Without order structure they would be flat (dashed line)."),
+    Fig("s06_shuffle", "p", "Per-script p-values. Without order structure they'd be flat (dashed line)."),
     Fig("s06_shuffle", "example", "The first of the Step 5 example scripts: its 1,000 shuffled D1 values and the "
         "real one."),
     Table("s06_shuffle", "genres", "Order structure by genre bin (primary sample)."),

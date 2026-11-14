@@ -23,7 +23,7 @@ MovieSum JSONL files under `data/raw/scripts/moviesum/`. Set `IMDB_DATA_DIR` if 
 Environment (tested 11 November 2026, Python 3.13):
 
 ```bash
-pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 scikit-learn==1.9.1 spacy==3.8.16 plotly==7.1.0 pyyaml==6.0.3 pyarrow==25.0.1 nbformat==5.11.1 nbconvert==7.17.1 ipykernel==7.3.0 mistune
+pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 scikit-learn==1.9.1 spacy==3.8.16 plotly==7.1.0 pyyaml==6.0.3 pyarrow==25.0.1 nbformat==5.11.1 nbconvert==7.17.1 ipykernel==7.3.0 mistune kaleido==1.5.1
 ```
 
 ```bash

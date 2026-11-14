@@ -198,12 +198,28 @@ def scatter(table: pd.DataFrame, title: str, n_labels: int = 8):
     lo, hi = float(min(x.min(), y.min())), float(max(x.max(), y.max()))
     fig.add_trace(go.Scatter(x=[lo, hi], y=[lo, hi], mode="lines", line=dict(color="#444", dash="dash"),
                              name="same rate in both groups"))
-    lab = pd.concat([table.head(n_labels), table.tail(n_labels)])
+    lab = _spread_labels(pd.concat([table.head(n_labels), table.tail(n_labels)]), e)
     fig.add_trace(go.Scatter(x=lab.rate_low + e, y=lab.rate_high + e, mode="text", text=lab.term,
                              textposition="top center", textfont=dict(size=10), showlegend=False, hoverinfo="skip"))
-    fig.update_xaxes(type="log", title_text=f"rate in unsuccessful scripts, per 10,000 words (+{e}, log scale)")
-    fig.update_yaxes(type="log", title_text=f"rate in successful scripts, per 10,000 words (+{e}, log scale)")
+    fig.update_xaxes(type="log", dtick=1,
+                     title_text=f"rate in unsuccessful scripts, per 10,000 words (+{e}, log scale)")
+    fig.update_yaxes(type="log", dtick=1,
+                     title_text=f"rate in successful scripts, per 10,000 words (+{e}, log scale)")
     return style(fig, title, height=620)
+
+
+def _spread_labels(lab: pd.DataFrame, e: float, dx: float = 0.22, dy: float = 0.09) -> pd.DataFrame:
+    """Keep a label only if it sits clear of every label already kept (distances in log10 units), so the word
+    labels on the scatter never print on top of each other. Labels are taken in order of |score|."""
+    lab = lab.assign(_ax=np.log10(lab.rate_low + e), _ay=np.log10(lab.rate_high + e)).sort_values(
+        "score", key=np.abs, ascending=False)
+    kept = []
+    for i, r in lab.iterrows():
+        if all(abs(r._ax - a) > dx or abs(r._ay - b) > dy for a, b in kept):
+            kept.append((r._ax, r._ay))
+        else:
+            lab = lab.drop(i)
+    return lab.drop(columns=["_ax", "_ay"])
 
 
 def figures(res: dict) -> dict:
@@ -223,6 +239,17 @@ def figures(res: dict) -> dict:
     return out
 
 
+def takeaway(res: dict) -> str:
+    m = res["summary"]["primary"]
+    g = res["grid"]
+    nonprim = g[~g.is_primary]
+    return (f"{m['above_threshold']} words are at least twice as frequent in one group ({m['above_high']} on the "
+            f"successful side, {m['above_low']} on the unsuccessful side). That count isn't a finding on its own, and "
+            f"Step 6 tests it against chance. Across the other {len(nonprim)} runs of the grid, the top-50 successful "
+            f"list shares a median Jaccard of {nonprim.jaccard_high_vs_primary.median():.2f} with the primary run "
+            f"(1 would mean identical lists).")
+
+
 def reading(res: dict) -> str:
     m = res["summary"]["primary"]
     v = res["variants"].set_index("variant")
@@ -232,70 +259,86 @@ def reading(res: dict) -> str:
     return (f"The primary comparison has {m['n_high']} successful and {m['n_low']} unsuccessful scripts "
             f"({m['words_high']:,} and {m['words_low']:,} dialogue words) and {m['terms']:,} terms used by at least "
             f"{cfg()['primary']['min_doc_freq']} scripts. {m['above_threshold']} terms are at least twice as "
-            f"frequent in one group ({m['above_high']} on the successful side, {m['above_low']} on the "
-            f"unsuccessful side). Whether that is more than chance is Step 6's question; on its own this number "
-            f"isn't a finding. Across the other {len(nonprim)} runs of the grid, the top-50 successful terms share "
+            f"frequent in one group, {m['above_high']} on the successful side and {m['above_low']} on the "
+            f"unsuccessful side. On its own that number isn't a finding, and whether it's more than chance is "
+            f"Step 6's question. Across the other {len(nonprim)} runs of the grid, the top-50 successful terms have "
             f"a median Jaccard overlap of {nonprim.jaccard_high_vs_primary.median():.2f} with the primary run "
-            f"(unsuccessful side: {nonprim.jaccard_low_vs_primary.median():.2f}); 1 would mean identical lists. "
-            f"Removing stopwords gives an overlap of {v.loc['stopwords removed', 'jaccard_high_vs_primary']:.2f}, "
-            f"lemmatising {v.loc['lemmatised', 'jaccard_high_vs_primary']:.2f}, and keeping names "
-            f"{v.loc['names kept', 'jaccard_high_vs_primary']:.2f}. The explorers were searched for "
-            f"{leak['probes']} eight-word runs of dialogue and contain "
+            f"({nonprim.jaccard_low_vs_primary.median():.2f} on the unsuccessful side), where 1 would mean identical "
+            f"lists. Removing stopwords gives an overlap of "
+            f"{v.loc['stopwords removed', 'jaccard_high_vs_primary']:.2f}, lemmatising "
+            f"{v.loc['lemmatised', 'jaccard_high_vs_primary']:.2f} and keeping names "
+            f"{v.loc['names kept', 'jaccard_high_vs_primary']:.2f}. We searched the explorers for "
+            f"{leak['probes']} eight-word runs of dialogue, and they contain "
             f"{sum(v for k, v in leak.items() if k != 'probes')}.")
 
 
 SECTION = [
     Md("""## Step 5 · Scattertext: which words does each group use comparatively more?
 
-**What we do.** Each script is one document. For each group we add up how often every word is used and divide
-by the group's total words, giving a **rate per 10,000 words**. We plot the unsuccessful group's rate (x)
-against the successful group's rate (y) on log axes. The dashed diagonal is "same rate in both". Words near it
-are shared language; words far above it are comparatively more frequent in successful scripts, words far
-below it in unsuccessful ones. The distance from the diagonal is the score:
+This step asks which words successful scripts use comparatively more often than unsuccessful ones, and the
+other way round.
+
+### What we do
+
+Each script is one document. For each group we add up how often every word is used and divide by the group's
+total words, which gives a **rate per 10,000 words**. We plot the unsuccessful group's rate (x) against the
+successful group's rate (y) on log axes. The dashed diagonal means "same rate in both". Words near it are
+shared language. Words far above it are comparatively more frequent in successful scripts, and words far below
+it in unsuccessful ones. The distance from the diagonal is the score, a smoothed log rate ratio:
 
 score = log10( (rate_successful + 0.1) / (rate_unsuccessful + 0.1) )
 
-so a score of 0.3 means about twice as frequent. The 0.1 per 10,000 words is smoothing, so a word one group
-never uses still gets a finite score.
+A score of 0.3 means about twice as frequent. The 0.1 per 10,000 words is smoothing, so a word one group never
+uses still gets a finite score.
 
-**Why.** It is the course's two-corpus comparison (Scattertext, weeks 5-7). Using rates rather than counts
-means the groups can differ in size and script length.
+### Why
 
-**Guarding against one script.** A word used 200 times in a single script can look distinctive by itself, so
-a word must appear in at least **5 scripts** (document frequency, not total count). We also run 3 and 10, and
-a "presence" mode that counts how many scripts use a word rather than how often.
+It's the course's two-corpus comparison (Scattertext, weeks 5-7). Using rates rather than counts means the
+groups can differ in size and script length.
 
-**What it measures.** Which words each group uses comparatively more, in this corpus, under these
-preprocessing choices.
+### Guarding against one script
 
-**What it cannot tell us.** How a word is used (Step 8 reads the text), whether the difference is more than
-chance (Step 6), whether it depends on which scripts are in the sample (Step 7), or anything about causes or
-the quality of a script.
+A word used 200 times in a single script can look distinctive by itself. So a word must appear in at least
+**5 scripts** (document frequency, not total count). We also run 3 and 10, and a "presence" mode that counts
+how many scripts use a word rather than how often.
 
-The primary run is definition (C), dialogue, names removed, minimum document frequency 5. All other runs are
-exploratory."""),
+### What it measures
+
+Which words each group uses comparatively more, in this corpus, under these preprocessing choices.
+
+### What it can't tell us
+
+How a word is used (Step 8 reads the text), whether the difference is more than chance (Step 6), whether it
+depends on which scripts are in the sample (Step 7), or anything about causes or the quality of a script.
+
+The primary run is definition (C), dialogue, names removed and a minimum document frequency of 5. All other
+runs are exploratory."""),
     Run("s05_scatter"),
-    Fig("s05_scatter", "primary", "Primary Scattertext: every dot is a word used by at least 5 scripts. x: rate in "
-        "unsuccessful scripts, y: rate in successful scripts, both per 10,000 dialogue words on log scales. Words "
-        "at least twice as frequent in one group are drawn as circles (successful) or triangles (unsuccessful); "
-        "the labelled words are the most extreme on each side. Hover for counts. What to look for: whether the "
-        "labelled words are plausible style or topic words or artefacts, which Step 8 checks in the text."),
+    Fig("s05_scatter", "primary", "The primary Scattertext. Every dot is a word used by at least 5 scripts. x is "
+        "its rate in unsuccessful scripts and y its rate in successful scripts, both per 10,000 dialogue words on "
+        "log scales. Words at least twice as frequent in one group are drawn as circles (successful) or triangles "
+        "(unsuccessful), and the labelled words are the most extreme on each side. Hover for counts. Look at "
+        "whether the labelled words are plausible style or topic words or look like artefacts. Step 8 checks "
+        "that in the text."),
     Table("s05_scatter", "top", "The 25 most extreme words on each side of the primary run, with the number of "
-          "scripts using each."),
-    Fig("s05_scatter", "A", "Exploratory: the same plot for definition (A). With 67 unsuccessful scripts, rare "
-        "words on the unsuccessful side are noisy."),
-    Fig("s05_scatter", "B", "Exploratory: definition (B), which mixes genres and eras; expect genre words."),
-    Fig("s05_scatter", "matched", "Exploratory: the matched sample from Step 4 (same genre, decade and budget)."),
-    Table("s05_scatter", "variants", "Preprocessing variants of the primary run: how many terms clear the "
-          "2× threshold, and the Jaccard overlap of their top-50 lists with the primary run."),
+          "scripts that use each one."),
+    Fig("s05_scatter", "A", "Exploratory run of the same plot for definition (A). With 67 unsuccessful scripts, "
+        "rare words on the unsuccessful side are noisy."),
+    Fig("s05_scatter", "B", "Exploratory run for definition (B), which mixes genres and eras, so expect genre "
+        "words."),
+    Fig("s05_scatter", "matched", "Exploratory run on the matched sample from Step 4 (same genre, decade and "
+        "budget)."),
+    Table("s05_scatter", "variants", "Preprocessing variants of the primary run. For each we show how many terms "
+          "clear the 2× threshold and the Jaccard overlap of its top-50 lists with the primary run's (the words "
+          "both lists share, divided by all words on either list)."),
     Fig("s05_scatter", "grid", "Jaccard overlap between each run's top-50 successful terms and the primary run's, "
-        "across group definitions, layers, minimum document frequencies and count modes. Light = similar lists, "
-        "dark = different."),
-    Table("s05_scatter", "grid_summary", "Mean overlap with the primary run by definition and layer."),
-    Table("s05_scatter", "strata", "Within single genres and decades where both groups have at least 30 scripts: "
-          "the ten most extreme words on each side."),
+        "across group definitions, layers, minimum document frequencies and count modes. Light means similar "
+        "lists and dark means different ones."),
+    Table("s05_scatter", "grid_summary", "Mean overlap with the primary run, by definition and layer."),
+    Table("s05_scatter", "strata", "The ten most extreme words on each side within single genres and single "
+          "decades, wherever both groups have at least 30 scripts."),
     Reading("s05_scatter"),
-    Md("""Interactive Scattertext explorers for (C), (A), (B) and the matched sample are written to
-`analysis/scripts_text/private/scattertext/`. They are built from word counts only, with no document text, and
-are checked for dialogue before use, but stay out of git as the brief asks."""),
+    Md("""The interactive Scattertext explorers for (C), (A), (B) and the matched sample are written to
+`analysis/scripts_text/private/scattertext/`. They're built from word counts only, with no document text, and
+are checked for dialogue before use. They still stay out of git, as the brief asks."""),
 ]

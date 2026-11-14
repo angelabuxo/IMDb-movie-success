@@ -111,15 +111,25 @@ def figures(res: dict) -> dict:
     return {}
 
 
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    status = ("Nobody has classified them by hand yet." if s["human_categories_filled"] == 0 else
+              f"{s['human_categories_filled']} of {s['terms']} have a human category so far.")
+    return (f"Of the {s['terms']} most extreme words, {s['terms_that_are_names_somewhere']} are a speaker name in at "
+            f"least {s['name_rule_scripts']} scripts, and {s['terms_mostly_one_script']} get more than half their uses "
+            f"from a single script. {status}")
+
+
 def reading(res: dict) -> str:
     s = res["summary"]
-    status = ("NOT YET VALIDATED: the human category column is empty." if s["human_categories_filled"] == 0 else
+    status = ("NOT YET VALIDATED. The human category column is empty." if s["human_categories_filled"] == 0 else
               f"{s['human_categories_filled']} of {s['terms']} terms have a human category.")
-    return (f"For the {s['terms']} most extreme terms ({s['terms'] // 2} per side), {s['terms_that_are_names_somewhere']} "
-            f"are a speaker name in the cues of at least {s['name_rule_scripts']} scripts (MovieSum's cues also hold "
-            f"mis-tagged headings, so one or two scripts aren't enough), so name removal (which works script by "
-            f"script) can miss them when a character is talked about in another film, or when a name is also a "
-            f"word. {s['terms_mostly_one_script']} terms get more than half their uses from a single script. "
+    return (f"Of the {s['terms']} most extreme terms ({s['terms'] // 2} per side), "
+            f"{s['terms_that_are_names_somewhere']} are a speaker name in the cues of at least "
+            f"{s['name_rule_scripts']} scripts. We ask for {s['name_rule_scripts']} because MovieSum's cues also hold "
+            f"mis-tagged headings, so one or two scripts aren't enough. Name removal works script by script, so it "
+            f"can miss these names when a character is talked about in another film, or when a name is also a word. "
+            f"{s['terms_mostly_one_script']} terms get more than half their uses from a single script. "
             f"{s['windows']} windows of at most {s['window_words_max']} words are written to the private folder for "
             f"reading. {status} If the table and the text disagree, the text wins.")
 
@@ -127,23 +137,33 @@ def reading(res: dict) -> str:
 SECTION = [
     Md("""## Step 8 · Go back to the text
 
-**What we do.** For the 15 most extreme terms on each side of the primary run we count how many scripts use
-the term, what share of its uses comes from the single script that uses it most, and whether it is a
-character name in some other script. We then pull a handful of keyword-in-context (KWIC) windows per term, at
-most 15 words each, from different scripts.
+This step asks what the most distinctive words really are once you read them in their scripts.
 
-**Why.** A word list is a summary; the text is the evidence. A "distinctive" word can turn out to be one film's
-catchphrase, a name, a formatting leftover, or a genre topic. Only reading tells which. **This
-classification is a human decision**: the table has an empty column for it, and nothing here fills it in.
+### What we do
 
-**What it measures.** How concentrated each term is, and what its uses look like.
+For the 15 most extreme terms on each side of the primary run, we count how many scripts use the term, what
+share of its uses comes from the single script that uses it most, and whether it's a character name in some
+other script. We then pull a handful of keyword-in-context (KWIC) windows per term, from different scripts. A
+KWIC window is the term with a few words on either side, at most 15 words in all.
 
-**What it misses.** Five windows per term is a glimpse, not a reading of every use."""),
+### Why
+
+A word list is a summary, and the text is the evidence. A "distinctive" word can turn out to be one film's
+catchphrase, a name, a formatting leftover or a genre topic, and only reading tells which. **This
+classification is a human decision.** The table has an empty column for it, and nothing here fills it in.
+
+### What it measures
+
+How concentrated each term is, and what its uses look like.
+
+### What it misses
+
+Five windows per term is a glimpse, not a reading of every use."""),
     Run("s08_kwic"),
-    Table("s08_kwic", "terms", "The top 15 terms per side: how many scripts use them, the share of uses from "
-          "the single heaviest script, whether the term is a character name elsewhere, a machine hint, and empty "
-          f"columns for the human category ({CATEGORIES}) and notes."),
-    Private("s08_kwic", "kwic", "Keyword-in-context windows (at most 15 words). Notebook only, output cleared "
-            "before commit; the full file is in the private folder."),
+    Table("s08_kwic", "terms", "The top 15 terms per side: how many scripts use each one, the share of its uses "
+          "that comes from the single heaviest script, whether it's a character name elsewhere, a machine hint, "
+          f"and empty columns for the human category ({CATEGORIES}) and for notes."),
+    Private("s08_kwic", "kwic", "Keyword-in-context windows of at most 15 words. They're in the notebook only, "
+            "with the output cleared before commit, and the full file is in the private folder."),
     Reading("s08_kwic"),
 ]

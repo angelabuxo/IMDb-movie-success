@@ -1,7 +1,7 @@
 {
  "s01_groups": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s01_summary.json",
    "script_table.csv"
@@ -72,7 +72,7 @@
  },
  "s02_layers": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s02_parser_report.csv",
    "s02_summary.json"
@@ -88,7 +88,7 @@
  },
  "s03_clean": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s03_names.csv",
    "s03_rank_frequency.csv",
@@ -131,7 +131,7 @@
  },
  "s04_controls": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s04_balance.csv",
    "s04_matches.csv",
@@ -150,7 +150,7 @@
  },
  "s05_scatter": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s05_grid.csv",
    "s05_primary_terms.csv",
@@ -190,7 +190,7 @@
  },
  "s06_null": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s06_null_counts.csv",
    "s06_summary.json",
@@ -216,7 +216,7 @@
  },
  "s07_stability": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s07_matched.csv",
    "s07_summary.json",
@@ -339,7 +339,7 @@
  },
  "s08_kwic": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s08_summary.json",
    "s08_terms.csv"
@@ -354,7 +354,7 @@
  },
  "s09_logreg": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s09_coefficients.csv",
    "s09_cv.csv",
@@ -380,7 +380,7 @@
  },
  "s10_franchise": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "s10_flags.csv",
    "s10_random_drop.csv",
@@ -394,7 +394,7 @@
  },
  "s11_validation": {
   "config": "d53695adc3",
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "outputs": [
    "validation_scripts.csv",
    "validation_terms.csv"
