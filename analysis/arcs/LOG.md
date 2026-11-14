@@ -560,3 +560,16 @@ was rewritten before commit. Steps 9 and 10 will show whether the near miss is s
 
 **Not done:** Step 11 (instrument-match question with the group); human sheets (Steps 4 and 12); ModernBERT
 robustness run (amendment (d), next).
+
+## 2026-11-14 · HPC copies of the SST-2/RoBERTa job cancelled; ModernBERT race copy (rule fixed before any ModernBERT score)
+
+- At the user's request, jobs 30053002 (gpua40) and 30053443 (gpua10) were cancelled at 10:4x, still pending
+  after more than 2 h. Neither ever started. The local MPS run stays the run of record for SST-2 and RoBERTa, so
+  **there is no HPC reproducibility check for those two models.** The only cross-hardware evidence is the
+  17-sentence stress comparison (MPS fp16 vs HPC CPU fp32, within 0.003). Their watcher was stopped.
+- **ModernBERT (amendment (d)):** the local MPS run started at about 10:30 (projected 1.93 h for sentences, then
+  scenes). The user asked for a race copy on HPC (gpua10).
+- **Rule, fixed before either run has produced a score:** for `modernbert3`, the full run (both passes) that
+  *finishes first* is the one used. The other, if it completes, is used only as a reproducibility check. Finish
+  time is the write time of the run's scene file: on this Mac for the local run, and the LSF finish time
+  recorded by the watcher for HPC.
