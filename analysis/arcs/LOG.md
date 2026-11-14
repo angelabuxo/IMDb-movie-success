@@ -617,3 +617,9 @@ VADER stands in for their syuzhet lexicon; SST-2 is our primary instrument. 1,04
   but is weaker than with SST-2, so the near miss in Step 7 does not get stronger support from the best model.
 - **Primary analysis unchanged** (Step 7 run once with SST-2). Steps 3, 4, 9, 12 and 13, their notebooks and
   the site rebuilt. Step 7 notebook rebuilt only for a figure fix (both r_min lines labelled).
+
+## 2026-11-14 · HPC ModernBERT copy cancelled
+
+Job 30053931 (gpua10) never left the queue. The local MPS run was the run of record under the race rule, so the
+HPC copy would only have been a reproducibility check. It was cancelled with `bkill` (status EXIT, never started)
+and its watcher stopped. No HPC jobs remain for this project.
