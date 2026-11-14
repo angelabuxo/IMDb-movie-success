@@ -271,3 +271,21 @@ The config already fixed the sample sizes, labels and error categories. Added `v
 - The six example arcs are drawn with the config seed: 127 Hours, Barbarian, Hanna, House of 1000 Corpses,
   Next, The Accountant.
 - No outcome used. Notebook 05: 0 errors; leak check 0 of 19,995.
+
+## 2026-11-14 · Step 6: scene-order null (VADER)
+
+- 1,000 shuffles of each script's scenes; one generator seeded with `seed`, scripts in sorted order. The
+  rerun is identical, and the real D1/D2 match Step 5 to 1e-9 for every script. Runtime 2.5 s.
+- **D1, one-sided:** 291 of 834 primary scripts (35%) beat their own shuffle null, against 5% by chance
+  (binomial p 1e-158). Median z +1.14, 81% have z > 0, and the real D1 is typically 1.21× the shuffled mean.
+  Scene order carries structure: neighbouring scenes share tone.
+- **D2, two-sided** (distance from the null mean; this two-sided rule is fixed here and was not in the config):
+  143 of 834 (17%) beat the null (binomial p 2e-37). Median z −0.52 in every genre bin. Endings are darker
+  than a random placement of the same scenes, for more scripts than chance allows. For most single films the
+  difference is within the shuffle range.
+- All 1,087 scripts: the same picture (D1 35%, D2 18%).
+- The 55 possible transcripts show much less order structure (D1 beyond null 11% vs 36%), which fits their
+  having little description. Step 10 drops them as a check.
+- The first draft of the reading called D2 "mostly within random ordering". It was rewritten from the data
+  before commit: the excess over 5% and the negative lean are both clear.
+- No outcome used. Notebook 06: 0 errors; leak check 0 of 19,995.
