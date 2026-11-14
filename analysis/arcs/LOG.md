@@ -317,3 +317,24 @@ mixed. The runtime projection for the fallback rule is measured on whichever GPU
   - Planted partial association of about 0.45: recovered ρ 0.42, CI [0.36, 0.48], p at its floor.
   - 200 pure-noise outcomes (300 films, 8 cells): 5.5% below 0.05 and 44.5% below 0.5. The test is calibrated.
 - No association with the real outcome has been computed.
+
+## 2026-11-14 · Step 8 code written, NOT run; two rules fixed before any result
+
+- `s08_prediction.py` implements `config.prediction`:
+  - 5 folds × 10 repeats stratified by cell (sklearn RepeatedStratifiedKFold, `seed`);
+  - OLS;
+  - out-of-fold R² of log_mult per repeat, predictions pooled over that repeat's folds;
+  - baseline: cells + log budget + scene length; plus: D1, D2;
+  - repeat interval = min–max over the 10 repeats;
+  - 200 permutations with the outcome permuted.
+- **Decision rule** (from the brief; the config had none): "adds predictive value" only if the gain is
+  positive in all 10 repeats AND the outcome-permutation p < 0.05. Otherwise "does not add predictive value
+  beyond the baseline".
+- **Exploratory second null:** D1 and D2 permuted together across films. Permuting the outcome also destroys
+  the baseline's own signal, so its null is not exactly "the arc adds nothing". This one keeps the baseline
+  intact. It is reported beside the pre-registered null, not instead of it.
+- Guard as in Step 7: no run without `s03_instrument_decision.json`.
+- Synthetic self-test only:
+  - no signal: gain −0.0007, range [−0.004, +0.003], p 0.15 / 0.20, verdict "does not add";
+  - planted signal: gain +0.067, range [+0.063, +0.071], p at its floor, verdict "adds".
+- No prediction of the real outcome has been made.
