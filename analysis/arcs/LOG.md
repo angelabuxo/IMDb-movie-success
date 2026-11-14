@@ -129,3 +129,28 @@ each, on N = 834 (arc-ready, not likely franchise). r_min at 80% power is 0.097 
 
 Fallback rule as of now: VADER primary. If the user allows the download, the model will be benchmarked on
 the same 200 sentences. It becomes primary only if the projected full run is within 3.0 hours.
+
+## 2026-11-14 · Config amendment: extra contextual configurations on DTU HPC (before any contextual score)
+
+The user asked to use DTU HPC for heavier runs and allowed downloading the models there. Added to
+`config.yaml` as `instruments.robustness_extra`:
+- **`roberta3`** (`cardiffnlp/twitter-roberta-base-sentiment-latest`, three classes). Why: SST-2 has no neutral
+  class and forces neutral action lines to a sign. About 60% of sentences are neutral to VADER (compute-check
+  sample).
+- **`scene_context`**: both models also score each scene's text in order, packed into pieces of at most 510
+  word pieces, so the model sees context (week 7: chunking).
+
+**Status.** These are robustness rows for Step 9 only. The pre-registered DistilBERT SST-2 remains the
+contextual instrument of the fallback rule, and the primary family is unchanged.
+
+**What had been computed before this amendment:**
+- No contextual score.
+- No association with any outcome.
+- VADER only on the 200 + 20,000 sentences of the compute check (speed, share non-zero, mean), plus the
+  hand-made contraction cases.
+
+**Run notes.**
+- The job measures its runtime projection on the HPC GPU and stops before the full run if it exceeds 3 h.
+- The HPC venv has no pyarrow and nothing was installed, so the job reads gzipped JSON lines and writes
+  gzipped CSV.
+- Sentences are copied only to the owner-only folder `~/02805-embed/arcs/private` (mode 700, umask 077).

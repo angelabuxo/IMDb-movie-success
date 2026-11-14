@@ -113,6 +113,20 @@ instruments:
   # The instrument that is not primary, when it ran, is the robustness instrument (Step 9).
   max_runtime_hours: 3.0
   compute_check_sentences: 200    # benchmark sample, drawn with `seed`
+  # AMENDMENT 2026-11-14 (before any contextual score or any association was computed; see LOG.md):
+  # extra ROBUSTNESS configurations, run on DTU HPC. They never replace the primary instrument chosen by
+  # the fallback rule above; they appear only as Step 9 rows.
+  robustness_extra:
+    roberta3:
+      name: "cardiffnlp/twitter-roberta-base-sentiment-latest"   # three classes: has a NEUTRAL class
+      score: "P(positive) - P(negative)"                          # P(neutral) kept for diagnostics
+      why: "SST-2 has no neutral class, so it forces neutral action lines to a sign"
+    scene_context:
+      models: ["sst2", "roberta3"]
+      unit: "each scene's 'both' text in order, packed at sentence boundaries into pieces of <= 510 word pieces"
+      score: "mean over pieces weighted by their length in word pieces"
+      why: "the model sees context instead of isolated sentences (week 7: chunking and the input limit)"
+    hardware: "DTU HPC GPU queue; the runtime projection for the fallback rule is measured on that GPU"
   # Step 11 must match the reviews branch: VADER compound. Step 11 therefore uses VADER on the scripts,
   # whatever instrument is primary in Step 7.
   step11_instrument: "vader"
