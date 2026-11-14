@@ -6,3 +6,7 @@ build/
 # Screenplay text analysis: anything that holds script text (layers, token caches, KWIC lines,
 # Scattertext explorers, validation previews) stays local. See docs/scripts-text.md.
 analysis/scripts_text/private/
+
+# Screenplay arcs: anything holding script text (scene text, KWIC windows, previews) stays local.
+analysis/arcs/private/
+site/arcs/private/
