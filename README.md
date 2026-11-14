@@ -104,7 +104,7 @@ The first reads MovieSum and the second the Tag Genome reviews. Both write only 
 
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
 - [`scripts/get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json): the downloader and its list of files.
-- [`docs/overview/overview.pdf`](docs/overview/overview.pdf): the whole project on one page, with [`project-details.pdf`](docs/overview/project-details.pdf) for a bit more on each part. LaTeX sources are next to them; rebuild with `tectonic -X compile overview.tex`.
+- [`docs/overview/overview.pdf`](docs/overview/overview.pdf): the whole project on one page, with [`project-details.pdf`](docs/overview/project-details.pdf) for a bit more on each part and [`literature.pdf`](docs/overview/literature.pdf) comparing our methods and findings with published research. LaTeX sources are next to them; rebuild with `tectonic -X compile overview.tex`.
 - [`docs/data-sources.md`](docs/data-sources.md): where each dataset comes from, with links and licences.
 - [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md): how the data fits together, with coverage and checks.
 - [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.

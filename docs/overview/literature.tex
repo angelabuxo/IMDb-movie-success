@@ -1,0 +1,114 @@
+\documentclass[10pt]{article}
+\input{preamble}
+
+\newcommand{\paper}[2]{\par\smallskip\textbf{#1}\ #2\par}
+\newcommand{\vs}[1]{\par{\color{accent}\textbf{vs ours:}} #1\par}
+\newcommand{\src}[1]{{\small\color{muted}[#1]}}
+
+\begin{document}
+\doctitle{How our work compares with published research}{Log-Log Legends · DTU 02805 · 14 November 2026 · companion to \textit{overview.pdf} and \textit{project-details.pdf}. \src{read} = full text read, \src{abstract} = only the abstract, index page or citing papers were seen, so numbers there are less certain.}
+
+\section{The short version}
+\begin{itemize}
+  \item \textbf{Almost all prior work predicts revenue, not return on budget.} Revenue is driven by budget, so many positive findings shrink or disappear when budget is controlled. Our outcome, $\ln(\text{gross}/\text{budget})$, follows the profitability line of Ravid (1999), Eliashberg et al.\ (2007) and Lash \& Zhao (2016).
+  \item \textbf{Our network results agree with the literature.} Track records predict returns (Lash \& Zhao) and stars raise revenue but not returns (Ravid, Elberse). Directors have hot streaks (Liu et al.\ 2018).
+  \item \textbf{Our script results agree with the careful studies and contradict one loose one.} Del Vecchio et al.\ (2021) report that ``Man in a hole'' arcs earn more. They use revenue, a single dummy per regression and no genre or franchise control, and their effect weakens to $p = 0.055$ once budget is available. Berger et al.\ (2021), with controls, find that the arc's swing and ending don't matter even for ratings.
+  \item \textbf{Our reception results match the critic-vs-audience literature,} with one instructive sign flip. Holbrook \& Addis (2007) find critic scores go \emph{down} with revenue ($r = -0.29$). Ours go \emph{up} with return on budget ($\rho = +0.33$). Critics favour cheaper films that earn their budget back.
+  \item \textbf{What looks new in our design:} an out-of-time test (train to 2010, test 2011--2017) with network features from earlier films only, pre-registered text tests, franchise checks, and shuffle nulls within genre $\times$ decade. We found no published study that combines these.
+\end{itemize}
+
+\section{Who made the film: networks and track records}
+
+\paper{Lash \& Zhao (2016), Early predictions of movie success: the who, what, and when of profitability.}{\textit{J.\ Management Information Systems} 33(3). \src{read, arXiv 1506.05382}}
+2,506 films (2000--2010). Outcome is ROI $=(\text{revenue}-\text{budget})/\text{budget}$. Actor and director networks are built only from earlier years. Random forest AUC 0.86 for the top 30\% by ROI. The strongest LASSO feature is the past profit of actor--director pairs.
+\vs{The closest precedent, and it agrees: track record predicts return. They evaluate with random 10-fold cross-validation. Our split by year is stricter, since future films can't leak into training.}
+
+\paper{Packard, Aribarg, Eliashberg \& Foutz (2016), The role of network embeddedness in film success.}{\textit{Int.\ J.\ Research in Marketing} 33. \src{read}}
+2,110 US films (1999--2004), lagged 10-year collaboration network. Eigenvector centrality helps cast and betweenness helps crew, for log box office. Per the search, a footnote says the network effects could not be found in the subsample that has budgets.
+\vs{Partly differs. Centrality helps revenue for them. For return, our PageRank adds nothing beyond plain experience counts. Their budget-subsample note would fit our result. We still need to check that footnote ourselves.}
+
+\paper{Ravid (1999), Information, blockbusters, and stars; Elberse (2007), The power of stars.}{\textit{J.\ Business} 72(4); \textit{J.\ Marketing} 71(4). \src{abstract}}
+Stars and budgets raise revenue. Ravid finds return relates only to G/PG ratings and, weakly, sequels. Elberse finds a star adds about \$3M in expected revenue, with no sign of extra studio profit.
+\vs{Agrees, and it justifies our choice of outcome: revenue rewards the inputs, while return on budget asks whether they paid off.}
+
+\paper{De Vany \& Walls (1999), Uncertainty in the movie industry.}{\textit{J.\ Cultural Economics} 23(4). \src{abstract}}
+Box office has heavy, Pareto-like tails, and ``nobody knows'' which film will be a hit.
+\vs{Explains why an out-of-sample $R^2$ of about 0.2--0.3 is a reasonable ceiling, and supports our rank and log methods.}
+
+\paper{Liu et al.\ (2018), Hot streaks in artistic, cultural, and scientific careers; John, Ravid \& Sunder (2017), Managerial ability and success.}{\textit{Nature} 559; \textit{J.\ Corporate Finance} 44. \src{abstract}}
+Directors have hot streaks lasting about five years (Liu, measured on IMDb ratings). Directors affect financial results, and rehiring follows full-career performance (John et al.).
+\vs{Agrees with our hit-after-hit result (35\% against 18\%) and with testing it against each director's own shuffled career. Liu measures ratings, not money.}
+
+\paper{Cattani \& Ferriani (2008); Ferriani, Cattani \& Baden-Fuller (2009); Uzzi \& Spiro (2005).}{\textit{Organization Science} 19(6); \textit{Research Policy} 38(10); \textit{Am.\ J.\ Sociology} 111(2). \src{read p.~1--2 / abstract}}
+Core/periphery position and team mix predict awards in Hollywood. Centrality has diminishing returns. Broadway success is an inverted U in small-worldness.
+\vs{Theory to cite. Their outcomes are awards or Broadway, not return. A nonlinear (squared) centrality term would test their diminishing-returns claim.}
+
+\section{What the film says: script text and emotional arcs}
+
+\paper{Del Vecchio, Kharlamov, Parry \& Pogrebna (2021), Improving productivity in Hollywood with data science: using emotional arcs of movies\ldots}{\textit{J.\ Operational Research Society} 72(5). \src{read, arXiv 1807.02221 version}}
+6,174 films from \emph{subtitles}, syuzhet lexicon, six $k$-means arc clusters. Each regression puts revenue on a single cluster dummy. ``Man in a hole'' adds \$6.6M domestic gross ($p < 0.001$). In the 3,051 films with budgets it weakens to $p = 0.055$ (domestic) and $0.088$ (worldwide).
+\vs{\textbf{The one contradiction.} Our six VADER shapes show no difference in return ($p = 0.99$), and our pre-registered swing and ending tests are null or a near miss. Their test has no budget, genre or franchise control in the same model, and no out-of-sample check. Its lexicon method has been criticised (Swafford 2015). We could rerun their exact single-dummy test on our data to show it can give a false positive.}
+
+\paper{Berger, Kim \& Meyer (2021), What makes content engaging? How emotional dynamics shape success.}{\textit{J.\ Consumer Research} 48(2). \src{read}}
+4,118 films (subtitles), outcome IMDb rating. Volatility (SD of first differences) predicts rating, but the effect falls by about two-thirds with controls ($b = 2.81$, partial $\eta^2 = .002$). The SD of the arc (like our swing) and the ending (like our ending lift) are not significant.
+\vs{Agrees with ours, even on a rating outcome. Worth adopting: their volatility measure as a third, exploratory descriptor.}
+
+\paper{Toubia, Berger \& Eliashberg (2021), How quantifying the shape of stories predicts their success.}{\textit{PNAS} 118(26). \src{read}}
+4,118 films, outcome IMDb rating. Story ``speed'' in an embedding space helps (+0.048 rating per SD), with genre and year controls but no budget.
+\vs{Different outcome. Their speed measure could be computed on our script embeddings.}
+
+\paper{Eliashberg, Hui \& Zhang (2007; 2014), From story line to box office; Assessing box office performance using movie scripts.}{\textit{Management Science} 53(6); \textit{IEEE TKDE} 26(11). \src{read / abstract}}
+2007: 281 films, text from viewer-written plot ``spoilers'' (only 52 actual scripts), ROI outcome, holdout test, positive. 2014: about 200--300 scripts, kernel regression on revenue with budget as an input, 29\% lower error than benchmarks.
+\vs{The canonical positive result for scripts. It uses small samples, and in 2014 budget is an input, so the text's added value is unclear. Our word classifier ties the genre, decade and budget baseline (AUC 0.58 against 0.58).}
+
+\paper{Reagan et al.\ (2016); Monroe, Colaresi \& Quinn (2008); Saxena \& Keller (2024).}{\textit{EPJ Data Science} 5; \textit{Political Analysis} 16(4); \textit{Findings of ACL}. \src{read / abstract}}
+Respectively: the six arc shapes (on novels, outcome downloads, no significance tests), the log-odds word comparison we use, and the MovieSum dataset paper.
+\vs{Method and data citations.}
+
+\section{How it was received: critics, audiences and money}
+
+\paper{Holbrook \& Addis (2007), Taste versus the market.}{\textit{J.\ Consumer Research} 34(3). \src{read}}
+219 films from 2000. Critics and IMDb ratings agree at $r = 0.92$. Both correlate \emph{negatively} with market success, an index of screens, box office and rentals ($r = -0.29$ and $-0.28$).
+\vs{Critics and audiences agree in both studies (ours 0.76--0.79). The money sign flips: theirs is revenue size, ours is return on budget. Worth one sentence in the paper, because it shows the outcome choice matters.}
+
+\paper{Holbrook \& Addis (2008), Art versus commerce: a two-path model; Holbrook (1999).}{\textit{J.\ Cultural Economics} 32(2); \textit{J.\ Consumer Research} 26(2). \src{abstract}}
+Quality leads to awards, buzz leads to money. These are two separate paths.
+\vs{The theory behind our ``liked beyond their money'' and ``earned beyond their liking'' groups.}
+
+\paper{Eliashberg \& Shugan (1997); Basuroy, Chatterjee \& Ravid (2003); Reinstein \& Snyder (2005); Moon, Bergey \& Iacobucci (2010).}{\textit{J.\ Marketing} 61, 67, 74; \textit{J.\ Industrial Economics} 53. \src{abstract, Moon partly read}}
+Critics mostly \emph{predict} rather than drive revenue. Negative reviews hurt more than positive ones help. A causal design finds a smaller but real influence. Early revenue raises later ratings, and sequels earn more but are rated lower.
+\vs{Supports treating reviews as reception, not a predictor, as we do. Two checks we could add: whether panned hits have bigger budgets than loved flops, and whether sequels are rated lower in our data.}
+
+\paper{Basuroy, Ravid, Gretz \& Allen (2020), Is everybody an expert?}{\textit{J.\ Cultural Economics} 44. \src{abstract}}
+Critic ratings matter much more for revenue than user ratings.
+\vs{Agrees: Rotten Tomatoes (0.33) goes with return more than IMDb rating does (0.27).}
+
+\paper{Liu (2006); Duan, Gu \& Whinston (2008); Joshi et al.\ (2010).}{\textit{J.\ Marketing} 70; \textit{Decision Support Systems} 45; NAACL. \src{abstract / Joshi read}}
+The \emph{volume} of user reviews predicts box office, but their tone doesn't once endogeneity is handled. Joshi et al.: critics' words before release add to metadata for opening gross ($r$ 0.72 to 0.82). What matters is what reviewers mention, not whether they liked the film.
+\vs{Fits our weak review-tone result (0.13). We haven't tested volume. IMDb vote count is an obvious measure of it.}
+
+\paper{Vig, Sen \& Riedl (2012), The Tag Genome.}{\textit{ACM TiiS} 2(3).}
+The dataset paper for our audience reviews.
+
+\section{Where we're stronger, and where we're weaker}
+\begin{tabularx}{\linewidth}{@{}LL@{}}
+\toprule
+\textbf{Stronger} & \textbf{Weaker} \\
+\midrule
+Return on budget, not revenue & Gross over budget still isn't profit (no marketing, no cinema share) \\
+Out-of-time test, leakage-safe network features & 100k+ sample has few flops; reviews stop at 2017 \\
+Pre-registered text tests, Bonferroni, shuffle nulls & No causal design (Reinstein \& Snyder, Elberse have one) \\
+Franchise checks; genre $\times$ decade controls & Franchise flag is rough; no review-volume or marketing data \\
+Several sentiment models, split-half reliability & No human validation yet (sheets unfilled) \\
+\bottomrule
+\end{tabularx}
+
+\section{Worth adding before the paper}
+\begin{enumerate}
+  \item Rerun Del Vecchio's single-dummy revenue test on our data, then the same test with return on budget and our controls. This is cheap, and it would make the contrast concrete.
+  \item Berger's volatility as an exploratory arc descriptor, labelled as added after pre-registration.
+  \item IMDb vote count as a review-volume measure (Liu, Duan).
+  \item One sentence on the Holbrook \& Addis sign flip, revenue against return.
+  \item Check the \src{abstract} entries above against the papers before citing any number from them.
+\end{enumerate}
+\end{document}
