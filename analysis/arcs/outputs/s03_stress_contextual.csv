@@ -1,0 +1,18 @@
+sentence,sst2,roberta3,roberta3_neutral
+I love you.,0.9997,0.9198,0.0625
+I don't love you.,-0.9932,-0.7294,0.2263
+This is not bad.,0.9994,0.5656,0.3226
+I'm not unhappy.,0.9983,0.2016,0.5276
+I killed him.,-0.9975,-0.6577,0.2728
+I didn't kill him.,0.9873,-0.5471,0.4057
+"The hero died, but saved everyone.",0.9984,0.0763,0.5137
+"The hero saved everyone, but died.",-0.8083,-0.5997,0.3196
+The dog bit the man.,-0.9793,-0.5242,0.434
+The man bit the dog.,-0.9762,-0.5086,0.453
+"Oh great, another flat tire.",-0.9963,-0.7267,0.2014
+"Yeah, I just love waiting in line all day.",0.9995,0.5732,0.1663
+He opens the door and walks in.,0.9984,0.1273,0.8538
+She looks at the clock.,-0.7999,0.0332,0.8959
+Blood pools under the body.,-0.5742,-0.3811,0.5801
+He pulls the trigger.,0.9927,-0.0931,0.8138
+NO! NO! NO!,-0.9938,-0.378,0.3654

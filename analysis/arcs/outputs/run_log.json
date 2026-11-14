@@ -1,0 +1,604 @@
+{
+ "s01_sample": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s01_films.csv",
+   "s01_summary.json"
+  ],
+  "params": {
+   "controls": {
+    "covariates": [
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "decade_bins": [
+     [
+      0,
+      1979,
+      "pre-1980"
+     ],
+     [
+      1980,
+      1989,
+      "1980s"
+     ],
+     [
+      1990,
+      1999,
+      "1990s"
+     ],
+     [
+      2000,
+      2009,
+      "2000s"
+     ],
+     [
+      2010,
+      2019,
+      "2010s"
+     ],
+     [
+      2020,
+      2025,
+      "2020s"
+     ]
+    ],
+    "fixed_effects": "cell",
+    "genre_rule_sensitivity": "first_listed",
+    "min_films_per_cell": 5,
+    "other_genre": "Other",
+    "primary_genre_priority": [
+     "Horror",
+     "Sci-Fi",
+     "Thriller",
+     "Adventure",
+     "Action",
+     "Comedy",
+     "Drama"
+    ]
+   },
+   "sample": {
+    "arc_ready": {
+     "min_scene_tags": 20,
+     "min_sentences": 300,
+     "sensitivity_loose": {
+      "min_scene_tags": 10,
+      "min_sentences": 150
+     },
+     "sensitivity_strict": {
+      "min_scene_tags": 40,
+      "min_sentences": 600
+     }
+    },
+    "duplicate_rule": "longest_script",
+    "expected": {
+     "after_dialogue_exclusion": 1087,
+     "clean_movies": 2446,
+     "clean_with_usable_script": 1095,
+     "not_likely_franchise": 868,
+     "not_likely_franchise_arc_ready": 834,
+     "with_genome_reviews": 946,
+     "with_genome_reviews_not_franchise": 759
+    },
+    "flags": {
+     "possible_transcript": "action share of dialogue+action words < 0.15 OR scene tags < 20",
+     "pretokenised": "20 or more split contractions joined in the dialogue+action layer"
+    },
+    "franchise_flag": "Wikidata follows (P155) OR named franchise (P8345)",
+    "max_year_exclusive": 2026,
+    "min_budget_usd": 1000,
+    "min_dialogue_words": 500,
+    "primary": "not_likely_franchise",
+    "script_rule": ">= 1 <scene> and >= 1 <dialogue> tag",
+    "sensitivity": [
+     "all_scripts",
+     "exclude_follows_only",
+     "exclude_named_only"
+    ],
+    "streaming_distributors": "netflix|amazon|apple|hulu",
+    "tier": "100k+"
+   }
+  }
+ },
+ "s02_units": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "analysis_table.csv",
+   "s02_parser_report.csv",
+   "s02_scene_counts.csv.gz",
+   "s02_summary.json"
+  ],
+  "params": {
+   "arc_ready": {
+    "min_scene_tags": 20,
+    "min_sentences": 300,
+    "sensitivity_loose": {
+     "min_scene_tags": 10,
+     "min_sentences": 150
+    },
+    "sensitivity_strict": {
+     "min_scene_tags": 40,
+     "min_sentences": 600
+    }
+   },
+   "text": {
+    "empty_scene_rule": "drop from that layer's timeline; counted",
+    "excluded_tags": [
+     "stage_direction",
+     "character",
+     "parenthetical"
+    ],
+    "layers": [
+     "dialogue",
+     "action",
+     "both"
+    ],
+    "normalise_split_contractions": true,
+    "primary_layer": "both",
+    "sentence_split_regex": "(?<=[.!?])[\"')\\]]*\\s+",
+    "split_contraction_regex": "(\\w)\\s+(n't|'s|'re|'ve|'ll|'d|'m)\\b",
+    "unit_of_time": "scene",
+    "word_regex": "[A-Za-z]+(?:'[A-Za-z]+)?"
+   }
+  }
+ },
+ "s03_compute_check": {
+  "config": "03e51e86b0",
+  "date": "2026-11-14",
+  "outputs": [
+   "s03_compute_check.json"
+  ],
+  "params": {
+   "instruments": {
+    "compute_check_sentences": 200,
+    "contextual": {
+     "batch_size": 64,
+     "chunking": "a sentence longer than 510 word pieces is cut into consecutive 510-piece chunks, scored, and averaged (counted)",
+     "max_tokens": 512,
+     "name": "distilbert-base-uncased-finetuned-sst-2-english",
+     "score": "P(positive) - P(negative)"
+    },
+    "lexicon": {
+     "name": "vader",
+     "neutral_band": 0.05
+    },
+    "max_runtime_hours": 3.0,
+    "step11_instrument": "vader"
+   }
+  }
+ },
+ "s03_instruments": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s03_scene_vader.csv.gz",
+   "s03_summary.json"
+  ],
+  "params": {
+   "instruments": {
+    "agreement": {
+     "disagreements": {
+      "n": 20,
+      "rule": "sentences where VADER and sst2 have opposite non-zero signs, 3 to 15 words, drawn at random with `seed`",
+      "storage": "private only; shown in the notebook with output cleared, never on the site"
+     },
+     "labels": {
+      "roberta3": "argmax of the three classes (negative / neutral / positive)",
+      "sst2": "sign of P(pos) - P(neg); the model has no neutral class, so it is compared on VADER-non-neutral sentences only",
+      "vader": "sign with neutral band: |compound| < 0.05 -> 0"
+     },
+     "sample": "primary 834 first, all 1,087 scripts second",
+     "statistics": [
+      "% sign agreement on sentences VADER calls non-neutral (all three instruments)",
+      "Cohen's kappa on three classes, VADER vs roberta3",
+      "Spearman correlation of raw scores at sentence, scene (mean, 'both' layer) and film (mean of scene means) level"
+     ]
+    },
+    "compute_check_sentences": 200,
+    "contextual": {
+     "batch_size": 64,
+     "chunking": "a sentence longer than 510 word pieces is cut into consecutive 510-piece chunks, scored, and averaged (counted)",
+     "max_tokens": 512,
+     "name": "distilbert-base-uncased-finetuned-sst-2-english",
+     "score": "P(positive) - P(negative)"
+    },
+    "lexicon": {
+     "name": "vader",
+     "neutral_band": 0.05
+    },
+    "max_runtime_hours": 3.0,
+    "robustness_extra": {
+     "hardware": "DTU HPC GPU queue; the runtime projection for the fallback rule is measured on that GPU",
+     "modernbert3": {
+      "caveat": "no published English-only or screenplay accuracy; its 'neutral' may mean 'mixed review'. Untested until Step 4 is filled",
+      "classes": [
+       "negative",
+       "neutral",
+       "positive"
+      ],
+      "name": "clapAI/modernBERT-large-multilingual-sentiment",
+      "role": "Step 9 rows and an instrument-agreement row only; never primary, never changes the fallback rule",
+      "score": "P(positive) - P(negative)",
+      "units": [
+       "sentence",
+       "scene_context"
+      ],
+      "why": "trained mainly on product/movie/hotel reviews: a third domain next to SST-2 and tweets"
+     },
+     "roberta3": {
+      "name": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+      "score": "P(positive) - P(negative)",
+      "why": "SST-2 has no neutral class, so it forces neutral action lines to a sign"
+     },
+     "scene_context": {
+      "models": [
+       "sst2",
+       "roberta3"
+      ],
+      "score": "mean over pieces weighted by their length in word pieces",
+      "unit": "each scene's 'both' text in order, packed at sentence boundaries into pieces of <= 510 word pieces",
+      "why": "the model sees context instead of isolated sentences (week 7: chunking and the input limit)"
+     }
+    },
+    "step11_instrument": "vader"
+   },
+   "seed": 20261114
+  }
+ },
+ "s04_validation": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s04_validation_results.json",
+   "scenes_sheet.csv",
+   "scripts_sheet.csv"
+  ],
+  "params": {
+   "seed": 20261114,
+   "validation": {
+    "draw": {
+     "allocation": "proportional to each genre bin's share of those scenes, largest remainder, at least 1 per bin; uniform within bin; `seed`",
+     "blind": "raters label from the private preview, which shows the scene text but no instrument score",
+     "scenes_from": "primary 834, scenes on the timeline (>= 1 dialogue or action sentence)",
+     "scripts_from": "all 1,087 scripts after Step 1's exclusions, uniform, `seed`"
+    },
+    "error_categories": [
+     "negation",
+     "sarcasm",
+     "event-not-tone",
+     "tokenisation/markup",
+     "other"
+    ],
+    "labels": [
+     "positive",
+     "negative",
+     "neutral",
+     "mixed"
+    ],
+    "scenes": 50,
+    "scoring": {
+     "accuracy": "share of scenes where the instrument's label equals the reference label; reported on all resolved scenes (a 'mixed' reference always counts as a miss) and on resolved non-mixed scenes",
+     "error_table": "count of each error category, overall and among scenes the primary instrument got wrong",
+     "instrument_label": "scene score -> positive / negative / neutral with the same band for every instrument: |score| < 0.05 -> neutral",
+     "rater_agreement": "Cohen's kappa on the four labels over scenes both raters labelled",
+     "reference_label": "adjudicated label if filled; else rater 1 if rater 2 is empty or agrees; else the scene is counted as unresolved and left out of accuracy"
+    },
+    "scripts": 25
+   }
+  }
+ },
+ "s05_arcs[sst2]": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s05_arcs_sst2.csv.gz",
+   "s05_descriptors_sst2.csv",
+   "s05_summary_sst2.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "sst2"
+  }
+ },
+ "s05_arcs[vader]": {
+  "config": "2bebdfb79c",
+  "date": "2026-11-14",
+  "outputs": [
+   "s05_arcs_vader.csv.gz",
+   "s05_descriptors_vader.csv",
+   "s05_summary_vader.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "vader"
+  }
+ },
+ "s06_shuffle[sst2]": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s06_shuffle_sst2.csv",
+   "s06_summary_sst2.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "sst2",
+   "scene_shuffle": {
+    "alpha_per_script": 0.05,
+    "shuffles": 1000
+   }
+  }
+ },
+ "s06_shuffle[vader]": {
+  "config": "2bebdfb79c",
+  "date": "2026-11-14",
+  "outputs": [
+   "s06_shuffle_vader.csv",
+   "s06_summary_vader.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "vader",
+   "scene_shuffle": {
+    "alpha_per_script": 0.05,
+    "shuffles": 1000
+   }
+  }
+ },
+ "s07_primary": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s07_primary.json"
+  ],
+  "params": {
+   "controls": {
+    "covariates": [
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "decade_bins": [
+     [
+      0,
+      1979,
+      "pre-1980"
+     ],
+     [
+      1980,
+      1989,
+      "1980s"
+     ],
+     [
+      1990,
+      1999,
+      "1990s"
+     ],
+     [
+      2000,
+      2009,
+      "2000s"
+     ],
+     [
+      2010,
+      2019,
+      "2010s"
+     ],
+     [
+      2020,
+      2025,
+      "2020s"
+     ]
+    ],
+    "fixed_effects": "cell",
+    "genre_rule_sensitivity": "first_listed",
+    "min_films_per_cell": 5,
+    "other_genre": "Other",
+    "primary_genre_priority": [
+     "Horror",
+     "Sci-Fi",
+     "Thriller",
+     "Adventure",
+     "Action",
+     "Comedy",
+     "Drama"
+    ]
+   },
+   "instrument": "sst2",
+   "primary": {
+    "alpha_bonferroni": 0.025,
+    "alpha_family": 0.05,
+    "bootstrap": 2000,
+    "decision": "an association is reported only if p < 0.025; otherwise 'no evidence of an association'",
+    "descriptors": [
+     "D1_volatility",
+     "D2_ending_minus_start"
+    ],
+    "instrument": "per fallback rule",
+    "layer": "both",
+    "outcome": "log_mult",
+    "p_value": "two-sided empirical: (1 + #{|rho_perm| >= |rho_real|}) / (1 + permutations)",
+    "permutations": 1000,
+    "power": 0.8,
+    "sample": "not_likely_franchise + arc_ready",
+    "statistic": "Spearman rho between the control-residualised descriptor and the control-residualised outcome",
+    "z": "(rho_real - mean(null)) / sd(null)"
+   },
+   "seed": 20261114
+  }
+ },
+ "s08_prediction": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s08_prediction.json"
+  ],
+  "params": {
+   "instrument": "sst2",
+   "prediction": {
+    "baseline": [
+     "cell one-hot (genre x decade)",
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "folds": 5,
+    "metric": "out-of-fold R2 of log_mult",
+    "model": "OLS",
+    "permutations": 200,
+    "plus": [
+     "D1_volatility",
+     "D2_ending_minus_start"
+    ],
+    "repeat_interval": "min-max of the 10 repeat means",
+    "repeats": 10,
+    "stratify": "cell"
+   },
+   "seed": 20261114
+  }
+ },
+ "s09_robustness": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s09_meta.json",
+   "s09_robustness.csv"
+  ],
+  "params": {
+   "instrument": "sst2",
+   "robustness": {
+    "bootstrap_resamples": 100,
+    "permutations_per_variant": 500,
+    "smoothing_windows": [
+     5,
+     11,
+     21
+    ],
+    "time_points": [
+     50,
+     100,
+     200
+    ]
+   },
+   "seed": 20261114
+  }
+ },
+ "s10_checks": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s10_checks.csv",
+   "s10_meta.json",
+   "s10_random_drops.csv"
+  ],
+  "params": {
+   "franchise_check": {
+    "permutations_per_drop": 200,
+    "random_drops": 50
+   },
+   "instrument": "sst2",
+   "robustness": {
+    "bootstrap_resamples": 100,
+    "permutations_per_variant": 500,
+    "smoothing_windows": [
+     5,
+     11,
+     21
+    ],
+    "time_points": [
+     50,
+     100,
+     200
+    ]
+   }
+  }
+ },
+ "s12_back_to_text": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s12_back_to_text.csv",
+   "s12_driver_words.csv",
+   "s12_meta.json"
+  ],
+  "params": {
+   "back_to_text": {
+    "extreme_scripts_per_descriptor": 10,
+    "window_words": 15
+   },
+   "instrument": "sst2"
+  }
+ }
+}

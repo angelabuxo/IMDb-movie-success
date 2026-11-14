@@ -1,0 +1,83 @@
+{
+ "instrument": "vader",
+ "scripts": 1087,
+ "primary": 834,
+ "params": {
+  "time_points": 100,
+  "smoothing_window": 11,
+  "edge_share": 0.2
+ },
+ "reliability": [
+  {
+   "descriptor": "D1",
+   "split-half Spearman": 0.3628570818324314,
+   "Spearman-Brown": 0.5324946931993065
+  },
+  {
+   "descriptor": "D2",
+   "split-half Spearman": 0.2927250838301116,
+   "Spearman-Brown": 0.452880643365904
+  },
+  {
+   "descriptor": "mean_level",
+   "split-half Spearman": 0.7913071539734664,
+   "Spearman-Brown": 0.8834968946762634
+  }
+ ],
+ "proxies": [
+  {
+   "descriptor": "D1",
+   "against": "scenes on the timeline",
+   "Spearman": -0.0958649784471065
+  },
+  {
+   "descriptor": "D1",
+   "against": "sentences",
+   "Spearman": -0.2238632829912894
+  },
+  {
+   "descriptor": "D1",
+   "against": "mean sentences per scene",
+   "Spearman": -0.01358446312875204
+  },
+  {
+   "descriptor": "D2",
+   "against": "scenes on the timeline",
+   "Spearman": -0.05784344335951997
+  },
+  {
+   "descriptor": "D2",
+   "against": "sentences",
+   "Spearman": 0.018507521225900395
+  },
+  {
+   "descriptor": "D2",
+   "against": "mean sentences per scene",
+   "Spearman": 0.07467431744181716
+  },
+  {
+   "descriptor": "mean_level",
+   "against": "scenes on the timeline",
+   "Spearman": -0.1407362107091083
+  },
+  {
+   "descriptor": "mean_level",
+   "against": "sentences",
+   "Spearman": -0.023804688864423905
+  },
+  {
+   "descriptor": "mean_level",
+   "against": "mean sentences per scene",
+   "Spearman": 0.12574488613551363
+  }
+ ],
+ "D1_D2_spearman": -0.17252756442257253,
+ "examples": [
+  "127 Hours_2010",
+  "Barbarian_2022",
+  "Hanna_2011",
+  "House of 1000 Corpses_2003",
+  "Next_2007",
+  "The Accountant_2016"
+ ]
+}

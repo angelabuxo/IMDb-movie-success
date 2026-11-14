@@ -1,0 +1,268 @@
+# Screenplay emotional arcs: PRE-REGISTRATION.
+# Written and committed on 2026-11-14, BEFORE any sentiment score or any association was computed.
+# Only counts were computed before this file (the reproduction in LOG.md, Step 0).
+# Changing a value afterwards needs a dated entry in LOG.md with the reason. The primary analysis
+# (section `primary`) is never changed after results are seen.
+
+research_question: >
+  Once genre, decade, budget, franchise status and scene length are controlled, is the emotional
+  shape of a screenplay (how its tone rises and falls across the story) associated with the film's
+  profitability, and is it reflected in the tone of the audience's reviews?
+
+environment:
+  python: "3.13.16"   # /Users/.../02805-social-graphs/.venv-course; see docs/scripts-arcs.md
+  packages: {pandas: "3.0.5", numpy: "2.5.3", scipy: "1.18.1", scikit-learn: "1.9.1", statsmodels: "0.15.0",
+             vaderSentiment: "3.3.2", transformers: "5.20.2", torch: "2.14.1", plotly: "7.1.0",
+             pyyaml: "6.0.3", nbformat: "5.11.1", nbconvert: "7.17.1", mistune: "any"}
+
+seed: 20261114                    # every random draw derives from this seed
+stability_seeds: [20261114, 1, 2, 3, 4]   # Step 9: the primary null rerun with each seed
+
+# ------------------------------------------------------------------ sample
+sample:
+  tier: "100k+"                   # features/movies_features.csv; the 10k tier is NOT used (money unvalidated)
+  # Clean theatrical USD rule, as in scripts/imdb/coverage_clean_sample.sql and analysis/scripts_text
+  min_budget_usd: 1000
+  max_year_exclusive: 2026
+  streaming_distributors: "netflix|amazon|apple|hulu"
+  script_rule: ">= 1 <scene> and >= 1 <dialogue> tag"
+  duplicate_rule: "longest_script"          # 12 IMDb IDs appear twice in MovieSum
+  min_dialogue_words: 500                   # 8 scripts whose dialogue markup failed; excluded and counted
+  # PRIMARY sample: clean scripts after exclusions, NOT likely franchise, arc-ready.
+  primary: "not_likely_franchise"
+  # Rationale, stated openly: the earlier word-level branch (analysis/scripts_text, Step 10) found that its
+  # weak signal vanished once franchise films were removed (z 2.08 -> 0.50). Making the non-franchise films
+  # the primary sample is therefore INFORMED BY A PREVIOUS RESULT on the same scripts. All scripts and the
+  # two single-source franchise cuts are run as sensitivity samples (Steps 9 and 10).
+  sensitivity: ["all_scripts", "exclude_follows_only", "exclude_named_only"]
+  franchise_flag: "Wikidata follows (P155) OR named franchise (P8345)"   # noisy; reported as such
+  arc_ready:
+    min_scene_tags: 20            # scene tags in the raw markup
+    min_sentences: 300            # sentences in the dialogue+action layer (sentence rule below)
+    sensitivity_strict: {min_scene_tags: 40, min_sentences: 600}
+    sensitivity_loose: {min_scene_tags: 10, min_sentences: 150}
+  expected:                       # reproduced 2026-11-14 (LOG.md, Step 0)
+    clean_movies: 2446
+    clean_with_usable_script: 1095
+    after_dialogue_exclusion: 1087
+    not_likely_franchise: 868
+    not_likely_franchise_arc_ready: 834
+    with_genome_reviews: 946
+    with_genome_reviews_not_franchise: 759
+  flags:
+    possible_transcript: "action share of dialogue+action words < 0.15 OR scene tags < 20"   # flagged, kept
+    pretokenised: "20 or more split contractions joined in the dialogue+action layer"         # descriptive
+  # Prior exposure, stated openly: notebooks/scripts_and_reviews.ipynb (on main) already compared a
+  # speech-level VADER arc (40 bins, Gaussian smoothing; "swing" and "ending vs average") between hit and
+  # flop quartiles, franchise films included, and found no difference (p = 0.89 and 0.41; six k-means
+  # arc shapes, Kruskal-Wallis p = 0.99). Our D1 and D2 are close relatives of those features, so this
+  # pre-registration is not blind to that earlier null. The unit of time (scene), sample, controls and
+  # outcome (continuous) differ.
+
+# ------------------------------------------------------------------ outcome and controls
+outcome:
+  primary: "log_mult"             # natural log of (worldwide gross / budget), continuous
+  sensitivity: ["log_gross"]
+  exploratory: ["unprofitable"]   # gross < budget; low power, exploratory only
+controls:
+  # Same controls on BOTH sides (Frisch-Waugh): the outcome and each descriptor are regressed by OLS on
+  # the controls, and the residuals are correlated (Spearman).
+  fixed_effects: "cell"           # primary genre x decade bin
+  covariates: ["log_budget", "mean_sentences_per_scene"]   # scene length: mean sentences per non-empty scene
+  primary_genre_priority: ["Horror", "Sci-Fi", "Thriller", "Adventure", "Action", "Comedy", "Drama"]  # FROZEN, from analysis/scripts_text
+  other_genre: "Other"
+  decade_bins: [[0, 1979, "pre-1980"], [1980, 1989, "1980s"], [1990, 1999, "1990s"],
+                [2000, 2009, "2000s"], [2010, 2019, "2010s"], [2020, 2025, "2020s"]]
+  # A singleton cell gives a zero residual and makes within-cell permutation a no-op. Cells with fewer
+  # than this many films IN THE ANALYSED SAMPLE are pooled into "<genre> | pooled decades"; if that is still
+  # too small, into "pooled". Counted and reported. The same cells are the permutation strata.
+  min_films_per_cell: 5
+  genre_rule_sensitivity: "first_listed"   # exploratory row only (agreement with priority rule: 49%)
+
+# ------------------------------------------------------------------ text units
+text:
+  unit_of_time: "scene"           # <scene> blocks in order of appearance (assumption: appearance order = story order)
+  layers: ["dialogue", "action", "both"]   # dialogue = <dialogue>; action = <scene_description>; both = the two
+  primary_layer: "both"
+  excluded_tags: ["stage_direction", "character", "parenthetical"]   # headings, speaker cues, parentheticals
+  normalise_split_contractions: true       # "do n't" -> "don't", applied BEFORE sentence split and scoring
+  split_contraction_regex: "(\\w)\\s+(n't|'s|'re|'ve|'ll|'d|'m)\\b"
+  # Sentence split: inside each tag body (a tag boundary is always a sentence boundary), split after
+  # . ! or ? (plus closing quotes/brackets) followed by whitespace. A piece counts as a sentence if it has
+  # at least one word token. This is the rule that reproduces 834.
+  sentence_split_regex: "(?<=[.!?])[\"')\\]]*\\s+"
+  word_regex: "[A-Za-z]+(?:'[A-Za-z]+)?"
+  empty_scene_rule: "drop from that layer's timeline; counted"   # a scene with no sentence in the layer
+
+# ------------------------------------------------------------------ instruments
+instruments:
+  lexicon:
+    name: "vader"                 # vaderSentiment 3.3.2, compound score in [-1, 1] per sentence
+    neutral_band: 0.05            # VADER's own cut-off; |score| < 0.05 = neutral
+  contextual:
+    name: "distilbert-base-uncased-finetuned-sst-2-english"   # fine-tuned on SST-2 (movie-review sentences)
+    score: "P(positive) - P(negative)"   # = 2*P(pos) - 1, in [-1, 1]; the model has no neutral class
+    max_tokens: 512
+    chunking: "a sentence longer than 510 word pieces is cut into consecutive 510-piece chunks, scored, and averaged (counted)"
+    batch_size: 64
+  # FALLBACK RULE, fixed now and independent of any association:
+  # primary = contextual IF (i) the model is available locally after the user answers the compute check
+  # (no download without explicit permission) AND (ii) the projected runtime for scoring every sentence of
+  # all 1,087 scripts once (the 'both' layer; dialogue and action are subsets) is <= max_runtime_hours.
+  # Otherwise primary = lexicon and the contextual model is skipped (reported as NOT AVAILABLE).
+  # The instrument that is not primary, when it ran, is the robustness instrument (Step 9).
+  max_runtime_hours: 3.0
+  compute_check_sentences: 200    # benchmark sample, drawn with `seed`
+  # AMENDMENT 2026-11-14 (before any contextual score or any association was computed; see LOG.md):
+  # extra ROBUSTNESS configurations, run on DTU HPC. They never replace the primary instrument chosen by
+  # the fallback rule above; they appear only as Step 9 rows.
+  robustness_extra:
+    roberta3:
+      name: "cardiffnlp/twitter-roberta-base-sentiment-latest"   # three classes: has a NEUTRAL class
+      score: "P(positive) - P(negative)"                          # P(neutral) kept for diagnostics
+      why: "SST-2 has no neutral class, so it forces neutral action lines to a sign"
+    scene_context:
+      models: ["sst2", "roberta3"]
+      unit: "each scene's 'both' text in order, packed at sentence boundaries into pieces of <= 510 word pieces"
+      score: "mean over pieces weighted by their length in word pieces"
+      why: "the model sees context instead of isolated sentences (week 7: chunking and the input limit)"
+    hardware: "DTU HPC GPU queue; the runtime projection for the fallback rule is measured on that GPU"
+    # AMENDMENT 2026-11-14 (d), before any association with the outcome was computed (no Step 7-10 output
+    # existed; see LOG.md). One more ROBUSTNESS instrument, chosen by a literature/model-card search for the
+    # strongest permissively licensed English-capable 3-class encoder that runs on the M5 and the HPC GPUs.
+    modernbert3:
+      name: "clapAI/modernBERT-large-multilingual-sentiment"   # ModernBERT-large, 396M params, Apache-2.0
+      classes: ["negative", "neutral", "positive"]
+      score: "P(positive) - P(negative)"
+      units: ["sentence", "scene_context"]                      # same two configurations as above
+      why: "trained mainly on product/movie/hotel reviews: a third domain next to SST-2 and tweets"
+      caveat: "no published English-only or screenplay accuracy; its 'neutral' may mean 'mixed review'. Untested until Step 4 is filled"
+      role: "Step 9 rows and an instrument-agreement row only; never primary, never changes the fallback rule"
+  # Step 11 must match the reviews branch: VADER compound. Step 11 therefore uses VADER on the scripts,
+  # whatever instrument is primary in Step 7.
+  step11_instrument: "vader"
+  # AMENDMENT 2026-11-14 (b), committed while HPC job 30053002 was queued and before any contextual score was
+  # read (see LOG.md). Step 3 instrument-agreement rules. Descriptive only; no outcome is used in Step 3.
+  agreement:
+    labels:
+      vader: "sign with neutral band: |compound| < 0.05 -> 0"
+      sst2: "sign of P(pos) - P(neg); the model has no neutral class, so it is compared on VADER-non-neutral sentences only"
+      roberta3: "argmax of the three classes (negative / neutral / positive)"
+    statistics:
+      - "% sign agreement on sentences VADER calls non-neutral (all three instruments)"
+      - "Cohen's kappa on three classes, VADER vs roberta3"
+      - "Spearman correlation of raw scores at sentence, scene (mean, 'both' layer) and film (mean of scene means) level"
+    sample: "primary 834 first, all 1,087 scripts second"
+    disagreements:
+      n: 20
+      rule: "sentences where VADER and sst2 have opposite non-zero signs, 3 to 15 words, drawn at random with `seed`"
+      storage: "private only; shown in the notebook with output cleared, never on the site"
+
+scene_score:
+  aggregate: "mean"               # mean sentence score in the scene, neutral (zero) sentences included
+  exploratory: "share of sentences with |score| >= neutral_band, by sign"
+
+# ------------------------------------------------------------------ arcs
+arc:
+  time_points: 100
+  # Scene i of n covers the interval [i/n, (i+1)/n) of normalised story time. Grid point k covers
+  # [k/100, (k+1)/100) and takes the OVERLAP-WEIGHTED mean of the scenes it overlaps. This works the same
+  # whether a script has fewer or more scenes than grid points; no scene is dropped or interpolated.
+  resampling: "overlap_weighted_mean"
+  smoothing: "centred moving average"
+  smoothing_window: 11            # grid points (about 10% of the story); window truncated at the ends
+  descriptors:
+    primary:
+      D1_volatility: "SD (ddof=0) of the SMOOTHED arc"
+      D2_ending_minus_start: "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+    exploratory:
+      mean_level: "mean of the resampled arc"
+      min_position: "position (0-1) of the minimum of the smoothed arc"
+      sign_changes: "number of sign changes of (smoothed arc - its own mean)"
+  edge_share: 0.20
+  split_half: "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected"
+
+# ------------------------------------------------------------------ Step 6: scene-order null
+scene_shuffle:
+  shuffles: 1000                  # per script: permute the order of its non-empty scenes
+  # D1 is tested one-sided (real > shuffled: an ordered story should vary more after smoothing than a
+  # random order, whose neighbours average out). D2 two-sided. Per-script empirical p as below.
+  alpha_per_script: 0.05
+
+# ------------------------------------------------------------------ Step 7: PRIMARY ANALYSIS
+primary:
+  sample: "not_likely_franchise + arc_ready"    # expected N = 834
+  instrument: "per fallback rule"
+  layer: "both"
+  outcome: "log_mult"
+  descriptors: ["D1_volatility", "D2_ending_minus_start"]   # exactly two: the primary family
+  statistic: "Spearman rho between the control-residualised descriptor and the control-residualised outcome"
+  bootstrap: 2000                 # film resamples; residualisation REFIT in each; percentile 95% CI
+  permutations: 1000              # residualised outcome permuted WITHIN cells (strata as in controls)
+  p_value: "two-sided empirical: (1 + #{|rho_perm| >= |rho_real|}) / (1 + permutations)"
+  z: "(rho_real - mean(null)) / sd(null)"
+  alpha_family: 0.05
+  alpha_bonferroni: 0.025         # per descriptor
+  decision: "an association is reported only if p < 0.025; otherwise 'no evidence of an association'"
+  # Minimum detectable |rho| at 80% power, r_min = (z_{1-a/2} + z_{0.8}) / sqrt(N - 3):
+  # N = 834: 0.097 at alpha 0.05 (constant 2.80), 0.107 at alpha 0.025 (constant 3.08). Both reported.
+  power: 0.80
+
+# ------------------------------------------------------------------ Step 8: incremental prediction
+prediction:
+  folds: 5
+  repeats: 10
+  stratify: "cell"                # pooled cells as above
+  model: "OLS"                    # linear regression, no tuning
+  baseline: ["cell one-hot (genre x decade)", "log_budget", "mean_sentences_per_scene"]
+  plus: ["D1_volatility", "D2_ending_minus_start"]
+  metric: "out-of-fold R2 of log_mult"
+  permutations: 200               # outcome permuted, gain (R2 plus - R2 baseline) recomputed
+  repeat_interval: "min-max of the 10 repeat means"
+
+# ------------------------------------------------------------------ Step 9: robustness (exploratory)
+robustness:
+  smoothing_windows: [5, 11, 21]
+  time_points: [50, 100, 200]
+  bootstrap_resamples: 100        # sign stability of rho across film resamples
+  permutations_per_variant: 500
+
+# ------------------------------------------------------------------ Step 10: franchise / leakage
+franchise_check:
+  random_drops: 50                # drop as many random non-franchise films as there are franchise films
+  permutations_per_drop: 200
+
+# ------------------------------------------------------------------ Step 11: reception (conditional)
+reception:
+  reviews_scores_path: "data/raw/features/review_features.csv"   # built by scripts/reviews/review_features.py
+  reviews_instrument: "vader compound, mean over the first 50 Tag Genome reviews per film (whole review)"
+  # Unit mismatch to resolve with the group: whole review (reviews side) vs mean of sentences (script side).
+  score_column: "vader_mean"
+  min_reviews_scored: 1           # primary (matches N = 759 frame); sensitivity: 20
+  min_reviews_sensitivity: 20
+  sample: "script AND Tag Genome reviews AND not likely franchise AND arc-ready"
+  descriptors: ["D1_volatility", "D2_ending_minus_start", "mean_level"]
+  ratings: ["imdb_rating", "metacritic", "rotten_tomatoes"]   # film-level, private columns
+  permutations: 1000
+
+# ------------------------------------------------------------------ Steps 4 and 12: human sheets
+validation:
+  scenes: 50                      # random, stratified by primary genre bin
+  scripts: 25
+  error_categories: ["negation", "sarcasm", "event-not-tone", "tokenisation/markup", "other"]
+  labels: ["positive", "negative", "neutral", "mixed"]
+  # AMENDMENT 2026-11-14 (c), before any sheet was drawn or labelled (see LOG.md): how the sheets are drawn and scored.
+  draw:
+    scenes_from: "primary 834, scenes on the timeline (>= 1 dialogue or action sentence)"
+    allocation: "proportional to each genre bin's share of those scenes, largest remainder, at least 1 per bin; uniform within bin; `seed`"
+    scripts_from: "all 1,087 scripts after Step 1's exclusions, uniform, `seed`"
+    blind: "raters label from the private preview, which shows the scene text but no instrument score"
+  scoring:
+    instrument_label: "scene score -> positive / negative / neutral with the same band for every instrument: |score| < 0.05 -> neutral"
+    reference_label: "adjudicated label if filled; else rater 1 if rater 2 is empty or agrees; else the scene is counted as unresolved and left out of accuracy"
+    accuracy: "share of scenes where the instrument's label equals the reference label; reported on all resolved scenes (a 'mixed' reference always counts as a miss) and on resolved non-mixed scenes"
+    rater_agreement: "Cohen's kappa on the four labels over scenes both raters labelled"
+    error_table: "count of each error category, overall and among scenes the primary instrument got wrong"
+back_to_text:
+  extreme_scripts_per_descriptor: 10
+  window_words: 15                # maximum; windows stay in private/
