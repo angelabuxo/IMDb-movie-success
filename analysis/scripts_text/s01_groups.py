@@ -222,7 +222,11 @@ def tables(res: dict) -> dict:
 # ---------------------------------------------------------------- figures
 
 def _by_group(sc, value, title, xaxis, log=False):
-    fig = make_subplots(rows=1, cols=3, subplot_titles=[f"({k}) {DEFS[k]}" for k in "ABC"], shared_yaxes=True)
+    short = {"A": "(A) gross below budget<br>vs all others", "B": "(B) bottom vs top quartile,<br>all films",
+             "C": "(C) bottom vs top quartile<br>within genre × decade"}
+    fig = make_subplots(rows=1, cols=3, subplot_titles=[short[k] for k in "ABC"], shared_yaxes=True,
+                        horizontal_spacing=0.06)
+    fig.update_annotations(font_size=12)
     for i, k in enumerate("ABC", 1):
         col = sc[f"group_{k}"]
         for grp, colour, name in (("low", LOW, "unsuccessful"), ("high", HIGH, "successful")):
@@ -257,8 +261,10 @@ def figures(res: dict) -> dict:
             cov.add_trace(go.Histogram(x=v.log_mult, name=f"{name} (n={len(v)})", marker_color=colour,
                                        opacity=0.65, histnorm="probability", nbinsx=50))
         q1, q3 = allc.log_mult.quantile([0.25, 0.75])
-        for q, lab in ((q1, "Q1 cut"), (q3, "Q3 cut"), (0.0, "break-even")):
-            cov.add_vline(x=q, line_dash="dash", line_color="#444", annotation_text=lab)
+        for q, lab, where in ((q1, "Q1 cut", "top right"), (q3, "Q3 cut", "top right"),
+                              (0.0, "break-even", "bottom left")):
+            cov.add_vline(line_width=1.5, x=q, line_dash="dash", line_color="#444", annotation_text=lab, annotation_position=where,
+                          annotation_bgcolor="rgba(255,255,255,0.85)")
         cov.update_layout(barmode="overlay", xaxis_title="log(gross / budget)  (0 = gross equals budget)",
                           yaxis_title="share of films")
         style(cov, "Films with a script lean towards hits", height=380)
@@ -269,6 +275,14 @@ def figures(res: dict) -> dict:
 
 # ---------------------------------------------------------------- reading
 
+def takeaway(res: dict) -> str:
+    b = _bias(res["scripts"]).set_index("definition")
+    return (f"Our main definition (C) compares the bottom and top quarter of films by gross/budget within the same "
+            f"genre and decade. Budgets still differ inside those cells (median ${b.loc['C', 'median budget, low ($M)']}M "
+            f"for the unsuccessful group against ${b.loc['C', 'median budget, high ($M)']}M for the successful one, "
+            f"p = {b.loc['C', 'Mann-Whitney p, log budget']}), which is why Step 4 also matches on budget.")
+
+
 def reading(res: dict) -> str:
     sc, s = res["scripts"], res["summary"]
     b = _bias(sc).set_index("definition")
@@ -277,21 +291,21 @@ def reading(res: dict) -> str:
     return (
         f"All five coverage checks reproduce ({', '.join(f'{k} {v['got']:,}' for k, v in s['checks'].items())}). "
         f"Under (A) only {int((sc.group_A == 'low').sum())} scripts are unsuccessful, so any word-level test on (A) "
-        f"has little power. Under (B) the median budget is ${b.loc['B', 'median budget, low ($M)']}M for the bottom "
-        f"quartile against "
-        f"${b.loc['B', 'median budget, high ($M)']}M for the top (Mann-Whitney p = {b.loc['B', 'Mann-Whitney p, log budget']}), "
-        f"and horror makes up {b.loc['B', 'horror share, high']:.0%} of the top quartile against "
-        f"{b.loc['B', 'horror share, low']:.0%} of the bottom. Within genre × decade cells (C) the budget gap is "
-        f"${b.loc['C', 'median budget, low ($M)']}M against ${b.loc['C', 'median budget, high ($M)']}M "
-        f"(p = {b.loc['C', 'Mann-Whitney p, log budget']}), so (C) removes the genre and era difference but not "
-        f"all of the budget difference; Step 4's matching handles budget. "
-        f"{s['cells_ok']} of {s['cells_total']} genre × decade cells have at least "
-        f"{cfg()['groups']['min_clean_movies_per_cell']} clean films; {s['scripts_in_dropped_cells']} scripts sit in "
-        f"cells too small to cut quartiles and are left out of (C). "
-        f"{len(skipped)} single-genre or single-decade strata have fewer than "
-        f"{cfg()['groups']['min_scripts_per_group']} scripts in a group and are skipped: "
+        f"has little power. Under (B) the bottom quartile's median budget is "
+        f"${b.loc['B', 'median budget, low ($M)']}M against ${b.loc['B', 'median budget, high ($M)']}M for the top "
+        f"quartile (Mann-Whitney p = {b.loc['B', 'Mann-Whitney p, log budget']}), and horror makes up "
+        f"{b.loc['B', 'horror share, high']:.0%} of the top quartile but only {b.loc['B', 'horror share, low']:.0%} "
+        f"of the bottom. Within genre × decade cells (C), the unsuccessful group's median budget is "
+        f"${b.loc['C', 'median budget, low ($M)']}M against ${b.loc['C', 'median budget, high ($M)']}M for the "
+        f"successful group (p = {b.loc['C', 'Mann-Whitney p, log budget']}). So (C) removes the genre and era "
+        f"difference but not all of the budget difference, and Step 4's matching takes care of budget. "
+        f"{s['cells_ok']} of the {s['cells_total']} genre × decade cells have at least "
+        f"{cfg()['groups']['min_clean_movies_per_cell']} clean films. {s['scripts_in_dropped_cells']} scripts sit "
+        f"in cells too small to cut quartiles, so they're left out of (C). "
+        f"{len(skipped)} single-genre or single-decade strata are skipped because one of their groups has fewer than "
+        f"{cfg()['groups']['min_scripts_per_group']} scripts: "
         f"{', '.join(skipped.value.astype(str))}. "
-        f"The priority genre rule agrees with Àngela's first-listed rule for "
+        f"Our priority rule for choosing a film's primary genre agrees with Àngela's first-listed rule for "
         f"{s['primary_vs_first_listed_agree']:.0%} of scripts."
     )
 
@@ -299,55 +313,73 @@ def reading(res: dict) -> str:
 SECTION = [
     Md("""## Step 1 · Who counts as a success?
 
-**What we do.** We define success as a film's gross divided by its budget, and use log(gross/budget) when we
-need a number on a continuous scale: 0 means the film grossed its budget, 1 means about 2.7 times its budget.
-From it we build three pairs of groups for the 1,095 clean 100k+ films that have a usable MovieSum script:
+This step asks which films count as successful and which as unsuccessful, so that every later step has two
+groups to compare.
 
-- **(A)** unprofitable (gross below budget) against everyone else. The most literal definition, but tiny.
-- **(B)** the bottom quarter against the top quarter of log(gross/budget). The cut-offs are computed on all
-  2,446 clean films, scripted or not, so a film's label doesn't depend on which other films happen to have a
-  script.
-- **(C)** the same quarters, but cut inside each primary-genre × decade cell. This compares a horror film from
-  the 2000s with other horror films from the 2000s, not with dramas from the 1970s.
+### What we do
 
-**Why.** Scattertext compares two groups, so we need to say which two. The course's "compared to what"
-question starts here: a word can only be distinctive of success relative to a definition of failure.
+We measure success as a film's gross divided by its budget. When we need a number on a continuous scale we use
+log(gross/budget): 0 means the film grossed exactly its budget, and 1 means it grossed about 2.7 times its
+budget. From that we build three pairs of groups for the 1,095 clean 100k+ films that have a usable MovieSum
+script:
 
-**What it measures.** How much a film earned relative to what it cost to make, as reported in its Wikipedia
-infobox.
+- (A) Unprofitable films (gross below budget) against everyone else. It's the most literal definition, but the
+  unprofitable group is tiny.
+- (B) The bottom quarter against the top quarter of log(gross/budget). We compute the cut-offs on all 2,446
+  clean films, with or without a script, so a film's label doesn't depend on which other films happen to have
+  one.
+- (C) The same quarters, but cut separately inside each primary-genre × decade cell (all the films that share
+  one primary genre and one decade). A horror film from the 2000s is then compared with other horror films
+  from the 2000s, not with dramas from the 1970s.
 
-**What it misses.** Gross minus budget is **not profit**: marketing isn't in the budget, cinemas keep a large
-share of the gross (often around half), and nothing is adjusted for inflation (the ratio is unaffected by
-inflation only because budget and gross are in the same year's dollars). The ratio also rewards very cheap
-films: a $1 million horror film that grosses $50 million beats a $200 million blockbuster that grosses $1
-billion.
+### Why
 
-**Primary analysis, fixed in advance:** definition (C), dialogue layer, character names removed, minimum
-document frequency 5. Everything else in these notebooks is exploratory."""),
+Scattertext compares two groups, so we have to say which two. The course's "compared to what?" question starts
+here, because a word can only be distinctive of success relative to some definition of failure.
+
+### What it measures
+
+How much a film earned relative to what it cost to make, as reported in its Wikipedia infobox.
+
+### What it misses
+
+Gross minus budget isn't profit. Marketing isn't in the budget, cinemas keep a large share of the gross (often
+around half), and nothing is adjusted for inflation. The ratio is unaffected by inflation only because budget
+and gross are in the same year's dollars. It also rewards very cheap films: a $1 million horror film that
+grosses $50 million beats a $200 million blockbuster that grosses $1 billion.
+
+### Primary analysis, fixed in advance
+
+Definition (C), the dialogue layer, character names removed and a minimum document frequency of 5. Everything
+else in these notebooks is exploratory."""),
     Run("s01_groups"),
-    Table("s01_groups", "checks", "Reproduction of the coverage numbers before anything else is computed."),
-    Table("s01_groups", "sizes", "Group sizes under each definition. All films are in the 100k+ vote tier."),
+    Table("s01_groups", "checks", "Before computing anything else, we check that the coverage numbers reproduce."),
+    Table("s01_groups", "sizes", "How many scripts land in each group under each definition. All films are in the "
+          "100k+ vote tier."),
     Fig("s01_groups", "coverage", "log(gross/budget) for the 2,446 clean films, split by whether MovieSum has "
-        "their script. Dashed lines: the quartile cuts used for (B) and break-even. The scripted films sit "
-        "further right: the script sample over-represents hits, which is why (B) has 306 successful and only "
-        "243 unsuccessful scripts."),
-    Fig("s01_groups", "budget", "Budget of the unsuccessful (orange) and successful (blue) scripts under each "
-        "definition, log scale. Look for whether the two boxes overlap: where they don't, a word difference "
-        "between the groups could be a budget difference."),
-    Fig("s01_groups", "year", "Release year by group. A shift between the boxes means era could explain word "
-        "differences (language changes over decades)."),
-    Fig("s01_groups", "genre_mix", "Share of each primary genre in each group, with a fill pattern per genre "
-        "so the chart reads without colour. Horror's share among successful films under (A) and (B) is the "
-        "known micro-budget bias; (C) equalises genre by construction."),
+        "their script. The dashed lines mark the quartile cuts used for (B) and break-even. Scripted films sit "
+        "further right, so the script sample over-represents hits. That's why (B) has 306 successful scripts but "
+        "only 243 unsuccessful ones."),
+    Fig("s01_groups", "budget", "Budgets of the unsuccessful (orange) and successful (blue) scripts under each "
+        "definition, on a log scale. Check whether the two boxes overlap. Where they don't, a word difference "
+        "between the groups could really be a budget difference."),
+    Fig("s01_groups", "year", "Release year by group. If the boxes are shifted, era could explain word "
+        "differences, since language changes over the decades."),
+    Fig("s01_groups", "genre_mix", "Share of each primary genre in each group. Every genre also has its own fill "
+        "pattern, so the chart reads without colour. Horror's share among successful films under (A) and (B) is "
+        "the known micro-budget bias. (C) equalises genre by construction."),
     Table("s01_groups", "bias", "The budget-bias test: median budget, median year and horror share in each "
-          "group, and a Mann-Whitney test of log budget between the two groups."),
-    Table("s01_groups", "strata", "Definition (C) within one genre or one decade alone. A stratum is used only "
+          "group, plus a Mann-Whitney test of log budget between the two groups (a rank test of whether one "
+          "group's budgets tend to be higher than the other's)."),
+    Table("s01_groups", "strata", "Definition (C) within a single genre or a single decade. We only use a stratum "
           "if both groups have at least 30 scripts (the brief's rule)."),
-    Table("s01_groups", "cells", "Genre × decade cells. A cell needs at least 20 clean films (scripted or "
-          "not) to cut quartiles; scripts in smaller cells are left out of (C) and counted here."),
+    Table("s01_groups", "cells", "Genre × decade cells. A cell needs at least 20 clean films, scripted or not, "
+          "before we can cut quartiles. Scripts in smaller cells are left out of (C) and counted here."),
     Reading("s01_groups"),
-    Md("""**Why we keep three definitions for now.** (A) is the most literal reading of "unprofitable" but has so
-few scripts that rare words can't be tested. (B) is larger and more robust, but mixes genres and eras, so it
-partly measures "horror vs drama" or "1980s vs 2010s". (C) controls genre and era by construction, which is
-why it's the primary analysis. None of them controls budget fully; Step 4 does that by matching."""),
+    Md("""### Why we keep three definitions for now
+
+(A) is the most literal reading of "unprofitable", but it has so few scripts that rare words can't be tested.
+(B) is larger and more robust, but it mixes genres and eras, so it partly measures "horror vs drama" or "1980s
+vs 2010s". (C) controls genre and era by construction, which is why it's the primary analysis. None of the
+three fully controls budget. Step 4 does that by matching."""),
 ]

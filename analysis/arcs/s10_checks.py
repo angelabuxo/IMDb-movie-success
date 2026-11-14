@@ -111,9 +111,11 @@ def figures(res: dict) -> dict:
         n, e = np.histogram(d.rho, bins=20)
         f = go.Figure(go.Bar(x=(e[:-1] + e[1:]) / 2, y=n, width=np.diff(e), marker_color=NEUTRAL,
                              name=f"{len(d)} random drops"))
-        for prefix, colour, txt in (("(a)", LOW, "(a) all scripts"), ("(b)", HIGH, "(b) franchise excluded")):
+        for prefix, colour, txt, where in (("(a)", LOW, "(a) all scripts", "top right"),
+                                           ("(b)", HIGH, "(b) franchise excluded", "bottom right")):
             v = ch[(ch.descriptor == k) & ch["sample"].str.startswith(prefix)].rho.iloc[0]
-            f.add_vline(x=v, line_color=colour, line_width=3, annotation_text=txt)
+            f.add_vline(x=v, line_color=colour, line_width=3, annotation_text=txt, annotation_position=where,
+                        annotation_bgcolor="rgba(255,255,255,0.85)")
         f.update_layout(xaxis_title=f"ρ for {k}, all scripts minus {res['meta']['franchise_in_all']} random "
                         f"non-franchise films", yaxis_title="drops", showlegend=False)
         out[f"drops_{k}"] = style(f, f"{k}: franchise films or just fewer films?", height=340)
@@ -130,41 +132,69 @@ def reading(res: dict) -> str:
         c = ch[(ch.descriptor == k) & ch["sample"].str.startswith("(c)")].rho.iloc[0]
         lo, hi = [float(x) for x in r["(d) 5th–95th percentile"].strip("[]").split(",")]
         inside = lo <= b <= hi
-        parts.append(f"For {label}: ρ = {a:+.3f} with all scripts, {b:+.3f} without likely franchise films and "
-                     f"{c:+.3f} also without possible transcripts. Dropping the same number of random non-franchise "
-                     f"films instead gives a median ρ of {dmed:+.3f} (5th–95th percentile {lo:+.3f} to {hi:+.3f}). "
-                     + (f"(a) and (b) barely differ (Δρ = {b - a:+.3f}), so there is little for the franchise "
+        parts.append(f"For {label}, ρ = {a:+.3f} with all scripts, {b:+.3f} without likely franchise films, and "
+                     f"{c:+.3f} without possible transcripts as well. Dropping the same number of random "
+                     f"non-franchise films instead gives a median ρ of {dmed:+.3f} (5th to 95th percentile "
+                     f"{lo:+.3f} to {hi:+.3f}). "
+                     + (f"(a) and (b) barely differ (Δρ = {b - a:+.3f}), so there's little for the franchise "
                         f"films to explain. " if abs(b - a) < 0.02 else "")
                      + ("The franchise-free value lies inside that range, so the difference between (a) and (b) "
                         "is what losing that many films does anyway, not something franchise films carry."
                         if inside else
                         "The franchise-free value lies outside that range, so franchise films themselves carry part "
                         "of the difference between (a) and (b)."))
-    return " ".join(parts) + (" Leakage: the scripts were written before release, so a film's success cannot have "
-                              "shaped its script. That is an advantage over reviews and ratings. That each MovieSum "
-                              "script is the final shooting draft is an unverified assumption (Step 4's script "
-                              "sheet checks a sample).")
+    return "\n\n".join(parts) + ("\n\nAs for leakage, the scripts were written before release, so a film's success "
+                                 "can't have shaped its script. That's an advantage over reviews and ratings. That "
+                                 "each MovieSum script is the final shooting draft is an unverified assumption "
+                                 "(Step 4's script sheet checks a sample).")
+
+
+def takeaway(res: dict) -> str:
+    s = _summary(res).set_index("descriptor")
+    nums, inside = [], []
+    for k, name in (("D1", "swing"), ("D2", "ending lift")):
+        r = s.loc[k]
+        a, b = r["ρ (a) all scripts"], r["ρ (b) franchise excluded"]
+        lo, hi = [float(x) for x in r["(d) 5th–95th percentile"].strip("[]").split(",")]
+        inside.append(lo <= b <= hi)
+        nums.append(f"{name}, ρ is {a:+.3f} with franchise films and {b:+.3f} without")
+    if all(inside):
+        head = ("Leaving out franchise films shifts ρ no more than leaving out the same number of random films "
+                "does, for both descriptors")
+    elif any(inside):
+        head = ("Leaving out franchise films shifts ρ more than leaving out the same number of random films does "
+                f"for {'ending lift' if inside[0] else 'swing'}, but not for {'swing' if inside[0] else 'ending lift'}")
+    else:
+        head = ("Leaving out franchise films shifts ρ more than leaving out the same number of random films does, "
+                "for both descriptors")
+    return f"{head}. For {nums[0]}, and for {nums[1]}."
 
 
 SECTION = [
     Md("""## Step 10 · Franchise, transcript and leakage checks
 
-**Why.** The earlier word-level branch found a weak signal that vanished once franchise films were removed.
-That is the reason the primary sample here excludes likely franchise films. Removing them changes two things
-at once, though: *which* films are in the sample and *how many*. This step separates the two:
-- **(a)** all arc-ready scripts, franchise films included;
-- **(b)** the primary sample, likely franchise films excluded;
-- **(c)** the primary sample also without the possible transcripts, which have little description;
-- **(d)** all scripts minus the same number of **randomly chosen non-franchise** films, 50 times.
+Does leaving out franchise films change the result because of what those films are, or just because the sample
+gets smaller?
 
-If (b) differs from (a) only because it has fewer films, the random drops in (d) should look like (b). If
-the franchise films themselves matter, (d) should look like (a).
+### Why
+The earlier word-level branch found a weak signal that vanished once franchise films were removed. That's why
+the primary sample here leaves out likely franchise films. But removing them changes two things at once:
+*which* films are in the sample and *how many*. This step separates the two:
+- **(a)** all arc-ready scripts, franchise films included
+- **(b)** the primary sample, likely franchise films excluded
+- **(c)** the primary sample, also without the possible transcripts, which have little description
+- **(d)** all scripts minus the same number of **randomly chosen non-franchise** films, done 50 times.
 
-**Leakage.** Screenplays are written before release, so a film's success cannot have shaped its script. That
-is an advantage over reviews and ratings, which come after. We assume each MovieSum script is the final
-shooting draft. We can't verify that from the data; the script sheet of Step 4 checks a sample by hand.
+If (b) differs from (a) only because it has fewer films, the random drops in (d) should look like (b). If the
+franchise films themselves matter, (d) should look like (a).
 
-These rows use the same statistic as Step 7. Only (b) repeats the primary sample; the rest is exploratory."""),
+### Leakage
+Screenplays are written before release, so a film's success can't have shaped its script. That's an advantage
+over reviews and ratings, which come after. We assume each MovieSum script is the final shooting draft. We
+can't verify that from the data, but the script sheet of Step 4 checks a sample by hand.
+
+These rows use the same statistic as Step 7. Only (b) repeats the primary sample, and the rest is
+exploratory."""),
     Run("s10_checks"),
     Table("s10_checks", "checks", "The Step 7 statistic on samples (a), (b) and (c)."),
     Table("s10_checks", "drops", "Random drops (d) against (a) and (b)."),

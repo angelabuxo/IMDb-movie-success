@@ -337,81 +337,106 @@ def figures(res: dict) -> dict:
     for version, colour, dash in (("raw", NEUTRAL, "dot"), ("primary", HIGH, "solid"), ("stopwords removed", LOW, "dash")):
         v = rf[rf.version == version]
         fig.add_trace(go.Scatter(x=v["rank"], y=v.frequency, mode="lines", name=version, line=dict(color=colour, dash=dash, width=2.5)))
-    fig.update_xaxes(type="log", title_text="rank of the word (1 = most frequent), log scale")
-    fig.update_yaxes(type="log", title_text="times the word occurs in all dialogue, log scale")
+    fig.update_xaxes(type="log", dtick=1, title_text="rank of the word (1 = most frequent), log scale")
+    fig.update_yaxes(type="log", dtick=1, title_text="times the word occurs in all dialogue, log scale")
     style(fig, "Rank-frequency of dialogue words, before and after cleaning", height=420)
 
     st = res["stages"]
     bar = go.Figure()
     for col, colour, pat in (("tokens", HIGH, ""), ("types", ACCENT, "/"), ("hapax", LOW, "x")):
         bar.add_trace(go.Bar(y=st.stage, x=st[col], name=col, orientation="h", marker_color=colour, marker_pattern_shape=pat))
-    bar.update_layout(barmode="group", xaxis_type="log", xaxis_title="count, log scale", yaxis_autorange="reversed")
+    bar.update_layout(barmode="group", xaxis_type="log", xaxis_dtick=1, xaxis_title="count, log scale",
+                      yaxis_autorange="reversed")
     style(bar, "Tokens, types and hapax after each cleaning stage (dialogue)", height=460)
     return {"rankfreq": fig, "stages": bar}
+
+
+def takeaway(res: dict) -> str:
+    s, st = res["summary"], res["stages"].set_index("stage")
+    raw, prim = st.iloc[0], st.loc["2 character names removed (labels)"]
+    return (f"Removing character names takes {s['dialogue_name_tokens_removed']:,} tokens out of the dialogue "
+            f"({s['dialogue_name_tokens_removed']/raw.tokens:.1%} of all dialogue tokens). What's left for the primary "
+            f"analysis is {int(prim.tokens):,} tokens and {int(prim.types):,} distinct words.")
 
 
 def reading(res: dict) -> str:
     s, st = res["summary"], res["stages"].set_index("stage")
     raw, prim = st.iloc[0], st.loc["2 character names removed (labels)"]
-    return (f"Cleaning joined {s['contraction_joins']:,} split contractions; {s['scripts_pretokenised']} scripts "
-            f"are pre-tokenised ({s['pretokenised_rule']}). It removed {s['technical_tokens_removed']:,} tokens of "
-            f"technical directions and {s['artefact_tokens_removed']:,} tokens on page or revision lines across all "
-            f"layers, and {s['heading_tokens_removed_full']:,} heading tokens from the full layer. Speaker cues give a "
-            f"median of {s['median_label_names']:.0f} name tokens per script; {s['label_names_dictionary_words']:,} of "
-            f"the {s['label_names_total']:,} are also ordinary English words, which is why those are removed only when "
-            f"capitalised mid-sentence. In the dialogue, {s['dialogue_name_tokens_removed']:,} name tokens go "
+    return (f"Cleaning joined {s['contraction_joins']:,} split contractions, and {s['scripts_pretokenised']} scripts "
+            f"are pre-tokenised ({s['pretokenised_rule']}). Across all layers it removed "
+            f"{s['technical_tokens_removed']:,} tokens of technical directions and {s['artefact_tokens_removed']:,} "
+            f"tokens on page or revision lines, plus {s['heading_tokens_removed_full']:,} heading tokens from the full "
+            f"layer. Speaker cues give a median of {s['median_label_names']:.0f} name tokens per script. Summed over "
+            f"scripts that's {s['label_names_total']:,} name tokens, and {s['label_names_dictionary_words']:,} of them "
+            f"are also ordinary English words, which is why those are removed only when capitalised mid-sentence. In "
+            f"the dialogue, {s['dialogue_name_tokens_removed']:,} name tokens go "
             f"({s['dialogue_name_tokens_removed']/raw.tokens:.1%} of all dialogue tokens). spaCy's NER finds a median "
-            f"of {s['median_ner_names']:.0f} person-name tokens per script, {s['median_ner_not_in_labels']:.0f} of them "
-            f"not among the speaker cues (people who are talked about but never speak, and NER errors); adding them "
-            f"would remove {s['dialogue_name_tokens_removed_with_ner'] - s['dialogue_name_tokens_removed']:,} more "
-            f"tokens. The primary dialogue corpus has {int(prim.tokens):,} tokens, {int(prim.types):,} types and "
-            f"{int(prim.hapax):,} hapax types (tokens ≥ types ≥ hapax holds at every stage).")
+            f"of {s['median_ner_names']:.0f} person-name tokens per script, and {s['median_ner_not_in_labels']:.0f} of "
+            f"them aren't among the speaker cues (people who are talked about but never speak, plus NER errors). Adding "
+            f"them would remove {s['dialogue_name_tokens_removed_with_ner'] - s['dialogue_name_tokens_removed']:,} "
+            f"more tokens. The primary dialogue corpus has {int(prim.tokens):,} tokens, {int(prim.types):,} types and "
+            f"{int(prim.hapax):,} hapax types, and tokens ≥ types ≥ hapax holds at every stage.")
 
 
 SECTION = [
     Md("""## Step 3 · Cleaning what isn't language
 
-**What we do.** We remove what a reader wouldn't count as the script's language, and count every removal:
+This step asks what has to come out of the text so that we only compare the script's actual language.
 
-- **split contractions** joined back ("do n't" → "don't"), because some scripts in MovieSum are pre-tokenised;
-- **scene headings** (INT., EXT., DAY, NIGHT) and **technical directions** (CUT TO, FADE IN, V.O., O.S., CONT'D);
-- **page and revision artefacts** (page numbers, "Revised pages", "Written by …");
-- **character names**, taken from each script's own speaker cues.
+### What we do
 
-**Why names.** A character's name is unique to one film, so in a two-group comparison it is always
-"distinctive" and tells us nothing about success. In the course's Marvel text, names dominated every
-word list for this reason.
+We remove what a reader wouldn't count as the script's language, and we count every removal:
 
-**Extraction is not resolution.** The speaker cues are raw strings ("JULES (V.O.)", "COP #2", "OLD MAN"). We
-strip extensions and titles and split them into tokens, but we don't resolve nicknames ("Mike" vs "Michael").
-Some name tokens are ordinary words (Will, Grace, Hope, Frank): those are removed only where they are
-capitalised in the middle of a sentence. As a second source of names we run spaCy's named-entity recogniser
-(NER) on the dialogue and report how much it would add, without using it in the primary analysis.
+- split contractions, joined back ("do n't" → "don't") because some scripts in MovieSum are pre-tokenised
+  (already split into separate tokens)
+- scene headings (INT., EXT., DAY, NIGHT) and technical directions (CUT TO, FADE IN, V.O., O.S., CONT'D)
+- page and revision artefacts (page numbers, "Revised pages", "Written by …")
+- character names, taken from each script's own speaker cues
 
-**Preprocessing is part of the model.** Every choice below changes which words can appear distinctive later.
-We keep stopwords (function words like "the", "you", "we" carry style) and don't lemmatise (lemmas merge
-"killed" and "kills", which may be the signal), and run both the other way as variants.
+### Why we remove names
 
-**What it measures.** The vocabulary that is left: tokens (every occurrence), types (distinct words) and hapax
-types (words occurring once). Tokens ≥ types ≥ hapax always.
+A character's name belongs to one film, so in a two-group comparison it always looks "distinctive" and tells
+us nothing about success. In the course's Marvel text, names dominated every word list for this reason.
 
-**What it misses.** Our tokenizer splits on anything that isn't a letter, so "ice-cream" becomes two words
-and numbers disappear. The name list misses characters who never speak and keeps nicknames unresolved."""),
+### Extraction is not resolution
+
+The speaker cues are raw strings ("JULES (V.O.)", "COP #2", "OLD MAN"). We strip extensions and titles and
+split the cues into tokens, but we don't resolve nicknames ("Mike" vs "Michael"). Some name tokens are
+ordinary words (Will, Grace, Hope, Frank), so we only remove those where they're capitalised in the middle of
+a sentence. As a second source of names we run spaCy's named-entity recogniser (NER), which tags words that
+look like people's names, on the dialogue. We report how much it would add but don't use it in the primary
+analysis.
+
+### Preprocessing is part of the model
+
+Every choice below changes which words can look distinctive later. We keep stopwords, because function words
+like "the", "you" and "we" carry style. We don't lemmatise (reduce words to their dictionary form), because
+lemmas merge "killed" and "kills", which may be the signal. We also run both the other way, as variants.
+
+### What it measures
+
+What's left of the vocabulary, counted as tokens (every occurrence), types (distinct words) and hapax types
+(words that occur once). Tokens ≥ types ≥ hapax always holds.
+
+### What it misses
+
+Our tokenizer splits on anything that isn't a letter, so "ice-cream" becomes two words and numbers disappear.
+The name list misses characters who never speak, and nicknames stay unresolved."""),
     Run("s03_clean"),
-    Table("s03_clean", "choices", "Every preprocessing choice, its setting and why."),
+    Table("s03_clean", "choices", "Every preprocessing choice, its setting and the reason for it."),
     Table("s03_clean", "stages", "Tokens, types and hapax types of all dialogue after each stage. Stage 2 is "
-          "the primary corpus; 2b, 3a and 3b are variants."),
-    Fig("s03_clean", "stages", "The same counts as bars on a log axis. Names remove many types but few tokens; "
-        "stopwords remove few types but many tokens."),
+          "the primary corpus, and 2b, 3a and 3b are variants."),
+    Fig("s03_clean", "stages", "The same counts as bars on a log axis. Removing names takes out many types but "
+        "few tokens, while removing stopwords takes out few types but many tokens."),
     Table("s03_clean", "top", "The 30 most frequent dialogue words before cleaning, after cleaning (primary) "
-          "and with stopwords removed. Before cleaning, names and formatting can appear; after, the list is "
-          "ordinary spoken English."),
+          "and with stopwords removed. Before cleaning, names and formatting can show up. After cleaning, the "
+          "list is ordinary spoken English."),
     Fig("s03_clean", "rankfreq", "Rank against frequency on log-log axes for the raw, primary and "
-        "stopwords-removed dialogue. A roughly straight line is suggestive of a Zipf-like heavy tail: a few words "
-        "are extremely common and most are rare. It is not proof of Zipf's law; testing that would need a "
-        "fitted model against alternatives."),
-    Private("s03_clean", "names_sample", "20 scripts at random (fixed seed) with the name tokens found in their "
-            "speaker cues and the extra ones NER suggests. Check: are these names, and is anything missing? "
-            "Notebook only, output cleared before commit."),
+        "stopwords-removed dialogue. A roughly straight line is suggestive of a Zipf-like heavy tail, where a few "
+        "words are extremely common and most are rare. It isn't proof of Zipf's law, since testing that would "
+        "need a fitted model compared against alternatives."),
+    Private("s03_clean", "names_sample", "20 scripts picked at random (fixed seed), with the name tokens found in "
+            "their speaker cues and the extra ones NER suggests. Check whether these are really names and whether "
+            "anything is missing. It's in the notebook only, and the output is cleared before commit."),
     Reading("s03_clean"),
 ]

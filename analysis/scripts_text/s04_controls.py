@@ -136,49 +136,69 @@ def figures(res: dict) -> dict:
     fig.add_trace(go.Scatter(x=b["SMD after"], y=b.variable, mode="markers", name="after matching",
                              marker=dict(color=HIGH, symbol=HIGH_SYMBOL, size=11)))
     for x in (-0.1, 0.1):
-        fig.add_vline(x=x, line_dash="dot", line_color="#666")
-    fig.add_vline(x=0, line_color="#999")
+        fig.add_vline(line_width=1.5, x=x, line_dash="dot", line_color="#666")
+    fig.add_vline(line_width=1.5, x=0, line_color="#999")
     fig.update_layout(xaxis_title="standardised mean difference, unprofitable − profitable (dotted: ±0.1)",
                       yaxis_autorange="reversed")
     return {"balance": style(fig, "Balance before and after matching", height=440)}
 
 
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    return (f"{s['matched']} of the {s['treated']} unprofitable scripts get a profitable partner with the same genre, "
+            f"the same decade and a similar budget, and the largest imbalance on those variables falls from SMD "
+            f"{s['max_abs_smd_before']:.2f} to {s['max_abs_smd_after']:.2f}. Popularity isn't matched (IMDb votes "
+            f"SMD {s['smd_votes_after']:.2f}), so word differences in the matched sample may also reflect it.")
+
+
 def reading(res: dict) -> str:
     s = res["summary"]
     return (f"Of the {s['treated']} unprofitable scripts, {s['matched']} find a profitable partner in the same "
-            f"genre and decade with a log budget within {s['caliper_log_units']:.2f} (that is "
-            f"{s['caliper_sd']} standard deviations); {s['unmatched_dropped']} have none and are dropped from the "
-            f"matched comparison. The median budget gap within a pair is {s['median_budget_gap_log']:.2f} in log "
-            f"units (about {np.expm1(s['median_budget_gap_log']):.0%}). On the variables we match on (year, budget, "
-            f"genre) the largest absolute standardised mean difference falls from {s['max_abs_smd_before']:.2f} to "
-            f"{s['max_abs_smd_after']:.2f}. IMDb votes are deliberately not matched on, because votes come after "
-            f"release and partly measure success itself; their SMD stays at {s['smd_votes_after']:.2f} "
-            f"(before: {s['smd_votes_before']:.2f}): unprofitable films are far less watched, so any word difference "
+            f"genre and decade with a log budget within {s['caliper_log_units']:.2f} ({s['caliper_sd']} standard "
+            f"deviations). {s['unmatched_dropped']} have none and are dropped from the matched comparison. Within a "
+            f"pair the median budget gap is {s['median_budget_gap_log']:.2f} in log units, about "
+            f"{np.expm1(s['median_budget_gap_log']):.0%}. On the variables we match on (year, budget, genre), the "
+            f"largest absolute standardised mean difference falls from {s['max_abs_smd_before']:.2f} to "
+            f"{s['max_abs_smd_after']:.2f}. We deliberately don't match on IMDb votes, because votes come after "
+            f"release and partly measure success itself. Their SMD stays at {s['smd_votes_after']:.2f} "
+            f"(before: {s['smd_votes_before']:.2f}). Unprofitable films are far less watched, so any word difference "
             f"in the matched sample may also reflect popularity.")
 
 
 SECTION = [
     Md("""## Step 4 · Controlling for genre, era and budget
 
-**What we do.** Without controls, a comparison of successful and unsuccessful scripts mostly shows genre and
-era words: action against drama, 1990s against 2010s. We control in two ways.
+This step asks how to compare successful and unsuccessful scripts without simply picking up differences in
+genre, era and budget.
 
-1. **Stratification.** Definition (C) already compares films only within the same genre × decade cell, and
-   Step 5 also runs within single genres and decades where both groups have at least 30 scripts.
-2. **Matching.** For each unprofitable script (gross below budget) we find the profitable script with the same
-   primary genre, the same decade and the closest log budget, within a caliper of 0.5 standard deviations of
-   log budget, without reusing a partner. Scripts with no partner inside the caliper are dropped and counted.
+### What we do
 
-**Why match instead of randomly undersampling.** Scattertext compares *rates* per 10,000 words, so the two
-groups don't need to be the same size; unequal sizes only make rare words noisier, which Step 7 tests.
-Matching does something undersampling can't: it makes the two groups alike on budget, genre and era, so what
-remains different is closer to the script itself.
+Without controls, a comparison of successful and unsuccessful scripts mostly shows genre and era words, like
+action against drama or the 1990s against the 2010s. We control in two ways.
 
-**What it measures.** Balance, as standardised mean differences (SMD): the gap between the groups' means in
-units of their pooled standard deviation. |SMD| below 0.1 is the usual rule of thumb for "balanced".
+1. Stratification, which means comparing only within subgroups. Definition (C) already compares films only
+   within the same genre × decade cell, and Step 5 also runs within single genres and single decades where
+   both groups have at least 30 scripts.
+2. Matching. For each unprofitable script (gross below budget) we find the profitable script with the same
+   primary genre, the same decade and the closest log budget. The partner has to fall within a caliper (the
+   largest distance we accept) of 0.5 standard deviations of log budget, and no partner is used twice.
+   Scripts with no partner inside the caliper are dropped and counted.
 
-**What it misses.** Matching only balances what we match on. Stars, studio, marketing and release date stay
-unbalanced. With 67 unprofitable scripts, the matched sample is small."""),
+### Why match instead of randomly undersampling
+
+Scattertext compares *rates* per 10,000 words, so the two groups don't need to be the same size. Unequal sizes
+only make rare words noisier, which Step 7 tests. Matching does something undersampling can't, because it
+makes the two groups alike on budget, genre and era. What still differs is then closer to the script itself.
+
+### What it measures
+
+Balance, as standardised mean differences (SMD). An SMD is the gap between the two groups' means in units of
+their pooled standard deviation, and |SMD| below 0.1 is the usual rule of thumb for "balanced".
+
+### What it misses
+
+Matching only balances what we match on. Stars, studio, marketing and release date stay unbalanced. And with
+67 unprofitable scripts, the matched sample is small."""),
     Run("s04_controls"),
     Fig("s04_controls", "balance", "Standardised mean differences between unprofitable and profitable scripts, "
         "before (triangles) and after (circles) matching. Points inside the dotted lines are balanced."),

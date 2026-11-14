@@ -71,10 +71,10 @@ def variants(primary_inst: str) -> list[dict]:
     r = cfg()["robustness"]
     out = [{"group": "primary", "label": f"primary ({primary_inst}, both layers, window {a['smoothing_window']}, "
             f"{a['time_points']} points)", "desc": {"inst": primary_inst}, "mask": "primary"}]
-    for inst in ("vader", "sst2", "roberta3"):
+    for inst in ("vader", "sst2", "roberta3", "modernbert3"):
         if inst != primary_inst and (OUTPUTS / f"s03_scene_{inst}.csv.gz").exists():
             out.append({"group": "instrument", "label": f"instrument: {inst}", "desc": {"inst": inst}, "mask": "primary"})
-    for inst in ("sst2", "roberta3"):
+    for inst in ("sst2", "roberta3", "modernbert3"):
         if (OUTPUTS / f"s03_scene_context_{inst}.csv.gz").exists():
             out.append({"group": "instrument", "label": f"instrument: {inst}, scene in context",
                         "desc": {"inst": inst, "context": True}, "mask": "primary"})
@@ -169,8 +169,10 @@ def figures(res: dict) -> dict:
         fig.add_vline(x=0, line_color="black", line_width=1, row=1, col=j)
         rm = float(q.loc[q.group == "primary", "r_min_0.05"].iloc[0])
         for s in (-1, 1):
-            fig.add_vline(x=s * rm, line_dash="dot", line_color=LOW, row=1, col=j)
-    fig.update_xaxes(title_text="Spearman ρ (residualised), 95% bootstrap CI")
+            fig.add_vline(line_width=1.5, x=s * rm, line_dash="dot", line_color=LOW, row=1, col=j)
+    fig.update_xaxes(title_text="")
+    fig.add_annotation(text="Spearman ρ (residualised), 95% bootstrap CI", xref="paper", yref="paper", x=0.5, y=0,
+                       yshift=-48, showarrow=False, font=dict(size=13))
     style(fig, "Robustness: the primary statistic across variants (dotted: ±r_min of the primary sample)",
           height=max(500, 26 * len(labels)))
     return {"forest": fig}
@@ -190,30 +192,50 @@ def reading(res: dict) -> str:
         real = q[(q.group != "primary") & (q.group != "seed") & ((q.rho - p0.rho).abs() >= 1e-9)]
         sig = real[real.p < 0.05]
         out.append(
-            f"For {label}, the primary ρ is {p0.rho:+.3f}. {len(real)} variants change ρ: it ranges from "
+            f"For {label}, the primary ρ is {p0.rho:+.3f}. {len(real)} variants change ρ. Across them it ranges from "
             f"{real.rho.min():+.3f} to {real.rho.max():+.3f}, {int((np.sign(real.rho) == np.sign(p0.rho)).sum())} of "
             f"{len(real)} have the same sign, and {len(sig)} {'reaches' if len(sig) == 1 else 'reach'} p < 0.05"
             + (f" ({'; '.join(sig.variant)})" if len(sig) else "") + ". "
             + (f"{len(same)} {'variant leaves' if len(same) == 1 else 'variants leave'} ρ unchanged by construction ({'; '.join(same.variant)}). " if len(same) else "")
             + f"Re-running the permutations and bootstrap with {len(seeds)} other seeds gives p from "
               f"{seeds.p.min():.3f} to {seeds.p.max():.3f}.")
-    return (" ".join(out) + " D2 does not depend on smoothing or on the grid, because it compares the first and "
-            "last fifths of story time on the unsmoothed arc; and with log budget as a control, log gross and "
-            "log(gross/budget) leave the same residuals. The seed rows show that the D2 p-value sits on the "
-            "pre-registered threshold: with 1,000 permutations a p near 0.025 carries a Monte Carlo error of about "
-            "±0.005. These rows are exploratory. The primary decision stays the one in Step 7, run once with the "
-            "config seed.")
+    d2s = t[(t.descriptor == "D2") & (t.group == "seed")].p
+    alpha = 0.025
+    seed_txt = ("The seed rows show that the D2 p-value sits on the pre-registered threshold (they straddle "
+                f"{alpha}): with 1,000 permutations, a p near {alpha} carries a Monte Carlo error (the wobble from "
+                "using a finite number of random shuffles) of about ±0.005."
+                if len(d2s) and d2s.min() <= alpha <= d2s.max() else
+                f"The seed rows keep the D2 p-value on the same side of the pre-registered threshold ({alpha}).")
+    return ("\n\n".join(out) + "\n\nD2 doesn't depend on smoothing or on the grid, because it compares the first "
+            "and last fifths of story time on the unsmoothed arc. And with log budget as a control, log gross and "
+            f"log(gross/budget) leave the same residuals. {seed_txt} These rows are exploratory. "
+            "The primary decision stays the one in Step 7, run once with the config seed.")
+
+
+def takeaway(res: dict) -> str:
+    t = res["table"]
+    out = []
+    for k, name in (("D1", "Swing (D1)"), ("D2", "Ending lift (D2)")):
+        q = t[t.descriptor == k]
+        p0 = q[q.group == "primary"].iloc[0]
+        real = q[(q.group != "primary") & (q.group != "seed") & ((q.rho - p0.rho).abs() >= 1e-9)]
+        out.append(f"{name} keeps the sign of its Step 7 ρ in {int((np.sign(real.rho) == np.sign(p0.rho)).sum())} "
+                   f"of the {len(real)} variants that change it, and {int((real.p < 0.05).sum())} of them reach "
+                   f"p < 0.05.")
+    return " ".join(out) + " All of these rows are exploratory, so the Step 7 decision stands."
 
 
 SECTION = [
     Md("""## Step 9 · Stability and robustness (exploratory)
 
-One run is not *the* answer. We repeat the Step 7 statistic, with the same controls and the same
-within-cell null, while changing one choice at a time:
-- **Instrument:** VADER, DistilBERT SST-2, the three-class RoBERTa, and both contextual models reading whole
-  scenes in context. Each runs only if it is available.
+Does the Step 7 result change when we make different reasonable choices along the way?
+
+One run is not *the* answer. We repeat the Step 7 statistic, with the same controls and the same within-cell
+null, while changing one choice at a time:
+- **Instrument:** VADER, DistilBERT SST-2, the three-class RoBERTa, the ModernBERT-large model added as
+  amendment (d), and the contextual models reading whole scenes in context. Each runs only if it's available.
 - **Layer:** dialogue only, and action lines only.
-- **Arc:** smoothing windows 5 and 21, and grids of 50 and 200 points.
+- **Arc:** smoothing windows of 5 and 21, and grids of 50 and 200 points.
 - **Sample:** all scripts with franchise films included, each single-source franchise cut, the strict and
   loose arc-ready filters, and the primary sample without possible transcripts.
 - **Outcome:** log gross instead of log(gross/budget).
@@ -221,10 +243,10 @@ within-cell null, while changing one choice at a time:
 - **Seed:** the permutations and the bootstrap rerun with four other seeds.
 
 Each variant uses 500 permutations and 100 bootstrap resamples. All rows are **exploratory**. With this many
-rows, one or two will pass p < 0.05 by chance; the question is whether the sign and the size are stable."""),
+rows, one or two will pass p < 0.05 by chance. The question is whether the sign and the size stay stable."""),
     Run("s09_robustness"),
     Fig("s09_robustness", "forest", "One row per variant: ρ with its 95% bootstrap CI. Blue: the primary analysis. "
-        "Orange: a variant with p < 0.05. Dotted lines: ±r_min."),
-    Table("s09_robustness", "variants", "Every variant, both descriptors."),
+        "Orange: a variant with p < 0.05. Dotted lines: ±r_min, the minimum detectable correlation."),
+    Table("s09_robustness", "variants", "Every variant, for both descriptors."),
     Reading("s09_robustness"),
 ]

@@ -16,7 +16,7 @@ from scipy.stats import spearmanr
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s03_instruments
-from .common import INSTRUMENT_NAMES, primary_instrument
+from .common import INSTRUMENT_NAMES, primary_instrument, sentiment_validation_status
 from .config import cfg, log_run
 from .paths import OUTPUTS
 
@@ -187,7 +187,7 @@ def figures(res: dict) -> dict:
 
     noise = go.Figure(go.Scattergl(x=p.mean_sentences_per_scene, y=p.D1, mode="markers",
                                    marker=dict(color=NEUTRAL, size=5, opacity=0.6)))
-    noise.update_xaxes(type="log", title="mean sentences per scene (log)")
+    noise.update_xaxes(type="log", title="mean sentences per scene (log)", tickvals=[5, 10, 20, 50, 100, 200])
     noise.update_yaxes(title="D1, volatility of the smoothed arc")
     style(noise, "Volatility against mean scene length", height=380)
 
@@ -215,65 +215,81 @@ def reading(res: dict) -> str:
         f"{p.scenes.median() / s['params']['time_points']:.1f} scenes per grid point. "
         f"The average smoothed arc stays close to zero: {m.iloc[:e].mean():+.3f} over the first 20%, "
         f"{m.iloc[-e:].mean():+.3f} over the last 20%, and between {m.min():+.3f} and {m.max():+.3f} overall. "
-        f"Individual arcs swing much more than the average, which mostly cancels out (median D1 "
-        f"{p.D1.median():.3f}, median D2 {p.D2.median():+.3f}, {100 * (p.D2 < 0).mean():.0f}% of films end lower "
-        f"than they start). The scores are {INSTRUMENT_NAMES[s['instrument']]} and NOT YET VALIDATED. "
-        f"**Proxies.** The strongest size correlate of D1 is {strongest('D1')}; of D2, {strongest('D2')}; of mean "
-        f"level, {strongest('mean_level')}. "
-        + ("All are weak (|ρ| < 0.3), so the descriptors are not script size in disguise. The size controls of "
-           "Step 7 still apply. " if max(abs(x["Spearman"]) for x in s["proxies"]) < 0.3 else
-           "At least one is not weak (|ρ| ≥ 0.3): that descriptor partly measures script size, which the Step 7 "
-           "controls must absorb. ") +
-        f"**Reliability.** Split-half (odd vs even scenes, Spearman-Brown corrected): D1 "
-        f"{rel['D1']['Spearman-Brown']:.2f}, D2 {rel['D2']['Spearman-Brown']:.2f}, mean level "
-        f"{rel['mean_level']['Spearman-Brown']:.2f}. A reliability of r means roughly a share 1 − r of the "
-        f"between-film variance is scene-level noise: {1 - rel['D1']['Spearman-Brown']:.0%} for D1 and "
-        f"{1 - rel['D2']['Spearman-Brown']:.0%} for D2, against {1 - rel['mean_level']['Spearman-Brown']:.0%} "
-        f"for the mean level. That noise caps how strongly a descriptor can correlate with anything, profit "
-        f"included. Step 6 checks whether the order of scenes carries any structure at all."
+        f"Single arcs swing much more than the average, and those swings mostly cancel out (median D1 "
+        f"{p.D1.median():.3f}, median D2 {p.D2.median():+.3f}, and {100 * (p.D2 < 0).mean():.0f}% of films end lower "
+        f"than they start). The scores are {INSTRUMENT_NAMES[s['instrument']]} and {sentiment_validation_status()}.\n\n"
+        f"Are the descriptors just script size? The size measure most strongly correlated with D1 is {strongest('D1')}. For D2 it's "
+        f"{strongest('D2')}, and for the mean level {strongest('mean_level')}. "
+        + ("All are weak (|ρ| < 0.3), so the descriptors aren't script size in disguise. The size controls of "
+           "Step 7 still apply.\n\n" if max(abs(x["Spearman"]) for x in s["proxies"]) < 0.3 else
+           "At least one isn't weak (|ρ| ≥ 0.3). That descriptor partly measures script size, which the Step 7 "
+           "controls must absorb.\n\n") +
+        f"How reliable are they? Split-half reliability (odd vs even scenes, Spearman-Brown corrected) is "
+        f"{rel['D1']['Spearman-Brown']:.2f} for D1, {rel['D2']['Spearman-Brown']:.2f} for D2 and "
+        f"{rel['mean_level']['Spearman-Brown']:.2f} for the mean level. A reliability of r means that roughly a "
+        f"share 1 − r of the differences between films is scene-level noise. That's "
+        f"{1 - rel['D1']['Spearman-Brown']:.0%} for D1 and {1 - rel['D2']['Spearman-Brown']:.0%} for D2, against "
+        f"{1 - rel['mean_level']['Spearman-Brown']:.0%} for the mean level. The noise caps how strongly a "
+        f"descriptor can correlate with anything, profit included. Step 6 checks whether the order of scenes "
+        f"carries any structure at all."
     )
+
+
+def takeaway(res: dict) -> str:
+    s, d = res["summary"], res["desc"]
+    p = d[d.in_primary]
+    rel = {r["descriptor"]: r for r in s["reliability"]}
+    return (f"Each of the {s['primary']} primary scripts now has an arc, summed up by its swing (D1, median "
+            f"{p.D1.median():.3f}) and its ending lift (D2, median {p.D2.median():+.3f}). Their split-half reliability is "
+            f"{rel['D1']['Spearman-Brown']:.2f} and {rel['D2']['Spearman-Brown']:.2f}, so roughly "
+            f"{1 - rel['D1']['Spearman-Brown']:.0%} and {1 - rel['D2']['Spearman-Brown']:.0%} of the differences "
+            f"between films is scene-level noise, which caps how strongly they can correlate with profit.")
 
 
 SECTION = [
     Md("""## Step 5 · Arcs
 
-**What we do.** For each script we take its scene scores in story order: the "both" layer, one score per
-scene on the timeline. Then:
+How do we turn a script's scene scores into one emotional arc, and into a couple of numbers that describe it?
+
+For each script we take its scene scores in story order: the "both" layer, one score per scene on the
+timeline. Then:
 1. We put them on a common clock of **100 points of story time**. Scene *i* of *n* covers
    [*i*/*n*, (*i*+1)/*n*) of the story. Each grid point takes the mean of the scenes it overlaps, weighted by
-   the overlap. This works the same for a script with 40 scenes as for one with 400; nothing is dropped or
-   interpolated.
+   how much they overlap. This works the same for a script with 40 scenes as for one with 400. Nothing is
+   dropped or interpolated.
 2. We **smooth** with a centred moving average over 11 points (about a tenth of the story), cut short at the
    two ends.
-3. We summarise each arc with the two pre-registered **primary descriptors**:
-   - **D1, volatility**: the standard deviation of the smoothed arc. How much the tone swings.
-   - **D2, ending minus start**: the mean of the last 20% minus the mean of the first 20% of the unsmoothed
-     arc. Does the story end lighter or darker than it began.
+3. We sum up each arc with the two **primary descriptors** we fixed in advance:
+   - **D1, volatility ("swing")**: the standard deviation of the smoothed arc, so how much the tone swings.
+   - **D2, ending minus start ("ending lift")**: the mean of the last 20% minus the mean of the first 20% of
+     the unsmoothed arc. It asks whether the story ends lighter or darker than it began.
 
-   Three exploratory descriptors come alongside (mean level, position of the low point, number of swings).
+   Three exploratory descriptors come alongside: mean level, position of the low point, and number of swings.
 
-**Two checks.**
-- **Proxies.** Are the descriptors just script size in disguise? A scene made of two sentences gives a noisy
-  mean, so scripts of short scenes could look volatile for no narrative reason.
-- **Reliability.** Each script is split into odd and even scenes, and every descriptor is computed on each
-  half. If the halves disagree, scene noise dominates.
+### Two checks
+- **Proxies.** Are the descriptors just script size in disguise? A scene of two sentences gives a noisy mean,
+  so scripts made of short scenes could look volatile for no narrative reason.
+- **Reliability.** We split each script into its odd and its even scenes and compute every descriptor on each
+  half. Split-half reliability is the correlation between the two halves across films, and the
+  Spearman-Brown correction scales it up to the full script's length. If the halves disagree, scene noise
+  dominates.
 
-The instrument is the one the pre-registered fallback rule chose in Step 3 (named in every figure and reading);
-the other instruments appear in Step 9. No outcome is used in this step."""),
+The instrument is the one the fallback rule chose in Step 3 (it's named in every figure and reading). The
+other instruments appear in Step 9. This step doesn't use the outcome."""),
     Run("s05_arcs"),
     Fig("s05_arcs", "mean", "Mean arc over the primary sample. Grey: smoothed. Blue: resampled, unsmoothed. Bands: "
         "±1.96 standard errors across films."),
     Fig("s05_arcs", "genres", "Mean smoothed arc per genre bin."),
     Table("s05_arcs", "genres", "Median descriptors per genre bin (primary sample)."),
-    Fig("s05_arcs", "examples", "Six arcs drawn with the config seed: numbers only, no script text."),
+    Fig("s05_arcs", "examples", "Six arcs drawn with the config seed. Numbers only, no script text."),
     Table("s05_arcs", "examples", "The six example scripts and their descriptors."),
     Fig("s05_arcs", "descriptors", "Distributions of D1 and D2 in the primary sample."),
     Table("s05_arcs", "distribution", "Descriptor quantiles in the primary sample."),
     Table("s05_arcs", "proxies", "Spearman correlation of each descriptor with script size (primary sample)."),
-    Fig("s05_arcs", "noise", "D1 against mean scene length: the scene-noise effect that the scene-length control "
-        "addresses (the Spearman correlation is in the proxies table)."),
-    Table("s05_arcs", "reliability", "Split-half reliability: odd against even scenes, Spearman correlation across "
-          "films and its Spearman-Brown correction to full length."),
+    Fig("s05_arcs", "noise", "D1 against mean scene length. This is the scene-noise effect the scene-length control "
+        "is there for (the Spearman correlation is in the proxies table)."),
+    Table("s05_arcs", "reliability", "Split-half reliability: the Spearman correlation across films between odd and "
+          "even scenes, and its Spearman-Brown correction to full length."),
     Fig("s05_arcs", "split_half", "D1 computed on odd scenes against D1 on even scenes."),
     Reading("s05_arcs"),
 ]

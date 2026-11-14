@@ -38,6 +38,32 @@ def _complete(d) -> bool:
 
 
 CONTEXTUAL = LOCAL_RUN
+# Amendment (d), robustness only. Two runs race (LOG 2026-11-14): the local MPS run and an HPC gpua10 copy. The run
+# that FINISHED FIRST is used; the other is only a reproducibility check.
+MODERNBERT_RUNS = {"local MPS": PRIVATE / "contextual_modernbert", "HPC gpua10": PRIVATE / "contextual_modernbert_hpc"}
+THREE_CLASS = ("roberta3", "modernbert3")
+
+
+def _finished_at(d) -> float | None:
+    """Epoch seconds at which a ModernBERT run finished both passes, or None if it has not."""
+    m = d / "meta.json"
+    if not m.exists() or "scene_seconds" not in json.loads(m.read_text())["models"].get("modernbert3", {}):
+        return None
+    f = d / "finished_at.txt"                       # HPC: LSF finish time, written by the watcher
+    return float(f.read_text()) if f.exists() else (d / "scene_modernbert3.csv.gz").stat().st_mtime
+
+
+def modernbert_run() -> tuple[str | None, object]:
+    done = {k: _finished_at(d) for k, d in MODERNBERT_RUNS.items()}
+    done = {k: v for k, v in done.items() if v is not None}
+    if not done:
+        return None, None
+    k = min(done, key=done.get)
+    return k, MODERNBERT_RUNS[k]
+
+
+def _source(key: str):
+    return modernbert_run()[1] if key == "modernbert3" else CONTEXTUAL
 KEYS = ["movie_name", "scene", "pos"]
 LAYERS = ("both", "dialogue", "action")
 
@@ -183,8 +209,14 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
     out = {"status": "done", "meta": meta, "decision": decision}
     sc = s[KEYS + ["layer", "words", "text", "vader"]]
     band = c["instruments"]["lexicon"]["neutral_band"]
-    for key in ("sst2", "roberta3"):
-        p = CONTEXTUAL / f"sentence_{key}.csv.gz"
+    for key in ("sst2", "roberta3", "modernbert3"):
+        p = _source(key) / f"sentence_{key}.csv.gz"
+        if key == "modernbert3":
+            which, _ = modernbert_run()
+            if which is None:
+                out[key] = "not finished yet"
+                continue
+            out["modernbert3_run"] = which
         if not p.exists():
             out[key] = "not run (over the runtime limit or missing)"
             continue
@@ -195,11 +227,12 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
         sc = sc.drop(columns=[f"layer_{key}"])
         sc[KEYS + ["layer", key]].to_parquet(_sentence_path(key), index=False)
         _scene_means(sc, key).to_csv(_scene_path(key), index=False, compression="gzip")
-        ctx = CONTEXTUAL / f"scene_{key}.csv.gz"
+        ctx = _source(key) / f"scene_{key}.csv.gz"
         if ctx.exists():
             pd.read_csv(ctx, dtype={"movie_name": str}).to_csv(OUTPUTS / f"s03_scene_context_{key}.csv.gz",
                                                                index=False, compression="gzip")
     out["agreement"] = _agreement(sc, prim, band)
+    out["matrix"] = _matrix(sc, prim)
     out["disagreements_available"] = "sst2" in sc
     if "sst2" in sc:   # private: kept on disk for the notebook's private cell only
         d = sc[(_label(sc.vader.to_numpy(), band) * np.sign(sc.sst2.to_numpy()) < 0) & sc.words.between(3, 15)]
@@ -212,14 +245,15 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
 def _agreement(sc: pd.DataFrame, prim: set, band: float) -> list[dict]:
     rows = []
     vl = _label(sc.vader.to_numpy(), band)
-    if "roberta3" in sc:
-        p_neu = sc["roberta3_neutral"].to_numpy()
-        sp = sc["roberta3"].to_numpy()
-        probs = np.stack([(1 - p_neu - sp) / 2, p_neu, (1 - p_neu + sp) / 2], 1)   # neg, neu, pos
-        sc = sc.assign(roberta3_label=probs.argmax(1) - 1)
+    for k3 in THREE_CLASS:
+        if k3 in sc:
+            p_neu = sc[f"{k3}_neutral"].to_numpy()
+            sp = sc[k3].to_numpy()
+            probs = np.stack([(1 - p_neu - sp) / 2, p_neu, (1 - p_neu + sp) / 2], 1)   # neg, neu, pos
+            sc = sc.assign(**{f"{k3}_label": probs.argmax(1) - 1})
     for sample, keep in (("primary 834", sc.movie_name.isin(prim).to_numpy()), ("all 1,087", np.ones(len(sc), bool))):
         nn = keep & (vl != 0)
-        for key in ("sst2", "roberta3"):
+        for key in ("sst2",) + THREE_CLASS:
             if key not in sc:
                 continue
             x = sc[keep]
@@ -228,15 +262,24 @@ def _agreement(sc: pd.DataFrame, prim: set, band: float) -> list[dict]:
             r = {"sample": sample, "instrument": key,
                  "sign agreement on VADER-non-neutral sentences": float(
                      (np.sign(sc[key].to_numpy()[nn]) == vl[nn]).mean()) if key == "sst2" else float(
-                     (sc.roberta3_label.to_numpy()[nn] == vl[nn]).mean()),
+                     (sc[f"{key}_label"].to_numpy()[nn] == vl[nn]).mean()),
                  "Spearman, sentences": float(spearmanr(x.vader, x[key]).statistic),
                  "Spearman, scenes": float(spearmanr(scene.vader, scene[key]).statistic),
                  "Spearman, films": float(spearmanr(film.vader, film[key]).statistic)}
-            if key == "roberta3":
-                r["Cohen's kappa, 3 classes"] = float(cohen_kappa_score(vl[keep], sc.roberta3_label.to_numpy()[keep]))
-                r["roberta3 neutral share"] = float((sc.roberta3_label.to_numpy()[keep] == 0).mean())
+            if key in THREE_CLASS:
+                r["Cohen's kappa, 3 classes"] = float(cohen_kappa_score(vl[keep], sc[f"{key}_label"].to_numpy()[keep]))
+                r["neutral share"] = float((sc[f"{key}_label"].to_numpy()[keep] == 0).mean())
             rows.append(r)
     return rows
+
+
+def _matrix(sc: pd.DataFrame, prim: set) -> dict:
+    """Pairwise Spearman between every instrument that ran, primary 834: sentences, scenes, films."""
+    inst = [k for k in ("vader", "sst2", "roberta3", "modernbert3") if k in sc]
+    x = sc[sc.movie_name.isin(prim)]
+    scene = x.groupby(["movie_name", "scene"])[inst].mean()
+    film = scene.groupby("movie_name").mean()
+    return {lvl: d.rank().corr().round(4).to_dict() for lvl, d in (("sentences", x[inst]), ("scenes", scene), ("films", film))}
 
 
 def load() -> dict:
@@ -280,8 +323,11 @@ def tables(res: dict) -> dict:
         st["sst2"] = st["roberta3"] = PENDING
     if ctx["status"] == "pending":
         agree = pd.DataFrame([{"comparison": "VADER vs sst2, VADER vs roberta3", "result": PENDING}])
+        matrix = pd.DataFrame([{"result": PENDING}])
     else:
         agree = pd.DataFrame(ctx["agreement"]).round(3)
+        matrix = pd.concat({lvl: pd.DataFrame(m) for lvl, m in ctx["matrix"].items()}, names=["level", "instrument"]
+                           ).round(3).reset_index()
     sc = res["scenes"]
     prim = set(res["table"].movie_name[res["table"].in_primary])
     sc = sc[sc.movie_name.isin(prim)]
@@ -294,7 +340,7 @@ def tables(res: dict) -> dict:
     film = sc.groupby("movie_name").vader_both.agg(["mean", "std"])
     films = film.describe(percentiles=[.1, .5, .9]).T.round(3)
     films.index = ["mean scene score per film", "SD of scene scores per film"]
-    return {"scoring": scoring, "distribution": dist, "contraction": con, "contraction_forms": forms, "stress": st.round(3), "agreement": agree,
+    return {"scoring": scoring, "distribution": dist, "contraction": con, "contraction_forms": forms, "matrix": matrix, "stress": st.round(3), "agreement": agree,
             "scenes": pd.DataFrame(rows), "films": films.reset_index(names="per film (primary 834)")}
 
 
@@ -379,96 +425,122 @@ def reading(res: dict) -> str:
     txt = (
         f"VADER scored all {s['sentences']:,} sentences in {s['vader_seconds']:.0f} seconds. In the primary sample "
         f"{p('both', 'neutral')} of sentences fall inside the neutral band: {p('dialogue', 'neutral')} of dialogue "
-        f"and {p('action', 'neutral')} of action lines. Of the rest, dialogue leans positive "
+        f"and {p('action', 'neutral')} of action lines. Among the rest, dialogue leans positive "
         f"({p('dialogue', 'positive')} positive vs {p('dialogue', 'negative')} negative) and action lines lean "
         f"negative ({p('action', 'negative')} vs {p('action', 'positive')}). "
-        f"Re-scoring every sentence that holds a contraction in its split, pre-tokenised form changed "
+        f"We re-scored every sentence that holds a contraction in its split, pre-tokenised form. That changed "
         f"{con[0]['score_changed']:,} of {con[0]['sentences']:,} scores "
-        f"({100 * con[0]['score_changed'] / con[0]['sentences']:.1f}%; largest change {con[0]['largest_change']:.2f}; "
-        f"{con[0]['crossed_neutral_band']:,} crossed the neutral band). The forms most often involved are {top}. "
-        f"An extra token shifts VADER's three-word negation and booster windows, and a split possessive exposes a "
-        f"lexicon word (\"God 's\"). So the contraction fix is not neutral for VADER after all. What it guarantees "
-        f"is that pre-tokenised and ordinary scripts are scored the same way. "
-        f"The stress tests show the blind spots of a word lexicon: \"I didn't kill him.\" scores {kill:+.2f}; "
-        f"sarcasm reads as positive; violent action lines with no sentiment words score 0. VADER's \"but\" rule "
-        f"does follow order (\"died, but saved everyone\" {died:+.2f}, \"saved everyone, but died\" {saved:+.2f}). "
+        f"({100 * con[0]['score_changed'] / con[0]['sentences']:.1f}%, largest change {con[0]['largest_change']:.2f}), "
+        f"and {con[0]['crossed_neutral_band']:,} crossed the neutral band. The forms most often involved are {top}. "
+        f"An extra token shifts the three-word windows VADER uses for negation and for boosters (words like "
+        f"\"very\"), and a split possessive exposes a lexicon word (\"God 's\"). So the contraction fix isn't neutral "
+        f"for VADER after all. What it does guarantee is that pre-tokenised and ordinary scripts are scored the same "
+        f"way. "
+        f"The stress tests show the blind spots of a word lexicon. \"I didn't kill him.\" scores {kill:+.2f}, "
+        f"sarcasm reads as positive, and violent action lines with no sentiment words score 0. VADER's \"but\" rule "
+        f"does follow word order (\"died, but saved everyone\" {died:+.2f}, \"saved everyone, but died\" "
+        f"{saved:+.2f}). "
     )
     if STRESS_CTX.exists():
         k = pd.read_csv(STRESS_CTX).set_index("sentence")
         neutral = ["He opens the door and walks in.", "She looks at the clock.", "He pulls the trigger."]
         kk = "I didn't kill him."
         forced = int((k.loc[neutral, "sst2"].abs() > 0.5).sum())
-        txt += (f"On the same sentences the contextual models differ in telling ways. SST-2, which has no neutral class, "
-                f"gives {forced} of the {len(neutral)} plain action lines a score beyond ±0.5 "
-                f"(\"He opens the door and walks in.\" {k.loc[neutral[0], 'sst2']:+.2f}); the three-class RoBERTa calls "
+        txt += (f"On the same sentences the contextual models differ in telling ways. SST-2 has no neutral class, and "
+                f"it gives {forced} of the {len(neutral)} plain action lines a score beyond ±0.5 "
+                f"(\"He opens the door and walks in.\" {k.loc[neutral[0], 'sst2']:+.2f}). The three-class RoBERTa calls "
                 f"them mostly neutral (P(neutral) {k.loc[neutral, 'roberta3_neutral'].min():.2f} to "
-                f"{k.loc[neutral, 'roberta3_neutral'].max():.2f}). \"I didn't kill him.\" is "
-                f"{k.loc[kk, 'sst2']:+.2f} for SST-2 and "
-                f"{k.loc[kk, 'roberta3']:+.2f} for RoBERTa. Both models read "
+                f"{k.loc[neutral, 'roberta3_neutral'].max():.2f}). \"I didn't kill him.\" gets "
+                f"{k.loc[kk, 'sst2']:+.2f} from SST-2 and "
+                f"{k.loc[kk, 'roberta3']:+.2f} from RoBERTa. Both models read "
                 f"\"Oh great, another flat tire.\" as negative, and both miss the sarcasm of loving to wait in line. "
-                f"No instrument is right on every case; this is why Step 4 validates against human labels. ")
+                f"No instrument gets every case right, which is why Step 4 checks them against human labels. ")
     ctx = s["contextual"]
     if ctx["status"] == "pending":
-        txt += (f"Contextual scores for the scripts: NOT YET AVAILABLE (the contextual run has not finished). Until they are, "
-                f"the fallback rule cannot be applied "
-                f"and Step 7 does not run.")
+        txt += (f"Contextual scores for the scripts are NOT YET AVAILABLE, because the contextual run hasn't "
+                f"finished. Until they are, the fallback rule can't be applied and Step 7 doesn't run.")
     else:
         ag = {(a["sample"], a["instrument"]): a for a in ctx["agreement"]}
         s2, r3 = ag[("primary 834", "sst2")], ag[("primary 834", "roberta3")]
-        txt += (f"On the scripts themselves the instruments agree only moderately. Against VADER, SST-2 has the same "
-                f"sign on {100 * s2['sign agreement on VADER-non-neutral sentences']:.0f}% of the sentences VADER calls "
-                f"non-neutral, and the Spearman correlation is {s2['Spearman, sentences']:.2f} for sentences, "
+        txt += (f"On the scripts themselves the instruments agree only moderately. Of the sentences VADER calls "
+                f"non-neutral, SST-2 gives "
+                f"{100 * s2['sign agreement on VADER-non-neutral sentences']:.0f}% the same sign. The Spearman "
+                f"correlation between the two is {s2['Spearman, sentences']:.2f} for sentences, "
                 f"{s2['Spearman, scenes']:.2f} for scenes and {s2['Spearman, films']:.2f} for films. The three-class "
-                f"RoBERTa calls {100 * r3['roberta3 neutral share']:.0f}% of sentences neutral (κ = "
-                f"{r3["Cohen's kappa, 3 classes"]:.2f} with VADER's three labels), and correlates "
+                f"RoBERTa calls {100 * r3['neutral share']:.0f}% of sentences neutral (Cohen's κ = "
+                f"{r3["Cohen's kappa, 3 classes"]:.2f} against VADER's three labels, where 0 is chance agreement and "
+                f"1 is perfect). It correlates "
                 f"{r3['Spearman, scenes']:.2f} with VADER for scenes and {r3['Spearman, films']:.2f} for films. "
-                f"By the pre-registered fallback rule (projected {ctx['decision']['projected_hours_sentence_all']:.2f} h "
-                f"≤ {ctx['decision']['limit_hours']:.0f} h) the primary instrument is DistilBERT SST-2 "
-                f"({ctx['decision']['primary_instrument']}); VADER and RoBERTa are robustness instruments (Step 9).")
+                f"The fallback rule we fixed in advance picks the primary instrument by projected run time "
+                f"({ctx['decision']['projected_hours_sentence_all']:.2f} h ≤ {ctx['decision']['limit_hours']:.0f} h), "
+                f"so the primary instrument is DistilBERT SST-2 ({ctx['decision']['primary_instrument']}). VADER and "
+                f"RoBERTa are robustness instruments (Step 9).")
+        if ("primary 834", "modernbert3") in ag:
+            mb, mx = ag[("primary 834", "modernbert3")], ctx["matrix"]["films"]
+            txt += (f" The ModernBERT-large model we added later (amendment (d), robustness only) calls "
+                    f"{100 * mb['neutral share']:.0f}% of sentences neutral (κ = {mb["Cohen's kappa, 3 classes"]:.2f} "
+                    f"with VADER). At film level it correlates {mx['modernbert3']['sst2']:.2f} with SST-2, "
+                    f"{mx['modernbert3']['roberta3']:.2f} with RoBERTa and {mx['modernbert3']['vader']:.2f} with VADER.")
     return txt
+
+
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    ctx = s["contextual"]
+    if ctx["status"] == "pending":
+        return ("Only VADER has scored the scripts so far. The contextual scores are NOT YET AVAILABLE, so the "
+                "primary instrument isn't chosen yet and Step 7 doesn't run.")
+    ag = {(a["sample"], a["instrument"]): a for a in ctx["agreement"]}
+    s2 = ag[("primary 834", "sst2")]
+    return (f"The primary instrument is DistilBERT SST-2 ({ctx['decision']['primary_instrument']}), picked by the "
+            f"fallback rule fixed in advance. It agrees only moderately with the VADER lexicon (Spearman "
+            f"{s2['Spearman, scenes']:.2f} for scenes, {s2['Spearman, films']:.2f} for films). Step 9 reruns the "
+            f"analysis with each instrument.")
 
 
 SECTION = [
     Md("""## Step 3 · Sentiment instruments
 
-**What we do.** We score every sentence with VADER, a word lexicon with rules for negation, intensifiers,
-capitals and "but". Each sentence gets a compound score in [-1, 1], and |score| < 0.05 counts as neutral. Two
-contextual transformer models score the same sentences on DTU HPC:
-- DistilBERT fine-tuned on SST-2, which is pre-registered;
+How do we give each sentence a tone score, and how far do different scoring tools agree?
+
+We score every sentence with VADER, a word lexicon with rules for negation, intensifiers, capitals and "but".
+Each sentence gets a compound score between -1 and 1, and a score with |score| < 0.05 counts as neutral. Two
+contextual transformer models, which read the whole sentence, score the same sentences on DTU HPC:
+- DistilBERT fine-tuned on SST-2, which is pre-registered (named in the config before we saw any results)
 - a three-class RoBERTa, which is robustness only.
 
-A scene's score is the mean of its sentence scores (neutral sentences included). That is what the arcs in
-Step 5 are built from.
+A scene's score is the mean of its sentence scores, neutral sentences included. Those scene scores are what
+the arcs in Step 5 are built from.
 
-**Why two kinds of instrument.**
-- A lexicon is fast and transparent: every score can be traced to words. It does not understand order,
-  sarcasm, or what an event means.
-- A contextual model reads the whole sentence. It was trained on review text, not screenplays, though.
+### Why two kinds of instrument
+- A lexicon is fast and transparent, because every score can be traced back to words. But it doesn't
+  understand order, sarcasm, or what an event means.
+- A contextual model reads the whole sentence. It was trained on review text, though, not screenplays.
 
 Where the two disagree, the arc depends on the instrument. Step 9 reports the analysis with each.
 
-**What this step checks.**
+### What this step checks
 1. How scores are distributed in dialogue and in action lines.
 2. Whether the contraction fix from Step 2 changes any VADER score.
-3. A small set of constructed stress sentences. The "intent" column is the author's construction goal, not a
-   human validation; human validation is Step 4.
-4. Agreement between the instruments, by rules fixed before the contextual scores were read.
+3. A small set of stress sentences we made up. The "intent" column is what the author meant each sentence to
+   test, not a human validation. Human validation is Step 4.
+4. How well the instruments agree, by rules we fixed before reading the contextual scores.
 
-No outcome is used in this step."""),
+This step doesn't use the outcome at all."""),
     Run("s03_instruments"),
-    Table("s03_instruments", "scoring", "What was scored, how fast, and the state of the contextual run."),
-    Table("s03_instruments", "distribution", "Share of negative, neutral and positive sentences per layer, primary "
-          "834 first and all 1,087 scripts second."),
-    Fig("s03_instruments", "layers", "Stacked shares per layer (primary 834). Action lines are mostly neutral to a "
-        "lexicon: they describe events in plain words."),
+    Table("s03_instruments", "scoring", "What was scored, how fast, and how far the contextual run has got."),
+    Table("s03_instruments", "distribution", "Share of negative, neutral and positive sentences per layer, for the "
+          "primary 834 first and all 1,087 scripts second."),
+    Fig("s03_instruments", "layers", "Stacked shares per layer (primary 834). To a lexicon, action lines are mostly "
+        "neutral, because they describe events in plain words."),
     Fig("s03_instruments", "nonzero", "Distribution of non-zero sentence scores, dialogue against action, each as a "
         "percentage of its own layer."),
     Table("s03_instruments", "contraction", "Every sentence that contains a contraction, re-scored in its split "
-          "('do n't') form: how many scores move. The second row is limited to the pre-tokenised scripts, where "
-          "the split form actually occurred."),
-    Table("s03_instruments", "stress", "Constructed stress sentences (not from any script). The contextual columns "
-          "were scored on the HPC login node's CPU in fp32; the full job runs in fp16 on a GPU, so the last "
-          "decimal can differ."),
+          "('do n't') form: how many scores move. The second row covers only the pre-tokenised scripts, where the "
+          "split form actually occurred."),
+    Table("s03_instruments", "stress", "Stress sentences we made up (not from any script). We scored the contextual "
+          "columns on the CPU of the HPC login node in fp32. The full job runs in fp16 on a GPU, so the last decimal "
+          "can differ."),
     Table("s03_instruments", "contraction_forms", "The contraction forms that most often appear in sentences whose "
           "score moved, against how often they appear in all contraction sentences (single tokens only)."),
     Private("s03_instruments", "extremes", "ten real sentences at the extremes of VADER (≥ 0.9 or ≤ −0.9), 3 to 15 "
@@ -476,12 +548,14 @@ No outcome is used in this step."""),
     Table("s03_instruments", "scenes", "Scene scores in the primary sample, per layer: quantiles and the share of "
           "scenes that score exactly zero."),
     Fig("s03_instruments", "scenes", "Scene scores (both layers) in the primary sample."),
-    Table("s03_instruments", "films", "Per film: the mean scene score and the SD of scene scores. That SD is a raw "
-          "version of D1 before smoothing; no outcome is shown."),
+    Table("s03_instruments", "films", "For each film, the mean scene score and the SD of its scene scores. That SD is "
+          "a raw version of D1 (volatility) before smoothing. No outcome is shown."),
     Table("s03_instruments", "agreement", "Agreement between VADER and the contextual models, using the rules "
-          "pre-registered in `instruments.agreement`."),
+          "fixed in advance in `instruments.agreement`."),
+    Table("s03_instruments", "matrix", "Spearman correlation between every pair of instruments that ran, primary 834: "
+          "per sentence, per scene (mean of its sentences) and per film (mean of its scenes)."),
     Fig("s03_instruments", "agreement", "Scene scores from VADER (x) against DistilBERT SST-2 (y), primary sample."),
     Private("s03_instruments", "disagreements", "20 sentences where VADER and SST-2 have opposite signs, drawn by the "
-            "pre-registered rule (notebook only)."),
+            "rule fixed in advance (notebook only)."),
     Reading("s03_instruments"),
 ]

@@ -16,7 +16,7 @@ import sys
 import nbformat as nbf
 from nbconvert.preprocessors import ExecutePreprocessor, TagRemovePreprocessor
 
-from analysis.scripts_text.report import Fig, Md, Private, Reading, Run, Table
+from analysis.scripts_text.report import Fig, Md, Private, Reading, Run, Table, nb_md, takeaway_text
 
 from .paths import NOTEBOOKS, REPO
 
@@ -30,19 +30,27 @@ STEPS = [("01", "s01_sample", "sample_outcome"), ("02", "s02_units", "text_units
          ("12", "s12_back_to_text", "back_to_text"),
          ("13", "s13_interpretation", "interpretation")]
 
+from analysis.static_figures import drop_noise, number_cells, pngify_file
+
 SETUP = """import sys
 from pathlib import Path
 
 REPO = Path.cwd().resolve().parents[1]   # notebooks/arcs -> repo root
 sys.path.insert(0, str(REPO))
 
+import warnings
+
 import pandas as pd
 import plotly.io as pio
 from IPython.display import Markdown, display
 
+from analysis.scripts_text.report import nb_md
+from analysis.static_figures import use_static_figures
+
 from analysis.arcs import {module} as step
 
-pio.renderers.default = "notebook_connected"
+use_static_figures()   # figures become static PNGs (they show on GitHub); interactive ones are on the static page
+warnings.filterwarnings("ignore", category=RuntimeWarning)   # known 0/0 on very short arcs, handled downstream
 pd.set_option("display.max_columns", 30)
 pd.set_option("display.width", 200)
 pd.set_option("display.max_colwidth", 120)"""
@@ -56,21 +64,25 @@ def notebook(num: str, module_name: str) -> nbf.NotebookNode:
              nbf.v4.new_code_cell(SETUP.format(module=module_name))]
     if not any(isinstance(i, Run) for i in mod.SECTION):
         cells.append(nbf.v4.new_code_cell("res = step.load()"))
+    take, first_md = takeaway_text(mod), True
     for item in mod.SECTION:
         if isinstance(item, Md):
-            cells.append(nbf.v4.new_markdown_cell(item.text))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(item.text)))
+            if first_md and take:   # the answer first: right under the step's title
+                cells.append(nbf.v4.new_markdown_cell(nb_md(f"> **Takeaway.** {take}")))
+            first_md = False
         elif isinstance(item, Run):
             cells.append(nbf.v4.new_code_cell(f"res = step.{getattr(item, 'call', 'run')}()   "
                                               "# recomputes this step and saves its outputs"))
         elif isinstance(item, Table):
-            cells.append(nbf.v4.new_markdown_cell(f"**Table.** {item.caption}"))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(f"**Table.** {item.caption}")))
             cells.append(nbf.v4.new_code_cell(f'display(step.tables(res)["{item.name}"])'))
         elif isinstance(item, Fig):
-            cells.append(nbf.v4.new_markdown_cell(f"**Figure.** {item.caption}"))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(f"**Figure.** {item.caption}")))
             cells.append(nbf.v4.new_code_cell(f'step.figures(res)["{item.name}"].show()'))
         elif isinstance(item, Reading):
             cells.append(nbf.v4.new_markdown_cell("**Plain-language reading** (generated from the saved numbers):"))
-            cells.append(nbf.v4.new_code_cell("display(Markdown(step.reading(res)))"))
+            cells.append(nbf.v4.new_code_cell("display(Markdown(nb_md(step.reading(res))))"))
         elif isinstance(item, Private):
             cells.append(nbf.v4.new_markdown_cell(f"**Private check.** {item.caption}"))
             c = nbf.v4.new_code_cell(f'display(step.private(res)["{item.name}"])   # output cleared before commit')
@@ -96,14 +108,11 @@ def main(argv: list[str]) -> None:
             strip = TagRemovePreprocessor(remove_all_outputs_tags={"private"})
             strip.enabled = True
             nb, _ = strip.preprocess(nb, {})
-            for c in nb.cells:   # execution counts and timing metadata make diffs noisy
-                if c.cell_type == "code":
-                    c.execution_count = None
-                    c.metadata.pop("execution", None)
-                    for o in c.get("outputs", []):
-                        if "execution_count" in o:
-                            o["execution_count"] = None
+            drop_noise(nb)
+            number_cells(nb)   # sequential counts; timing metadata dropped so diffs stay quiet
         nbf.write(nb, path)
+        if run:
+            print(f"  {pngify_file(path)} figures drawn as PNG", flush=True)
         print(f"wrote {path.relative_to(REPO)}", flush=True)
 
 

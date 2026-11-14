@@ -560,3 +560,60 @@ was rewritten before commit. Steps 9 and 10 will show whether the near miss is s
 
 **Not done:** Step 11 (instrument-match question with the group); human sheets (Steps 4 and 12); ModernBERT
 robustness run (amendment (d), next).
+
+## 2026-11-14 · HPC copies of the SST-2/RoBERTa job cancelled; ModernBERT race copy (rule fixed before any ModernBERT score)
+
+- At the user's request, jobs 30053002 (gpua40) and 30053443 (gpua10) were cancelled at 10:4x, still pending
+  after more than 2 h. Neither ever started. The local MPS run stays the run of record for SST-2 and RoBERTa, so
+  **there is no HPC reproducibility check for those two models.** The only cross-hardware evidence is the
+  17-sentence stress comparison (MPS fp16 vs HPC CPU fp32, within 0.003). Their watcher was stopped.
+- **ModernBERT (amendment (d)):** the local MPS run started at about 10:30 (projected 1.93 h for sentences, then
+  scenes). The user asked for a race copy on HPC (gpua10).
+- **Rule, fixed before either run has produced a score:** for `modernbert3`, the full run (both passes) that
+  *finishes first* is the one used. The other, if it completes, is used only as a reproducibility check. Finish
+  time is the write time of the run's scene file: on this Mac for the local run, and the LSF finish time
+  recorded by the watcher for HPC.
+- Race copy submitted: job **30053931** (gpua10, 4 h walltime, `hpc/score_modernbert.lsf`), writing to
+  `out_modernbert/`. The HPC script is identical to the local one (SHA-256 prefix 336acffc693ac48a). The
+  model was downloaded to scratch and smoke-tested on 20 sentences on the login node CPU (labels
+  negative/neutral/positive, no NaN). `hpc/watch_job.sh` fetches it to `private/contextual_modernbert_hpc/`
+  together with the LSF finish time. Step 3's `modernbert_run()` picks the run that finished first.
+
+## 2026-11-14 · Exploratory: Del Vecchio et al. (2021) replication (`x01_del_vecchio.py`)
+
+Added after the primary analysis, not pre-registered. Del Vecchio et al. report that "Man in a hole" arcs earn
+more (+$6.6M domestic gross, p < 0.001, on 6,174 subtitle files; p = 0.055 in their budget subsample). We rebuilt
+their pipeline on our 100-point arcs (DCT low-pass, 5 components; z-scored; k-means, 6 clusters, seed 20261114;
+clusters named by best template match) and ran one HC3 OLS per cluster dummy, tightening step by step.
+VADER stands in for their syuzhet lexicon; SST-2 is our primary instrument. 1,043 scripts with arcs, budget and gross.
+
+| Spec | "Man in a hole", VADER | "Man in a hole", SST-2 | Shapes with p < 0.05 (VADER / SST-2) |
+|---|---|---|---|
+| S1 their test: gross ($M) ~ dummy | +9.2M, p 0.67 | +23.6M, p 0.32 | 1 / 0 |
+| S2 + budget | +5.5M, p 0.72 | +17.0M, p 0.31 | 1 / 0 |
+| S3 ln(gross/budget) ~ dummy + ln budget | +0.10, p 0.12 | +0.02, p 0.76 | 0 / 0 |
+| S4 + genre x decade, scene length, no franchise (834) | +0.08, p 0.29 | −0.07, p 0.45 | 0 / 0 |
+
+- Their headline effect does not reproduce on our scripts, even with their own specification. Our sample is
+  smaller and skews to hits (100k+ votes), so this is a failure to reproduce, not proof of absence.
+- Their loose specification does produce a "finding" here: with VADER the Oedipus cluster earns $42.6M less
+  (p = 0.015, S1; p = 0.022 with budget). It is one of six tests, it isn't in SST-2, and it reverses sign under
+  our outcome and controls (S4: +0.16, p = 0.055). That is the false-positive pattern the stricter design guards against.
+- Cluster template matches are moderate (r 0.56 to 0.93), so the shape names are approximate. Kruskal-Wallis of
+  the multiple across the six clusters: VADER p = 0.58, SST-2 p = 0.98.
+
+## 2026-11-14 · ModernBERT ingested (amendment d, robustness only)
+
+- **Run of record:** the local MPS run finished first (sentences 5,402 s, scenes 4,668 s; 15 sentences over
+  510 word pieces chunked), so it is used under the race rule. HPC job 30053931 was still queued; it stays a
+  reproducibility check only.
+- **Agreement (primary 834):** ModernBERT calls 70% of sentences neutral (RoBERTa 72%). Against VADER: sign
+  agreement 31% on VADER-non-neutral sentences, κ 0.19 (RoBERTa 0.37), Spearman 0.34 by sentence, 0.42 by
+  scene, 0.68 by film. Between the contextual models, film-level Spearman is 0.66 (SST-2) and 0.76 (RoBERTa).
+  The models disagree a lot sentence by sentence and much less once averaged over a film.
+- **Step 9 rows:** D1 ρ +0.027 (p 0.41), D2 ρ +0.043 (p 0.23). Scene-in-context: D1 −0.065 (p 0.048),
+  D2 +0.045 (p 0.18). The D1 context row is one of 19 D1 variants, has the opposite sign to the primary, and is
+  the kind of single hit expected by chance; reported as exploratory. D2 keeps its positive sign with ModernBERT
+  but is weaker than with SST-2, so the near miss in Step 7 does not get stronger support from the best model.
+- **Primary analysis unchanged** (Step 7 run once with SST-2). Steps 3, 4, 9, 12 and 13, their notebooks and
+  the site rebuilt. Step 7 notebook rebuilt only for a figure fix (both r_min lines labelled).

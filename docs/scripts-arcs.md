@@ -25,7 +25,7 @@ MovieSum JSONL files under `data/raw/scripts/moviesum/`. Set `IMDB_DATA_DIR` if 
 Environment (tested 14 November 2026, Python 3.13.16):
 
 ```bash
-pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 scikit-learn==1.9.1 plotly==7.1.0 pyyaml==6.0.3 pyarrow==25.0.1 nbformat==5.11.1 nbconvert==7.17.1 ipykernel==7.3.0 mistune==3.3.4 vaderSentiment==3.3.2
+pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 scikit-learn==1.9.1 plotly==7.1.0 pyyaml==6.0.3 pyarrow==25.0.1 nbformat==5.11.1 nbconvert==7.17.1 ipykernel==7.3.0 mistune==3.3.4 vaderSentiment==3.3.2 kaleido==1.5.1
 ```
 
 Then, from the repo root, build and execute the notebooks (Steps 1 to 6 and 12 run in a few minutes; VADER
@@ -125,3 +125,10 @@ null and test results, and the sheets with their empty human columns. Films are 
 sentence-level scores, the HPC results as returned, the rater previews and the ≤ 15-word windows. Before
 writing the page, `make_site.py` checks every 8-word run on it against every 8-word run of every script
 sentence, and refuses to write if any match.
+
+## Figures in the notebooks
+
+The notebooks carry static PNG figures, so they show on GitHub; the interactive versions are on the static page.
+The builders draw the PNGs with kaleido (`analysis/static_figures.py`). kaleido needs a Chrome it can drive; if none
+is found, run `python -c "import kaleido; kaleido.get_chrome_sync()"` once. Without kaleido the notebooks still
+build, with interactive figures that GitHub leaves blank.

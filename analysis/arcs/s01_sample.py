@@ -233,7 +233,7 @@ def figures(res: dict) -> dict:
         hist.add_trace(go.Histogram(x=v, name=f"{name} (n={len(v):,})", marker_color=colour, opacity=0.6,
                                     histnorm="probability", xbins=dict(start=-6, end=8, size=0.25),
                                     marker_pattern_shape=pat))
-    hist.add_vline(x=0, line_dash="dash", line_color="#444", annotation_text="break-even (gross = budget)")
+    hist.add_vline(line_width=1.5, x=0, line_dash="dash", line_color="#444", annotation_text="break-even (gross = budget)")
     hist.update_layout(barmode="overlay", xaxis_title="log(gross / budget)   (0 = break-even; 1 ≈ 2.7×; 2 ≈ 7.4×)",
                        yaxis_title="share of films in the sample")
     style(hist, "The outcome: log(gross / budget)", height=400)
@@ -241,7 +241,7 @@ def figures(res: dict) -> dict:
     p = _primary(f)
     bud = go.Figure(go.Histogram(x=np.log10(p.budget_usd), marker_color=HIGH, nbinsx=40,
                                  name=f"primary sample (n={len(p)})"))
-    bud.update_layout(xaxis_title="budget, log10 USD   (6 = $1M, 7 = $10M, 8 = $100M)", yaxis_title="films",
+    bud.update_layout(xaxis_title="budget, log10 USD   (6 = 1M USD, 7 = 10M, 8 = 100M)", yaxis_title="films",
                       showlegend=False)
     style(bud, "Budget in the primary sample", height=340)
 
@@ -269,77 +269,100 @@ def reading(res: dict) -> str:
     lean_scripted = np.exp(sc["median"]) > np.exp(a["median"])
     lean_primary = skp["B"]["high"] / skp["B"]["low"] > 1.1
     return (
-        f"{'All' if ok else 'NOT all'} six funnel numbers reproduce the feasibility note "
+        f"{'All' if ok else 'NOT all'} six funnel numbers match the feasibility note "
         f"({', '.join(f'{v['got']:,}' for v in s['checks'].values())}). "
-        f"The scripted films {'lean' if lean_scripted else 'do not lean'} towards hits: median multiple "
-        f"{np.exp(sc['median']):.2f}× against {np.exp(a['median']):.2f}× for all clean films, and "
-        f"{sk['B']['high']} scripts in the top quarter against {sk['B']['low']} in the bottom ({sk['C']['high']} vs "
-        f"{sk['C']['low']} within cells). Most of that lean comes from franchise films: in the primary sample the "
-        f"counts are {skp['B']['high']} vs {skp['B']['low']} ({skp['C']['high']} vs {skp['C']['low']} within cells), the "
-        f"median multiple is {np.exp(p['median']):.2f}×, {p['share_unprofitable']:.1%} grossed less than their budget "
-        f"(all clean films: {a['share_unprofitable']:.1%}) and the SD of log(gross/budget) is {p['sd']:.2f} "
-        f"(all clean films: {a['sd']:.2f}). So the restricted range the brief expects "
-        f"{'is still visible' if lean_primary else 'is small'} in the primary sample: "
-        f"it is mainly a property of the scripted sample as a whole. The selection is still not random: "
-        f"these are films popular enough for 100,000+ IMDb votes and a public screenplay. "
-        f"After genre × decade cells and log budget the SD left to explain is {s['sd_after_cell_and_budget_primary']:.2f}. "
+        f"The scripted films {'lean' if lean_scripted else 'do not lean'} towards hits. Their median film grossed "
+        f"{np.exp(sc['median']):.2f}× its budget, against {np.exp(a['median']):.2f}× for all clean films, and "
+        f"{sk['B']['high']} scripts fall in the top quarter against {sk['B']['low']} in the bottom ({sk['C']['high']} vs "
+        f"{sk['C']['low']} when the quarters are cut within genre × decade cells). "
+        + ("Most of that lean comes from franchise films. " if lean_scripted and not lean_primary else "")
+        + f"In the primary sample the counts are {skp['B']['high']} vs {skp['B']['low']} ({skp['C']['high']} vs "
+        f"{skp['C']['low']} within cells), the median multiple is {np.exp(p['median']):.2f}×, "
+        f"{p['share_unprofitable']:.1%} grossed less than their budget (all clean films: "
+        f"{a['share_unprofitable']:.1%}), and the SD of log(gross/budget) is {p['sd']:.2f} (all clean films: "
+        f"{a['sd']:.2f}). "
+        + ("So the restricted range the project brief expects is still visible in the primary sample. "
+           if lean_primary else
+           "So the restricted range the project brief expects is small in the primary sample. It's mainly a "
+           "property of the scripted sample as a whole. ")
+        + f"The selection still isn't random, though: these are films popular enough to get 100,000+ IMDb votes "
+        f"and to have a public screenplay. Once genre × decade cells and log budget are taken out, the SD left to "
+        f"explain is {s['sd_after_cell_and_budget_primary']:.2f}. "
         f"{s['films_in_pooled_cells']} primary films sit in cells with fewer than "
-        f"{cfg()['controls']['min_films_per_cell']} films and are pooled ({s['cells_primary']} cells in all). "
+        f"{cfg()['controls']['min_films_per_cell']} films, so they're pooled ({s['cells_primary']} cells in all). "
         f"Tag Genome reviews stop at {s['latest_year_with_reviews']}."
     )
+
+
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    o = s["outcome"]
+    a, p = o["all_clean"], o["primary_not_franchise"]
+    ok = all(v["match"] for v in s["checks"].values())
+    return (f"{'The rebuilt sample matches' if ok else 'The rebuilt sample does NOT match'} the feasibility numbers. "
+            f"The primary sample has {p['n']:,} non-franchise films with a usable screenplay (before Step 2's "
+            f"arc-ready filter). Its median film grossed {np.exp(p['median']):.2f}× its budget, against "
+            f"{np.exp(a['median']):.2f}× for all clean films.")
 
 
 SECTION = [
     Md("""## Step 1 · Sample and outcome
 
-**What we do.** We rebuild the sample from the repo's own rules and check that it reproduces the feasibility
-numbers before anything is measured. Then we describe the outcome, log(gross / budget), in the primary sample.
+Which films do we study, and how is their box-office success spread out?
 
-**The sample, step by step.**
-- Clean theatrical films with US-dollar budget and gross and 100,000+ IMDb votes (the 10k tier is not used:
-  its money isn't validated).
-- Keep those with a MovieSum screenplay that has scene and dialogue markup.
+Before we measure anything, we rebuild the sample from the repo's own rules and check that it lands on the
+feasibility numbers. Then we describe the outcome, log(gross / budget), in the primary sample.
+
+### The sample, step by step
+- Start from clean theatrical films with a US-dollar budget and gross and 100,000+ IMDb votes. We don't use
+  the 10k tier, because its money fields aren't validated.
+- Keep the films with a MovieSum screenplay that has scene and dialogue markup.
 - Drop the 8 scripts whose dialogue markup failed.
-- The **primary sample** drops films that are likely part of a franchise (Wikidata "follows" or a named
-  franchise). This choice was informed by the earlier word-level analysis, where the signal vanished without
-  franchise films. We say this openly, and Steps 9 and 10 rerun everything with all scripts.
+- For the **primary sample**, also drop films that are likely part of a franchise (Wikidata says the film
+  "follows" another one, or names its franchise). We made this choice after the earlier word-level analysis,
+  where the signal vanished once franchise films were left out. We say that openly, and Steps 9 and 10 rerun
+  everything with all scripts.
 
-**Why a continuous outcome.** The earlier branch compared the bottom and top quarters of films, which threw
-away the middle half of the data and the ordering inside each quarter. A correlation on the continuous
-outcome uses every film, so it has more power at the same sample size.
+### Why a continuous outcome
+The earlier branch compared the bottom and top quarters of films. That threw away the middle half of the data
+and the ordering inside each quarter. A correlation on the continuous outcome uses every film, so it has more
+power with the same number of films.
 
-**What it measures.** log(gross / budget): 0 means the film grossed its budget, 1 means about 2.7 times its
-budget, 2 about 7.4 times. The log stops a few huge multiples from dominating.
+### What it measures
+log(gross / budget). A value of 0 means the film grossed exactly its budget, 1 means about 2.7 times its
+budget, and 2 about 7.4 times. Taking the log stops a few huge multiples from dominating.
 
-**What it misses.** Gross / budget is **not profit**:
+### What it misses
+Gross / budget is **not profit**:
 - Marketing isn't in the budget.
 - Cinemas keep a large share of the gross.
-- Nothing is adjusted for inflation. The ratio is still in consistent units, because budget and gross are in the
-  same year's dollars.
-- The ratio favours micro-budget films, horror especially: a cheap film can earn 50 times its budget, a
+- Nothing is adjusted for inflation. The ratio still compares like with like, because budget and gross are in
+  the same year's dollars.
+- The ratio favours micro-budget films, horror especially. A cheap film can earn 50 times its budget, a
   blockbuster rarely more than 5."""),
     Run("s01_sample"),
-    Table("s01_sample", "funnel", "Sample funnel, rebuilt from the raw data and checked against the feasibility "
-          "numbers (the 'expected' column). A mismatch would stop the analysis."),
-    Fig("s01_sample", "outcome", "Distribution of log(gross/budget) for all clean films (grey), the primary sample "
-        "(blue, hatched) and the franchise films we set aside (orange, crossed). Bars are shares of each sample. "
-        "Compare the blue with the grey: if the primary sample were a narrow, hit-only slice, its bars would sit "
-        "to the right of the grey and be narrower. The table below gives the numbers."),
-    Table("s01_sample", "outcome", "The outcome in three samples: spread (SD), range, quartiles and the share of "
+    Table("s01_sample", "funnel", "How the sample is built, step by step, rebuilt from the raw data. The 'expected' "
+          "column holds the feasibility numbers, and a mismatch would stop the analysis."),
+    Fig("s01_sample", "outcome", "log(gross/budget) for all clean films (grey), the primary sample (blue, hatched) "
+        "and the franchise films we set aside (orange, crossed). Bars show the share of each sample. If the primary "
+        "sample were a narrow slice of hits, its blue bars would sit to the right of the grey ones and cover a "
+        "narrower range. The table below gives the numbers."),
+    Table("s01_sample", "outcome", "The outcome in three samples: spread (SD), range, quartiles, and the share of "
           "films that grossed less than their budget."),
-    Table("s01_sample", "skew", "Does the script sample lean towards hits? Counts of films in the bottom and top "
-          "quarters used by the earlier branch (cut-offs from all 2,446 clean films), for all scripted films and for the "
+    Table("s01_sample", "skew", "Does the script sample lean towards hits? We count films in the bottom and top "
+          "quarters the earlier branch used (cut-offs from all 2,446 clean films), for all scripted films and for the "
           "primary sample. With no lean the two counts would be about equal (top / bottom ≈ 1)."),
-    Fig("s01_sample", "budget", "Budget of the primary films, log scale. Budgets range from under a million to "
-        "hundreds of millions, which is why log budget is a control."),
+    Fig("s01_sample", "budget", "Budgets of the primary films, on a log scale. They run from under a million to "
+        "hundreds of millions of dollars, which is why we control for log budget."),
     Fig("s01_sample", "budget_vs_outcome", "Each dot is a primary film: budget (x) against log(gross/budget) (y). "
-        "The spread in y is much wider for cheap films, so budget has to be controlled before anything else is "
-        "related to the outcome."),
+        "Cheap films spread much more widely in y, so we have to control for budget before relating anything else to "
+        "the outcome."),
     Table("s01_sample", "budget", "Budget percentiles for the scripted films, the primary sample and the franchise "
-          "films. Franchise films are much more expensive, one reason to treat them separately."),
-    Fig("s01_sample", "cells", "Number of primary films in each primary-genre × decade cell (the fixed effects of "
-        "the analysis). Genre uses the frozen priority rule (Horror, Sci-Fi, Thriller, Adventure, Action, Comedy, "
-        "Drama). Cells with fewer than 5 films are pooled, so no film is compared only with itself."),
+          "films. Franchise films cost much more, which is one reason to treat them separately."),
+    Fig("s01_sample", "cells", "How many primary films fall in each primary-genre × decade cell. These cells are "
+        "the fixed effects of the analysis, so a film is compared with others from the same genre and decade. Genre follows the "
+        "frozen priority rule (Horror, Sci-Fi, Thriller, Adventure, Action, Comedy, Drama). Cells with fewer than 5 "
+        "films are pooled, so no film is compared only with itself."),
     Table("s01_sample", "composition", "The same counts as a table."),
     Reading("s01_sample"),
 ]

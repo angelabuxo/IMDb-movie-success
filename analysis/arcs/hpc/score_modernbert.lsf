@@ -1,0 +1,20 @@
+#!/bin/bash
+# DTU HPC batch job: contextual sentiment scores for the arc analysis (see score_contextual.py).
+# Submit from ~/02805-embed/arcs with:  bsub < score.lsf
+# The folder is owner-only (umask 077): it holds screenplay sentences. Outputs are numbers only.
+#BSUB -J arcs_modernbert
+#BSUB -q gpua10
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 8
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -W 4:00
+#BSUB -o lsf_modernbert_%J.out
+#BSUB -e lsf_modernbert_%J.err
+
+umask 077
+module load python3/3.12.11
+export HF_HOME=/dtu/blackhole/0e/223278/.sg02805/hf
+cd ~/02805-embed/arcs
+nvidia-smi > nvidia-smi_modernbert.txt
+~/venvs/sg02805/bin/python -I score_contextual.py private/sentences.jsonl.gz out_modernbert --models modernbert3 --max-hours 3.0
