@@ -272,5 +272,36 @@
     "scripts": 25
    }
   }
+ },
+ "s05_arcs[vader]": {
+  "config": "2bebdfb79c",
+  "date": "2026-11-14",
+  "outputs": [
+   "s05_arcs_vader.csv.gz",
+   "s05_descriptors_vader.csv",
+   "s05_summary_vader.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "vader"
+  }
  }
 }

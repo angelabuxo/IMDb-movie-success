@@ -249,3 +249,25 @@ The config already fixed the sample sizes, labels and error categories. Added `v
   0 IMDb-only titles, no IMDb IDs.
 - Status: NOT YET VALIDATED. Every result built on the sentiment scores carries that caveat until the group
   fills the sheets.
+
+## 2026-11-14 · Step 5: arcs (VADER; rebuilt with the contextual model once it returns)
+
+- The arc maths is written as matrices (overlap-weighted resampling R, moving average S), so Steps 6 and 9
+  can reuse it. Unit checks:
+  - 3 scenes on 6 points map 2:2:2;
+  - every row sums to 1 for 250 scenes;
+  - a constant series gives D1 = 0 and D2 = 0;
+  - a 0→1 step in the last 20% of scenes gives D2 = 1.
+- All 1,087 scripts have an arc (834 primary). The median primary script has 133 scenes, about 1.3 per grid point.
+- The average smoothed arc stays near zero: +0.015 over the first 20%, −0.004 over the last 20%, range
+  −0.010 to +0.020. Medians: D1 0.038, D2 −0.018. 66% of films end lower than they start.
+- **Proxy check, against my expectation.** I expected D1 to track scene length, since short scenes give noisy
+  means. It does not: ρ = −0.01 with mean sentences per scene. Its strongest size correlate is total sentences
+  (ρ = −0.22). All proxy correlations have |ρ| ≤ 0.22. The reading was first drafted with the expected
+  direction and corrected to the data before commit.
+- **Split-half reliability** (Spearman-Brown corrected): D1 0.53, D2 0.45, mean level 0.88. Roughly half of the
+  between-film variance in the two primary descriptors is scene-level noise. That caps any association with
+  profit (attenuation). Reported now, before any association is computed.
+- The six example arcs are drawn with the config seed: 127 Hours, Barbarian, Hanna, House of 1000 Corpses,
+  Next, The Accountant.
+- No outcome used. Notebook 05: 0 errors; leak check 0 of 19,995.
