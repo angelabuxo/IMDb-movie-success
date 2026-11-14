@@ -168,9 +168,10 @@ def figures(res: dict) -> dict:
         f = go.Figure(go.Bar(x=(e[:-1] + e[1:]) / 2, y=n, width=np.diff(e), marker_color=NEUTRAL,
                              name="1,000 within-cell permutations"))
         f.add_vline(x=r["rho"], line_color=HIGH, line_width=3, annotation_text=f"real ρ = {r['rho']:+.3f}")
-        for s in (-1, 1):
-            f.add_vline(x=s * res["r_min"]["alpha_0.025"], line_dash="dot", line_color=LOW,
-                        annotation_text="r_min" if s > 0 else None)
+        for s in (-1, 1):   # both lines labelled: an annotation with no text renders as plotly's "new text"
+            f.add_vline(x=s * res["r_min"]["alpha_0.025"], line_dash="dot", line_color=LOW, line_width=2,
+                        annotation_text="−r_min" if s < 0 else "+r_min",
+                        annotation_position="top left" if s < 0 else "top right")
         f.update_layout(xaxis_title=f"Spearman ρ, residualised {label} vs residualised outcome",
                         yaxis_title="permutations", showlegend=False)
         out[f"null_{k}"] = style(f, f"{label}: the real correlation against its permutation null", height=360)
