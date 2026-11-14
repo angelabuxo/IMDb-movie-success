@@ -106,7 +106,7 @@ Several sentiment models, split-half reliability & No human validation yet (shee
 
 \section{Worth adding before the paper}
 \begin{enumerate}
-  \item \textbf{Done (14 Nov):} Del Vecchio's single-dummy revenue test on our 1,043 scripts. ``Man in a hole'' does not earn more even in their specification (VADER $+\$9$M, $p=0.67$; SST-2 $+\$24$M, $p=0.32$). Their specification instead flags a different shape (VADER ``Oedipus'', $-\$43$M, $p=0.015$) that disappears under return on budget and our controls. Details: \code{analysis/arcs/x01\_del\_vecchio.py} and the arcs LOG.
+  \item \textbf{Done (14 Nov):} Del Vecchio's single-dummy revenue test on our 1,043 scripts. ``Man in a hole'' does not earn more even in their specification (VADER $+\$9$M, $p=0.67$; SST-2 $+\$24$M, $p=0.32$). Their specification instead flags a different shape (VADER ``Oedipus'', $-\$43$M, $p=0.015$) that disappears under return on budget and our controls. Details: \gh[scripts-arcs-modernbert]{analysis/arcs/x01_del_vecchio.py}{code} and \gh[scripts-arcs-modernbert]{analysis/arcs/LOG.md}{log}.
   \item Berger's volatility as an exploratory arc descriptor, labelled as added after pre-registration.
   \item IMDb vote count as a review-volume measure (Liu, Duan).
   \item One sentence on the Holbrook \& Addis sign flip, revenue against return.
@@ -116,7 +116,7 @@ Several sentiment models, split-half reliability & No human validation yet (shee
 \clearpage
 \section{Bibliography}
 Every paper above, grouped by strand and numbered. Links open the paper. The tag says how far it was checked.
-The same entries are in \code{paper/references.bib}, which the paper cites, and this list is generated from that
-file (\code{make\_biblist.py}), so the two never drift apart.
+The same entries are in the paper\textquotesingle s \gh[g/project-overview]{paper/references.bib}{bibliography file}, and this list is generated from
+it, so the two never drift apart.
 \input{biblist}
 \end{document}

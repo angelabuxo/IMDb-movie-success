@@ -26,7 +26,7 @@ gets a null or a second method, and no script text, review text or IMDb fields g
 
 \section{Who made the film}
 
-\subsection{Movie graph \where{(\code{scripts/network/}, \code{notebooks/movie\_graph.ipynb})}}
+\subsection{Movie graph \where{(\gh{scripts/network}{code}, \gh{notebooks/movie_graph.ipynb}{notebook})}}
 Movies, people (by role and billing) and companies in one network, with studio names merged through Wikidata IDs.
 \begin{itemize}
   \item The studio's track record is the strongest single measure: $\rho = +0.27$ with the multiple, net of budget and year, on 4,568 films.
@@ -34,7 +34,7 @@ Movies, people (by role and billing) and companies in one network, with studio n
   \item A director's next film is a hit 35\% of the time after a hit, and 18\% after a non-hit.
 \end{itemize}
 
-\subsection{Shared-people returns \where{(\code{scripts/network/roi\_similarity.py})}}
+\subsection{Shared-people returns \where{(\gh{scripts/network/roi_similarity.py}{code})}}
 Do films with the same director, producer, cast member or studio have more similar returns than chance?
 \begin{itemize}
   \item Every role clusters: 0.09 (top-three cast) to 0.17 (producers), against a shuffle null of at most 0.02.
@@ -42,19 +42,19 @@ Do films with the same director, producer, cast member or studio have more simil
   \item It's descriptive: it uses all years at once.
 \end{itemize}
 
-\subsection{Actor network \where{(Niklas, branch \code{initial\_actor\_network}, not merged)}}
+\subsection{Actor network \where{(Niklas, branch \gh[initial_actor_network]{scripts/network/actor_roi.py}{branch}, not merged)}}
 Top-three billed actors, linked by shared films. It comes with an interactive page with projections,
 communities, centrality and per-actor ROI.
 
 \section{What the film says}
 
-\subsection{Scripts and reviews notebook \where{(\code{notebooks/scripts\_and\_reviews.ipynb})}}
+\subsection{Scripts and reviews notebook \where{(\gh{notebooks/scripts_and_reviews.ipynb}{notebook})}}
 \begin{itemize}
   \item Only 2 of 15 script features pass $q < 0.05$ net of budget and year. The strongest is a character network centred on one character ($\rho = -0.097$).
   \item Six VADER arc shapes don't differ in profit ($p = 0.99$).
 \end{itemize}
 
-\subsection{Scattertext words \where{(\code{analysis/scripts\_text/}, pre-registered)}}
+\subsection{Scattertext words \where{(\gh{analysis/scripts_text}{code}, \gh{site/scripts/index.html}{page}, pre-registered)}}
 Top against bottom quarter by multiple, within genre and decade, on dialogue.
 \begin{itemize}
   \item The difference is slightly above random groupings ($z = 2.08$, $p = 0.024$).
@@ -62,7 +62,7 @@ Top against bottom quarter by multiple, within genre and decade, on dialogue.
   \item A word classifier doesn't beat genre, decade and budget (AUC 0.58 against 0.58).
 \end{itemize}
 
-\subsection{Emotional arcs \where{(\code{analysis/arcs/}, pre-registered, one test)}}
+\subsection{Emotional arcs \where{(\gh{analysis/arcs}{code}, \gh{site/arcs/index.html}{page}, pre-registered, one test)}}
 Every sentence of 834 non-franchise scripts is scored by DistilBERT SST-2. Each film becomes a 100-point tone
 curve, summarised as swing (D1) and ending lift (D2). Budget, genre, decade and scene length are controlled.
 \begin{itemize}
@@ -70,12 +70,13 @@ curve, summarised as swing (D1) and ending lift (D2). Budget, genre, decade and 
   \item Ending lift: a near miss ($\rho = +0.078$, $p = 0.028$, against a pre-set cutoff of 0.025). Its sign holds in 12 of 13 variants, but not with VADER.
   \item The arc adds nothing to out-of-sample prediction.
   \item About half of the arc variation between films is scene noise (split-half reliability around 0.45).
+  \item Exploratory replication of Del Vecchio et al.\ (2021): their ``Man in a hole'' effect does not reproduce on our scripts, even in their own specification (\gh[scripts-arcs-modernbert]{analysis/arcs/x01_del_vecchio.py}{code}).
   \item A fourth sentiment model, ModernBERT, is running as a robustness check.
 \end{itemize}
 
 \section{How it was received}
 
-\subsection{Reviews exploration \where{(Àngela, branch \code{reviews-exploration}, not merged)}}
+\subsection{Reviews exploration \where{(Àngela, \gh[reviews-exploration]{analysis/reviews}{branch}, not merged)}}
 2,095 films up to 2017. Every correlation is tested against a shuffle within genre $\times$ decade.
 \begin{itemize}
   \item The multiple goes with IMDb rating at $\rho = 0.27$, Metacritic 0.26 and Rotten Tomatoes 0.33. Genre and decade alone give about 0.1.
@@ -83,7 +84,7 @@ curve, summarised as swing (D1) and ending lift (D2). Budget, genre, decade and 
   \item A disagreement score (rating rank minus money rank) finds ``liked beyond their money'' films (\textit{tarantino}, \textit{noir}) and ``earned beyond their liking'' films (\textit{scares}, \textit{slasher}).
 \end{itemize}
 
-\section{What predicts profit \where{(\code{notebooks/what\_predicts\_profit.ipynb})}}
+\section{What predicts profit \where{(\gh{notebooks/what_predicts_profit.ipynb}{notebook})}}
 Trained on films to 2010, tested on 2011 to 2017.
 
 \begin{tabularx}{0.62\linewidth}{@{}Lr@{}}
@@ -106,22 +107,22 @@ All pre-release blocks (adds month, franchise) & 0.244 \\
 \begin{itemize}
   \item \textbf{Human validation}, which only people can fill:
   \begin{itemize}
-    \item Scattertext: \code{analysis/scripts\_text/outputs/validation\_*.csv}
-    \item Arcs: \code{analysis/arcs/validation/} and \code{analysis/arcs/outputs/s12\_back\_to\_text.csv}
-    \item Reviews: the 50-review sample on \code{reviews-exploration}
+    \item \gh{analysis/scripts_text/outputs}{Scattertext sheets}
+    \item \gh{analysis/arcs/validation}{arc scene sheets} and the \gh{analysis/arcs/outputs/s12_back_to_text.csv}{extreme-arc sheet}
+    \item the 50-review sample on \gh[reviews-exploration]{analysis/reviews}{the reviews branch}
   \end{itemize}
   \item \textbf{Arcs Step 11} waits on the instrument question (whole-review VADER against sentence-level VADER).
   \item \textbf{Weak spots}: the franchise flag is rough, release month isn't checked, reviews stop at 2017, and gross over budget isn't profit.
 \end{itemize}
 
 \section{Where things are}
-\begin{tabularx}{\linewidth}{@{}p{5.6cm}L@{}}
-\toprule
-\code{scripts/} & Data download and parsing, the graph, network features \\
-\code{analysis/scripts\_text/}, \code{analysis/arcs/} & The two pre-registered text analyses: config, LOG, steps, outputs \\
-\code{notebooks/} & Graph, profit model, scripts and reviews, one folder per text analysis \\
-\code{site/scripts/}, \code{site/arcs/} & Static pages for the text analyses \\
-\code{data/bundles/} & Compressed data that ships with the repo \\
-\bottomrule
-\end{tabularx}
+Everything links to the group repository on GitHub.
+\begin{itemize}
+  \item \gh{}{Repository} and its \gh{README.md}{README} (data, how to get it, how to run each part).
+  \item Step-by-step notebooks: \gh{notebooks/arcs}{emotional arcs}, \gh{notebooks/scripts_text}{word comparison}, \gh{notebooks/movie_graph.ipynb}{movie graph}, \gh{notebooks/what_predicts_profit.ipynb}{profit model}, \gh{notebooks/scripts_and_reviews.ipynb}{scripts and reviews}.
+  \item Every decision and test, dated: \gh{analysis/arcs/LOG.md}{arcs log}, \gh{analysis/scripts_text/LOG.md}{word-comparison log}.
+  \item Pre-registrations: \gh{analysis/arcs/config.yaml}{arcs config}, \gh{analysis/scripts_text/config.yaml}{word-comparison config}.
+  \item Run guides: \gh{docs/scripts-arcs.md}{arcs}, \gh{docs/scripts-text.md}{word comparison}.
+  \item The \gh[g/project-overview]{paper}{paper sources} (also in Overleaf as ``Log-Log Legends - 02805 paper (PNAS)'').
+\end{itemize}
 \end{document}

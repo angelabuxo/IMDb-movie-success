@@ -23,6 +23,9 @@
 \pagestyle{empty}
 
 \newcommand{\code}[1]{\texttt{\small #1}}
+% \gh[branch]{path}{text}: a link to that place in the group repo on GitHub (default branch main)
+\newcommand{\repo}{https://github.com/angelabuxo/IMDb-movie-success}
+\newcommand{\gh}[3][main]{\href{\repo/tree/#1/#2}{\color{accent}#3}}
 \newcommand{\where}[1]{{\small\color{muted}#1}}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 
