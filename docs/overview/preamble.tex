@@ -1,0 +1,31 @@
+% Shared look for overview.tex and project-details.tex. Build with: tectonic -X compile <file>.tex
+\usepackage[a4paper,margin=1.7cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setsansfont{texgyreheros}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\usepackage{amsmath,microtype,xcolor,tikz,booktabs,tabularx,enumitem,titlesec,array}
+\usepackage[hidelinks]{hyperref}
+\usetikzlibrary{positioning,arrows.meta,fit}
+
+\definecolor{ink}{HTML}{1F2933}
+\definecolor{accent}{HTML}{1F6F8B}
+\definecolor{soft}{HTML}{E8F1F4}
+\definecolor{muted}{HTML}{5C6B73}
+\color{ink}
+
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.1ex}{0.5ex}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{1ex}{0.3ex}
+\setlist{itemsep=1pt,topsep=2pt,parsep=0pt,leftmargin=1.2em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5ex}
+\pagestyle{empty}
+
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\where}[1]{{\small\color{muted}#1}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\newcommand{\doctitle}[2]{%
+  {\sffamily\bfseries\LARGE\color{accent}#1\par}\vspace{2pt}
+  {\small\color{muted}#2\par}\vspace{4pt}}
