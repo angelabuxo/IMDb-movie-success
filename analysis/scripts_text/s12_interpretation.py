@@ -85,6 +85,8 @@ def _finding(r) -> str:
     no_null = ct["p"] > 0.05
     no_lr = s09_logreg.no_clear_gain(lr) or lr["auc_text_mean"] <= lr["auc_baseline_mean"] or lr["permutation_p"] > 0.05
     rdz = r["s10_franchise"]["summary"]["random_drop"]["z_median"]
+    full = r["s10_franchise"]["results"].set_index("run").loc["primary"]   # same 200-shuffle null as `fr`
+    s8 = r["s08_kwic"]["summary"]
     if not no_null and fr.p_empirical > 0.05:
         nf = r["s10_franchise"]["summary"]["logreg_without_franchise"]
         lr_part = (f"a TF-IDF classifier doesn't do clearly better than genre, decade and budget alone (AUC "
@@ -94,11 +96,13 @@ def _finding(r) -> str:
                    f"for genre, decade and budget")
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
                 f"gross/budget) differs only slightly more than random groupings of the same scripts do (z = "
-                f"{ct['z']:.2f}, p = {ct['p']:.3f}, 1,000 stratified shuffles). That excess disappears once "
-                f"franchise films are removed (z = {fr.z:.2f}, p = {fr.p_empirical:.2f}), while random drops of the "
-                f"same size give a median z of {rdz:.2f}. The most extreme words are mostly names, franchise words and "
-                f"one film's French dialogue, so the result isn't robust to removing franchise films. As a second "
-                f"method, {lr_part}.")
+                f"{ct['z']:.2f}, p = {ct['p']:.3f}, 1,000 stratified shuffles). In the franchise check (200 shuffles per run) "
+                f"the same comparison gives z = {full.z:.2f} (p = {full.p_empirical:.3f}) with all films and z = "
+                f"{fr.z:.2f} (p = {fr.p_empirical:.2f}) without the likely franchise films, while random drops of the "
+                f"same size give a median z of {rdz:.2f}. So the result isn't robust to removing franchise films. Of "
+                f"the {s8['terms']} most extreme words, {s8['terms_that_are_names_somewhere']} are a speaker name in at "
+                f"least {s8['name_rule_scripts']} scripts and {s8['terms_mostly_one_script']} get more than half their "
+                f"uses from one script. Nobody has classified them by hand yet. As a second method, {lr_part}.")
     if no_null and no_lr:
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
                 f"gross/budget) is no more different than random groupings of the same scripts (z = {ct['z']:.2f}, "
@@ -166,13 +170,15 @@ def figures(res: dict) -> dict:
 def takeaway(r) -> str:
     ct = r["s06_null"]["summary"]["count_test"]
     lr = r["s09_logreg"]["summary"]
-    fr = r["s10_franchise"]["results"].set_index("run").loc["without likely franchise films"]
+    runs = r["s10_franchise"]["results"].set_index("run")
+    fr, full = runs.loc["without likely franchise films"], runs.loc["primary"]
     no_null = ct["p"] > 0.05
     no_lr = s09_logreg.no_clear_gain(lr) or lr["auc_text_mean"] <= lr["auc_baseline_mean"] or lr["permutation_p"] > 0.05
     if not no_null and fr.p_empirical > 0.05:
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
-                f"gross/budget) differs only slightly more than chance (z = {ct['z']:.2f}, p = {ct['p']:.3f}), and the difference disappears "
-                f"without franchise films (z = {fr.z:.2f}).")
+                f"gross/budget) differs only slightly more than chance (z = {ct['z']:.2f}, p = {ct['p']:.3f}). On the "
+                f"franchise check's own null the difference drops from z = {full.z:.2f} with all films to z = "
+                f"{fr.z:.2f} without franchise films.")
     if no_null and no_lr:
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
                 f"gross/budget) is no more different than chance (z = {ct['z']:.2f}), and a dialogue classifier does no better than genre, "

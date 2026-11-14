@@ -21,6 +21,17 @@ def primary_instrument() -> str:
     return "vader"
 
 
+def sentiment_validation_status() -> str:
+    """'validated' once the Step 4 human sheets are scored, else 'NOT YET VALIDATED' (the text steps use this
+    instead of a fixed string, so they change by themselves when the sheets are filled)."""
+    p = OUTPUTS / "s04_validation_results.json"
+    if p.exists():
+        import json
+        if json.loads(p.read_text()).get("status") == "validated":
+            return "validated"
+    return "NOT YET VALIDATED"
+
+
 def primary_genre(genres: str) -> str:
     g = set((genres or "").split(","))
     for name in cfg()["controls"]["primary_genre_priority"]:

@@ -178,7 +178,14 @@ def reading(res: dict) -> str:
             f"VADER-lexicon words that most often pull arc minima down are {top('word pulling the arc minimum')}, "
             f"and the ones that most often lift arc maxima are {top('word pulling the arc maximum')}. Whether these "
             f"are described events (a death on the page), artefacts or tone is for a human reader to decide from the "
-            f"private windows. Until then the sheet reads NOT YET VALIDATED.")
+            f"private windows. " + ("The sheet has been filled in." if _sheet_filled(res) else
+                                    "Until then the sheet reads NOT YET VALIDATED."))
+
+
+def _sheet_filled(res: dict) -> bool:
+    s = res["sheet"]
+    cols = [c for c in ("score_matches_text", "driver") if c in s.columns]
+    return bool(cols) and bool((s[cols].fillna("").astype(str) != "").all(axis=None))
 
 
 def takeaway(res: dict) -> str:
@@ -187,7 +194,9 @@ def takeaway(res: dict) -> str:
     mn = s[s.point == "arc minimum"]
     return (f"The most extreme arcs are shaped by short scenes: {one:.0%} of the scenes at an arc extreme hold a "
             f"single sentence, and {int((mn.sentence_layer == 'action').sum())} of {len(mn)} sentences driving an "
-            f"arc minimum are action lines. Whether the scores match the text is NOT YET VALIDATED by a human reader.")
+            f"arc minimum are action lines. " + ("A human reader has checked the sheet." if _sheet_filled(res) else
+                                                 "Whether the scores match the text is NOT YET VALIDATED by a human "
+                                                 "reader."))
 
 
 SECTION = [

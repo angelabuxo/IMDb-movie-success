@@ -164,8 +164,10 @@ def finding(d: dict) -> str:
     note = "".join(f" {'Volatility' if k == 'D1' else 'Ending minus start'} is a near miss ({_primary(d, k)}, above the "
                    f"pre-registered α = {d['s07']['alpha']}), not a finding." for k in near) + rob
     if not sig:
-        return (f"Our finding is negative. Screenplays have an emotional order: {order} of scripts are more volatile "
-                f"than shuffled versions of themselves. But once genre, decade, budget and scene length are held "
+        order_txt = (f"Screenplays have an emotional order: {order} of scripts are more volatile than shuffled "
+                     f"versions of themselves. But once" if order != PENDING else
+                     "Whether scene order carries structure is still PENDING (Step 6). Once")
+        return (f"Our finding is negative. {order_txt} genre, decade, budget and scene length are held "
                 f"fixed, neither their volatility ({_primary(d, 'D1')}) nor their ending relative to their start "
                 f"({_primary(d, 'D2')}) is associated with log(gross/budget) in {d['s07']['n']} films, and "
                 f"associations much stronger than |ρ| ≈ {rm:.2f} are unlikely.{note}{tail} The sentiment scores are "

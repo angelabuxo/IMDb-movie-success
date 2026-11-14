@@ -188,12 +188,14 @@ def takeaway(res: dict) -> str:
     s, r = res["summary"], res["results"].set_index("run")
     nf = r.loc["without likely franchise films"]
     rd = s["random_drop"]
+    full = r.loc["primary"]
     stands = "no longer stands out from" if nf.p_empirical > 0.05 else "still stands out from"
-    why = ("so losing those particular films, not just losing films, is what removes the excess."
+    verb = "removes" if nf.p_empirical > 0.05 else "shrinks"
+    why = (f"so losing those particular films, not just losing films, is what {verb} the excess."
            if rd["share_z_at_or_below_franchise_drop"] < 0.1 else "so part of the drop is simply lost power.")
     return (f"Without the {s['likely_franchise']} likely franchise films, the excess of distinctive words {stands} "
-            f"chance (z = {nf.z:.2f}, p = {nf.p_empirical:.3f}). Dropping the same number of random films instead "
-            f"gives a median z of {rd['z_median']:.2f}, {why}")
+            f"chance (z = {nf.z:.2f}, p = {nf.p_empirical:.3f}, against z = {full.z:.2f} with all films on the same "
+            f"null). Dropping the same number of random films instead gives a median z of {rd['z_median']:.2f}, {why}")
 
 
 def reading(res: dict) -> str:
@@ -212,7 +214,8 @@ def reading(res: dict) -> str:
             f"unsuccessful) at random from the non-franchise films, {rd['replicates']} times. That gives a median z of "
             f"{rd['z_median']:.2f} (90% between {rd['z_p05']:.2f} and {rd['z_p95']:.2f}), and "
             f"{rd['share_z_at_or_below_franchise_drop']:.0%} of random drops fall as low as dropping the franchise "
-            f"films does, so " + ("losing those particular films, not just losing films, is what removes the excess."
+            f"films does, so " + ("losing those particular films, not just losing films, is what "
+            + ("removes" if nf.p_empirical > 0.05 else "shrinks") + " the excess."
             if rd["share_z_at_or_below_franchise_drop"] < 0.1 else "part of the drop is simply lost power.")
             + f" {s['possible_transcripts']} "
             f"scripts look like they could be transcripts (less than 15% action words, or fewer than "

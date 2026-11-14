@@ -16,7 +16,7 @@ from scipy.stats import spearmanr
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s03_instruments
-from .common import INSTRUMENT_NAMES, primary_instrument
+from .common import INSTRUMENT_NAMES, primary_instrument, sentiment_validation_status
 from .config import cfg, log_run
 from .paths import OUTPUTS
 
@@ -217,7 +217,7 @@ def reading(res: dict) -> str:
         f"{m.iloc[-e:].mean():+.3f} over the last 20%, and between {m.min():+.3f} and {m.max():+.3f} overall. "
         f"Single arcs swing much more than the average, and those swings mostly cancel out (median D1 "
         f"{p.D1.median():.3f}, median D2 {p.D2.median():+.3f}, and {100 * (p.D2 < 0).mean():.0f}% of films end lower "
-        f"than they start). The scores are {INSTRUMENT_NAMES[s['instrument']]} and NOT YET VALIDATED.\n\n"
+        f"than they start). The scores are {INSTRUMENT_NAMES[s['instrument']]} and {sentiment_validation_status()}.\n\n"
         f"Are the descriptors just script size? The size measure most strongly correlated with D1 is {strongest('D1')}. For D2 it's "
         f"{strongest('D2')}, and for the mean level {strongest('mean_level')}. "
         + ("All are weak (|ρ| < 0.3), so the descriptors aren't script size in disguise. The size controls of "

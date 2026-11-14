@@ -199,11 +199,16 @@ def reading(res: dict) -> str:
             + (f"{len(same)} {'variant leaves' if len(same) == 1 else 'variants leave'} ρ unchanged by construction ({'; '.join(same.variant)}). " if len(same) else "")
             + f"Re-running the permutations and bootstrap with {len(seeds)} other seeds gives p from "
               f"{seeds.p.min():.3f} to {seeds.p.max():.3f}.")
+    d2s = t[(t.descriptor == "D2") & (t.group == "seed")].p
+    alpha = 0.025
+    seed_txt = ("The seed rows show that the D2 p-value sits on the pre-registered threshold (they straddle "
+                f"{alpha}): with 1,000 permutations, a p near {alpha} carries a Monte Carlo error (the wobble from "
+                "using a finite number of random shuffles) of about ±0.005."
+                if len(d2s) and d2s.min() <= alpha <= d2s.max() else
+                f"The seed rows keep the D2 p-value on the same side of the pre-registered threshold ({alpha}).")
     return ("\n\n".join(out) + "\n\nD2 doesn't depend on smoothing or on the grid, because it compares the first "
             "and last fifths of story time on the unsmoothed arc. And with log budget as a control, log gross and "
-            "log(gross/budget) leave the same residuals. The seed rows show that the D2 p-value sits on the "
-            "pre-registered threshold: with 1,000 permutations, a p near 0.025 carries a Monte Carlo error (the "
-            "wobble from using a finite number of random shuffles) of about ±0.005. These rows are exploratory. "
+            f"log(gross/budget) leave the same residuals. {seed_txt} These rows are exploratory. "
             "The primary decision stays the one in Step 7, run once with the config seed.")
 
 

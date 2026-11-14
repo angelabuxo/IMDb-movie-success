@@ -152,16 +152,23 @@ def reading(res: dict) -> str:
                    "unsuccessful scripts differ in vocabulary more than random groupings of the same scripts would, "
                    "once genre and decade are held fixed.")
     elif ct["p"] > 0.01:
+        sides = (f"successful side z = {hi['z']:.2f}, p = {hi['p']:.3f}; unsuccessful side z = {lo['z']:.2f}, "
+                 f"p = {lo['p']:.3f}")
+        bigger, smaller = (("successful", "unsuccessful") if hi["z"] >= lo["z"] else ("unsuccessful", "successful"))
+        side_txt = (f"Neither side clears p < 0.05 on its own ({sides}), though the {bigger} side carries more of it."
+                    if hi["p"] > 0.05 and lo["p"] > 0.05 else
+                    f"Both sides contribute ({sides})." if hi["p"] <= 0.05 and lo["p"] <= 0.05 else
+                    f"The excess is mostly on the {bigger} side, while the {smaller} side looks like chance ({sides}).")
         verdict = (f"The real count sits at the upper edge of the null distribution, which is **weak evidence** that "
                    f"the two groups differ in vocabulary more than random groupings within the same genre and decade "
-                   f"cells. The excess is on the successful side (z = {hi['z']:.2f}, p = {hi['p']:.3f}), while the "
-                   f"unsuccessful side looks like chance (z = {lo['z']:.2f}, p = {lo['p']:.3f}). It's one test among "
-                   f"several in these notebooks, and Steps 8 and 10 check what the extra terms are.")
+                   f"cells. {side_txt} It's one test among several in these notebooks, and Steps 8 and 10 check what "
+                   f"the extra terms are.")
     else:
         verdict = ("The real count sits well above the null distribution, so the two groups differ in vocabulary more "
                    "than random groupings of the same scripts within the same genre and decade cells.")
     return (f"In the real comparison, {ct['real']} terms are at least twice as frequent in one group. Across "
-            f"{s['shuffles']:,} label shuffles within {s['strata']} genre × decade cells, that count averages "
+            f"{s['shuffles']:,} label shuffles within the {s['strata']} genre × decade cells that hold scripts from both "
+            f"compared groups (Step 1's qualifying cells, minus any left without them), that count averages "
             f"{ct['null_mean']:.1f} (standard deviation {ct['null_std']:.1f}, and 90% of shuffles fall between "
             f"{ct['null_p05']:.0f} and {ct['null_p95']:.0f}). That gives z = {ct['z']:.2f} and an empirical p = "
             f"{ct['p']:.3f}. {verdict} Many terms clear the threshold in every shuffle, because with "

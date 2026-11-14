@@ -18,7 +18,7 @@ from scipy.stats import spearmanr
 from analysis.scripts_text.report import HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 from . import s02_units, s05_arcs
-from .common import design, empirical_p, pooled_cells, r_min, residualise
+from .common import design, empirical_p, pooled_cells, r_min, residualise, sentiment_validation_status
 from .config import cfg, config_hash, log_run
 from .paths import OUTPUTS
 
@@ -211,7 +211,9 @@ def reading(res: dict) -> str:
                             f"larger than that in either direction are unlikely. With N = {r['n']}, an association of "
                             f"|ρ| ≥ {rm:.3f} would be detected with 80% power."))
     return (f"Primary analysis on {res['n']} films, instrument {res['instrument']}.\n\n" + "\n\n".join(parts) +
-            "\n\nTwo caveats carry over. The sentiment scores are NOT YET VALIDATED against human readers (Step 4), "
+            "\n\nTwo caveats carry over. The sentiment scores are "
+            + ("validated against human readers (Step 4)" if sentiment_validation_status() == "validated" else
+               "NOT YET VALIDATED against human readers (Step 4)") + ", "
             "and the split-half reliability of D1 and D2 (Step 5) pulls any true association towards zero.")
 
 
