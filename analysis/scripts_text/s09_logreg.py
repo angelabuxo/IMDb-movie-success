@@ -172,7 +172,7 @@ def figures(res: dict) -> dict:
                              ("auc_text_plus_baseline", "text + baseline", ACCENT)):
         fig.add_trace(go.Box(y=cv[k], name=label, marker_color=colour, boxpoints="all", jitter=0.3, pointpos=0))
     fig.add_trace(go.Box(y=perm.auc_text, name="text, shuffled labels", marker_color=LOW, boxpoints=False))
-    fig.add_hline(y=0.5, line_dash="dash", line_color="#444", annotation_text="chance")
+    fig.add_hline(line_width=1.5, y=0.5, line_dash="dash", line_color="#444", annotation_text="chance", layer="above")
     fig.update_layout(yaxis_title="cross-validated AUC (each dot: one test fold)", showlegend=False)
     return {"auc": style(fig, "Can the dialogue predict the success label?", height=440)}
 
@@ -186,12 +186,24 @@ def no_clear_gain(s: dict) -> bool:
 
 def compare_to_baseline(s: dict) -> str:
     if no_clear_gain(s):
-        return ("Text and baseline are **not clearly different**: the means of the 10 repeats overlap "
+        return ("Text and baseline are **not clearly different**, because the means of the 10 repeats overlap "
                 f"({s['auc_text_repeat_range'][0]:.3f} to {s['auc_text_repeat_range'][1]:.3f} for text, "
                 f"{s['auc_baseline_repeat_range'][0]:.3f} to {s['auc_baseline_repeat_range'][1]:.3f} for the baseline)")
     if s["auc_text_mean"] > s["auc_baseline_mean"]:
         return "The text model beats the baseline"
-    return "The text model **does not beat** the baseline"
+    return "The text model **doesn't beat** the baseline"
+
+
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    if no_clear_gain(s):
+        verdict = "Text and baseline aren't clearly different."
+    elif s["auc_text_mean"] > s["auc_baseline_mean"]:
+        verdict = "The text model beats the baseline."
+    else:
+        verdict = "The text model doesn't beat the baseline."
+    return (f"A classifier that reads the dialogue reaches a mean AUC of {s['auc_text_mean']:.3f}, against "
+            f"{s['auc_baseline_mean']:.3f} for genre, decade and budget alone (0.5 = chance). {verdict}")
 
 
 def reading(res: dict) -> str:
@@ -201,43 +213,60 @@ def reading(res: dict) -> str:
             f"cross-validation give a mean AUC of {s['auc_text_mean']:.3f} for the TF-IDF text model, "
             f"{s['auc_baseline_mean']:.3f} for the genre + decade + budget baseline and "
             f"{s['auc_text_plus_baseline_mean']:.3f} for both together (0.5 = chance). With labels shuffled within "
-            f"genre × decade cells the text model averages {s['permutation_mean']:.3f} (sd {s['permutation_std']:.3f}, "
-            f"{s['permutations']} shuffles), so the real text AUC has an empirical p = {s['permutation_p']:.3f}. "
-            + verdict + f". The text model does better in {s['text_beats_baseline_in_folds']:.0%} of test folds, and "
-            f"adding text to the baseline gives {s['auc_text_plus_baseline_mean']:.3f}. The top-50 positive "
-            f"coefficients overlap the Scattertext top 50 with Jaccard {s['jaccard_coef_vs_scattertext_high']:.2f} "
-            f"(negative side {s['jaccard_coef_vs_scattertext_low']:.2f}).")
+            f"genre × decade cells, the text model averages {s['permutation_mean']:.3f} (sd "
+            f"{s['permutation_std']:.3f}, {s['permutations']} shuffles), so the real text AUC has an empirical "
+            f"p = {s['permutation_p']:.3f}. "
+            + verdict + f". Fold by fold, the text model is ahead in {s['text_beats_baseline_in_folds']:.0%} of test "
+            f"folds. Its "
+            f"top-50 positive coefficients overlap the Scattertext top 50 with a Jaccard of "
+            f"{s['jaccard_coef_vs_scattertext_high']:.2f} ({s['jaccard_coef_vs_scattertext_low']:.2f} on the "
+            f"negative side).")
 
 
 SECTION = [
     Md("""## Step 9 · A second method: logistic regression on TF-IDF
 
-**What we do.** We turn each script's dialogue into a TF-IDF vector using the course definitions: tf = count /
-|d| (the word's count divided by the script's length) and idf = ln(N / df) (N scripts, df the number using the
-word), computed on the training scripts only so the test scripts stay unseen. A logistic regression predicts
-the success label of definition (C) from that vector. Cross-validation is 5-fold, repeated 10 times, with
-folds balanced on label × primary genre. We compare it with a **baseline** that only knows genre, decade and
+This step asks whether a model that uses all the words at once can tell successful from unsuccessful scripts
+better than genre, decade and budget alone.
+
+### What we do
+
+We turn each script's dialogue into a TF-IDF vector, a set of word weights that are high for words the script
+uses often and few other scripts use. We follow the course definitions: tf = count / |d| (the word's count
+divided by the script's length) and idf = ln(N / df) (N scripts, df the number of scripts using the word),
+computed on the training scripts only so the test scripts stay unseen. A logistic regression then predicts the
+success label of definition (C) from that vector. We use cross-validation, which fits the model on part of the
+scripts and tests it on the rest, rotating the held-out part. It's 5-fold, repeated 10 times, with folds
+balanced on label × primary genre. We compare the model with a **baseline** that only knows genre, decade and
 log budget, and with the text model trained on shuffled labels.
 
-**Why.** Scattertext looks at one word at a time. A classifier uses all words together and is evaluated on
-scripts it hasn't seen, so it answers a different question: is there *any* reliable signal in the dialogue?
-Agreement between the two methods is evidence; disagreement is a warning.
+### Why
 
-**What it measures.** AUC: the chance that a randomly chosen successful script gets a higher score than a
-randomly chosen unsuccessful one. 0.5 is a coin flip, 1 is perfect.
+Scattertext looks at one word at a time. A classifier uses all the words together and is scored on scripts it
+hasn't seen, so it answers a different question: is there *any* reliable signal in the dialogue? Agreement
+between the two methods is evidence, and disagreement is a warning.
 
-**How to read a coefficient.** A positive coefficient means that, holding the other words fixed, more of this
-word goes with a higher predicted chance of being in the successful group, in this corpus. It is an
-association, not a cause, and with thousands of correlated words a single coefficient is unstable.
+### What it measures
 
-**What it misses.** A linear model on word frequencies ignores order, meaning and context. The scikit-learn
-`TfidfVectorizer` isn't used because its idf adds 1 even without smoothing; the course formula is computed
-directly."""),
+AUC, the chance that a randomly chosen successful script gets a higher score than a randomly chosen
+unsuccessful one. 0.5 is a coin flip and 1 is perfect.
+
+### How to read a coefficient
+
+A positive coefficient means that, holding the other words fixed, more of this word goes with a higher
+predicted chance of being in the successful group, in this corpus. It's an association, not a cause, and with
+thousands of correlated words a single coefficient is unstable.
+
+### What it misses
+
+A linear model on word frequencies ignores order, meaning and context. We don't use scikit-learn's
+`TfidfVectorizer`, because its idf adds 1 even without smoothing. We compute the course formula directly
+instead."""),
     Run("s09_logreg"),
-    Fig("s09_logreg", "auc", "Cross-validated AUC for each test fold: baseline (genre, decade, budget), text only, "
-        "and both together, plus the text model trained on shuffled labels. Dashed line: chance."),
-    Table("s09_logreg", "auc", "Mean AUC with the spread over folds and over the 10 repeats."),
+    Fig("s09_logreg", "auc", "Cross-validated AUC for each test fold: the baseline (genre, decade, budget), text "
+        "only, both together, and the text model trained on shuffled labels. The dashed line is chance."),
+    Table("s09_logreg", "auc", "Mean AUC, with the spread over folds and over the 10 repeats."),
     Table("s09_logreg", "coefficients", "The 20 most positive and most negative coefficients of the text model "
-          "fitted on all scripts (associations in this corpus only)."),
+          "fitted on all scripts. They're associations in this corpus only."),
     Reading("s09_logreg"),
 ]

@@ -143,7 +143,7 @@ def figures_for_paper(d: dict) -> pd.DataFrame:
 
 def finding(d: dict) -> str:
     if not d["s07"]:
-        return f"**Finding: {PENDING}.** The primary analysis (Step 7) waits for the instrument decision."
+        return f"The main finding is {PENDING}. The primary analysis (Step 7) is waiting for the instrument decision."
     r = d["s07"]["results"]
     rm = d["s07"]["r_min"]["alpha_0.025"]
     sig = [k for k in ("D1", "D2") if r[k]["significant"]]
@@ -157,22 +157,22 @@ def finding(d: dict) -> str:
         q = d["s09"][(d["s09"].descriptor == near[0]) & ~d["s09"].group.isin(["primary", "seed"])]
         p0 = r[near[0]]["rho"]
         q = q[(q.rho - d["s09"][(d["s09"].descriptor == near[0]) & (d["s09"].group == "primary")].rho.iloc[0]).abs() >= 1e-9]
-        rob = (f" Across {len(q)} robustness variants that change it, it keeps its sign in "
+        rob = (f" Across the {len(q)} robustness variants that change it, it keeps its sign in "
                f"{int((np.sign(q.rho) == np.sign(p0)).sum())} and reaches p < 0.05 in {int((q.p < 0.05).sum())}, but "
                f"not with VADER (ρ = {q[q.variant == 'instrument: vader'].rho.iloc[0]:+.3f}).") \
             if (q.variant == "instrument: vader").any() else ""
     note = "".join(f" {'Volatility' if k == 'D1' else 'Ending minus start'} is a near miss ({_primary(d, k)}, above the "
                    f"pre-registered α = {d['s07']['alpha']}), not a finding." for k in near) + rob
     if not sig:
-        return (f"**Finding (negative):** screenplays have an emotional order ({order} of scripts are more volatile "
-                f"than shuffled versions of themselves), but once genre, decade, budget and scene length are held fixed, "
-                f"neither their volatility ({_primary(d, 'D1')}) nor their ending relative to their start "
-                f"({_primary(d, 'D2')}) is associated with log(gross/budget) in {d['s07']['n']} films; associations "
-                f"much stronger than |ρ| ≈ {rm:.2f} are unlikely.{note}{tail} The sentiment scores are "
+        return (f"Our finding is negative. Screenplays have an emotional order: {order} of scripts are more volatile "
+                f"than shuffled versions of themselves. But once genre, decade, budget and scene length are held "
+                f"fixed, neither their volatility ({_primary(d, 'D1')}) nor their ending relative to their start "
+                f"({_primary(d, 'D2')}) is associated with log(gross/budget) in {d['s07']['n']} films, and "
+                f"associations much stronger than |ρ| ≈ {rm:.2f} are unlikely.{note}{tail} The sentiment scores are "
                 + ("validated." if _validated(d) else "NOT YET VALIDATED."))
     k = sig[0]
     name = {"D1": "volatility", "D2": "ending relative to the start"}[k]
-    return (f"**Finding:** once genre, decade, budget and scene length are held fixed, a screenplay's {name} is "
+    return (f"Once genre, decade, budget and scene length are held fixed, a screenplay's {name} is "
             f"associated with log(gross/budget) ({_primary(d, k)}, N = {d['s07']['n']}). This is an association, "
             f"not an effect of the script.{tail} The sentiment scores are "
             + ("validated." if _validated(d) else "NOT YET VALIDATED."))
@@ -190,14 +190,37 @@ def reading(res: dict) -> str:
     return finding(res)
 
 
+def takeaway(res: dict) -> str:
+    d = res
+    if not d["s07"]:
+        return f"The main finding is {PENDING}, because Step 7 is waiting for the instrument decision."
+    r = d["s07"]["results"]
+    short = lambda k: f"ρ = {r[k]['rho']:+.3f}, p = {r[k]['p']:.3f}"
+    sig = [k for k in ("D1", "D2") if r[k]["significant"]]
+    near = [k for k in ("D1", "D2") if not r[k]["significant"] and (r[k]["ci_low"] > 0 or r[k]["ci_high"] < 0)]
+    valid = "validated." if _validated(d) else "NOT YET VALIDATED."
+    if not sig:
+        return (f"Once genre, decade, budget and scene length are held fixed, there's no evidence that a screenplay's "
+                f"arc is associated with log(gross/budget) (swing {short('D1')}, and ending lift {short('D2')})."
+                + "".join(f" {'Swing' if k == 'D1' else 'Ending lift'} is a near miss (p = {r[k]['p']:.3f} is above the "
+                          f"pre-set α = {d['s07']['alpha']}), not a finding." for k in near)
+                + f" The sentiment scores are {valid}")
+    k = sig[0]
+    return (f"Once genre, decade, budget and scene length are held fixed, a screenplay's "
+            f"{'swing' if k == 'D1' else 'ending lift'} is associated with log(gross/budget) ({short(k)}). That's an "
+            f"association, not an effect of the script. The sentiment scores are {valid}")
+
+
 SECTION = [
     Md("""## Step 13 · Interpretation and limitations
 
-For every analysis: one line on what it captures and one on what it misses. Then our own limitations, the
-finding in one sentence, and the three figures we would put in a six-page paper. Every number here is read
-from the saved outputs of the earlier steps; anything not yet run says PENDING."""),
+What did we find, and what can't this study tell us?
+
+For every analysis we give one line on what it captures and one on what it misses. Then come our own
+limitations, the main finding, and the three figures we'd put in a six-page paper. Every number here is read
+from the saved outputs of the earlier steps, and anything not yet run says PENDING."""),
     Table("s13_interpretation", "analyses", "Each analysis: what it captures and what it misses."),
-    Table("s13_interpretation", "limitations", "Limitations of this study."),
+    Table("s13_interpretation", "limitations", "The limitations of this study."),
     Reading("s13_interpretation"),
-    Table("s13_interpretation", "paper_figures", "The three figures for a six-page paper, and why each."),
+    Table("s13_interpretation", "paper_figures", "The three figures for a six-page paper, and why we'd pick each."),
 ]

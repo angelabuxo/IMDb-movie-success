@@ -87,31 +87,32 @@ def _finding(r) -> str:
     rdz = r["s10_franchise"]["summary"]["random_drop"]["z_median"]
     if not no_null and fr.p_empirical > 0.05:
         nf = r["s10_franchise"]["summary"]["logreg_without_franchise"]
-        lr_part = (f"a TF-IDF classifier does not do clearly better than genre, decade and budget alone (AUC "
+        lr_part = (f"a TF-IDF classifier doesn't do clearly better than genre, decade and budget alone (AUC "
                    f"{lr['auc_text_mean']:.2f} vs {lr['auc_baseline_mean']:.2f}), and without franchise films it does "
                    f"worse ({nf['auc_text']:.2f} vs {nf['auc_baseline']:.2f})" if no_lr else
                    f"a TF-IDF classifier reaches AUC {lr['auc_text_mean']:.2f} against {lr['auc_baseline_mean']:.2f} "
                    f"for genre, decade and budget")
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
-                f"gross/budget) differs only slightly more than random groupings of the same scripts (z = "
-                f"{ct['z']:.2f}, p = {ct['p']:.3f}, 1,000 stratified shuffles), and that excess disappears once "
-                f"franchise films are removed (z = {fr.z:.2f}, p = {fr.p_empirical:.2f}; random drops of the same size "
-                f"give a median z of {rdz:.2f}); the most extreme words are mostly names, franchise words and one "
-                f"film's French dialogue, so the result is not robust to removing franchise films; {lr_part}.")
+                f"gross/budget) differs only slightly more than random groupings of the same scripts do (z = "
+                f"{ct['z']:.2f}, p = {ct['p']:.3f}, 1,000 stratified shuffles). That excess disappears once "
+                f"franchise films are removed (z = {fr.z:.2f}, p = {fr.p_empirical:.2f}), while random drops of the "
+                f"same size give a median z of {rdz:.2f}. The most extreme words are mostly names, franchise words and "
+                f"one film's French dialogue, so the result isn't robust to removing franchise films. As a second "
+                f"method, {lr_part}.")
     if no_null and no_lr:
         return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
                 f"gross/budget) is no more different than random groupings of the same scripts (z = {ct['z']:.2f}, "
-                f"p = {ct['p']:.2f}, 1,000 stratified shuffles), and a TF-IDF classifier does no better than genre, "
+                f"p = {ct['p']:.2f}, 1,000 stratified shuffles). A TF-IDF classifier also does no better than genre, "
                 f"decade and budget alone (AUC {lr['auc_text_mean']:.2f} vs {lr['auc_baseline_mean']:.2f}).")
     if not no_null and not no_lr:
         return (f"Within the same genre and decade, the dialogue of the most profitable films differs from the least "
                 f"profitable more than random groupings do (z = {ct['z']:.2f}, p = {ct['p']:.3f}), and a TF-IDF "
                 f"classifier adds to genre, decade and budget (AUC {lr['auc_text_mean']:.2f} vs "
-                f"{lr['auc_baseline_mean']:.2f}); which words carry this still awaits human validation.")
-    return (f"The evidence is mixed: the word-count test against stratified shuffles gives z = {ct['z']:.2f} "
+                f"{lr['auc_baseline_mean']:.2f}). Which words carry this still awaits human validation.")
+    return (f"The evidence is mixed. The word-count test against stratified shuffles gives z = {ct['z']:.2f} "
             f"(p = {ct['p']:.3f}), while the TF-IDF classifier reaches AUC {lr['auc_text_mean']:.2f} against "
-            f"{lr['auc_baseline_mean']:.2f} for genre, decade and budget (permutation p = {lr['permutation_p']:.3f}); "
-            f"neither alone supports a claim about script vocabulary and profit.")
+            f"{lr['auc_baseline_mean']:.2f} for genre, decade and budget (permutation p = {lr['permutation_p']:.3f}). "
+            f"Neither alone supports a claim about script vocabulary and profit.")
 
 
 def _figures_for_paper(r) -> pd.DataFrame:
@@ -162,6 +163,30 @@ def figures(res: dict) -> dict:
     return {}
 
 
+def takeaway(r) -> str:
+    ct = r["s06_null"]["summary"]["count_test"]
+    lr = r["s09_logreg"]["summary"]
+    fr = r["s10_franchise"]["results"].set_index("run").loc["without likely franchise films"]
+    no_null = ct["p"] > 0.05
+    no_lr = s09_logreg.no_clear_gain(lr) or lr["auc_text_mean"] <= lr["auc_baseline_mean"] or lr["permutation_p"] > 0.05
+    if not no_null and fr.p_empirical > 0.05:
+        return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
+                f"gross/budget) differs only slightly more than chance (z = {ct['z']:.2f}, p = {ct['p']:.3f}), and the difference disappears "
+                f"without franchise films (z = {fr.z:.2f}).")
+    if no_null and no_lr:
+        return (f"Within the same genre and decade, the dialogue of the most and least profitable films (by "
+                f"gross/budget) is no more different than chance (z = {ct['z']:.2f}), and a dialogue classifier does no better than genre, "
+                f"decade and budget (AUC {lr['auc_text_mean']:.2f} vs {lr['auc_baseline_mean']:.2f}).")
+    if not no_null and not no_lr:
+        return (f"Within the same genre and decade, the dialogue of the most profitable films differs from the least "
+                f"profitable more than chance (z = {ct['z']:.2f}, p = {ct['p']:.3f}), and a dialogue classifier adds to genre, "
+                f"decade and budget (AUC {lr['auc_text_mean']:.2f} vs {lr['auc_baseline_mean']:.2f}). Which words "
+                f"carry this still awaits human validation.")
+    return (f"The evidence is mixed (word-count test z = {ct['z']:.2f}, classifier AUC {lr['auc_text_mean']:.2f} "
+            f"against {lr['auc_baseline_mean']:.2f} for genre, decade and budget), and neither alone supports a claim "
+            f"about script vocabulary and profit.")
+
+
 def reading(res: dict) -> str:
     return "**Finding candidate.** " + _finding(res)
 
@@ -169,13 +194,15 @@ def reading(res: dict) -> str:
 SECTION = [
     Md("""## Step 12 · Interpretation and limitations
 
-One sentence on what each analysis captures and one on what it misses, the limitations we found ourselves,
-the finding candidate, and the three figures we would put in a six-page paper. Everything below is generated
-from the saved outputs of Steps 1-11."""),
-    Table("s12_interpretation", "captures", "What each analysis captures and misses."),
+This step asks what the analysis as a whole does and doesn't show.
+
+Below we give one sentence on what each analysis captures and one on what it misses, the limitations we found
+ourselves, the finding candidate, and the three figures we'd put in a six-page paper. Everything below is
+generated from the saved outputs of Steps 1-11."""),
+    Table("s12_interpretation", "captures", "What each analysis captures and what it misses."),
     Table("s12_interpretation", "limitations", "Limitations, with numbers from our own coverage results."),
     Reading("s12_interpretation"),
-    Table("s12_interpretation", "paper_figures", "The three figures for a six-page PNAS paper, and why."),
+    Table("s12_interpretation", "paper_figures", "The three figures we'd use in a six-page PNAS paper, and why."),
     Md("### Final checklist"),
     Table("s12_interpretation", "checklist", "The course's checklist, answered with evidence from these notebooks."),
 ]

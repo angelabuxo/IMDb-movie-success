@@ -266,10 +266,16 @@ def figures(res: dict) -> dict:
         v = nf[nf.arc_ready == flag]
         sc.add_trace(go.Scattergl(x=v.n_scene_tags, y=v.sentences_both, mode="markers", name=f"{name} (n={len(v)})",
                                   marker=dict(color=colour, symbol=sym, size=6, opacity=0.6)))
-    sc.add_vline(x=ar["min_scene_tags"], line_dash="dash", annotation_text=f"{ar['min_scene_tags']} scenes")
-    sc.add_hline(y=ar["min_sentences"], line_dash="dash", annotation_text=f"{ar['min_sentences']} sentences")
-    sc.update_xaxes(type="log", title="scene tags per script (log scale)")
-    sc.update_yaxes(type="log", title="dialogue + action sentences per script (log scale)")
+    # On log axes Plotly takes line positions in data units but annotation positions in log10 units, so the
+    # cut-off lines and their labels are added separately
+    sc.add_vline(line_width=1.5, line_color="#444", x=ar["min_scene_tags"], line_dash="dash")
+    sc.add_hline(line_width=1.5, line_color="#444", y=ar["min_sentences"], line_dash="dash")
+    sc.add_annotation(x=np.log10(ar["min_scene_tags"]), y=1, yref="paper", text=f"{ar['min_scene_tags']} scenes",
+                      showarrow=False, xanchor="left", yanchor="top", xshift=4, bgcolor="rgba(255,255,255,0.85)")
+    sc.add_annotation(x=1, xref="paper", y=np.log10(ar["min_sentences"]), text=f"{ar['min_sentences']} sentences",
+                      showarrow=False, xanchor="right", yanchor="bottom", yshift=2, bgcolor="rgba(255,255,255,0.85)")
+    sc.update_xaxes(type="log", dtick=1, title="scene tags per script (log scale)")
+    sc.update_yaxes(type="log", tickvals=[300, 1000, 3000, 10000], title="dialogue + action sentences per script (log scale)")
     style(sc, "Which non-franchise scripts are long and well marked up enough for an arc", height=420)
 
     p = t[t.in_primary]
@@ -293,71 +299,85 @@ def reading(res: dict) -> str:
     s = res["summary"]
     m = s["median"]
     return (
-        f"All {s['scripts']:,} scripts parse ({s['parse_errors']} errors). They hold {s['scenes_total']:,} scene tags; "
-        f"{s['empty_scenes_both']:,} scenes have no dialogue or description sentence and drop out of the timeline. "
-        f"Joining {s['contraction_joins']:,} split contractions cut the standalone \"n't\" tokens from "
-        f"{s['lone_nt_before']:,} to {s['lone_nt_after']:,}; {s['pretokenised']} scripts are pre-tokenised (≥ 20 joins). "
-        f"{s['arc_ready_primary']} non-franchise scripts are arc-ready (the expected 834): the median one has "
+        f"All {s['scripts']:,} scripts parse ({s['parse_errors']} errors). Together they hold {s['scenes_total']:,} "
+        f"scene tags, and {s['empty_scenes_both']:,} of those scenes have no dialogue or description sentence, so "
+        f"they drop out of the timeline. Joining {s['contraction_joins']:,} split contractions cut the standalone "
+        f"\"n't\" tokens from {s['lone_nt_before']:,} to {s['lone_nt_after']:,}. {s['pretokenised']} scripts are "
+        f"pre-tokenised (≥ 20 joins). "
+        f"{s['arc_ready_primary']} non-franchise scripts are arc-ready (we expected 834). The median one has "
         f"{m['n_scene_tags']:.0f} scenes, {m['sentences_both']:,.0f} sentences and {m['mean_sentences_per_scene']:.1f} "
         f"sentences per scene, with {m['action_share']:.0%} of its words in descriptions. "
-        f"{s['possible_transcripts_in_primary']} possible transcripts remain in the primary sample (flagged; Step 10 "
-        f"drops them). Only {s['numbered_scenes']} scripts number most of their scene headings, so for nearly all "
-        f"scripts the order in which scenes appear in the file is taken to be the story order: an assumption we "
-        f"cannot check from the markup."
+        f"{s['possible_transcripts_in_primary']} possible transcripts remain in the primary sample. They're flagged, "
+        f"and Step 10 drops them. Only {s['numbered_scenes']} scripts number most of their scene headings. So for "
+        f"nearly all scripts we take the order in which scenes appear in the file to be the story order, and we "
+        f"can't check that assumption from the markup."
     )
+
+
+def takeaway(res: dict) -> str:
+    s = res["summary"]
+    m = s["median"]
+    return (f"{s['arc_ready_primary']} non-franchise scripts are long enough and well enough marked up to build an "
+            f"arc. The median one has {m['n_scene_tags']:.0f} scenes and {m['mean_sentences_per_scene']:.1f} "
+            f"sentences per scene. We assume the scene order in the file is the story order, because only "
+            f"{s['numbered_scenes']} scripts number most of their scenes.")
 
 
 SECTION = [
     Md("""## Step 2 · Text units: scenes and sentences
 
-**What we do.** We cut each screenplay into its `<scene>` blocks, in the order they appear, and split each
-scene into two layers:
-- **dialogue**: what characters say, from the `<dialogue>` tags;
+How do we turn a screenplay file into an ordered list of scenes, each with sentences we can score?
+
+We cut each screenplay into its `<scene>` blocks, in the order they appear, and split each scene into two
+layers:
+- **dialogue**: what characters say, from the `<dialogue>` tags
 - **action**: what the script describes happening, from the `<scene_description>` tags.
 
-Their union, **both**, is the primary layer. Scene headings ("INT. KITCHEN - NIGHT"), speaker names and
-parentheticals are not scored: they carry places and names, not tone.
+The two together, **both**, are the primary layer. We don't score scene headings ("INT. KITCHEN - NIGHT"),
+speaker names or parentheticals, because they carry places and names, not tone.
 
 Inside each tag we split the text into sentences after `.`, `!` or `?`. A tag boundary is always a sentence
-boundary. Sentiment is later computed **per sentence** and averaged per scene.
+boundary. Later we compute sentiment **per sentence** and average it per scene.
 
-**Before splitting we fix split contractions.** Some MovieSum scripts are pre-tokenised: "don't" appears as
-"do n't". We expected this to break negation in a lexicon. Testing showed that VADER's negation check catches
-a split "n't" anyway, so for VADER the fix is a safeguard, not a correction. Step 3 measures this on every
-affected sentence. The fix still matters for word counts (otherwise "n't", "ca" and "wo" count as words) and
-for a contextual model, whose tokenizer would see an unusual sequence. Pre-tokenised and ordinary scripts are
-now processed the same way.
+### Fixing split contractions first
+Some MovieSum scripts are pre-tokenised, so "don't" appears as "do n't". We expected this to break negation in
+a lexicon. VADER's negation check does catch a split "n't" on its own, but Step 3 measured every affected sentence
+and joining still changes about 1.4% of the VADER scores it touches, so the fix matters for VADER too. The fix still matters for word
+counts (otherwise "n't", "ca" and "wo" count as words) and for a contextual model, whose tokenizer would see an
+unusual sequence. Pre-tokenised and ordinary scripts now go through the same processing.
 
-**Why the scene is the unit of time.**
+### Why the scene is the unit of time
 - A scene is the screenwriter's own unit of story: one place, one stretch of time.
-- Pages or words would make long description passages count more than quick exchanges.
-- Speeches would make talky scenes count more than action scenes.
+- Counting by pages or words would give long description passages more weight than quick exchanges.
+- Counting by speeches would give talky scenes more weight than action scenes.
 
-**Assumption.** The scene order in the file is the story order. Only a handful of scripts number their scenes,
-so we can't check it.
+### Assumption
+The scene order in the file is the story order. Only a handful of scripts number their scenes, so we can't
+check it.
 
-**What it misses.**
+### What it misses
 - Scenes differ in length, so a short scene's mean rests on few sentences and is noisy (Step 5 checks this).
-- A scene with only a heading has no sentences and drops out of the timeline. It is counted, not hidden.
-- Sentence splitting on punctuation misses sentences without end punctuation and splits at "Mr.", which only
+- A scene with only a heading has no sentences and drops out of the timeline. We count these scenes rather
+  than hide them.
+- Splitting on punctuation misses sentences that have no end punctuation and splits at "Mr.". That only
   changes how finely a scene is cut, not what it says."""),
     Run("s02_units"),
     Table("s02_units", "sanity", "Parser sanity report over the 1,087 scripts left after Step 1's exclusions."),
-    Table("s02_units", "contractions", "Before/after for the contraction fix, counted over every script, with a "
-          "constructed example so no script text is needed."),
+    Table("s02_units", "contractions", "Before and after the contraction fix, counted over every script, with a "
+          "made-up example so no script text is needed."),
     Private("s02_units", "negation", "five real before/after negation cases, at most 15 words each (notebook only)."),
-    Table("s02_units", "examples", "Before/after for three example scripts, as counts only: what the markup holds "
-          "and what becomes a scored unit. Headings, speaker cues and parentheticals are kept out of the score."),
+    Table("s02_units", "examples", "Before and after for three example scripts, as counts only: what the markup "
+          "holds and what becomes a scored unit. Headings, speaker cues and parentheticals stay out of the score."),
     Fig("s02_units", "arc_ready", "Each mark is a non-franchise script: scene tags (x) against dialogue + action "
-        "sentences (y), both on log scales. Dashed lines are the pre-registered arc-ready filter. Excluded scripts "
-        "(orange crosses) sit left of or below the lines: their scene markup is missing or they are too short for "
-        "a 100-point arc."),
-    Table("s02_units", "funnel", "The funnel continued from Step 1: the arc-ready filter, its two sensitivity "
-          "versions, and the all-scripts sample used in Steps 9 and 10."),
-    Table("s02_units", "describe", "Per-script size in the primary sample: 10th, 50th and 90th percentiles."),
+        "sentences (y), both on log scales. The dashed lines are the arc-ready filter we fixed in advance. Excluded "
+        "scripts (orange crosses) sit left of or below the lines, because their scene markup is missing or they're "
+        "too short for a 100-point arc."),
+    Table("s02_units", "funnel", "The funnel continued from Step 1: the arc-ready filter, a stricter and a looser "
+          "version of it for sensitivity checks, and the all-scripts sample used in Steps 9 and 10."),
+    Table("s02_units", "describe", "Size of each script in the primary sample: 10th, 50th and 90th percentiles."),
     Fig("s02_units", "scene_length", "Mean sentences per scene for each primary script. This is the 'scene length' "
-        "control: a script of short scenes gives noisier scene scores, which could inflate volatility (D1)."),
-    Fig("s02_units", "sentences_per_scene", "Sentences in a single scene, over all scenes of the primary scripts. "
-        "Many scenes have only a few sentences, which is why scene scores are noisy and the arc is smoothed."),
+        "control. A script made of short scenes gets noisier scene scores, which could inflate volatility (D1)."),
+    Fig("s02_units", "sentences_per_scene", "Number of sentences in a single scene, over all scenes of the primary "
+        "scripts. Many scenes have only a few sentences, which is why scene scores are noisy and we smooth the arc."),
     Reading("s02_units"),
 ]

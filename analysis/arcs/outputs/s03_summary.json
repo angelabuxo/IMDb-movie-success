@@ -1,7 +1,7 @@
 {
  "sentences": 3149729,
  "sentences_primary": 2411761,
- "vader_seconds": 33.7,
+ "vader_seconds": 27.0,
  "vader_version": "3.3.2",
  "neutral_band": 0.05,
  "contraction_roundtrip": {

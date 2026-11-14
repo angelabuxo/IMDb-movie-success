@@ -125,51 +125,79 @@ def figures(res: dict) -> dict:
     return {}
 
 
+def takeaway(res: dict) -> str:
+    r = res["results"]
+    if r["status"] == "NOT YET VALIDATED":
+        return ("Nobody has filled in the validation sheets yet, so nothing in these notebooks has been checked by a "
+                "person against the scripts.")
+    parts = [f"Validation status: {r['status']}."]
+    if "terms_checked" in r:
+        parts.append(f"Of {r['terms_checked']} terms checked, {r['terms: share real language']:.0%} were judged real "
+                     f"language.")
+    return " ".join(parts)
+
+
 def reading(res: dict) -> str:
     r = res["results"]
     if r["status"] == "NOT YET VALIDATED":
-        return ("**NOT YET VALIDATED.** The two sheets are ready but nobody has filled them in. Until they are, "
-                "nothing in these notebooks has been checked by a person against the scripts.")
+        return ("**NOT YET VALIDATED.** The two sheets are ready, but nobody has filled them in yet. Until someone "
+                "does, nothing in these notebooks has been checked by a person against the scripts.")
     parts = [f"Status: {r['status']}."]
     if "terms_checked" in r:
-        parts.append(f"{r['terms_checked']} terms checked; {r['terms: share real language']:.0%} judged real language.")
+        parts.append(f"{r['terms_checked']} terms were checked, and {r['terms: share real language']:.0%} were "
+                     f"judged real language.")
     if "terms: agreement between checkers" in r:
-        parts.append(f"Two checkers agreed on {r['terms: agreement between checkers']:.0%} of "
-                     f"{r['terms: double-checked']} double-checked terms.")
+        parts.append(f"Two checkers agreed on {r['terms: agreement between checkers']:.0%} of the "
+                     f"{r['terms: double-checked']} terms they both checked.")
     if "scripts_checked" in r:
-        parts.append(f"{r['scripts_checked']} scripts checked.")
+        parts.append(f"{r['scripts_checked']} scripts were checked.")
     return " ".join(parts)
 
 
 SECTION = [
     Md("""## Step 11 · Human validation (prepared here, filled in by the team)
 
-**What we do.** We prepare two sheets with fixed random samples (seed in `config.yaml`):
+This step asks whether a person reading the scripts agrees with what the machine found.
 
-- **(a) 25 scripts**: IMDb ID, title, budget, gross, what the parser found, and empty columns: is the markup
-  right? Is it a final script or a transcript? Is the IMDb ID mapped to the right film? Were the character
-  names extracted correctly? A private preview with the first 15 words of each layer sits next to it.
-- **(b) 30 Scattertext terms**: the term, its score and document frequency, and an empty column: is it a
-  name, a franchise word, a formatting artefact, or real language? A second checker column measures
-  agreement. Short KWIC lines sit next to it in the private folder.
+### What we do
 
-**Why.** Everything before this step is a machine's reading. The course asks for validation on our own
-sample: the numbers mean what we say only if a person, reading the text, agrees.
+We prepare two sheets with fixed random samples (the seed is in `config.yaml`):
 
-**What it measures.** Once filled: the share of scripts that parse correctly and are final scripts, the share
-of terms that are real language, and agreement between two checkers.
+- (a) 25 scripts, with the IMDb ID, title, budget, gross, what the parser found, and empty columns for four
+  questions. Is the markup right? Is it a final script or a transcript? Is the IMDb ID mapped to the right
+  film? Were the character names extracted correctly? A private preview with the first 15 words of each layer
+  sits next to it.
+- (b) 30 Scattertext terms, with the term, its score and document frequency, and an empty column for whether
+  it's a name, a franchise word, a formatting artefact or real language. A second checker column lets us
+  measure agreement. Short KWIC lines sit next to it in the private folder.
 
-**What it misses.** 25 scripts and 30 terms are small samples; they catch systematic problems, not rare ones.
+### Why
 
-**How to fill it in.** Open `analysis/scripts_text/outputs/validation_scripts.csv` and
-`validation_terms.csv`, read the matching files in `analysis/scripts_text/private/`, fill the empty columns,
-then rerun this notebook (or `python -m analysis.scripts_text.s11_validation score`)."""),
+Everything before this step is a machine's reading. The course asks for validation on our own sample. The
+numbers mean what we say only if a person reading the text agrees.
+
+### What it measures
+
+Once the sheets are filled in, it measures the share of scripts that parse correctly and are final scripts,
+the share of terms that are real language, and the agreement between two checkers.
+
+### What it misses
+
+25 scripts and 30 terms are small samples, so they catch systematic problems, not rare ones.
+
+### How to fill it in
+
+Open `analysis/scripts_text/outputs/validation_scripts.csv` and `validation_terms.csv`, read the matching files
+in `analysis/scripts_text/private/`, and fill in the empty columns. Then rerun this notebook (or
+`python -m analysis.scripts_text.s11_validation score`)."""),
     Run("s11_validation"),
     Table("s11_validation", "results", "Validation status, computed from the sheets."),
-    Table("s11_validation", "scripts", "Sheet (a): 25 scripts for the team to check. Empty columns are for people."),
+    Table("s11_validation", "scripts", "Sheet (a): 25 scripts for the team to check. The empty columns are for "
+          "people to fill in."),
     Table("s11_validation", "terms", "Sheet (b): 30 terms for the team to classify."),
     Reading("s11_validation"),
 ]
+
 
 
 if __name__ == "__main__":

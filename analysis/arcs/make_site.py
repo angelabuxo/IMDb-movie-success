@@ -24,7 +24,7 @@ import pandas as pd
 import plotly.io as pio
 from plotly.offline import get_plotlyjs
 
-from analysis.scripts_text.report import Fig, Md, Private, Reading, Run, Table
+from analysis.scripts_text.report import Fig, Md, Private, Reading, Run, Table, takeaway_text
 from analysis.scripts_text.make_site import CSS
 
 from .build_notebooks import STEPS
@@ -76,6 +76,8 @@ def _section(num: str, module_name: str, draft: bool, validated: bool) -> str:
     if num in SENTIMENT_STEPS and not validated:      # after the section's opening text
         body.insert(1, '<div class="banner"><strong>NOT YET VALIDATED.</strong> The sentiment scores behind this '
                        "section have not been checked against human readers (the Step 4 sheets are empty).</div>")
+    if (take := takeaway_text(mod, res)):          # the answer first, right under the title
+        body.insert(1, f'<div class="takeaway"><strong>Takeaway.</strong> {md(take)}</div>')
     return "".join(body)
 
 

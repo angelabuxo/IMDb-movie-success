@@ -16,7 +16,7 @@ import nbformat as nbf
 from nbconvert.preprocessors import ClearOutputPreprocessor, ExecutePreprocessor, TagRemovePreprocessor
 
 from .paths import REPO
-from .report import Fig, Md, Private, Reading, Run, Table
+from .report import Fig, Md, Private, Reading, Run, Table, nb_md, takeaway_text
 
 NB_DIR = REPO / "notebooks" / "scripts_text"
 STEPS = [("01", "s01_groups", "success_groups"), ("02", "s02_layers", "text_layers"), ("03", "s03_clean", "cleaning"),
@@ -39,6 +39,7 @@ import pandas as pd
 import plotly.io as pio
 from IPython.display import Markdown, display
 
+from analysis.scripts_text.report import nb_md
 from analysis.static_figures import use_static_figures
 
 from analysis.scripts_text import {module} as step
@@ -60,20 +61,24 @@ def notebook(num: str, module_name: str) -> nbf.NotebookNode:
     has_run = any(isinstance(i, Run) for i in mod.SECTION)
     if not has_run:
         cells.append(nbf.v4.new_code_cell("res = step.load()"))
+    take, first_md = takeaway_text(mod), True
     for item in mod.SECTION:
         if isinstance(item, Md):
-            cells.append(nbf.v4.new_markdown_cell(item.text))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(item.text)))
+            if first_md and take:   # the answer first: right under the step's title
+                cells.append(nbf.v4.new_markdown_cell(nb_md(f"> **Takeaway.** {take}")))
+            first_md = False
         elif isinstance(item, Run):
             cells.append(nbf.v4.new_code_cell("res = step.run()   # recomputes this step and saves its outputs"))
         elif isinstance(item, Table):
-            cells.append(nbf.v4.new_markdown_cell(f"**Table.** {item.caption}"))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(f"**Table.** {item.caption}")))
             cells.append(nbf.v4.new_code_cell(f'display(step.tables(res)["{item.name}"])'))
         elif isinstance(item, Fig):
-            cells.append(nbf.v4.new_markdown_cell(f"**Figure.** {item.caption}"))
+            cells.append(nbf.v4.new_markdown_cell(nb_md(f"**Figure.** {item.caption}")))
             cells.append(nbf.v4.new_code_cell(f'step.figures(res)["{item.name}"].show()'))
         elif isinstance(item, Reading):
             cells.append(nbf.v4.new_markdown_cell("**Plain-language reading** (generated from the saved numbers):"))
-            cells.append(nbf.v4.new_code_cell("display(Markdown(step.reading(res)))"))
+            cells.append(nbf.v4.new_code_cell("display(Markdown(nb_md(step.reading(res))))"))
         elif isinstance(item, Private):
             cells.append(nbf.v4.new_markdown_cell(f"**Private check.** {item.caption}"))
             c = nbf.v4.new_code_cell(f'display(step.private(res)["{item.name}"])   # output cleared before commit')

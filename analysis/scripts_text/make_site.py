@@ -21,7 +21,7 @@ from plotly.offline import get_plotlyjs
 from .build_notebooks import STEPS
 from .config import config_hash
 from .paths import REPO, SITE
-from .report import Fig, Md, Private, Reading, Run, Table
+from .report import Fig, Md, Private, Reading, Run, Table, takeaway_text
 
 NAV = {"01": "Success", "02": "Text layers", "03": "Cleaning", "04": "Controls", "05": "Scattertext",
        "06": "Shuffle null", "07": "Stability", "08": "Back to the text", "09": "Second method",
@@ -48,6 +48,8 @@ figure { margin:24px 0; } figcaption { color:var(--muted); font-size:14px; max-w
 th, td { border-bottom:1px solid var(--line); padding:5px 10px; text-align:left; vertical-align:top; }
 th { background:var(--panel); font-weight:600; } caption { caption-side:bottom; text-align:left; color:var(--muted); font-size:14px; padding-top:6px; max-width:820px; }
 .reading { background:var(--panel); border-left:4px solid var(--high); padding:12px 18px; margin:20px 0; max-width:860px; }
+.takeaway { background:var(--panel); border-left:4px solid var(--accent, #009E73); padding:10px 18px; margin:14px 0 22px; max-width:860px; font-size:1.05em; }
+.takeaway p { margin:0; display:inline; }
 .private { border:1px dashed var(--line); color:var(--muted); padding:10px 14px; font-size:14px; max-width:860px; }
 .banner { background:#fff4e5; border:1px solid #f0b46b; padding:12px 18px; margin:16px 0; max-width:860px; }
 footer { color:var(--muted); font-size:13px; max-width:1100px; margin:0 auto; padding:24px; border-top:1px solid var(--line); }
@@ -89,6 +91,8 @@ def build() -> str:
                 body.append(f'<p class="private">Not shown on this page: {html.escape(item.caption)}</p>')
             elif isinstance(item, Run):
                 continue
+        if (take := takeaway_text(mod, res)):      # the answer first, right under the title
+            body.insert(1, f'<div class="takeaway"><strong>Takeaway.</strong> {md(take)}</div>')
         nav.append(f'<li><a href="#step-{num}">{num} {html.escape(NAV[num])}</a></li>')
         parts.append(f'<section id="step-{num}">{"".join(body)}</section>')
     banner = ("" if validation != "NOT YET VALIDATED" else

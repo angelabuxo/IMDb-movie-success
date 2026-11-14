@@ -66,3 +66,21 @@ def style(fig, title=None, height=420):
                       legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
                       title=dict(text=title, x=0.01, xanchor="left", y=0.985, yanchor="top", yref="container"))
     return fig
+
+
+def takeaway_text(mod, res=None) -> str | None:
+    """The step's one-to-three-sentence takeaway, shown right under its title in the notebook and on the page.
+    A step opts in by defining takeaway(res); None when it has none or its outputs aren't saved yet."""
+    if not hasattr(mod, "takeaway"):
+        return None
+    try:
+        return mod.takeaway(res if res is not None else mod.load())
+    except (FileNotFoundError, RuntimeError, KeyError):
+        return None
+
+
+def nb_md(text: str) -> str:
+    """Markdown for a notebook cell: a "$" before a digit is a dollar amount, not the start of a math formula,
+    so escape it (Jupyter and GitHub otherwise render "$40M ... $25M" as math)."""
+    import re
+    return re.sub(r"(?<!\\)\$(?=\d)", r"\\$", text)

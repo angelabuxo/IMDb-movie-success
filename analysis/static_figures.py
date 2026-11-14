@@ -104,7 +104,7 @@ def number_cells(nb) -> None:
                 out["execution_count"] = k
 
 
-def pngify_file(path, attempts: int = 3) -> int:
+def pngify_file(path, attempts: int = 6) -> int:
     """Convert one written notebook in a fresh process (kaleido's Chrome is reliable on a cold start but not when
     reused across many notebooks in one long builder process). Returns the number of figures converted."""
     import subprocess  # noqa: PLC0415

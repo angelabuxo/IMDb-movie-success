@@ -164,7 +164,7 @@ def figures(res: dict) -> dict:
     fig.add_trace(go.Bar(x=r.run, y=r.jaccard_high_vs_primary, name="successful side", marker_color=HIGH))
     fig.add_trace(go.Bar(x=r.run, y=r.jaccard_low_vs_primary, name="unsuccessful side", marker_color=LOW,
                          marker_pattern_shape="/"))
-    fig.update_layout(barmode="group", yaxis_title="Jaccard overlap of the top-50 lists with the primary run",
+    fig.update_layout(barmode="group", yaxis_title="Jaccard overlap with the primary top 50",
                       yaxis_range=[0, 1])
     z = go.Figure()
     z.add_hrect(y0=-1.96, y1=1.96, fillcolor="#999999", opacity=0.15, line_width=0,
@@ -184,61 +184,84 @@ def figures(res: dict) -> dict:
             "z": style(z, "The count test with and without franchise films", height=420)}
 
 
+def takeaway(res: dict) -> str:
+    s, r = res["summary"], res["results"].set_index("run")
+    nf = r.loc["without likely franchise films"]
+    rd = s["random_drop"]
+    stands = "no longer stands out from" if nf.p_empirical > 0.05 else "still stands out from"
+    why = ("so losing those particular films, not just losing films, is what removes the excess."
+           if rd["share_z_at_or_below_franchise_drop"] < 0.1 else "so part of the drop is simply lost power.")
+    return (f"Without the {s['likely_franchise']} likely franchise films, the excess of distinctive words {stands} "
+            f"chance (z = {nf.z:.2f}, p = {nf.p_empirical:.3f}). Dropping the same number of random films instead "
+            f"gives a median z of {rd['z_median']:.2f}, {why}")
+
+
 def reading(res: dict) -> str:
     s, r = res["summary"], res["results"].set_index("run")
     nf = r.loc["without likely franchise films"]
     nt = r.loc["without possible transcripts"]
     rd = s["random_drop"]
     return (f"Of the {s['labelled_films']} films in the primary comparison, {s['likely_franchise']} are likely "
-            f"franchise films ({s['sequel_follows']} follow another film on Wikidata, {s['named_franchise']} belong "
-            f"to a named media franchise); they make up {s['franchise_share_successful']:.0%} of the successful and "
-            f"{s['franchise_share_unsuccessful']:.0%} of the unsuccessful group. Dropping them, the top-50 lists "
-            f"overlap the primary ones with Jaccard {nf.jaccard_high_vs_primary:.2f} (successful) and "
+            f"franchise films. {s['sequel_follows']} follow another film on Wikidata and {s['named_franchise']} "
+            f"belong to a named media franchise. They make up {s['franchise_share_successful']:.0%} of the successful "
+            f"group and {s['franchise_share_unsuccessful']:.0%} of the unsuccessful group. Without them, the top-50 "
+            f"lists overlap the primary ones with a Jaccard of {nf.jaccard_high_vs_primary:.2f} (successful) and "
             f"{nf.jaccard_low_vs_primary:.2f} (unsuccessful), and the count of terms above 2× has z = {nf.z:.2f} "
             f"against {s['null_shuffles']} stratified shuffles (p = {nf.p_empirical:.3f}). As an exploratory control, "
-            f"dropping the same number of films ({rd['dropped_successful']} successful, {rd['dropped_unsuccessful']} "
-            f"unsuccessful) at random among the non-franchise films, {rd['replicates']} times, gives a median z of "
-            f"{rd['z_median']:.2f} (90% between {rd['z_p05']:.2f} and {rd['z_p95']:.2f}); "
+            f"we dropped the same number of films ({rd['dropped_successful']} successful, {rd['dropped_unsuccessful']} "
+            f"unsuccessful) at random from the non-franchise films, {rd['replicates']} times. That gives a median z of "
+            f"{rd['z_median']:.2f} (90% between {rd['z_p05']:.2f} and {rd['z_p95']:.2f}), and "
             f"{rd['share_z_at_or_below_franchise_drop']:.0%} of random drops fall as low as dropping the franchise "
             f"films does, so " + ("losing those particular films, not just losing films, is what removes the excess."
             if rd["share_z_at_or_below_franchise_drop"] < 0.1 else "part of the drop is simply lost power.")
             + f" {s['possible_transcripts']} "
             f"scripts look like they could be transcripts (less than 15% action words, or fewer than "
-            f"{cfg()['text']['min_scenes_flag']} scenes); without them the overlap is "
+            f"{cfg()['text']['min_scenes_flag']} scenes). Without them the overlap is "
             f"{nt.jaccard_high_vs_primary:.2f} and z = {nt.z:.2f}. Without franchise films, Step 9's classifier gives "
             f"AUC {s['logreg_without_franchise']['auc_text']:.3f} for text against "
             f"{s['logreg_without_franchise']['auc_baseline']:.3f} for the baseline (3 repeats). The Wikidata series "
-            f"property is reported but "
-            f"not used: it marks {s['series_noisy']} of these films and includes lists, not just series.")
+            f"property is reported but not used. It marks {s['series_noisy']} of these films and includes lists, not "
+            f"just series.")
 
 
 SECTION = [
     Md("""## Step 10 · Franchise and leakage checks
 
-**What we do.** We flag likely franchise films two ways: Wikidata's "follows" property (the film is a sequel;
-clean, but it misses first films) and membership of a named media franchise (catches first films too). The
-"series" property is reported but not used, because it also holds lists such as "100 greatest films". We
-rerun the primary comparison without franchise films, without sequels only, and without scripts that might be
-post-release transcripts (almost no action description, or fewer than 20 scenes), each with its own
+This step asks whether the vocabulary difference comes from franchise films or post-release transcripts rather
+than from the scripts themselves.
+
+### What we do
+
+We flag likely franchise films in two ways. Wikidata's "follows" property marks a film as a sequel, which is
+clean but misses first films. Membership of a named media franchise catches first films too. The "series"
+property is reported but not used, because it also holds lists such as "100 greatest films". We then rerun the
+primary comparison without franchise films, without sequels only, and without scripts that might be
+post-release transcripts (almost no action description, or fewer than 20 scenes). Each rerun gets its own
 200-shuffle null.
 
-**Why.** Sequels reuse characters, places and catchphrases, and franchise films are often hits. If a few
-franchises drive the "successful" vocabulary, the result is about franchises, not scripts. Name removal works
-script by script, so a sequel's script can still contain a character name that is only a speaker in the
-first film. A transcript written from the finished film is not the script that was green-lit, which matters
-for anything we say about scripts predicting success.
+### Why
 
-**What it measures.** Whether the top terms and the overall count test survive without these films.
+Sequels reuse characters, places and catchphrases, and franchise films are often hits. If a few franchises
+drive the "successful" vocabulary, the result is about franchises, not scripts. Name removal works script by
+script, so a sequel's script can still contain a character name that is only a speaker in the first film. A
+transcript written from the finished film isn't the script that was green-lit, which matters for anything we
+say about scripts predicting success.
 
-**What it misses.** Both franchise flags are incomplete, and the transcript rule is a heuristic."""),
+### What it measures
+
+Whether the top terms and the overall count test survive without these films.
+
+### What it misses
+
+Both franchise flags are incomplete, and the transcript rule is a heuristic (a rule of thumb)."""),
     Run("s10_franchise"),
     Fig("s10_franchise", "z", "z of the primary count test (terms at least twice as frequent in one group) "
         "against its own 200-shuffle stratified null, for the full comparison and with each set of films "
-        "removed. The box (exploratory control) drops the same number of random non-franchise films 50 times. "
-        "Inside the grey band the real groups are no more different than random ones."),
+        "removed. The box is an exploratory control that drops the same number of random non-franchise films, "
+        "50 times. Inside the grey band the real groups are no more different than random ones."),
     Fig("s10_franchise", "overlap", "Overlap of the top-50 lists with the primary run after dropping each set of "
-        "films. Bars near 1: the result doesn't depend on those films."),
-    Table("s10_franchise", "results", "Each rerun: films dropped, group sizes, overlap with the primary run, and "
-          "the count test against its own stratified null."),
+        "films. Bars near 1 mean the result doesn't depend on those films."),
+    Table("s10_franchise", "results", "Each rerun with the films dropped, the group sizes, the overlap with the "
+          "primary run, and the count test against its own stratified null."),
     Reading("s10_franchise"),
 ]
