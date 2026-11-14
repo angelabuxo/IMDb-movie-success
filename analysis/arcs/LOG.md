@@ -289,3 +289,13 @@ The config already fixed the sample sizes, labels and error categories. Added `v
 - The first draft of the reading called D2 "mostly within random ordering". It was rewritten from the data
   before commit: the excess over 5% and the negative lean are both clear.
 - No outcome used. Notebook 06: 0 errors; leak check 0 of 19,995.
+
+## 2026-11-14 · Second copy of the contextual job (queue backlog)
+
+Job 30053002 waited more than 30 minutes for an A40 (232 jobs ahead), and every GPU queue was backed up. With
+the user's approval, an identical copy was submitted to gpua10 as job 30053443 (`hpc/score_a10.lsf`). It
+writes to `out_a10/`, so the two cannot overwrite each other.
+
+**Rule:** whichever starts first is kept and the other is cancelled. Results are used from that job only, never
+mixed. The runtime projection for the fallback rule is measured on whichever GPU ran (A40 or A10), and
+`meta.json` records which.
