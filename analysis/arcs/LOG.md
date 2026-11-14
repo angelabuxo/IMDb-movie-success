@@ -226,3 +226,26 @@ The config already fixed the sample sizes, labels and error categories. Added `v
 - accuracy with and without "mixed";
 - kappa;
 - the error table.
+
+## 2026-11-14 · Step 4: human validation sheets (drawn; NOT YET VALIDATED)
+
+- `validation/scenes_sheet.csv`: 50 primary-sample scenes, drawn by the rules in amendment (c). Drama 13,
+  Comedy 9, Thriller 7, Adventure 6, Horror 5, Sci-Fi 5, Action 4, Other 1. Sizes run from 1 to 66 sentences
+  (median 8). Columns: MovieSum name, scene index, genre bin, size, VADER scene score, empty contextual columns
+  (filled from Step 3 when the HPC job returns), and empty rater columns.
+- `validation/scripts_sheet.csv`: 25 random scripts from all 1,087, with the Step 2 flags and empty check
+  columns (markup_ok, kind, id_mapping_ok).
+- Private previews (gitignored) in `private/validation/`. The scene preview shows the text and no score, so
+  labelling is blind. The script preview shows the first three scenes, the last scene, and the IMDb
+  title/year/ID for the mapping check. **Interpretation:** the brief limits excerpts to ≤ 15 words. These
+  previews hold whole scenes, because a rater can't label a scene from 15 words. They exist only on this
+  machine for the raters and are never committed or published.
+- Re-running the step never redraws the sample. It refreshes only the score columns and asserts the human
+  columns are unchanged; a rerun is byte-identical.
+- `python -m analysis.arcs.s04_validation score` applies the pre-registered scoring. It was tested on a
+  synthetic filled copy in a scratch folder, never on the real sheet: unresolved pairs, adjudication, kappa,
+  error table and the script checks all came out as expected.
+- 0 human cells filled. Leak check on notebook 04, both sheets and the results: 0 of 19,995 sentence openings,
+  0 IMDb-only titles, no IMDb IDs.
+- Status: NOT YET VALIDATED. Every result built on the sentiment scores carries that caveat until the group
+  fills the sheets.
