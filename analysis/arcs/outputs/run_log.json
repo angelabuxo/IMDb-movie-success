@@ -168,5 +168,67 @@
     "step11_instrument": "vader"
    }
   }
+ },
+ "s03_instruments": {
+  "config": "524ae2a04b",
+  "date": "2026-11-14",
+  "outputs": [
+   "s03_scene_vader.csv.gz",
+   "s03_summary.json"
+  ],
+  "params": {
+   "instruments": {
+    "agreement": {
+     "disagreements": {
+      "n": 20,
+      "rule": "sentences where VADER and sst2 have opposite non-zero signs, 3 to 15 words, drawn at random with `seed`",
+      "storage": "private only; shown in the notebook with output cleared, never on the site"
+     },
+     "labels": {
+      "roberta3": "argmax of the three classes (negative / neutral / positive)",
+      "sst2": "sign of P(pos) - P(neg); the model has no neutral class, so it is compared on VADER-non-neutral sentences only",
+      "vader": "sign with neutral band: |compound| < 0.05 -> 0"
+     },
+     "sample": "primary 834 first, all 1,087 scripts second",
+     "statistics": [
+      "% sign agreement on sentences VADER calls non-neutral (all three instruments)",
+      "Cohen's kappa on three classes, VADER vs roberta3",
+      "Spearman correlation of raw scores at sentence, scene (mean, 'both' layer) and film (mean of scene means) level"
+     ]
+    },
+    "compute_check_sentences": 200,
+    "contextual": {
+     "batch_size": 64,
+     "chunking": "a sentence longer than 510 word pieces is cut into consecutive 510-piece chunks, scored, and averaged (counted)",
+     "max_tokens": 512,
+     "name": "distilbert-base-uncased-finetuned-sst-2-english",
+     "score": "P(positive) - P(negative)"
+    },
+    "lexicon": {
+     "name": "vader",
+     "neutral_band": 0.05
+    },
+    "max_runtime_hours": 3.0,
+    "robustness_extra": {
+     "hardware": "DTU HPC GPU queue; the runtime projection for the fallback rule is measured on that GPU",
+     "roberta3": {
+      "name": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+      "score": "P(positive) - P(negative)",
+      "why": "SST-2 has no neutral class, so it forces neutral action lines to a sign"
+     },
+     "scene_context": {
+      "models": [
+       "sst2",
+       "roberta3"
+      ],
+      "score": "mean over pieces weighted by their length in word pieces",
+      "unit": "each scene's 'both' text in order, packed at sentence boundaries into pieces of <= 510 word pieces",
+      "why": "the model sees context instead of isolated sentences (week 7: chunking and the input limit)"
+     }
+    },
+    "step11_instrument": "vader"
+   },
+   "seed": 20261114
+  }
  }
 }

@@ -1,0 +1,266 @@
+{
+ "sentences": 3149729,
+ "sentences_primary": 2411761,
+ "vader_seconds": 27.6,
+ "vader_version": "3.3.2",
+ "neutral_band": 0.05,
+ "contraction_roundtrip": {
+  "can't": true,
+  "won't": true,
+  "I'm sure she's done.": true
+ },
+ "contraction": [
+  {
+   "set": "every sentence with a contraction",
+   "sentences": 690303,
+   "score_changed": 9907,
+   "largest_change": 1.5127999782562256,
+   "crossed_neutral_band": 4395
+  },
+  {
+   "set": "\u2026 in the 471 pre-tokenised scripts",
+   "sentences": 306182,
+   "score_changed": 4392,
+   "largest_change": 1.333899974822998,
+   "crossed_neutral_band": 2044
+  }
+ ],
+ "contraction_forms": [
+  {
+   "form": "i'm",
+   "in moved sentences": 1421,
+   "in all contraction sentences": 66404
+  },
+  {
+   "form": "it's",
+   "in moved sentences": 842,
+   "in all contraction sentences": 73408
+  },
+  {
+   "form": "don't",
+   "in moved sentences": 737,
+   "in all contraction sentences": 63478
+  },
+  {
+   "form": "god's",
+   "in moved sentences": 679,
+   "in all contraction sentences": 679
+  },
+  {
+   "form": "you're",
+   "in moved sentences": 524,
+   "in all contraction sentences": 39235
+  },
+  {
+   "form": "hell's",
+   "in moved sentences": 396,
+   "in all contraction sentences": 397
+  },
+  {
+   "form": "he's",
+   "in moved sentences": 307,
+   "in all contraction sentences": 36995
+  },
+  {
+   "form": "what's",
+   "in moved sentences": 260,
+   "in all contraction sentences": 14047
+  },
+  {
+   "form": "that's",
+   "in moved sentences": 241,
+   "in all contraction sentences": 32175
+  },
+  {
+   "form": "friend's",
+   "in moved sentences": 203,
+   "in all contraction sentences": 203
+  },
+  {
+   "form": "can't",
+   "in moved sentences": 173,
+   "in all contraction sentences": 24663
+  },
+  {
+   "form": "we're",
+   "in moved sentences": 165,
+   "in all contraction sentences": 18547
+  }
+ ],
+ "distribution": [
+  {
+   "sample": "primary 834",
+   "layer": "both",
+   "sentences": 2411761,
+   "negative": 0.17936727561313082,
+   "neutral": 0.6141491632048117,
+   "positive": 0.20648356118205743,
+   "exactly zero": 0.6080142269486902,
+   "mean": 0.012931340374052525,
+   "median |score| if non-neutral": 0.4018999934196472
+  },
+  {
+   "sample": "primary 834",
+   "layer": "dialogue",
+   "sentences": 1299310,
+   "negative": 0.16003878981921174,
+   "neutral": 0.602336624823945,
+   "positive": 0.23762458535684325,
+   "exactly zero": 0.596739808051966,
+   "mean": 0.029869111254811287,
+   "median |score| if non-neutral": 0.4018999934196472
+  },
+  {
+   "sample": "primary 834",
+   "layer": "action",
+   "sentences": 1112451,
+   "negative": 0.20194237768674755,
+   "neutral": 0.6279458600873207,
+   "positive": 0.17011176222593175,
+   "exactly zero": 0.6211824161243956,
+   "mean": -0.0068514784798026085,
+   "median |score| if non-neutral": 0.4018999934196472
+  },
+  {
+   "sample": "all 1,087",
+   "layer": "both",
+   "sentences": 3149729,
+   "negative": 0.18093048640057605,
+   "neutral": 0.6152040381886823,
+   "positive": 0.20386547541074168,
+   "exactly zero": 0.6090581126185777,
+   "mean": 0.011007851921021938,
+   "median |score| if non-neutral": 0.4018999934196472
+  },
+  {
+   "sample": "all 1,087",
+   "layer": "dialogue",
+   "sentences": 1675413,
+   "negative": 0.15984178229487297,
+   "neutral": 0.6060851861600692,
+   "positive": 0.23407303154505785,
+   "exactly zero": 0.6005020851575105,
+   "mean": 0.028608374297618866,
+   "median |score| if non-neutral": 0.4018999934196472
+  },
+  {
+   "sample": "all 1,087",
+   "layer": "action",
+   "sentences": 1474316,
+   "negative": 0.20489569400318522,
+   "neutral": 0.6255667034746961,
+   "positive": 0.16953760252211872,
+   "exactly zero": 0.6187811839524227,
+   "mean": -0.008993386290967464,
+   "median |score| if non-neutral": 0.4018999934196472
+  }
+ ],
+ "stress": [
+  {
+   "group": "negation",
+   "sentence": "I love you.",
+   "constructed intent (author)": "+",
+   "vader": 0.6369
+  },
+  {
+   "group": "negation",
+   "sentence": "I don't love you.",
+   "constructed intent (author)": "-",
+   "vader": -0.5216
+  },
+  {
+   "group": "negation",
+   "sentence": "This is not bad.",
+   "constructed intent (author)": "+ (mild)",
+   "vader": 0.431
+  },
+  {
+   "group": "negation",
+   "sentence": "I'm not unhappy.",
+   "constructed intent (author)": "+ (mild)",
+   "vader": 0.3252
+  },
+  {
+   "group": "negated violence",
+   "sentence": "I killed him.",
+   "constructed intent (author)": "-",
+   "vader": -0.6705
+  },
+  {
+   "group": "negated violence",
+   "sentence": "I didn't kill him.",
+   "constructed intent (author)": "0 / relief",
+   "vader": 0.5773
+  },
+  {
+   "group": "contrast and order",
+   "sentence": "The hero died, but saved everyone.",
+   "constructed intent (author)": "mixed, ends +",
+   "vader": 0.5719
+  },
+  {
+   "group": "contrast and order",
+   "sentence": "The hero saved everyone, but died.",
+   "constructed intent (author)": "mixed, ends -",
+   "vader": -0.4019
+  },
+  {
+   "group": "word order",
+   "sentence": "The dog bit the man.",
+   "constructed intent (author)": "-",
+   "vader": 0.0
+  },
+  {
+   "group": "word order",
+   "sentence": "The man bit the dog.",
+   "constructed intent (author)": "- (same words)",
+   "vader": 0.0
+  },
+  {
+   "group": "sarcasm",
+   "sentence": "Oh great, another flat tire.",
+   "constructed intent (author)": "-",
+   "vader": 0.6249
+  },
+  {
+   "group": "sarcasm",
+   "sentence": "Yeah, I just love waiting in line all day.",
+   "constructed intent (author)": "-",
+   "vader": 0.7506
+  },
+  {
+   "group": "neutral action line",
+   "sentence": "He opens the door and walks in.",
+   "constructed intent (author)": "0",
+   "vader": 0.0
+  },
+  {
+   "group": "neutral action line",
+   "sentence": "She looks at the clock.",
+   "constructed intent (author)": "0",
+   "vader": 0.0
+  },
+  {
+   "group": "violence without sentiment words",
+   "sentence": "Blood pools under the body.",
+   "constructed intent (author)": "-",
+   "vader": 0.0
+  },
+  {
+   "group": "violence without sentiment words",
+   "sentence": "He pulls the trigger.",
+   "constructed intent (author)": "-",
+   "vader": 0.0
+  },
+  {
+   "group": "shouting",
+   "sentence": "NO! NO! NO!",
+   "constructed intent (author)": "-",
+   "vader": 0.0
+  }
+ ],
+ "contextual": {
+  "status": "pending",
+  "job": "30053002"
+ }
+}

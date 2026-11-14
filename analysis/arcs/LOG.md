@@ -182,3 +182,35 @@ Step 3 uses no outcome.
 on DTU HPC, and amendment (a) measures the runtime on the HPC GPU. We read a completed HPC run, within 3.0 h
 projected, as meeting the availability condition. This is stated here rather than applied silently. The
 decision is written to `outputs/s03_instrument_decision.json`, and Step 7 does not run without that file.
+
+## 2026-11-14 · Step 3: instruments (VADER done; contextual pending)
+
+- VADER 3.3.2 scored all 3,149,729 sentences (26 s on one core). Sentence scores are in `private/`; scene means
+  per layer are committed as `outputs/s03_scene_vader.csv.gz`. The "both" scene score is the mean over all of
+  the scene's sentences, not the mean of the two layer means.
+- Primary 834: 61% of sentences are neutral (|score| < 0.05). Dialogue leans positive (24% vs 16%); action
+  lines lean negative (20% vs 17%). Scene scores: median 0.00, 13% of scenes exactly 0. Per film, the SD of raw
+  scene scores has a median of 0.124 (10th–90th percentile 0.088–0.168).
+- **Correction to the Step 2 claim.** Hand-made cases had shown no VADER change from the contraction fix. On
+  the real data, re-scoring all 690,303 sentences that contain a contraction in the split form changes 9,907
+  scores (1.4%). The largest change is 1.51, and 4,395 scores cross the neutral band. In the 471 pre-tokenised
+  scripts: 4,392 of 306,182.
+  - Mechanism 1: the extra token shifts VADER's three-word negation and booster windows ("i'm", "it's", "don't").
+  - Mechanism 2: a split possessive exposes a lexicon word ("god's" 679 of 679, "hell's", "friend's").
+  - The fix keeps pre-tokenised and ordinary scripts on the same footing, which was its purpose. The Step 2
+    notebook text already says Step 3 would measure this, and it is not changed.
+- **Stress tests.** 17 constructed sentences; the column "constructed intent (author)" is not human
+  validation. The contextual columns were scored on the HPC login node's CPU in fp32 with the job's own
+  `Scorer` (`hpc/score_stress.py`).
+  - SST-2 gives all three plain action lines a strong sign ("He opens the door and walks in." +1.00).
+  - RoBERTa gives them P(neutral) 0.81–0.90.
+  - "I didn't kill him.": VADER +0.58, SST-2 +0.99, RoBERTa −0.55.
+  - VADER's "but" rule follows clause order (+0.57 vs −0.40).
+  - All three instruments miss "love waiting in line all day".
+- Agreement statistics and the 20 private disagreement sentences wait for job 30053002, which is still
+  pending in gpua40. `ingest_contextual()` reads `private/contextual/meta.json`, merges one-to-one on
+  (movie_name, scene, pos) with layer and row-count asserts, and writes `outputs/s03_instrument_decision.json`.
+  Step 7 does not run before that file exists.
+- Notebook 03 runs with 0 errors. Private cells have no output. Leak check: 0 of 19,995 eight-word openings
+  found in the committed outputs, the notebook or the code.
+- No outcome was used in this step.
