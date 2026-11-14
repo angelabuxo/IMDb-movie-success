@@ -1,7 +1,7 @@
 {
  "sentences": 3149729,
  "sentences_primary": 2411761,
- "vader_seconds": 32.0,
+ "vader_seconds": 24.5,
  "vader_version": "3.3.2",
  "neutral_band": 0.05,
  "contraction_roundtrip": {
@@ -306,7 +306,7 @@
    "primary_instrument": "sst2",
    "reading": "availability read as met: the user allowed the download and the run completed on the hardware named here (LOG.md, 2026-11-14 entries on amendment (b) and the local run)"
   },
-  "modernbert3": "not run (over the runtime limit or missing)",
+  "modernbert3_run": "local MPS",
   "agreement": [
    {
     "sample": "primary 834",
@@ -327,6 +327,16 @@
     "neutral share": 0.7180869082798834
    },
    {
+    "sample": "primary 834",
+    "instrument": "modernbert3",
+    "sign agreement on VADER-non-neutral sentences": 0.31253734230264996,
+    "Spearman, sentences": 0.34146118854352464,
+    "Spearman, scenes": 0.42063321364951517,
+    "Spearman, films": 0.6759607060848722,
+    "Cohen's kappa, 3 classes": 0.1921477295198083,
+    "neutral share": 0.698585805144042
+   },
+   {
     "sample": "all 1,087",
     "instrument": "sst2",
     "sign agreement on VADER-non-neutral sentences": 0.7592448203511047,
@@ -343,6 +353,16 @@
     "Spearman, films": 0.7099757519286489,
     "Cohen's kappa, 3 classes": 0.36283987473183943,
     "neutral share": 0.7195076147820971
+   },
+   {
+    "sample": "all 1,087",
+    "instrument": "modernbert3",
+    "sign agreement on VADER-non-neutral sentences": 0.3093927985326769,
+    "Spearman, sentences": 0.3352900751050279,
+    "Spearman, scenes": 0.40800265389994517,
+    "Spearman, films": 0.6249729609450656,
+    "Cohen's kappa, 3 classes": 0.18618989829547994,
+    "neutral share": 0.6977031992276161
    }
   ],
   "matrix": {
@@ -350,51 +370,78 @@
     "vader": {
      "vader": 1.0,
      "sst2": 0.429,
-     "roberta3": 0.4751
+     "roberta3": 0.4751,
+     "modernbert3": 0.3415
     },
     "sst2": {
      "vader": 0.429,
      "sst2": 1.0,
-     "roberta3": 0.6565
+     "roberta3": 0.6565,
+     "modernbert3": 0.5032
     },
     "roberta3": {
      "vader": 0.4751,
      "sst2": 0.6565,
-     "roberta3": 1.0
+     "roberta3": 1.0,
+     "modernbert3": 0.5469
+    },
+    "modernbert3": {
+     "vader": 0.3415,
+     "sst2": 0.5032,
+     "roberta3": 0.5469,
+     "modernbert3": 1.0
     }
    },
    "scenes": {
     "vader": {
      "vader": 1.0,
      "sst2": 0.3923,
-     "roberta3": 0.5517
+     "roberta3": 0.5517,
+     "modernbert3": 0.4206
     },
     "sst2": {
      "vader": 0.3923,
      "sst2": 1.0,
-     "roberta3": 0.5669
+     "roberta3": 0.5669,
+     "modernbert3": 0.4496
     },
     "roberta3": {
      "vader": 0.5517,
      "sst2": 0.5669,
-     "roberta3": 1.0
+     "roberta3": 1.0,
+     "modernbert3": 0.595
+    },
+    "modernbert3": {
+     "vader": 0.4206,
+     "sst2": 0.4496,
+     "roberta3": 0.595,
+     "modernbert3": 1.0
     }
    },
    "films": {
     "vader": {
      "vader": 1.0,
      "sst2": 0.5403,
-     "roberta3": 0.7457
+     "roberta3": 0.7457,
+     "modernbert3": 0.676
     },
     "sst2": {
      "vader": 0.5403,
      "sst2": 1.0,
-     "roberta3": 0.6852
+     "roberta3": 0.6852,
+     "modernbert3": 0.661
     },
     "roberta3": {
      "vader": 0.7457,
      "sst2": 0.6852,
-     "roberta3": 1.0
+     "roberta3": 1.0,
+     "modernbert3": 0.7564
+    },
+    "modernbert3": {
+     "vader": 0.676,
+     "sst2": 0.661,
+     "roberta3": 0.7564,
+     "modernbert3": 1.0
     }
    }
   },

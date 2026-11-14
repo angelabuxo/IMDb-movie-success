@@ -601,3 +601,19 @@ VADER stands in for their syuzhet lexicon; SST-2 is our primary instrument. 1,04
   our outcome and controls (S4: +0.16, p = 0.055). That is the false-positive pattern the stricter design guards against.
 - Cluster template matches are moderate (r 0.56 to 0.93), so the shape names are approximate. Kruskal-Wallis of
   the multiple across the six clusters: VADER p = 0.58, SST-2 p = 0.98.
+
+## 2026-11-14 · ModernBERT ingested (amendment d, robustness only)
+
+- **Run of record:** the local MPS run finished first (sentences 5,402 s, scenes 4,668 s; 15 sentences over
+  510 word pieces chunked), so it is used under the race rule. HPC job 30053931 was still queued; it stays a
+  reproducibility check only.
+- **Agreement (primary 834):** ModernBERT calls 70% of sentences neutral (RoBERTa 72%). Against VADER: sign
+  agreement 31% on VADER-non-neutral sentences, κ 0.19 (RoBERTa 0.37), Spearman 0.34 by sentence, 0.42 by
+  scene, 0.68 by film. Between the contextual models, film-level Spearman is 0.66 (SST-2) and 0.76 (RoBERTa).
+  The models disagree a lot sentence by sentence and much less once averaged over a film.
+- **Step 9 rows:** D1 ρ +0.027 (p 0.41), D2 ρ +0.043 (p 0.23). Scene-in-context: D1 −0.065 (p 0.048),
+  D2 +0.045 (p 0.18). The D1 context row is one of 19 D1 variants, has the opposite sign to the primary, and is
+  the kind of single hit expected by chance; reported as exploratory. D2 keeps its positive sign with ModernBERT
+  but is weaker than with SST-2, so the near miss in Step 7 does not get stronger support from the best model.
+- **Primary analysis unchanged** (Step 7 run once with SST-2). Steps 3, 4, 9, 12 and 13, their notebooks and
+  the site rebuilt. Step 7 notebook rebuilt only for a figure fix (both r_min lines labelled).
