@@ -172,6 +172,61 @@ What it doesn't show:
 
 `features/roi_by_entity.csv` (local, not committed) lists each group's films, its mean return, and the mean shrunk towards zero by empirical Bayes, so a director with two lucky films doesn't top the list. Use it to look for patterns, then test any pattern you find the same way.
 
+## How far the similarity reaches, and whether a record travels
+
+Three scripts follow up on the shared-people result. They use the same 6,851 clean movies and the same adjusted return (ln(gross / budget) net of ln(budget), decade and genre). Run them from the data folder after the graph and `franchise_flag.py`:
+
+```bash
+../../.venv/bin/python ../../scripts/network/pair_returns.py
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/team_history.py
+```
+
+```bash
+../../.venv/bin/python ../../scripts/network/movers.py
+```
+
+The first takes several minutes and the other two under two. Each writes a JSON file next to [`roi_similarity.json`](analysis/network/roi_similarity.json), and `python scripts/network/network_figures.py` (from the repo root) draws [`analysis/network/figures/network_reach.pdf`](analysis/network/figures/network_reach.pdf) from them. [`notebooks/network_reach.ipynb`](notebooks/network_reach.ipynb) walks through all three with tables and plots. It reads only those JSON files, and `python scripts/network/build_notebook.py` rebuilds it. Every number below is without franchise films unless it says otherwise, and every null is 1,000 shuffles of returns.
+
+### Film pairs: distance, shared people and scripts
+
+[`pair_returns.py`](scripts/network/pair_returns.py) links two films when they share a key person (director, writer, producer, top-three cast, composer, cinematographer or editor) and measures the return correlation of film pairs, mean(z_i × z_j), which is 0 for random pairs.
+
+- **Only direct links count.** Films one step apart correlate at +0.036 (+0.043 with franchise films), against a shuffle null whose 95th percentile is +0.004. Two steps apart it's +0.001, and further out it's zero or slightly negative. The small negatives are arithmetic: standardised returns sum to zero, so if linked pairs sit above zero the rest must sit a little below.
+- **The more people two films share, the more alike their returns.** One shared person gives +0.029, two +0.081, three or four +0.157 and five or more +0.328 (634 pairs). With franchise films the top group reaches +0.467. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.017, +0.044, +0.067 and +0.152), though the top group is small and the franchise flag is rough, so some of it is still sequels.
+- **Companies and people both carry it.** Linked pairs with no studio or distributor in common still correlate at +0.022, and unlinked pairs that share a company at +0.033.
+- **Similar scripts don't.** On the 1,691 films with a screenplay embedding (1,174 without franchise films), pairs that share a person correlate at +0.041. The same number of unlinked pairs with the most similar scripts correlate at +0.004, inside the null (95th percentile +0.011). Across deciles of script similarity, unlinked pairs stay between -0.009 and +0.005.
+- **People do make somewhat similar films.** Within the same first genre, linked films' scripts have a cosine similarity of 0.664 against 0.648 for unlinked ones. That gap of 0.016 is about a sixth of the spread across all pairs (SD 0.093), and above a null that shuffles scripts within genre.
+
+What it measures and misses: the pair correlation says returns cluster, using every year at once, so it isn't a prediction. Script similarity is the cosine between mean all-MiniLM-L6-v2 passage vectors, which captures shared topic and vocabulary and not quality or structure.
+
+### Teams that have worked together before
+
+[`team_history.py`](scripts/network/team_history.py) asks whether a film returns more when its key people have shared an earlier film. `repeat_share` is the share of pairs in the team who have, built from earlier years only over all 12,673 films in the graph.
+
+- With franchise films, `repeat_share` goes with the adjusted return at ρ = +0.127, and adds 0.018 to out-of-time R² (fitted to 2010, tested on 2011 to 2017) over the team's own track record, experience and size.
+- Most of that is sequels. Without franchise films it's ρ = +0.077 (within-year shuffle null: -0.016 to +0.029). Net of track record, experience and team size it's +0.024 (p = 0.10), and the out-of-time gain is 0.001.
+- What's left sits after 2005: ρ = +0.136 (95% interval 0.097 to 0.172) for films from 2005 on, against +0.016 for 1990 to 2004 and -0.065 before 1990. We haven't tested why, and unflagged sequels are one candidate.
+
+What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's principals file lists about ten people a title, so teams are partial.
+
+### Movers: does a track record travel?
+
+[`movers.py`](scripts/network/movers.py) takes every director, writer, producer and top-three cast credit where the person has at least two earlier clean films and the film's studios have at least five that the person didn't work on. A credit is a mover when none of the film's studios appears on any of the person's earlier films. It then regresses the film's adjusted return on the person's earlier record and the studio's, both standardised, with intervals that resample people.
+
+| | Person's record | Studio's record |
+|---|---:|---:|
+| Movers (6,771 credits) | +0.041 (0.016 to 0.067) | +0.192 (0.160 to 0.225) |
+| Stayers (5,957 credits) | +0.171 (0.129 to 0.211) | +0.171 (0.133 to 0.212) |
+
+- **A person's record mostly stays behind.** At a studio that's new to them it predicts about a quarter of what it predicts for stayers, while the new studio's own record predicts as much as ever.
+- **Directors keep the most.** Their record still gives +0.111 (0.039 to 0.181) after a move, and writers' +0.080 (0.027 to 0.137). Producers' (+0.019) and cast's (+0.024) can't be told from zero.
+- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 22, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.053 for the person and +0.116 for the studio, and stayers +0.176 and +0.084.
+
+What it doesn't show: moves aren't random. A studio hires someone for a project it has already chosen, so this isn't what would happen if people were reassigned. "Studio" is the production company in the Wikipedia infobox, and a film with several studios counts as a stay if any of them is familiar.
+
 ## Collection rules
 
 We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
