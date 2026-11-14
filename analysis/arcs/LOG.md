@@ -338,3 +338,29 @@ mixed. The runtime projection for the fallback rule is measured on whichever GPU
   - no signal: gain −0.0007, range [−0.004, +0.003], p 0.15 / 0.20, verdict "does not add";
   - planted signal: gain +0.067, range [+0.063, +0.071], p at its floor, verdict "adds".
 - No prediction of the real outcome has been made.
+
+## 2026-11-14 · Step 9 code written, NOT run (exploratory robustness)
+
+`s09_robustness.py` re-runs the Step 7 statistic (the same `association` function) on each variant: 500
+within-cell permutations, 100 bootstrap resamples (config `robustness`). The variants:
+- **Instruments:** each of vader / sst2 / roberta3 that is not primary, plus the two scene-in-context
+  configurations. Each runs only if its scene file exists.
+- **Layers:** dialogue only and action only. A script needs ≥ 20 scenes in that layer: N 827 / 826.
+- **Arc:** smoothing windows 5 and 21; grids of 50 and 200 points.
+- **Samples:** all scripts (1,043), exclude 'follows' only (904), exclude named franchise only (916),
+  strict filter (812), loose filter (839), primary without possible transcripts (825).
+- **Outcome:** log_gross.
+- **Genre rule:** first listed instead of priority (exploratory; 38 cells).
+- **Seeds:** stability seeds 1–4.
+
+Cells are pooled on each variant's own sample.
+
+**Additions beyond the config list, fixed now:** the "without possible transcripts" sample (the brief puts it
+in Step 10; it is also shown here as a row), and the ≥ 20-scene rule for single-layer arcs.
+
+**Checks:**
+- The default configuration reproduces the Step 5 descriptors exactly (max difference 1e-16).
+- Dry run on a synthetic noise outcome, nothing saved: 38 rows in 8.5 s; 5.3% of rows below p = 0.05, as
+  chance predicts.
+
+Guard: no run without `s03_instrument_decision.json`.
