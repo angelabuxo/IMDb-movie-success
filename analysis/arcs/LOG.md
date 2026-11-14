@@ -385,3 +385,26 @@ The leakage statement (scripts precede release; final-draft status unverified) i
 
 **Dry run** on a fixed synthetic noise outcome per film, nothing saved: 4 s; 0 and 9 of 50 drops below
 p = 0.05. With a noise outcome, (a), (b) and (d) agree, as they should. Guard holds.
+
+## 2026-11-14 · Step 12: back to the text (run on VADER; rerun if the contextual model becomes primary)
+
+- **Selection rules, fixed before the run** (the brief says "the 10 most extreme" per descriptor):
+  - D1: the 10 most volatile primary scripts.
+  - D2 is signed: the 5 most negative and the 5 most positive.
+  - Driving scene: the most extreme scene under the smoothing window at the smoothed arc's minimum or maximum.
+  - Driving sentence: that scene's most extreme sentence.
+  - Window: the sentence, or the 15 words centred on its strongest VADER lexicon word.
+- 40 rows over 15 scripts (some are extreme on both descriptors). The committed sheet has keys, scores and
+  empty human columns (score_matches_text, driver, notes). The windows are in `private/back_to_text/` only;
+  the longest is 15 words.
+- **What it shows:**
+  - 50% of the scenes at an arc extreme hold a single sentence (median 2).
+  - 19 of 20 sentences driving an arc minimum are action lines.
+  - The most extreme arcs are shaped by short scenes, where one strongly scored line is the whole scene
+    score. This matches Step 5's split-half reliability (D1 0.53).
+  - For 4 of the 5 scripts that end darkest, the minimum is in the last fifth of the story.
+- Words pulling minima: dead, screaming, gun, weeping, panic. Words lifting maxima: like, great, invite, vip,
+  happy. **"like" is a known lexicon artefact** (comparison, not affection); the human check should look at those rows.
+- Leak check: none of the 40 windows, and 0 of 20,000 sentence openings, appear in the committed files.
+  Notebook 12: 0 errors, private cell has no output.
+- Status: NOT YET VALIDATED until the human columns are filled. No outcome used.

@@ -337,5 +337,21 @@
     "shuffles": 1000
    }
   }
+ },
+ "s12_back_to_text": {
+  "config": "2bebdfb79c",
+  "date": "2026-11-14",
+  "outputs": [
+   "s12_back_to_text.csv",
+   "s12_driver_words.csv",
+   "s12_meta.json"
+  ],
+  "params": {
+   "back_to_text": {
+    "extreme_scripts_per_descriptor": 10,
+    "window_words": 15
+   },
+   "instrument": "vader"
+  }
  }
 }
