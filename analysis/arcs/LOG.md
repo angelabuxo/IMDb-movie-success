@@ -299,3 +299,21 @@ writes to `out_a10/`, so the two cannot overwrite each other.
 **Rule:** whichever starts first is kept and the other is cancelled. Results are used from that job only, never
 mixed. The runtime projection for the fallback rule is measured on whichever GPU ran (A40 or A10), and
 `meta.json` records which.
+
+## 2026-11-14 · Step 7 code written, NOT run (waiting for the instrument decision)
+
+- `s07_primary.py` implements `config.primary` as written:
+  - Frisch-Waugh residualisation of the outcome and of each descriptor on the cells plus log budget plus mean
+    sentences per scene;
+  - Spearman ρ of the residuals;
+  - 1,000 within-cell permutations of the residualised outcome, two-sided empirical p, z;
+  - 2,000 bootstrap resamples, refitting the residualisation each time;
+  - r_min at α 0.05 and 0.025;
+  - decision at p < 0.025.
+- The association function is shared, so Steps 9 and 10 reuse exactly the same statistic.
+- Guard: `run()` refuses to start without `outputs/s03_instrument_decision.json`, and checks N = 834.
+- Tested only on synthetic data, never on the real outcome:
+  - Confounded noise: raw ρ 0.38 → residualised −0.002, p 0.95.
+  - Planted partial association of about 0.45: recovered ρ 0.42, CI [0.36, 0.48], p at its floor.
+  - 200 pure-noise outcomes (300 films, 8 cells): 5.5% below 0.05 and 44.5% below 0.5. The test is calibrated.
+- No association with the real outcome has been computed.

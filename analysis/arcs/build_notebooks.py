@@ -23,7 +23,8 @@ from .paths import NOTEBOOKS, REPO
 # Steps are added here as they are built (step number, module, notebook slug).
 STEPS = [("01", "s01_sample", "sample_outcome"), ("02", "s02_units", "text_units"),
          ("03", "s03_instruments", "instruments"), ("04", "s04_validation", "validation"),
-         ("05", "s05_arcs", "arcs"), ("06", "s06_shuffle", "order_null")]
+         ("05", "s05_arcs", "arcs"), ("06", "s06_shuffle", "order_null"),
+         ("07", "s07_primary", "primary")]
 
 SETUP = """import sys
 from pathlib import Path
