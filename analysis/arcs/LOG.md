@@ -451,3 +451,22 @@ here. The user asked to keep the HPC jobs.
   They are never mixed with the local run, and never substituted for it after its results are seen.
 - Amendment (a) named the HPC GPU as the hardware for the runtime projection. That projection is now measured
   on this Mac; this note records the change.
+
+## 2026-11-14 · Config amendment (d): a third contextual instrument (before any association)
+
+The user asked for the strongest sentiment model that runs on the laptop and on HPC, to be added and compared
+once the main rebuild is done. A model-card and literature search (sources in the research notes) gave:
+- **Chosen: `clapAI/modernBERT-large-multilingual-sentiment`.** ModernBERT-large, 396M parameters, 3 classes,
+  Apache-2.0, safetensors, about 1.5M English training rows, mostly reviews.
+- **Runner-up:** `clapAI/roberta-large-multilingual-sentiment`.
+- **Excluded:** SiEBERT and `j-hartmann/sentiment-roberta-large-english-3-classes` have the best published
+  evidence but no stated licence. The DeBERTa-v3-large TweetEval model is in the same domain as the
+  Cardiff model.
+- Small LLMs were judged too slow for 3.15M sentences, with no published evidence of a gain.
+
+**Caveat, stated now:** no published number shows it beats `twitter-roberta-base-sentiment-latest` on text
+like ours, and its "neutral" probably often means a mixed review rather than no sentiment. It is untested
+until the Step 4 sheets are filled.
+
+**Role:** Step 9 rows and an agreement row only. It is never primary and does not touch the fallback rule.
+Registered while no Step 7–10 output existed. It runs after the main rebuild, as the user asked.
