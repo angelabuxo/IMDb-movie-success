@@ -1,0 +1,172 @@
+{
+ "s01_sample": {
+  "config": "03e51e86b0",
+  "date": "2026-11-14",
+  "outputs": [
+   "s01_films.csv",
+   "s01_summary.json"
+  ],
+  "params": {
+   "controls": {
+    "covariates": [
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "decade_bins": [
+     [
+      0,
+      1979,
+      "pre-1980"
+     ],
+     [
+      1980,
+      1989,
+      "1980s"
+     ],
+     [
+      1990,
+      1999,
+      "1990s"
+     ],
+     [
+      2000,
+      2009,
+      "2000s"
+     ],
+     [
+      2010,
+      2019,
+      "2010s"
+     ],
+     [
+      2020,
+      2025,
+      "2020s"
+     ]
+    ],
+    "fixed_effects": "cell",
+    "genre_rule_sensitivity": "first_listed",
+    "min_films_per_cell": 5,
+    "other_genre": "Other",
+    "primary_genre_priority": [
+     "Horror",
+     "Sci-Fi",
+     "Thriller",
+     "Adventure",
+     "Action",
+     "Comedy",
+     "Drama"
+    ]
+   },
+   "sample": {
+    "arc_ready": {
+     "min_scene_tags": 20,
+     "min_sentences": 300,
+     "sensitivity_loose": {
+      "min_scene_tags": 10,
+      "min_sentences": 150
+     },
+     "sensitivity_strict": {
+      "min_scene_tags": 40,
+      "min_sentences": 600
+     }
+    },
+    "duplicate_rule": "longest_script",
+    "expected": {
+     "after_dialogue_exclusion": 1087,
+     "clean_movies": 2446,
+     "clean_with_usable_script": 1095,
+     "not_likely_franchise": 868,
+     "not_likely_franchise_arc_ready": 834,
+     "with_genome_reviews": 946,
+     "with_genome_reviews_not_franchise": 759
+    },
+    "flags": {
+     "possible_transcript": "action share of dialogue+action words < 0.15 OR scene tags < 20",
+     "pretokenised": "20 or more split contractions joined in the dialogue+action layer"
+    },
+    "franchise_flag": "Wikidata follows (P155) OR named franchise (P8345)",
+    "max_year_exclusive": 2026,
+    "min_budget_usd": 1000,
+    "min_dialogue_words": 500,
+    "primary": "not_likely_franchise",
+    "script_rule": ">= 1 <scene> and >= 1 <dialogue> tag",
+    "sensitivity": [
+     "all_scripts",
+     "exclude_follows_only",
+     "exclude_named_only"
+    ],
+    "streaming_distributors": "netflix|amazon|apple|hulu",
+    "tier": "100k+"
+   }
+  }
+ },
+ "s02_units": {
+  "config": "03e51e86b0",
+  "date": "2026-11-14",
+  "outputs": [
+   "analysis_table.csv",
+   "s02_parser_report.csv",
+   "s02_scene_counts.csv.gz",
+   "s02_summary.json"
+  ],
+  "params": {
+   "arc_ready": {
+    "min_scene_tags": 20,
+    "min_sentences": 300,
+    "sensitivity_loose": {
+     "min_scene_tags": 10,
+     "min_sentences": 150
+    },
+    "sensitivity_strict": {
+     "min_scene_tags": 40,
+     "min_sentences": 600
+    }
+   },
+   "text": {
+    "empty_scene_rule": "drop from that layer's timeline; counted",
+    "excluded_tags": [
+     "stage_direction",
+     "character",
+     "parenthetical"
+    ],
+    "layers": [
+     "dialogue",
+     "action",
+     "both"
+    ],
+    "normalise_split_contractions": true,
+    "primary_layer": "both",
+    "sentence_split_regex": "(?<=[.!?])[\"')\\]]*\\s+",
+    "split_contraction_regex": "(\\w)\\s+(n't|'s|'re|'ve|'ll|'d|'m)\\b",
+    "unit_of_time": "scene",
+    "word_regex": "[A-Za-z]+(?:'[A-Za-z]+)?"
+   }
+  }
+ },
+ "s03_compute_check": {
+  "config": "03e51e86b0",
+  "date": "2026-11-14",
+  "outputs": [
+   "s03_compute_check.json"
+  ],
+  "params": {
+   "instruments": {
+    "compute_check_sentences": 200,
+    "contextual": {
+     "batch_size": 64,
+     "chunking": "a sentence longer than 510 word pieces is cut into consecutive 510-piece chunks, scored, and averaged (counted)",
+     "max_tokens": 512,
+     "name": "distilbert-base-uncased-finetuned-sst-2-english",
+     "score": "P(positive) - P(negative)"
+    },
+    "lexicon": {
+     "name": "vader",
+     "neutral_band": 0.05
+    },
+    "max_runtime_hours": 3.0,
+    "step11_instrument": "vader"
+   }
+  }
+ }
+}

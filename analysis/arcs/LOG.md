@@ -72,3 +72,60 @@ each, on N = 834 (arc-ready, not likely franchise). r_min at 80% power is 0.097 
    tool, different unit. Does that count as "the same instrument and configuration"?
 3. The work lives in a new worktree, `IMDb-movie-success-arcs` (branch `scripts-arcs` from `origin/main`).
    This session's own folder is a different repository.
+
+## 2026-11-14 · Step 1: sample and outcome
+
+- All six funnel numbers reproduce from the raw data (2,446 / 1,095 / 1,087 / 868 / 946 / 759). Of the
+  1,087 scripts, 219 are likely franchise (follows 146, named 133, both 60). 36 genre × decade cells; 23 primary
+  films sit in cells with fewer than 5 films and are pooled.
+- **Anomaly against the brief's expectation.** The hit lean of the script sample is real for all scripted films:
+  - median multiple 3.69× against 3.41× for all clean films;
+  - earlier quartile groups B 304 top vs 242 bottom, C 290 vs 236.
+- **It mostly disappears once franchise films are out:**
+  - primary sample B 235 vs 223, C 213 vs 220;
+  - median 3.45×;
+  - 7.3% of films gross less than their budget (all clean films: 6.9%);
+  - SD of log(gross/budget) 1.04 (all clean films: 1.03).
+- "Restricted range" is therefore mainly a property of the scripted sample as a whole, not of the primary
+  sample. The notebook reading says so, rather than repeating the brief's claim. Selection is still not
+  random (100k+ votes, public screenplay).
+- SD of the outcome after cells and log budget: 0.91.
+- Fix before commit: the outcome table's "median multiple" was first computed from the quartile midpoint. It is
+  now the real median.
+
+## 2026-11-14 · Step 2: text units
+
+- 1,087 scripts, 0 parse errors, 148,637 scene tags.
+- 456 scenes have no dialogue or description sentence and are dropped from the timeline (counted).
+- 3,149,729 sentences: 1,675,413 dialogue and 1,474,316 action.
+- Contraction fix: 155,109 joins; standalone "n't" tokens went from 73,083 to 1. 471 scripts are pre-tokenised (the rule fixed in Step 0).
+- Arc-ready primary: 834, as expected. All 34 excluded films have fewer than 20 scene tags; none fails on
+  sentences alone. Strict filter 812, loose 839; all scripts arc-ready 1,043.
+- 9 possible transcripts remain in the primary sample (55 in all).
+- Only 3 scripts number most of their headings. The feasibility note said 13, under a rule that can't be seen.
+  So the order of appearance is the timeline for essentially every script: an unverifiable assumption.
+- **Correction before commit.** The first version of the Step 2 text said a lexicon misses the negation in
+  "do n't". Testing showed VADER scores split and joined forms identically on every hand-made case: its
+  negation check matches any token containing "n't". Two consequences:
+  - The text now says the fix is a safeguard for VADER, and that it matters for word counts and for a
+    contextual tokenizer.
+  - Step 3 will measure the effect on every affected sentence.
+- Spotted in passing: "I didn't kill him" scores +0.58 in VADER. Negating a violent verb reads as positive. It
+  goes into the Step 3 stress tests.
+- Leak check: 0 of 20,000 random 8-word sentence openings appear in the committed outputs or notebooks.
+
+## 2026-11-14 · Step 3 COMPUTE CHECK (stopped here for the user's approval)
+
+| Item | Value |
+|---|---:|
+| Sentences, all 1,087 scripts ('both' layer; dialogue and action are subsets) | 3,149,729 |
+| Sentences, primary 834 | 2,411,761 |
+| Sentence length: median / 99th percentile / max words | 6 / 28 / 945 (15 over 350 words) |
+| VADER: seconds per sentence (median of 3 timings on 200 seeded sentences; 20,000-sentence recheck: 8.1 µs) | 8.6 µs |
+| VADER: projected full run, one core | ~0.01 h (under a minute) |
+| Contextual (`distilbert-base-uncased-finetuned-sst-2-english`) | NOT AVAILABLE: not cached; no throughput measured, no runtime projected |
+| Limit in config | 3.0 h |
+| Memory | sentence table ~0.1 GB on disk; scores ~25 MB per instrument |
+
+Fallback rule as of now: VADER primary. If the user allows the download, the model will be benchmarked on
+the same 200 sentences. It becomes primary only if the projected full run is within 3.0 hours.

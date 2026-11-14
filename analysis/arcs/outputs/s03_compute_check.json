@@ -1,0 +1,31 @@
+{
+ "date": "2026-11-14",
+ "machine": "arm64 macOS-27.2.1-arm64-arm-64bit-Mach-O",
+ "cpu_cores": 10,
+ "sentences_all_scripts": 3149729,
+ "sentences_primary": 2411761,
+ "sentence_words": {
+  "median": 6.0,
+  "p99": 28.0,
+  "max": 945,
+  "over_350_words": 15
+ },
+ "benchmark_sentences": 200,
+ "max_runtime_hours": 3.0,
+ "memory_note": "sentence table on disk ~0.1 GB; scores are one float per sentence per instrument (~25 MB)",
+ "vader": {
+  "available": true,
+  "load_seconds": 0.0,
+  "seconds_per_sentence": 8.59958501678193e-06,
+  "sentences_per_second_one_core": 116285,
+  "projected_hours_one_core_all": 0.008,
+  "projected_hours_parallel_all": 0.001,
+  "parallel_workers": 8
+ },
+ "contextual": {
+  "name": "distilbert-base-uncased-finetuned-sst-2-english",
+  "available": false,
+  "status": "NOT AVAILABLE: not in the local Hugging Face cache. Downloading it needs the user's explicit permission; no throughput can be measured, so no runtime is projected."
+ },
+ "fallback_decision": "lexicon (VADER) primary unless the contextual model becomes available and fits the limit"
+}
