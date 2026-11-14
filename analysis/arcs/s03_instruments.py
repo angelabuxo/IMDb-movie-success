@@ -170,13 +170,15 @@ def ingest_contextual(s: pd.DataFrame, prim: set) -> dict:
     limit = c["instruments"]["max_runtime_hours"]
     m = meta["models"].get("sst2", {})
     ok = bool(m.get("within_limit")) and (CONTEXTUAL / "sentence_sst2.csv.gz").exists()
-    decision = {"date": time.strftime("%Y-%m-%d"), "job": JOB, "gpu": meta.get("gpu"),
+    decision = {"date": time.strftime("%Y-%m-%d"), "job": JOB, "device": meta.get("device"),
+                "hardware": "Apple M5 laptop GPU (MPS, fp16)" if meta.get("device") == "mps" else meta.get("gpu"),
                 "contextual_model": c["instruments"]["contextual"]["name"],
-                "available_on_hpc_after_user_permission": True,
+                "available_after_user_permission": True,
                 "projected_hours_sentence_all": m.get("projected_hours_sentence_all"), "limit_hours": limit,
                 "within_limit": bool(m.get("within_limit")), "full_run_present": ok,
                 "primary_instrument": "sst2" if ok else "vader",
-                "reading": "availability condition read as met by the HPC run (LOG.md, amendment (b))"}
+                "reading": "availability read as met: the user allowed the download and the run completed on the "
+                           "hardware named here (LOG.md, 2026-11-14 entries on amendment (b) and the local run)"}
     DECISION.write_text(json.dumps(decision, indent=1) + "\n")
     out = {"status": "done", "meta": meta, "decision": decision}
     sc = s[KEYS + ["layer", "words", "text", "vader"]]
@@ -411,7 +413,18 @@ def reading(res: dict) -> str:
                 f"the fallback rule cannot be applied "
                 f"and Step 7 does not run.")
     else:
-        txt += f"By the fallback rule the primary instrument is {ctx['decision']['primary_instrument']}."
+        ag = {(a["sample"], a["instrument"]): a for a in ctx["agreement"]}
+        s2, r3 = ag[("primary 834", "sst2")], ag[("primary 834", "roberta3")]
+        txt += (f"On the scripts themselves the instruments agree only moderately. Against VADER, SST-2 has the same "
+                f"sign on {100 * s2['sign agreement on VADER-non-neutral sentences']:.0f}% of the sentences VADER calls "
+                f"non-neutral, and the Spearman correlation is {s2['Spearman, sentences']:.2f} for sentences, "
+                f"{s2['Spearman, scenes']:.2f} for scenes and {s2['Spearman, films']:.2f} for films. The three-class "
+                f"RoBERTa calls {100 * r3['roberta3 neutral share']:.0f}% of sentences neutral (κ = "
+                f"{r3["Cohen's kappa, 3 classes"]:.2f} with VADER's three labels), and correlates "
+                f"{r3['Spearman, scenes']:.2f} with VADER for scenes and {r3['Spearman, films']:.2f} for films. "
+                f"By the pre-registered fallback rule (projected {ctx['decision']['projected_hours_sentence_all']:.2f} h "
+                f"≤ {ctx['decision']['limit_hours']:.0f} h) the primary instrument is DistilBERT SST-2 "
+                f"({ctx['decision']['primary_instrument']}); VADER and RoBERTa are robustness instruments (Step 9).")
     return txt
 
 

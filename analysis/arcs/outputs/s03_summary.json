@@ -1,7 +1,7 @@
 {
  "sentences": 3149729,
  "sentences_primary": 2411761,
- "vader_seconds": 27.6,
+ "vader_seconds": 25.3,
  "vader_version": "3.3.2",
  "neutral_band": 0.05,
  "contraction_roundtrip": {
@@ -260,7 +260,90 @@
   }
  ],
  "contextual": {
-  "status": "pending",
-  "job": "30053002"
+  "status": "done",
+  "meta": {
+   "device": "mps",
+   "gpu": "arm",
+   "torch": "2.14.1",
+   "sentences": 3149729,
+   "scenes": 148181,
+   "models": {
+    "sst2": {
+     "name": "distilbert-base-uncased-finetuned-sst-2-english",
+     "load_seconds": 0.5,
+     "seconds_per_sentence_bench200": 0.00042435271003341766,
+     "seconds_per_sentence_20k": 0.00016058571670000675,
+     "projected_hours_sentence_all": 0.141,
+     "within_limit": true,
+     "sentence_seconds": 500.5,
+     "sentences_chunked": 13,
+     "scene_seconds": 366.3
+    },
+    "roberta3": {
+     "name": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+     "load_seconds": 0.4,
+     "seconds_per_sentence_bench200": 0.0009116966700094053,
+     "seconds_per_sentence_20k": 0.0003413459479001176,
+     "projected_hours_sentence_all": 0.299,
+     "within_limit": true,
+     "sentence_seconds": 881.1,
+     "sentences_chunked": 15,
+     "scene_seconds": 693.6
+    }
+   }
+  },
+  "decision": {
+   "date": "2026-11-14",
+   "job": "local MPS run (HPC jobs 30053002 / 30053443 kept as a check)",
+   "device": "mps",
+   "hardware": "Apple M5 laptop GPU (MPS, fp16)",
+   "contextual_model": "distilbert-base-uncased-finetuned-sst-2-english",
+   "available_after_user_permission": true,
+   "projected_hours_sentence_all": 0.141,
+   "limit_hours": 3.0,
+   "within_limit": true,
+   "full_run_present": true,
+   "primary_instrument": "sst2",
+   "reading": "availability read as met: the user allowed the download and the run completed on the hardware named here (LOG.md, 2026-11-14 entries on amendment (b) and the local run)"
+  },
+  "agreement": [
+   {
+    "sample": "primary 834",
+    "instrument": "sst2",
+    "sign agreement on VADER-non-neutral sentences": 0.7624062412688861,
+    "Spearman, sentences": 0.4289593614538027,
+    "Spearman, scenes": 0.3922611655790965,
+    "Spearman, films": 0.5403113987593056
+   },
+   {
+    "sample": "primary 834",
+    "instrument": "roberta3",
+    "sign agreement on VADER-non-neutral sentences": 0.4200853231318103,
+    "Spearman, sentences": 0.47505377698229273,
+    "Spearman, scenes": 0.5516698710927076,
+    "Spearman, films": 0.7457419257712994,
+    "Cohen's kappa, 3 classes": 0.36994978917777754,
+    "roberta3 neutral share": 0.7180869082798834
+   },
+   {
+    "sample": "all 1,087",
+    "instrument": "sst2",
+    "sign agreement on VADER-non-neutral sentences": 0.7592448203511047,
+    "Spearman, sentences": 0.42314582357365904,
+    "Spearman, scenes": 0.38004357497985175,
+    "Spearman, films": 0.4884460548617379
+   },
+   {
+    "sample": "all 1,087",
+    "instrument": "roberta3",
+    "sign agreement on VADER-non-neutral sentences": 0.41495936891245316,
+    "Spearman, sentences": 0.4693644486493598,
+    "Spearman, scenes": 0.54138417083119,
+    "Spearman, films": 0.7099757519286489,
+    "Cohen's kappa, 3 classes": 0.36283987473183943,
+    "roberta3 neutral share": 0.7195076147820971
+   }
+  ],
+  "disagreements_available": true
  }
 }

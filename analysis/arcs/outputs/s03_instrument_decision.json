@@ -1,0 +1,14 @@
+{
+ "date": "2026-11-14",
+ "job": "local MPS run (HPC jobs 30053002 / 30053443 kept as a check)",
+ "device": "mps",
+ "hardware": "Apple M5 laptop GPU (MPS, fp16)",
+ "contextual_model": "distilbert-base-uncased-finetuned-sst-2-english",
+ "available_after_user_permission": true,
+ "projected_hours_sentence_all": 0.141,
+ "limit_hours": 3.0,
+ "within_limit": true,
+ "full_run_present": true,
+ "primary_instrument": "sst2",
+ "reading": "availability read as met: the user allowed the download and the run completed on the hardware named here (LOG.md, 2026-11-14 entries on amendment (b) and the local run)"
+}

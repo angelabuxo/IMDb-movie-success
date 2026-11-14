@@ -170,7 +170,7 @@
   }
  },
  "s03_instruments": {
-  "config": "524ae2a04b",
+  "config": "605801c43e",
   "date": "2026-11-14",
   "outputs": [
    "s03_scene_vader.csv.gz",
@@ -211,6 +211,22 @@
     "max_runtime_hours": 3.0,
     "robustness_extra": {
      "hardware": "DTU HPC GPU queue; the runtime projection for the fallback rule is measured on that GPU",
+     "modernbert3": {
+      "caveat": "no published English-only or screenplay accuracy; its 'neutral' may mean 'mixed review'. Untested until Step 4 is filled",
+      "classes": [
+       "negative",
+       "neutral",
+       "positive"
+      ],
+      "name": "clapAI/modernBERT-large-multilingual-sentiment",
+      "role": "Step 9 rows and an instrument-agreement row only; never primary, never changes the fallback rule",
+      "score": "P(positive) - P(negative)",
+      "units": [
+       "sentence",
+       "scene_context"
+      ],
+      "why": "trained mainly on product/movie/hotel reviews: a third domain next to SST-2 and tweets"
+     },
      "roberta3": {
       "name": "cardiffnlp/twitter-roberta-base-sentiment-latest",
       "score": "P(positive) - P(negative)",
@@ -232,7 +248,7 @@
   }
  },
  "s04_validation": {
-  "config": "2bebdfb79c",
+  "config": "605801c43e",
   "date": "2026-11-14",
   "outputs": [
    "s04_validation_results.json",
@@ -273,6 +289,37 @@
    }
   }
  },
+ "s05_arcs[sst2]": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s05_arcs_sst2.csv.gz",
+   "s05_descriptors_sst2.csv",
+   "s05_summary_sst2.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "sst2"
+  }
+ },
  "s05_arcs[vader]": {
   "config": "2bebdfb79c",
   "date": "2026-11-14",
@@ -302,6 +349,40 @@
     "time_points": 100
    },
    "instrument": "vader"
+  }
+ },
+ "s06_shuffle[sst2]": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s06_shuffle_sst2.csv",
+   "s06_summary_sst2.json"
+  ],
+  "params": {
+   "arc": {
+    "descriptors": {
+     "exploratory": {
+      "mean_level": "mean of the resampled arc",
+      "min_position": "position (0-1) of the minimum of the smoothed arc",
+      "sign_changes": "number of sign changes of (smoothed arc - its own mean)"
+     },
+     "primary": {
+      "D1_volatility": "SD (ddof=0) of the SMOOTHED arc",
+      "D2_ending_minus_start": "mean of the last 20% minus mean of the first 20% of the RESAMPLED (unsmoothed) arc"
+     }
+    },
+    "edge_share": 0.2,
+    "resampling": "overlap_weighted_mean",
+    "smoothing": "centred moving average",
+    "smoothing_window": 11,
+    "split_half": "odd vs even non-empty scenes, each resampled and described separately; Spearman-Brown corrected",
+    "time_points": 100
+   },
+   "instrument": "sst2",
+   "scene_shuffle": {
+    "alpha_per_script": 0.05,
+    "shuffles": 1000
+   }
   }
  },
  "s06_shuffle[vader]": {
@@ -338,8 +419,89 @@
    }
   }
  },
+ "s07_primary": {
+  "config": "605801c43e",
+  "date": "2026-11-14",
+  "outputs": [
+   "s07_primary.json"
+  ],
+  "params": {
+   "controls": {
+    "covariates": [
+     "log_budget",
+     "mean_sentences_per_scene"
+    ],
+    "decade_bins": [
+     [
+      0,
+      1979,
+      "pre-1980"
+     ],
+     [
+      1980,
+      1989,
+      "1980s"
+     ],
+     [
+      1990,
+      1999,
+      "1990s"
+     ],
+     [
+      2000,
+      2009,
+      "2000s"
+     ],
+     [
+      2010,
+      2019,
+      "2010s"
+     ],
+     [
+      2020,
+      2025,
+      "2020s"
+     ]
+    ],
+    "fixed_effects": "cell",
+    "genre_rule_sensitivity": "first_listed",
+    "min_films_per_cell": 5,
+    "other_genre": "Other",
+    "primary_genre_priority": [
+     "Horror",
+     "Sci-Fi",
+     "Thriller",
+     "Adventure",
+     "Action",
+     "Comedy",
+     "Drama"
+    ]
+   },
+   "instrument": "sst2",
+   "primary": {
+    "alpha_bonferroni": 0.025,
+    "alpha_family": 0.05,
+    "bootstrap": 2000,
+    "decision": "an association is reported only if p < 0.025; otherwise 'no evidence of an association'",
+    "descriptors": [
+     "D1_volatility",
+     "D2_ending_minus_start"
+    ],
+    "instrument": "per fallback rule",
+    "layer": "both",
+    "outcome": "log_mult",
+    "p_value": "two-sided empirical: (1 + #{|rho_perm| >= |rho_real|}) / (1 + permutations)",
+    "permutations": 1000,
+    "power": 0.8,
+    "sample": "not_likely_franchise + arc_ready",
+    "statistic": "Spearman rho between the control-residualised descriptor and the control-residualised outcome",
+    "z": "(rho_real - mean(null)) / sd(null)"
+   },
+   "seed": 20261114
+  }
+ },
  "s12_back_to_text": {
-  "config": "2bebdfb79c",
+  "config": "605801c43e",
   "date": "2026-11-14",
   "outputs": [
    "s12_back_to_text.csv",
@@ -351,7 +513,7 @@
     "extreme_scripts_per_descriptor": 10,
     "window_words": 15
    },
-   "instrument": "vader"
+   "instrument": "sst2"
   }
  }
 }

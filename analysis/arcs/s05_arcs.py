@@ -208,7 +208,7 @@ def reading(res: dict) -> str:
 
     def strongest(k: str) -> str:
         r = max((x for x in s["proxies"] if x["descriptor"] == k), key=lambda x: abs(x["Spearman"]))
-        return f"{r['against']} (ρ = {r['Spearman']:+.2f})"
+        return f"{r['against']} (ρ = {r['Spearman']:+.3f})"
     return (
         f"Every one of the {s['scripts']:,} scripts has an arc ({s['primary']} in the primary sample). The median "
         f"primary script has {p.scenes.median():.0f} scenes on its timeline, about "

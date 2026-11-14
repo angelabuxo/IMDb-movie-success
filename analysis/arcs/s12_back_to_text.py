@@ -174,7 +174,7 @@ def reading(res: dict) -> str:
             f"sentences driving an arc minimum are action lines. So the most extreme arcs are shaped by short "
             f"scenes, where one strongly scored line becomes the whole scene score. That fits the split-half "
             f"reliability of Step 5. For the {len(neg)} scripts that end darkest, the arc minimum falls in the last "
-            f"fifth of the story for {int((neg.story_time >= .8).sum())} of them. The lexicon words most often "
+            f"fifth of the story for {int((neg.story_time >= .8).sum())} of them. The VADER-lexicon words in those sentences most often "
             f"pulling arc minima are {top('word pulling the arc minimum')}; those lifting arc maxima are "
             f"{top('word pulling the arc maximum')}. Whether these are described events (a death on the page), "
             f"artefacts or tone is for a human reader to decide from the private windows. Until then the sheet "

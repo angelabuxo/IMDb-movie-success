@@ -470,3 +470,41 @@ until the Step 4 sheets are filled.
 
 **Role:** Step 9 rows and an agreement row only. It is never primary and does not touch the fallback rule.
 Registered while no Step 7–10 output existed. It runs after the main rebuild, as the user asked.
+
+## 2026-11-14 · Contextual scores ingested; fallback rule applied; Steps 4–6, 12 rebuilt; PRIMARY ANALYSIS run once
+
+**Local run.** M5 MPS fp16. SST-2: 500 s for sentences, 366 s for scenes. RoBERTa: 881 s and 694 s. 13 and 15
+sentences were over 510 word pieces and were chunked. Row counts match (3,149,729 sentences; 148,181 scenes =
+148,637 tags − 456 empty). The ingest merge is one-to-one, with layer and row-count asserts passing.
+
+**Fallback rule:** projected 0.141 h ≤ 3.0 h, so the **primary instrument is DistilBERT SST-2** (`s03_instrument_decision.json`).
+
+**Instrument agreement** (primary 834; rules from amendment (b)):
+
+| vs VADER | sign agreement (VADER non-neutral) | Spearman sentences / scenes / films | κ (3 classes) |
+|---|---|---|---|
+| SST-2 | 76% | 0.43 / 0.39 / 0.54 | – |
+| RoBERTa (3-class) | 42% (it calls 72% neutral) | 0.48 / 0.55 / 0.75 | 0.37 |
+
+The instruments agree only moderately: which one is used matters.
+
+**Rebuilt with SST-2** (no outcome):
+- Step 4: score columns refreshed; human columns still empty.
+- Step 5: medians D1 0.125, D2 +0.014. Reliability D1 0.43, D2 0.45, mean level 0.85.
+  Strongest size proxy: D1 vs number of scenes ρ = −0.299.
+- Step 6: D1 beyond the shuffle null for 27% of scripts (VADER: 35%). D2 for 12%, median z +0.12.
+  **The "endings darker than random placement" pattern from VADER (median z −0.52) does not hold with SST-2.**
+  It is instrument-dependent and is reported as such.
+- Step 12: 40 rows over 18 scripts; again driven by short scenes and action lines.
+
+**PRIMARY ANALYSIS (Step 7), run once:** N = 834, 36 cells, 1,000 within-cell permutations, 2,000 bootstraps.
+
+| descriptor | ρ | 95% CI | z | p | decision (α = 0.025) |
+|---|---|---|---|---|---|
+| D1 volatility | +0.035 | [−0.033, +0.106] | +0.97 | 0.319 | no evidence of an association |
+| D2 ending − start | +0.078 | [+0.010, +0.153] | +2.23 | 0.028 | no evidence of an association |
+
+r_min is 0.097 (α 0.05) and 0.107 (α 0.025). D2 is a near miss: the CI excludes 0, and p < 0.05 but above the
+pre-registered 0.025. Per the decision rule it is not a finding. The first generated reading said its CI "rules
+out associations stronger than 0.15 in either direction", which hid that the interval is entirely positive. It
+was rewritten before commit. Steps 9 and 10 will show whether the near miss is stable.

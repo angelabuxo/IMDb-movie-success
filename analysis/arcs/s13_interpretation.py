@@ -151,12 +151,15 @@ def finding(d: dict) -> str:
     pred = d["s08"]
     tail = (" Adding the arc to a baseline model " + ("does" if pred and pred["adds_predictive_value"] else "does not")
             + " improve out-of-sample prediction." if pred else "")
+    near = [k for k in ("D1", "D2") if not r[k]["significant"] and (r[k]["ci_low"] > 0 or r[k]["ci_high"] < 0)]
+    note = "".join(f" {'Volatility' if k == 'D1' else 'Ending minus start'} is a near miss ({_primary(d, k)}, above the "
+                   f"pre-registered α = {d['s07']['alpha']}), not a finding." for k in near)
     if not sig:
         return (f"**Finding (negative):** screenplays have an emotional order ({order} of scripts are more volatile "
                 f"than shuffled versions of themselves), but once genre, decade, budget and scene length are held fixed, "
                 f"neither their volatility ({_primary(d, 'D1')}) nor their ending relative to their start "
                 f"({_primary(d, 'D2')}) is associated with log(gross/budget) in {d['s07']['n']} films; associations "
-                f"stronger than |ρ| ≈ {rm:.2f} are unlikely.{tail} The sentiment scores are "
+                f"much stronger than |ρ| ≈ {rm:.2f} are unlikely.{note}{tail} The sentiment scores are "
                 + ("validated." if _validated(d) else "NOT YET VALIDATED."))
     k = sig[0]
     name = {"D1": "volatility", "D2": "ending relative to the start"}[k]

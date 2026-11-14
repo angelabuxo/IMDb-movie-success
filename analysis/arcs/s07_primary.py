@@ -193,13 +193,18 @@ def reading(res: dict) -> str:
                          f"budget and scene length are held fixed. It is an association, not an effect of the "
                          f"script on profit.")
         else:
-            inside = abs(r["rho"]) < rm
+            near = r["ci_low"] > 0 or r["ci_high"] < 0
             parts.append(f"{label}: ρ = {r['rho']:+.3f} (95% CI {r['ci_low']:+.3f} to {r['ci_high']:+.3f}), "
-                         f"p = {r['p']:.3f}, z = {r['z']:+.2f}: no evidence of an association. "
-                         + (f"With N = {r['n']} we could detect |ρ| ≥ {rm:.3f} with 80% power at α = {res['alpha']}; "
-                            f"the CI rules out associations stronger than about "
-                            f"{max(abs(r['ci_low']), abs(r['ci_high'])):.2f} in either direction. "
-                            if inside else ""))
+                         f"p = {r['p']:.3f}, z = {r['z']:+.2f}: no evidence of an association at the pre-registered "
+                         f"α = {res['alpha']}. "
+                         + (f"It is a near miss: the bootstrap interval excludes zero and p is below 0.05 but above "
+                            f"{res['alpha']}. Under the rule fixed before the analysis this is not a finding; at most it "
+                            f"suggests an association no larger than about {max(abs(r['ci_low']), abs(r['ci_high'])):.2f}, "
+                            f"to be checked for stability in Steps 9 and 10. "
+                            if near else
+                            f"The interval runs from {r['ci_low']:+.2f} to {r['ci_high']:+.2f}, so associations "
+                            f"larger than that in either direction are unlikely; with N = {r['n']}, |ρ| ≥ {rm:.3f} "
+                            f"would be detected with 80% power. "))
     return (f"Primary analysis on {res['n']} films, instrument {res['instrument']}. " + " ".join(parts) +
             " Two caveats carry over: the sentiment scores are NOT YET VALIDATED against human readers (Step 4), "
             "and the split-half reliability of D1 and D2 (Step 5) attenuates any true association towards zero.")
