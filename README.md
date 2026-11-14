@@ -188,7 +188,7 @@ Three scripts follow up on the shared-people result. They use the same 6,851 cle
 ../../.venv/bin/python ../../scripts/network/movers.py
 ```
 
-The first takes several minutes and the other two under two. Each writes a JSON file next to [`roi_similarity.json`](analysis/network/roi_similarity.json), and `python scripts/network/network_figures.py` (from the repo root) draws [`analysis/network/figures/network_reach.pdf`](analysis/network/figures/network_reach.pdf) from them. Every number below is without franchise films unless it says otherwise, and every null is 1,000 shuffles of returns.
+The first takes several minutes and the other two under two. Each writes a JSON file next to [`roi_similarity.json`](analysis/network/roi_similarity.json), and `python scripts/network/network_figures.py` (from the repo root) draws [`analysis/network/figures/network_reach.pdf`](analysis/network/figures/network_reach.pdf) from them. [`notebooks/network_reach.ipynb`](notebooks/network_reach.ipynb) walks through all three with tables and plots. It reads only those JSON files, and `python scripts/network/build_notebook.py` rebuilds it. Every number below is without franchise films unless it says otherwise, and every null is 1,000 shuffles of returns.
 
 ### Film pairs: distance, shared people and scripts
 
