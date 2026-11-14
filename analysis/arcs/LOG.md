@@ -578,3 +578,26 @@ robustness run (amendment (d), next).
   model was downloaded to scratch and smoke-tested on 20 sentences on the login node CPU (labels
   negative/neutral/positive, no NaN). `hpc/watch_job.sh` fetches it to `private/contextual_modernbert_hpc/`
   together with the LSF finish time. Step 3's `modernbert_run()` picks the run that finished first.
+
+## 2026-11-14 · Exploratory: Del Vecchio et al. (2021) replication (`x01_del_vecchio.py`)
+
+Added after the primary analysis, not pre-registered. Del Vecchio et al. report that "Man in a hole" arcs earn
+more (+$6.6M domestic gross, p < 0.001, on 6,174 subtitle files; p = 0.055 in their budget subsample). We rebuilt
+their pipeline on our 100-point arcs (DCT low-pass, 5 components; z-scored; k-means, 6 clusters, seed 20261114;
+clusters named by best template match) and ran one HC3 OLS per cluster dummy, tightening step by step.
+VADER stands in for their syuzhet lexicon; SST-2 is our primary instrument. 1,043 scripts with arcs, budget and gross.
+
+| Spec | "Man in a hole", VADER | "Man in a hole", SST-2 | Shapes with p < 0.05 (VADER / SST-2) |
+|---|---|---|---|
+| S1 their test: gross ($M) ~ dummy | +9.2M, p 0.67 | +23.6M, p 0.32 | 1 / 0 |
+| S2 + budget | +5.5M, p 0.72 | +17.0M, p 0.31 | 1 / 0 |
+| S3 ln(gross/budget) ~ dummy + ln budget | +0.10, p 0.12 | +0.02, p 0.76 | 0 / 0 |
+| S4 + genre x decade, scene length, no franchise (834) | +0.08, p 0.29 | −0.07, p 0.45 | 0 / 0 |
+
+- Their headline effect does not reproduce on our scripts, even with their own specification. Our sample is
+  smaller and skews to hits (100k+ votes), so this is a failure to reproduce, not proof of absence.
+- Their loose specification does produce a "finding" here: with VADER the Oedipus cluster earns $42.6M less
+  (p = 0.015, S1; p = 0.022 with budget). It is one of six tests, it isn't in SST-2, and it reverses sign under
+  our outcome and controls (S4: +0.16, p = 0.055). That is the false-positive pattern the stricter design guards against.
+- Cluster template matches are moderate (r 0.56 to 0.93), so the shape names are approximate. Kruskal-Wallis of
+  the multiple across the six clusters: VADER p = 0.58, SST-2 p = 0.98.
