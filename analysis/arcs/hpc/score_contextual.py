@@ -68,7 +68,10 @@ class Scorer:
         return out
 
     def _wrap(self, pieces: list[int]) -> list[int]:
-        return self.tok.build_inputs_with_special_tokens(pieces)
+        # transformers 5 dropped build_inputs_with_special_tokens; BERT uses [CLS] x [SEP], RoBERTa <s> x </s>.
+        first = self.tok.cls_token_id if self.tok.cls_token_id is not None else self.tok.bos_token_id
+        last = self.tok.sep_token_id if self.tok.sep_token_id is not None else self.tok.eos_token_id
+        return [first, *pieces, last]
 
     def sentences(self, texts: list[str]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Score each sentence; a sentence over 510 word pieces is cut into 510-piece chunks, each scored,

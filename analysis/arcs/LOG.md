@@ -154,3 +154,16 @@ contextual instrument of the fallback rule, and the primary family is unchanged.
 - The HPC venv has no pyarrow and nothing was installed, so the job reads gzipped JSON lines and writes
   gzipped CSV.
 - Sentences are copied only to the owner-only folder `~/02805-embed/arcs/private` (mode 700, umask 077).
+
+## 2026-11-14 · Contextual job submitted to DTU HPC
+
+- Upload checked by SHA-256 (sentence table and job script identical on both ends). macOS tar metadata files
+  were removed and the upload script now strips them.
+- Both models downloaded to the scratch Hugging Face cache and smoke-tested on CPU with 200 sentences: SST-2
+  gives {NEGATIVE, POSITIVE}, the RoBERTa model {negative, neutral, positive}.
+- **Bug found before submission:** transformers 5 removed `build_inputs_with_special_tokens`. Pieces are now
+  wrapped explicitly as [CLS] … [SEP] (BERT) or <s> … </s> (RoBERTa). On 50 sentences per model the
+  wrapping matches the tokenizer's own output exactly. A CPU dry run of both code paths on 300 sentences, one
+  of them longer than 510 pieces, ran with no NaN, with chunking and scene packing working.
+- Job 30053002 is in queue gpua40 (one A40, walltime 6 h). It benchmarks first and skips the full run if the
+  projection exceeds 3.0 h. No contextual score has been read back yet.
