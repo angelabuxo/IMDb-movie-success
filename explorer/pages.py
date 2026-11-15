@@ -13,6 +13,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from scipy.stats import spearmanr
 
+from . import graph_pages as gp
 from . import nav
 from .common import (arrow_safe, DATA, FEATURES, IDEAS, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, render_step,
                      show_df, steps, table)
@@ -304,7 +305,20 @@ def profit():
     c[2].metric("Median budget", f"${d.budget_usd.median() / 1e6:,.1f}M")
     c[3].metric("Median IMDb rating", f"{d.rating.median():.1f}")
 
-    num = [c for c in ["log_budget", "log_multiple", "budget_usd", "gross_usd", "multiple", "year", "votes", "rating", "rt", "mc"] if c in d]
+    arcs = gp.arc_tables()
+    k_arc, names = None, pd.Series(dtype=str)
+    if arcs:
+        with st.sidebar:
+            st.subheader("Sentiment arcs")
+            k_arc = st.radio("Arc instrument", list(arcs), horizontal=True, key="profit_arc_inst",
+                             format_func=lambda x: gp.INSTRUMENTS[x] + (" (primary)" if x == gp.PRIMARY else ""))
+        names = gp.script_names()
+        desc = arcs[k_arc]["desc"]
+        mn = d.tconst.map(names)
+        d = d.assign(**{col: mn.map(desc[src]) for col, (src, _) in ARC_COLS.items()},
+                     arc_in_primary=mn.map(desc.in_primary.astype(bool)).fillna(False).astype(bool))
+    num = [c for c in ["log_budget", "log_multiple", "budget_usd", "gross_usd", "multiple", "year", "votes", "rating", "rt", "mc"]
+           + list(ARC_COLS) if c in d and d[c].notna().any()]
     a, b, col, sz = st.columns(4)
     x = a.selectbox("x", num, index=num.index("log_budget"))
     ys = [c for c in num if c != x]  # same column on both axes breaks the trendline
@@ -321,6 +335,9 @@ def profit():
         st.caption(f"Spearman rho = {spearmanr(xy[x], xy[y]).statistic:+.3f} over {len(xy):,} films. "
                    "Gross over budget is not profit: budgets leave out marketing, and cinemas keep part of the gross.")
 
+    if k_arc:
+        _profit_arcs(d, arcs[k_arc], k_arc, names)
+
     l, r = st.columns(2)
     l.plotly_chart(px.histogram(d, x="log_multiple", nbins=60, template="simple_white", height=360,
                                 title="log(gross / budget): 0 means it grossed its budget",
@@ -336,6 +353,62 @@ def profit():
         show_df(d.nlargest(k, "multiple")[cols], key="hits", caption="Highest gross ÷ budget")
     with f:
         show_df(d.nsmallest(k, "multiple")[cols], key="flops", caption="Lowest gross ÷ budget")
+
+
+ARC_COLS = {"arc_swing": ("D1", "swing (D1)"), "arc_ending_lift": ("D2", "ending lift (D2)"),
+            "arc_mean_level": ("mean_level", "mean level"), "arc_low_point": ("min_position", "low point (share of story)"),
+            "arc_swings": ("sign_changes", "swings")}
+SPLITS = {"bottom vs top third of log(gross / budget)": 1 / 3, "bottom vs top quarter": 1 / 4,
+          "grossed less vs more than its budget": None}
+
+
+def _profit_arcs(d: pd.DataFrame, arcs: dict, k: str, names: pd.Series):
+    """Mean sentiment arc of the least and most profitable films in the selection, and how each arc
+    descriptor correlates with return there."""
+    st.subheader("Sentiment arcs and return")
+    a = d[d.arc_swing.notna() & d.log_multiple.notna()]
+    if st.toggle("Primary arcs sample only", True, key="profit_arc_primary",
+                 help="The films the arcs analysis and the paper use. Off adds scripts it set aside, such as possible "
+                      "transcripts or scripts with too few scene tags."):
+        a = a[a.arc_in_primary]
+    st.caption(f"{len(a):,} of the {len(d):,} films in the selection have a saved arc ({gp.INSTRUMENTS[k]}). "
+               "Exploratory: the arcs notebook's Step 7 is the test fixed in advance.")
+    if len(a) < 20:
+        st.info("Fewer than 20 films with an arc in this selection. Widen the filters.")
+        return
+    split = st.radio("Compare", list(SPLITS), horizontal=True, key="profit_arc_split")
+    q = SPLITS[split]
+    if q is None:
+        lo, hi = a[a.multiple < 1], a[a.multiple >= 1]
+        names_ = ("grossed less than budget", "grossed more")
+    else:
+        lo, hi = a[a.log_multiple <= a.log_multiple.quantile(q)], a[a.log_multiple >= a.log_multiple.quantile(1 - q)]
+        names_ = ("least profitable", "most profitable")
+    curves = arcs["arcs"]
+    fig = go.Figure()
+    for grp, colour, label, fill in ((lo, LOW, names_[0], "rgba(213,94,0,.15)"), (hi, HIGH, names_[1], "rgba(0,114,178,.15)")):
+        if grp.empty:
+            continue
+        films = curves.index.intersection(grp.tconst.map(names).dropna().unique())
+        w = curves.loc[films].reset_index().pivot_table(index="t", columns="movie_name", values="smooth")
+        m, se = w.mean(axis=1), w.std(axis=1) / np.sqrt(w.shape[1])
+        fig.add_scatter(x=np.r_[m.index, m.index[::-1]], y=np.r_[m + 1.96 * se, (m - 1.96 * se)[::-1]], fill="toself",
+                        fillcolor=fill, line=dict(width=0), hoverinfo="skip", showlegend=False)
+        fig.add_scatter(x=m.index, y=m.values, mode="lines", line=dict(color=colour, width=3),
+                        name=f"{label} (n={w.shape[1]:,})", hovertemplate="story %{x}%: %{y:+.3f}<extra></extra>")
+    fig.add_hline(y=0, line_dash="dot", line_color="#aaa")
+    fig.update_layout(template="simple_white", height=420, xaxis_title="story time (%)",
+                      yaxis_title=f"mean smoothed arc ({gp.INSTRUMENTS[k]})", legend=dict(orientation="h", y=1.1))
+    st.plotly_chart(fig, width="stretch", key="profit_arcs")
+    st.caption("Lines: the mean of the films' smoothed arcs. Bands: ±1.96 standard errors across films.")
+    rows = []
+    for col, (_, label) in ARC_COLS.items():
+        x = a[[col, "log_multiple"]].dropna()
+        if len(x) > 5 and x[col].nunique() > 1:   # a constant descriptor has no correlation
+            r = spearmanr(x[col], x.log_multiple)
+            rows.append({"descriptor": label, "Spearman rho with log(gross / budget)": round(r.statistic, 3),
+                         "p": float(f"{r.pvalue:.2g}"), "films": len(x)})
+    st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
 
 
 # ---------------------------------------------------------------- data inspector
