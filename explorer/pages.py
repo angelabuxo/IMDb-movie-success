@@ -14,8 +14,7 @@ import streamlit as st
 from scipy.stats import spearmanr
 
 from . import graph_pages as gp
-from . import nav
-from .common import (arrow_safe, DATA, FEATURES, IDEAS, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, render_step,
+from .common import (arrow_safe, DATA, FEATURES, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, render_step,
                      show_df, steps, table)
 
 GRAPH = FEATURES / "graph"
@@ -73,46 +72,6 @@ def home():
 - **Checks**: automatic sanity checks on the data and outputs, and the test suite.
 """)
     st.caption(f"Data folder: `{DATA}`. Nothing here writes to the repo or the data folder.")
-
-
-# ---------------------------------------------------------------- topic history (local only)
-
-def _idea(text: str, n: int) -> str | None:
-    """Numbered idea n from an ideas list ('97. **Title** ...' up to the next numbered idea)."""
-    m = re.search(rf"^{n}\. .*?(?=^\d+\. |^#|\Z)", text, re.M | re.S)
-    return m.group(0).strip() if m else None
-
-
-def topic_history():
-    st.title("Topic history")
-    st.caption(f"🔒 Local only. The topic-selection notes from before the movie question, read from `{IDEAS}`. "
-               "They are not part of the group repo and nothing here copies them into it.")
-    readme = (IDEAS / "README.md").read_text()
-    st.markdown("**How it led here.** On 28 October the search produced 108 candidate questions, mostly on founders "
-                "and venture capital, and a shortlist of ten. On 4 November the group settled on what makes a movie "
-                "highly profitable and dropped the founder study. One of the 108 is already a movie-network question "
-                "and carries over:")
-    w8 = IDEAS / "week8-inspired-ideas.md"
-    idea = _idea(w8.read_text(), 97) if w8.exists() else None
-    if idea:
-        st.info(md(idea))
-        if st.button("Open the co-production network (Whole graph)", type="primary"):
-            nav.go("graph", graph_mode="Companies that co-produce")
-
-    rows = re.findall(r"^\|\s*\[([^\]]+\.md)\]\([^)]+\)[^|]*\|\s*([^|]+?)\s*\|\s*(.+?)\s*\|\s*$", readme, re.M)
-    files = [("README.md", "", "Index of the idea files")] + [(f, d, w) for f, d, w in rows if (IDEAS / f).exists()]
-    st.subheader("The notes")
-    pick = st.selectbox("File", range(len(files)), format_func=lambda i: files[i][0] + (f" ({files[i][1]})" if files[i][1] else ""),
-                        key="ideas_file")
-    name, _, what = files[pick]
-    st.caption(md(what))
-    with st.container(height=760):
-        st.markdown(md((IDEAS / name).read_text()))
-    pdfs = [p for p in (IDEAS / "shortlist.pdf", IDEAS / "all-ideas.pdf") if p.exists()]
-    if pdfs:
-        cols = st.columns(len(pdfs))
-        for c, p in zip(cols, pdfs):
-            c.download_button(f"Download {p.name}", p.read_bytes(), file_name=p.name, mime="application/pdf")
 
 
 # ---------------------------------------------------------------- notebook series

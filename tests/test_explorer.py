@@ -26,7 +26,7 @@ TIMEOUT = 120
 
 @pytest.fixture(scope="module")
 def data_dir(tmp_path_factory):
-    """A data folder shaped like data/raw, and an ideas folder for the Topic history page."""
+    """A data folder shaped like data/raw."""
     rng = np.random.default_rng(2805)
     root = tmp_path_factory.mktemp("explorer_data")
     feat, graph = root / "features", root / "features" / "graph"
@@ -104,25 +104,14 @@ def data_dir(tmp_path_factory):
              {"movie_name": "Film_Two_2005", "imdb_id": "tt1000001", "script": script(["ANNA", "BEN"]), "summary": ""}]
     (ms / "train.jsonl").write_text("\n".join(json.dumps(x) for x in lines) + "\n")
 
-    ideas = root / "ideas"
-    ideas.mkdir()
-    (ideas / "README.md").write_text(
-        "# Idea files\n\n| File | Made | What it holds |\n| --- | --- | --- |\n"
-        "| [week8-inspired-ideas.md](week8-inspired-ideas.md) | 28 Oct | Ideas 76-100 |\n"
-        "| [missing.md](missing.md) | 28 Oct | Listed but not on disk |\n")
-    (ideas / "week8-inspired-ideas.md").write_text(
-        "# Ideas\n\n96. **Record deals.**\n    - one\n97. **Who co-finances films.**\n"
-        "    - **Question:** do co-financing networks decide what gets made? It costs $5 to ask.\n"
-        "98. **Novels.**\n")
     return root
 
 
 @pytest.fixture(scope="module")
 def explorer(data_dir):
     """Point the explorer at the synthetic folders and import it fresh (its paths are read at import)."""
-    old = {k: os.environ.get(k) for k in ("IMDB_DATA_DIR", "IDEAS_DIR")}
+    old = {k: os.environ.get(k) for k in ("IMDB_DATA_DIR",)}
     os.environ["IMDB_DATA_DIR"] = str(data_dir)
-    os.environ["IDEAS_DIR"] = str(data_dir / "ideas")
     for m in [m for m in sys.modules if m == "explorer" or m.startswith("explorer.")]:
         del sys.modules[m]
     if str(ROOT) not in sys.path:
@@ -157,7 +146,7 @@ def widget(at: AppTest, kind: str, label: str):
 
 
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
-         ("pages", "inspector"), ("pages", "checks"), ("pages", "topic_history"), ("graph_pages", "whole_graph"),
+         ("pages", "inspector"), ("pages", "checks"), ("graph_pages", "whole_graph"),
          ("graph_pages", "node"), ("graph_pages", "screenplays")]
 
 
@@ -167,12 +156,11 @@ def test_every_page_runs(explorer, module, fn):
 
 
 def test_app_registers_every_page(explorer):
-    """app.py builds the navigation; with an ideas folder the Topic history page is in it."""
+    """app.py builds the navigation with every page."""
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks",
-            "topic"} <= set(nav.PAGES)
+    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -335,16 +323,6 @@ def test_screenplay_switch_and_search(explorer):
     widget(at, "text_input", "Search in the script").set_value("Reply 3").run()
     ok(at)
     widget(at, "text_input", "Search in the script").set_value("nowhere at all").run()
-    ok(at)
-
-
-def test_topic_history_reads_the_ideas_folder(explorer):
-    at = page("pages", "topic_history")
-    ok(at)
-    assert "Who co-finances films" in at.info[0].value and "98." not in at.info[0].value
-    assert "\\$5" in at.info[0].value                      # money, not LaTeX
-    assert len(widget(at, "selectbox", "File").options) == 2      # README plus the one listed file on disk
-    widget(at, "selectbox", "File").select_index(1).run()
     ok(at)
 
 

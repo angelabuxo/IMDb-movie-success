@@ -9,7 +9,6 @@ import importlib
 import json
 import os
 import re
-import subprocess
 from pathlib import Path
 
 import pandas as pd
@@ -23,22 +22,6 @@ OUTPUT_DIRS = {"arcs": REPO / "analysis" / "arcs" / "outputs",
                "network": REPO / "analysis" / "network"}
 TABULAR = (".csv", ".csv.gz", ".tsv", ".parquet", ".json")
 
-
-def _ideas_dir() -> Path | None:
-    """The private topic-selection notes (docs/ideas), if this machine has them: $IDEAS_DIR, else the main
-    checkout of this repo. They were never part of the group repo, so on other machines this is None."""
-    cands = [Path(os.environ["IDEAS_DIR"])] if os.environ.get("IDEAS_DIR") else []
-    try:
-        common = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=REPO,
-                                capture_output=True, text=True, timeout=5).stdout.strip()
-        if common:
-            cands.append(Path(common).parent / "docs" / "ideas")
-    except (OSError, subprocess.SubprocessError):
-        pass
-    return next((p for p in cands if (p / "README.md").exists()), None)
-
-
-IDEAS = _ideas_dir()
 
 
 def md(text: str) -> str:
