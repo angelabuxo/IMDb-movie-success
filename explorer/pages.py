@@ -265,7 +265,8 @@ def profit():
     num = [c for c in ["log_budget", "log_multiple", "budget_usd", "gross_usd", "multiple", "year", "votes", "rating", "rt", "mc"] if c in d]
     a, b, col, sz = st.columns(4)
     x = a.selectbox("x", num, index=num.index("log_budget"))
-    y = b.selectbox("y", num, index=num.index("log_multiple"))
+    ys = [c for c in num if c != x]  # same column on both axes breaks the trendline
+    y = b.selectbox("y", ys, index=ys.index("log_multiple") if "log_multiple" in ys else 0)
     colour = col.selectbox("colour", ["first_genre", "tier", "clean", "none"])
     trend = sz.toggle("Trend line", True)
     fig = px.scatter(d, x=x, y=y, color=None if colour == "none" else colour, hover_name="title",
