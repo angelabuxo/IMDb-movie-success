@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 
@@ -355,7 +356,32 @@ def inspector():
 
 # ---------------------------------------------------------------- checks
 
-RUN_TOGETHER = r"\s(?!Ma?c|Van|De|La|Le|Di|Du)[A-Z][a-z]+[a-z][A-Z][a-z]"   # 'Madras TalkiesLyca', not 'Kyle MacLachlan'
+CAMEL = re.compile(r"(?<=[a-z])(?=[A-Z][a-z])")   # a point where two names could have been glued together
+
+# Findings a person has checked. A check lists them but doesn't count them against the data.
+VERIFIED_STALE = {"s03_compute_check": "a timing benchmark that reads only seed, instruments.compute_check_sentences, "
+                  "instruments.contextual and instruments.max_runtime_hours, none of which changed after it ran "
+                  "(checked 2026-11-15); rerunning needs the private sentence table"}
+VERIFIED_ODD = {"tt13570066": "Desert Warrior (2025): $150M budget and $759,228 gross are both what the cited sources "
+                "report (checked 2026-11-15); a real flop"}
+
+
+def merged_names(names: pd.Series) -> pd.Series:
+    """Names that are two other names glued together ('Madras TalkiesLyca Productions'): split at a lower-to-upper
+    boundary, both halves appear on their own elsewhere. Real CamelCase names ('DreamWorks Pictures') don't."""
+    known = set(names)
+    def glued(x):
+        return any(x[:m.start()].strip() in known and x[m.start():].strip() in known for m in CAMEL.finditer(x))
+    return names.map(glued)
+
+
+def readme_counts() -> dict:
+    """The sample sizes the README states, so the check follows the README instead of fixed numbers."""
+    t = (REPO / "README.md").read_text()
+    def num(pat):
+        m = re.search(pat, t)
+        return int(m.group(1).replace(",", "")) if m else None
+    return {"clean": num(r"It uses the ([\d,]+) clean movies"), "clean_100k": num(r"([\d,]+) movies are left")}
 
 
 def _check(name: str, ok: bool, detail: str, review: bool = False):
@@ -371,13 +397,15 @@ def checks():
         cfgmod = __import__(f"analysis.{pkg}.config", fromlist=["config_hash", "RUN_LOG"])
         log = json.loads(cfgmod.RUN_LOG.read_text()) if cfgmod.RUN_LOG.exists() else {}
         now = cfgmod.config_hash()
-        stale = sorted(k for k, v in log.items() if v.get("config") != now)
-        rows.append(_check(f"{pkg}: every saved step was run with the current config.yaml",
-                           not stale, f"current hash {now}; saved under an older config: {', '.join(stale) or 'none'} "
-                           f"of {len(log)} steps", review=True))
-        if stale:
-            lists[f"{pkg}: steps saved under an older config.yaml (rerun, or confirm the config change can't affect them)"] = \
-                pd.DataFrame([{"step": k, "saved": log[k].get("date"), "config hash": log[k].get("config")} for k in stale])
+        older = sorted(k for k, v in log.items() if v.get("config") != now)
+        stale = [k for k in older if k not in VERIFIED_STALE]
+        rows.append(_check(f"{pkg}: every saved step was run with the current config.yaml (or verified unaffected)",
+                           not stale, f"current hash {now}; older and unverified: {', '.join(stale) or 'none'}; "
+                           f"older but verified: {', '.join(k for k in older if k in VERIFIED_STALE) or 'none'}", review=True))
+        if older:
+            lists[f"{pkg}: steps saved under an older config.yaml"] = pd.DataFrame(
+                [{"step": k, "saved": log[k].get("date"), "config hash": log[k].get("config"),
+                  "verified": VERIFIED_STALE.get(k, "no: rerun it, or check the changed keys can't affect it")} for k in older])
     if (GRAPH / "nodes.csv").exists():
         m = movies()
         rows.append(_check("movies: one row per IMDb ID", m.tconst.is_unique, f"{len(m):,} movies"))
@@ -389,20 +417,25 @@ def checks():
         rows.append(_check("multiple equals gross ÷ budget (up to its 4-decimal rounding)", bool((gap <= tol).all()),
                            f"{int((gap > tol).sum())} films outside the tolerance; largest gap {gap.max():.1e}"))
         odd = c[(c.budget_usd >= 1e8) & (c.multiple < 0.01)]
-        rows.append(_check("no clean film with a $100M+ budget and under 1% of it back (likely a currency error)",
-                           odd.empty, f"{len(odd)} films, e.g. {', '.join(odd.title.head(3))}" if len(odd) else "none",
-                           review=True))
+        new_odd = odd[~odd.tconst.isin(VERIFIED_ODD)]
+        rows.append(_check("no unverified clean film with a $100M+ budget and under 1% of it back (likely a currency error)",
+                           new_odd.empty, f"{len(new_odd)} unverified ({', '.join(new_odd.title.head(3)) or 'none'}); "
+                           f"{len(odd) - len(new_odd)} verified as real", review=True))
         if len(odd):
-            lists["Clean films with a $100M+ budget and under 1% of it back: check the infobox currency"] = \
-                odd[["tconst", "title", "year", "budget_usd", "gross_usd", "multiple"]]
+            lists["Clean films with a $100M+ budget and under 1% of it back"] = \
+                odd[["tconst", "title", "year", "budget_usd", "gross_usd", "multiple"]].assign(
+                    verified=odd.tconst.map(VERIFIED_ODD).fillna("no: check the infobox currency"))
         ext = c[(c.multiple < 0.005) | (c.multiple > 200)].sort_values("multiple")
         lists[f"Extreme multiples among clean films ({len(ext)}): below 0.005 or above 200, mostly real but worth a look"] = \
             ext[["tconst", "title", "year", "budget_usd", "gross_usd", "multiple"]]
         rows.append(_check("release years are plausible (1900 to 2026)", bool(m.year.dropna().between(1900, 2026).all()),
                            f"{int(m.year.min())} to {int(m.year.max())}"))
-        rows.append(_check("README: 6,851 clean movies", len(c) == 6851, f"found {len(c):,}"))
-        rows.append(_check("README: 2,446 clean movies in the 100k+ tier", int((c.tier == "100k+").sum()) == 2446,
-                           f"found {int((c.tier == '100k+').sum()):,}"))
+        rc = readme_counts()
+        rows.append(_check("README's clean sample size matches the data", len(c) == rc["clean"],
+                           f"README {rc['clean']:,}, data {len(c):,}" if rc["clean"] else "README number not found"))
+        n100 = int((c.tier == "100k+").sum())
+        rows.append(_check("README's 100k+ clean count matches the data", n100 == rc["clean_100k"],
+                           f"README {rc['clean_100k']:,}, data {n100:,}" if rc["clean_100k"] else "README number not found"))
         if (FEATURES / "film_network_features.csv").exists():
             f = table(FEATURES / "film_network_features.csv")
             rows.append(_check("film features: one row per movie", f.tconst.is_unique and set(f.tconst) == set(m.tconst),
@@ -416,12 +449,12 @@ def checks():
             vals = pd.concat([ib[["tconst", "title", col]].rename(columns={col: "name"}).assign(field=col)
                               for col in ("studios", "distributors", "producers", "starring")])
             vals = vals.assign(name=vals["name"].fillna("").astype(str).str.split("|")).explode("name")
-            hit = vals[vals["name"].str.contains(RUN_TOGETHER, regex=True)]
-            rows.append(_check(f"{name}: no run-together names like 'Madras TalkiesLyca Productions'", hit.empty,
-                               f"{len(hit)} of {int((vals['name'] != '').sum()):,} names look run together "
-                               "(lists the <br> fix doesn't cover, plus a few real names)", review=True))
+            vals = vals[vals["name"] != ""]
+            hit = vals[merged_names(vals["name"])]
+            rows.append(_check(f"{name}: no names glued together like 'Madras TalkiesLyca Productions'", hit.empty,
+                               f"{len(hit)} of {len(vals):,} names split into two names found elsewhere"))
             if len(hit):
-                lists[f"{name}: names that look run together"] = hit[["tconst", "title", "field", "name"]]
+                lists[f"{name}: names that look glued together"] = hit[["tconst", "title", "field", "name"]]
     t = pd.DataFrame(rows)
     colour = {"pass": "color:#0a7d32;font-weight:600", "FAIL": "color:#b00020;font-weight:700",
               "review": "color:#a15c00;font-weight:700"}
