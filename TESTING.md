@@ -57,7 +57,7 @@ Auditing: **Present in research form.** `log_run()` writes a run log per step wi
 
 ## Bugs and quirks the tests found (2026-11-15)
 
-- **Fixed in code, outputs not regenerated yet: `names()` in `scripts/imdb/parse_infobox.py` merged unlinked names separated by `<br>`** (`"Jane Doe<br>John Roe"` became `"Jane DoeJohn Roe"`), because `strip_code()` deleted the `<br>` tags before the split. The fix splits first, decodes HTML entities before splitting (so the `;` in `&nbsp;` isn't treated as a separator), and drops items that are only a parenthetical note. Checked on the real articles:
+- **Fixed and regenerated: `names()` in `scripts/imdb/parse_infobox.py` merged unlinked names separated by `<br>`** (`"Jane Doe<br>John Roe"` became `"Jane DoeJohn Roe"`), because `strip_code()` deleted the `<br>` tags before the split. The fix splits first, decodes HTML entities before splitting (so the `;` in `&nbsp;` isn't treated as a separator), and drops items that are only a parenthetical note. Checked on the real articles:
   - 100k+ tier: 48 of 2,763 infoboxes change, gaining 130 names in place of 41 merged ones.
   - 10k+ tier: 831 of 9,789 infoboxes change (561 producer, 279 studio, 63 distributor and 34 starring fields), gaining 2,629 names in place of 880 merged ones.
   - Every removed name was either a merged run of the new names or had a note such as "(uncredited)" attached. No real name is lost.

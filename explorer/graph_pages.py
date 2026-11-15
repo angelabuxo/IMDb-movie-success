@@ -173,14 +173,12 @@ def whole_graph():
         return
     g = gd()
     n, e = g["nodes"], g["edges"]
-    c = st.columns(5)
-    c[0].metric("Nodes", f"{len(n):,}")
-    for i, t in enumerate(["movie", "person", "company"], 1):
-        c[i].metric(t.capitalize() + "s", f"{int((n.type == t).sum()):,}")
-    c[4].metric("Credits (edges)", f"{len(e):,}")
+    counts = {"movie": "Movies", "person": "People", "company": "Companies"}
+    st.markdown(f"**{len(n):,} nodes** (" + ", ".join(f"{int((n.type == t).sum()):,} {lab.lower()}" for t, lab in counts.items())
+                + f") and **{len(e):,} credits**.")
     st.caption("The full graph has about 110,000 nodes, too many to draw at once. Below it is projected: films linked "
                "when they share people (or companies), or people linked when they made films together. Filter, then "
-               "**click a node, or drag a box or lasso**, to see its details.")
+               "**click a node, or drag a box around several** (lasso is in the chart's toolbar), to see its details.")
 
     with st.sidebar:
         st.subheader("What to draw")
@@ -232,11 +230,15 @@ def whole_graph():
     fig.add_trace(go.Scattergl(x=xy[:, 0], y=xy[:, 1], mode="markers", customdata=ids, text=hover,
                                hovertemplate="%{text}<extra></extra>",
                                marker=dict(size=size, line=dict(width=0.3, color="white"), **marker), showlegend=False))
-    fig.update_layout(template="simple_white", height=760, margin=dict(l=0, r=0, t=10, b=0), dragmode="lasso",
+    fig.update_layout(clickmode="event+select", template="simple_white", height=760, margin=dict(l=0, r=0, t=10, b=0), dragmode="select",
                       xaxis=dict(visible=False), yaxis=dict(visible=False, scaleanchor="x"))
     event = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box", "lasso"),
                             key="whole_graph_plot")
     sel = _selected_ids(event)
+    jump = st.selectbox("Or find a node in this drawing", sorted(ids, key=lambda x: g["label"].get(x, x).lower()), index=None,
+                        placeholder="Type a title or name…", format_func=lambda x: g["label"].get(x, x), key="graph_jump")
+    if jump and jump not in sel:
+        sel = [jump] + sel
 
     left, right = st.columns([3, 2])
     with left:
@@ -272,7 +274,7 @@ def whole_graph():
         for t, colr in TYPE_COLOUR.items():
             vc = d.loc[d.type == t, "degree"].value_counts().sort_index()
             fig.add_scatter(x=vc.index, y=vc.values, mode="markers", name=t, marker=dict(color=colr, size=5))
-        fig.update_layout(template="simple_white", xaxis_type="log", yaxis_type="log", height=380,
+        fig.update_layout(clickmode="event+select", template="simple_white", xaxis_type="log", yaxis_type="log", height=380,
                           xaxis_title="credits (degree)", yaxis_title="nodes")
         st.plotly_chart(fig, width="stretch")
         G = ig.Graph.TupleList(e[["source", "target"]].itertuples(index=False), directed=False)
@@ -336,15 +338,14 @@ def node():
     st.caption(f"`{cur}` · {int(r.degree):,} credits in the graph")
 
     if r.type == "movie":
-        c = st.columns(6)
+        c = st.columns(3)
         c[0].metric("Budget", f"${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "—")
         c[1].metric("Gross", f"${r.gross_usd / 1e6:,.1f}M" if pd.notna(r.gross_usd) else "—")
         c[2].metric("Gross ÷ budget", f"{r.multiple:,.2f}" if pd.notna(r.multiple) else "—")
-        c[3].metric("Clean", "yes" if r.clean else "no")
-        c[4].metric("IMDb", f"{r.rating}" if pd.notna(r.rating) else "—", f"{int(r.votes):,} votes" if pd.notna(r.votes) else None,
-                    delta_color="off")
-        c[5].metric("Critics", f"RT {int(r.rt)}%" if pd.notna(r.rt) else "—", f"MC {int(r.mc)}" if pd.notna(r.mc) else None,
-                    delta_color="off")
+        c = st.columns(3)
+        c[0].metric("Clean sample", "yes" if r.clean else "no")
+        c[1].metric("IMDb", f"{r.rating} ({int(r.votes):,} votes)" if pd.notna(r.votes) else "—")
+        c[2].metric("Critics", " · ".join(x for x in [f"RT {int(r.rt)}%" if pd.notna(r.rt) else "", f"MC {int(r.mc)}" if pd.notna(r.mc) else ""] if x) or "—")
         if cur in script_index().index and st.button("Read the screenplay", type="primary"):
             nav.open_script(cur)
 
@@ -354,7 +355,8 @@ def node():
             rows = e[e.target == cur].assign(id=lambda d: d.source)
         else:
             rows = e[e.source == cur].assign(id=lambda d: d.target)
-        rows = rows.merge(n[["id", "label", "type", "year", "multiple", "clean"]], on="id", how="left")
+        rows = rows.drop(columns=["year"], errors="ignore").merge(
+            n[["id", "label", "type", "year", "multiple", "clean"]], on="id", how="left")
         cols = ["label", "type", "role", "ordering", "year", "multiple", "clean", "origin", "id"]
         rows = rows[cols].sort_values(["role", "ordering", "year"])
         st.caption("Click a row to open that node.")
@@ -369,9 +371,10 @@ def node():
                                            text=fl.label, customdata=fl.id, marker=dict(size=9, color="#0072B2"),
                                            hovertemplate="%{text} (%{x})<br>ln multiple %{y:.2f}<extra></extra>"))
                 fig.add_hline(y=0, line_dash="dash", line_color="#999")
-                fig.update_layout(template="simple_white", height=320, title="Their films over time",
+                fig.update_layout(clickmode="event+select", template="simple_white", height=320, title="Their films over time",
                                   yaxis_title="ln(gross / budget)")
-                ev2 = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode="points", key=f"tl_{cur}")
+                fig.update_layout(dragmode="select")
+                ev2 = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"tl_{cur}")
                 s = _selected_ids(ev2)
                 if s:
                     nav.open_node(s[0])
@@ -415,13 +418,20 @@ def node():
                     customdata=np.asarray(ids)[m], text=sub.label[m].astype(str).str.slice(0, 22), textposition="top center",
                     textfont=dict(size=10), hovertext=[f"{l} ({t})" for l in sub.label[m]], hoverinfo="text",
                     marker=dict(size=np.where(np.asarray(ids)[m] == cur, 22, 10), color=colr, line=dict(width=1, color="white"))))
-            fig.update_layout(template="simple_white", height=640, margin=dict(l=0, r=0, t=10, b=0),
-                              xaxis=dict(visible=False), yaxis=dict(visible=False), legend=dict(orientation="h"))
-            st.caption(f"{len(ids):,} nodes, {len(pairs):,} links. Click a node to move to it.")
-            ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode="points", key=f"ego_{cur}_{hops}")
+            fig.update_layout(clickmode="event+select", dragmode="select", template="simple_white", height=640,
+                              margin=dict(l=0, r=0, t=10, b=0), xaxis=dict(visible=False), yaxis=dict(visible=False),
+                              legend=dict(orientation="h"))
+            st.caption(f"{len(ids):,} nodes, {len(pairs):,} links. Click a node, or drag a small box around it, to move to it.")
+            ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box", "lasso"),
+                                 key=f"ego_{cur}_{hops}")
             s = [x for x in _selected_ids(ev) if x != cur]
             if s:
                 nav.open_node(s[0])
+            others = sorted((x for x in ids if x != cur), key=lambda x: g["label"].get(x, x).lower())
+            jump = st.selectbox("Or jump to", others, index=None, placeholder="Pick a node in this network…",
+                                format_func=lambda x: f"{g['label'].get(x, x)} · {by.at[x, 'type']}", key=f"jump_{cur}")
+            if jump:
+                nav.open_node(jump)
 
     with t3:
         full = r.dropna().astype(str).rename("value").rename_axis("field").reset_index()
@@ -547,12 +557,10 @@ def screenplays():
     st.subheader(f"{title} ({meta.movie_name.rsplit('_', 1)[-1]})")
     if have_graph and pick in by.index:
         r = by.loc[pick]
-        c = st.columns(5)
-        c[0].metric("Budget", f"${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "—")
-        c[1].metric("Gross", f"${r.gross_usd / 1e6:,.1f}M" if pd.notna(r.gross_usd) else "—")
-        c[2].metric("Gross ÷ budget", f"{r.multiple:,.2f}" if pd.notna(r.multiple) else "—")
-        c[3].metric("Clean", "yes" if r.clean else "no")
-        c[4].metric("Scenes", f"{len(scenes):,}")
+        st.markdown(" · ".join(x for x in [f"**Budget** ${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "**Budget** —",
+                                f"**Gross** ${r.gross_usd / 1e6:,.1f}M" if pd.notna(r.gross_usd) else "**Gross** —",
+                                f"**Gross ÷ budget** {r.multiple:,.2f}" if pd.notna(r.multiple) else "",
+                                f"**Clean** {'yes' if r.clean else 'no'}", f"**Scenes** {len(scenes):,}"] if x).replace("$", "\\$"))
         if st.button("Open this film in the node explorer"):
             nav.open_node(pick)
 
@@ -588,10 +596,10 @@ def screenplays():
         if not cand:
             st.info("No scene matches.")
         else:
-            start_scene = st.session_state.pop("scene_focus", None)
+            start_scene = st.session_state.get("scene_focus")
             pages = max(1, (len(cand) + per - 1) // per)
             page0 = (next((k for k, i in enumerate(cand) if i >= start_scene), 0) // per) if start_scene is not None else 0
-            page = st.number_input(f"Page (of {pages})", 1, pages, page0 + 1) - 1
+            page = st.number_input(f"Page (of {pages})", 1, pages, page0 + 1, key=f"page_{pick}_{who}_{query}_{per}_{start_scene}") - 1
             which = cand[page * per:(page + 1) * per]
             st.caption(f"Scenes {which[0]} to {which[-1]} of {len(scenes) - 1}")
             with st.container(height=760):
@@ -620,11 +628,12 @@ def screenplays():
                                          marker=dict(size=6 + 30 * np.sqrt(sz / sz.max()), color="#E69F00",
                                                      line=dict(width=1, color="white")),
                                          hovertemplate="%{text}<extra></extra>"))
-                fig.update_layout(template="simple_white", height=560, margin=dict(l=0, r=0, t=10, b=0), showlegend=False,
+                fig.update_layout(clickmode="event+select", dragmode="select", template="simple_white", height=560,
+                                  margin=dict(l=0, r=0, t=10, b=0), showlegend=False,
                                   xaxis=dict(visible=False), yaxis=dict(visible=False))
                 st.caption("Characters with 3+ speeches, linked when they speak in the same scene. "
-                           "Click one to read only their scenes.")
-                ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode="points", key=f"chars_{pick}")
+                           "Click one (or drag a box around it) to read only their scenes, or pick one in the Read tab.")
+                ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"chars_{pick}")
                 s = _selected_ids(ev)
                 if s:
                     st.session_state["char_focus"] = s[0]
@@ -647,15 +656,17 @@ def screenplays():
                     fig.add_scatter(x=d.scene, y=d[col], mode="lines+markers", name=name, line=dict(color=colr, width=1.5),
                                     marker=dict(size=4), customdata=d.scene)
                 fig.add_hline(y=0, line_dash="dash", line_color="#aaa")
-                fig.update_layout(template="simple_white", height=420, xaxis_title="scene", yaxis_title="mean VADER compound",
+                fig.update_layout(clickmode="event+select", dragmode="select", template="simple_white", height=420,
+                                  xaxis_title="scene", yaxis_title="mean VADER compound",
                                   legend=dict(orientation="h", y=1.08))
-                st.caption("Mean VADER score of each scene's sentences (saved by arcs Step 3). Click a point to jump to "
-                           "that scene in the Read tab.")
-                ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode="points", key=f"arc_{pick}")
+                st.caption("Mean VADER score of each scene's sentences (saved by arcs Step 3). Click a point, or drag a box "
+                           "over some scenes, to open the Read tab at the first of them.")
+                ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"arc_{pick}")
                 pts = ev.selection["points"] if ev and ev.selection else []
                 if pts:
-                    st.session_state["scene_focus"] = int(pts[0]["x"])
-                    st.success(f"Read tab now opens at scene {int(pts[0]['x'])}.")
+                    first = int(min(p["x"] for p in pts))
+                    st.session_state["scene_focus"] = first
+                    st.success(f"Read tab now opens at scene {first}.")
                 show_df(d, key=f"scenescores_{pick}")
 
     with t4:
