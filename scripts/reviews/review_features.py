@@ -44,9 +44,9 @@ def clean_ids():
     def ok(r):
         return (r["budget_cur"] == "USD" and r["gross_cur"] == "USD" and float(r["b"] or 0) >= 1000
                 and float(r["g"] or 0) >= 1000 and "rentals" not in r["gross_flag"]
-                and "regional" not in r["gross_flag"]
+                and "regional" not in r["gross_flag"] and "direct_to_video" not in r["gross_flag"]
                 and not re.search("netflix|amazon|apple|hulu", r["distributors"] or "", re.I)
-                and int(r["y"] or 0) < 2026)
+                and 1975 <= int(r["y"] or 0) < 2026)
     with open(FEATURES, newline="") as f:
         return {r["tconst"] for r in csv.DictReader(f) if ok(r)}
 

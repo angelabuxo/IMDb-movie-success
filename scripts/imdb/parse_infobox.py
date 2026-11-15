@@ -38,6 +38,20 @@ def scope(s):
     if re.search(r'\bu\.?s\.?\b|domestic|north america|canada|\buk\b|italy|japan',t) and not re.search(r'worldwide|global',t): f.append('regional')
     if re.search(r'\(net\)|\(gross\)',t): f.append('net_gross')
     return ';'.join(f)
+DTV=re.compile(r'(?i)\[\[\s*Category\s*:[^\]]*direct-to-video')
+NOT_RENTALS=re.compile(r'(?i)worldwide rentals beat domestic take|\bname\s*=\s*"?[^">|}]*"?|https?://[^\s|\]}]+')  # a Variety 1995 headline on 1994 worldwide grosses; ref names; URLs
+def gross_flags(raw,shown,wikitext='',title=''):
+    """scope() of the ref-stripped gross, plus 'rentals' when the raw value, refs included, says rentals
+    (The Haunting's ref reads 'figures are rentals as opposed to total gross'), plus 'direct_to_video' when
+    the article is in a direct-to-video category. Whole words only, so 'parental' doesn't count, and the film's
+    own title is ignored, so The Rental (2020) isn't flagged by its Box Office Mojo citation."""
+    f=[x for x in scope(shown).split(';') if x]
+    s=NOT_RENTALS.sub('',raw or '')
+    name=re.sub(r'\s*\([^()]*\)\s*$','',title or '').strip()
+    if name: s=re.sub(re.escape(name),'',s,flags=re.I)
+    if 'rentals' not in f and re.search(r'(?i)\brentals?\b',s): f.insert(0,'rentals')
+    if DTV.search(wikitext or ''): f.append('direct_to_video')
+    return ';'.join(f)
 LIST_TPL=re.compile(r'(?i)\s*(ubl\w*|ubi\w*|blist|idp|pl|[\w ]*list)\s*$')  # ubl, ubli, ubil, idp, pl, plainlist, indented plainlist, unbulleted list, hlist...
 def _items(text):
     # One name per line: a line's link titles if it has links, else its plain text. Bare '(...)' notes are dropped.
@@ -75,7 +89,7 @@ for l in open(SRC):
     for tp in p.filter_templates(recursive=False):
         if IB.match(str(tp.name).strip()): box=tp;break
     g=lambda *k:next((str(box.get(x).value) for x in k if box is not None and box.has(x) and str(box.get(x).value).strip()),'')
-    bv,bc,br=money(g('budget')); gv,gc,gr=money(g('gross','box office','box_office'))
+    graw=g('gross','box office','box_office'); bv,bc,br=money(g('budget')); gv,gc,gr=money(graw)
     rt=None;mc=None
     m=re.search(r'\{\{\s*Rotten Tomatoes prose\s*\|\s*(\d{1,3})',t,re.I); rt=m and m[1]
     if not rt:
@@ -92,6 +106,6 @@ for l in open(SRC):
     else:
         d=re.search(r'(?i)\b('+'|'.join(MON)+r')\b',rel); rm=d and MON[d[1].lower()]
     for tc in r['tconst']:
-        w.writerow([tc,r['title'],int(box is not None),bv,bc,br,scope(br),gv,gc,gr,scope(gr),'|'.join(names(g('studio','studios','production_companies','production companies'))),'|'.join(names(g('distributor','distributors'))),'|'.join(names(g('producer','producers'))),'|'.join(names(g('starring'))),rt,mc,cc,rm])
+        w.writerow([tc,r['title'],int(box is not None),bv,bc,br,scope(br),gv,gc,gr,gross_flags(graw,gr,t,r['title']),'|'.join(names(g('studio','studios','production_companies','production companies'))),'|'.join(names(g('distributor','distributors'))),'|'.join(names(g('producer','producers'))),'|'.join(names(g('starring'))),rt,mc,cc,rm])
     n+=1
 print('parsed',n)

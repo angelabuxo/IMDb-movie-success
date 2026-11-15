@@ -1,0 +1,51 @@
+i,tconst,title,year,budget_usd,gross_usd,parse_matches_raw,category,note,in_clean_after_2026_11_15_rule
+1,tt0154421,The Idiots,1998,2500000.0,7235.0,yes,not_theatrical,"Danish film, gross from The Numbers is likely US only",yes
+2,tt1743720,The Greatest Movie Ever Sold,2011,1500000.0,700000.0,yes,us_only,infobox says approx. (USA),yes
+3,tt0091083,From Beyond,1986,2500000.0,1200000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+4,tt1294213,Solitary Man,2009,15000000.0,5600000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+5,tt7134096,The Rhythm Section,2020,50000000.0,6000000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+6,tt0477139,Wristcutters: A Love Story,2006,1000000.0,454026.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+7,tt1308728,The Happytime Murders,2018,43500000.0,27500000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+8,tt4334266,The Bad Batch,2016,6000000.0,201890.0,yes,not_theatrical,"Netflix SVOD deal, limited theatrical release",yes
+9,tt1020558,Centurion,2010,13500000.0,7900000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+10,tt0235737,The Salton Sea,2002,18000000.0,1100000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+11,tt6598238,Life in a Year,2020,10000000.0,43862.0,yes,unclear,"tiny gross, no release details in article",yes
+12,tt0181739,Osmosis Jones,2001,70000000.0,14000000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+13,tt0023427,Scarface,1932,800000.0,600000.0,yes,rentals_or_old,"1932 figure, article says unsuccessful at box office",no
+14,tt0115734,Bottle Rocket,1996,5000000.0,560069.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+15,tt1798243,Rudderless,2014,5000000.0,584499.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+16,tt0815178,The Life Before Her Eyes,2007,13000000.0,7200000.0,yes,unclear,"infobox $7.2M but article gives domestic $303,439, sources disagree",yes
+17,tt7137380,Destroyer,2018,10700000.0,5600000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+18,tt0057129,The Haunting,1963,1050000.0,1020000.0,yes,rentals_or_old,"infobox ref note says rentals, not gross; flagged since the 15 Nov parser change",no
+19,tt0110169,It's Pat: The Movie,1994,8000000.0,60822.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+20,tt0102388,The Man in the Moon,1991,6600000.0,2800000.0,yes,us_only,article: US and Canada gross,yes
+21,tt2463288,Walk of Shame,2014,15000000.0,8100000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+22,tt0054757,The Comancheros,1961,4260000.0,3500000.0,yes,rentals_or_old,article: theatrical rentals in US and Canada,no
+23,tt0043132,Where the Sidewalk Ends,1950,1475000.0,1000000.0,yes,rentals_or_old,"pre-1975 figure from a studio history, scope unclear",no
+24,tt0097179,DeepStar Six,1989,8500000.0,8143225.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+25,tt11198810,She Said,2022,32000000.0,13900000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+26,tt0114345,The Scarlet Letter,1995,46000000.0,35000000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+27,tt0053137,On the Beach,1959,2900000.0,2200000.0,yes,rentals_or_old,"1959 figure, article says the film recorded a loss",no
+28,tt0100449,Quick Change,1990,17000000.0,15300000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+29,tt4106376,American Renegades,2017,77500000.0,2200000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+30,tt12583926,Anniversary,2025,7000000.0,672711.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+31,tt3099498,Tusk,2014,3000000.0,1900000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+32,tt1724970,Beyond Skyline,2017,14000000.0,992181.0,yes,not_theatrical,VOD and digital release,yes
+33,tt0098051,The Package,1989,16000000.0,10600000.0,yes,us_only,article: US and Canada gross,yes
+34,tt0417056,Pledge This!,2006,8300000.000000001,1751490.0,yes,not_theatrical,Wikipedia category: direct-to-video film,no
+35,tt1231277,S. Darko,2009,4000000.0,1035846.0,yes,not_theatrical,Wikipedia category: direct-to-video film,no
+36,tt0088915,A Chorus Line,1985,25000000.0,14200000.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+37,tt0284490,Showtime,2002,85000000.0,77700000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+38,tt0163579,Chill Factor,1999,52000000.0,11800000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+39,tt1673702,A Cat in Paris,2010,7500000.0,3300000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+40,tt12349832,Cuckoo,2024,7000000.0,6700000.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+41,tt1416801,Kill the Irishman,2011,12000000.0,1200000.0,yes,us_only,article: domestic gross,yes
+42,tt6476140,Serenity,2019,25000000.0,14400000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+43,tt0120913,Titan A.E.,2000,82500000.0,36800000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+44,tt0070334,The Long Goodbye,1973,1700000.0,959000.0,yes,rentals_or_old,"pre-1975 figure from a studio history, scope unclear",no
+45,tt0327679,Ella Enchanted,2004,31000000.0,27400000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+46,tt32323252,Christy,2025,15000000.0,2300000.0,yes,unclear,"figure matches infobox, article gives no scope",yes
+47,tt0115610,Bad Moon,1996,7000000.0,1100000.0,yes,us_only,Wikidata scope: United States,yes
+48,tt0330099,The Brown Bunny,2003,10000000.0,630427.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes
+49,tt0091209,The Hitcher,1986,7900000.0,5800000.0,yes,us_only,article: North America gross,yes
+50,tt0361925,Welcome to Mooseport,2004,30000000.0,14600000.0,yes,worldwide_flop,article text or Wikidata confirms a full-run or worldwide gross under budget,yes

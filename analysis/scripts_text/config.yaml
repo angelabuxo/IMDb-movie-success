@@ -7,6 +7,7 @@ sample:
   tier: "100k+"                  # features/movies_features.csv; the 10k tier's money isn't validated
   # Clean theatrical rule, as in scripts/imdb/coverage_clean_sample.sql
   min_budget_usd: 1000
+  min_year_inclusive: 1975        # pre-1975 grosses are mostly distributor rentals
   max_year_exclusive: 2026
   streaming_distributors: "netflix|amazon|apple|hulu"
   duplicate_rule: "longest_script"   # 12 IMDb IDs appear twice in MovieSum

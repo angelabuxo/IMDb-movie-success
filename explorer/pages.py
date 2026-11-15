@@ -243,7 +243,7 @@ def profit():
     m = movies()
     with st.sidebar:
         st.subheader("Sample")
-        clean = st.toggle("Clean films only", True, help="Usable USD budget and worldwide gross, no streaming or rentals.")
+        clean = st.toggle("Clean films only", True, help="Usable USD budget and worldwide gross, released 1975 to 2025, no streaming, rentals or direct-to-video.")
         tiers = st.multiselect("Vote tier", sorted(m.tier.dropna().unique()), default=sorted(m.tier.dropna().unique()))
         yr = st.slider("Release year", int(m.year.min()), int(m.year.max()), (1980, int(m.year.max())))
         genres = sorted({g for gs in m.genres.dropna() for g in gs.split(",") if g})
