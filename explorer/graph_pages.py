@@ -530,6 +530,12 @@ def _render(scenes, which, query: str) -> str:
     return "".join(out)
 
 
+def _script_label(movie_name: str) -> str:
+    """'Face_Off_1997' -> 'Face Off (1997)'. MovieSum joins the title words and the year with underscores."""
+    title, _, year = movie_name.rpartition("_")
+    return f"{title.replace('_', ' ')} ({year})" if title else movie_name
+
+
 def screenplays():
     st.title("Screenplays")
     idx = script_index()
@@ -544,17 +550,16 @@ def screenplays():
     default = st.session_state.get("script_tconst")
     with st.sidebar:
         pick = st.selectbox(f"Screenplay ({len(opts):,})", opts, index=opts.index(default) if default in opts else 0,
-                            format_func=lambda t: idx.at[t, "movie_name"].replace("_", " (") + ")", key="script_pick")
+                            format_func=lambda t: _script_label(idx.at[t, "movie_name"]), key="script_pick")
     if pick != st.session_state.get("script_tconst"):
         st.session_state["script_tconst"] = pick
-        st.session_state.pop("scene_focus", None)
-        st.session_state.pop("char_focus", None)
+        for k in ("scene_focus", "char_focus", "scene_clicked", "char_clicked"):
+            st.session_state.pop(k, None)
     meta = idx.loc[pick]
     doc = _load_script(meta.file, int(meta.offset))
     scenes = _scenes(doc.get("script", ""))
 
-    title = meta.movie_name.rsplit("_", 1)[0]
-    st.subheader(f"{title} ({meta.movie_name.rsplit('_', 1)[-1]})")
+    st.subheader(_script_label(meta.movie_name))
     if have_graph and pick in by.index:
         r = by.loc[pick]
         st.markdown(" · ".join(x for x in [f"**Budget** ${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "**Budget** —",
@@ -584,9 +589,13 @@ def screenplays():
                     here.add(speaker)
             scene_chars.append(here)
         top_chars = [c for c, _ in chars.most_common(40)]
-        focus = st.session_state.get("char_focus")
-        who = c2.selectbox("Only scenes with", ["anyone"] + top_chars,
-                           index=(top_chars.index(focus) + 1) if focus in top_chars else 0, key="char_sel")
+        # A character clicked in the Characters tab is handed over once; after that the box is the user's again.
+        focus = st.session_state.pop("char_focus", None)
+        if focus in top_chars:
+            st.session_state["char_sel"] = focus
+        elif st.session_state.get("char_sel") not in ["anyone"] + top_chars:
+            st.session_state["char_sel"] = "anyone"
+        who = c2.selectbox("Only scenes with", ["anyone"] + top_chars, key="char_sel")
         per = c3.number_input("Scenes per page", 5, 200, 25, step=5)
         cand = [i for i in range(len(scenes))
                 if (who == "anyone" or who in scene_chars[i])
@@ -635,8 +644,11 @@ def screenplays():
                            "Click one (or drag a box around it) to read only their scenes, or pick one in the Read tab.")
                 ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"chars_{pick}")
                 s = _selected_ids(ev)
+                # The Read tab is drawn before this one, so rerun once for it to pick the click up.
+                if s and s[0] != st.session_state.get("char_clicked"):
+                    st.session_state["char_clicked"] = st.session_state["char_focus"] = s[0]
+                    st.rerun()
                 if s:
-                    st.session_state["char_focus"] = s[0]
                     st.success(f"Read tab now shows only scenes with {s[0]}.")
             st.dataframe(cdf, width="stretch", hide_index=True, height=360)
 
@@ -665,7 +677,9 @@ def screenplays():
                 pts = ev.selection["points"] if ev and ev.selection else []
                 if pts:
                     first = int(min(p["x"] for p in pts))
-                    st.session_state["scene_focus"] = first
+                    if first != st.session_state.get("scene_clicked"):   # Read tab is drawn first: rerun once
+                        st.session_state["scene_clicked"] = st.session_state["scene_focus"] = first
+                        st.rerun()
                     st.success(f"Read tab now opens at scene {first}.")
                 show_df(d, key=f"scenescores_{pick}")
 

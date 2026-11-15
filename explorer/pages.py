@@ -298,6 +298,9 @@ def profit():
 
 # ---------------------------------------------------------------- data inspector
 
+MAX_COLS = 500
+
+
 def inspector():
     st.title("Data inspector")
     groups = data_files()
@@ -314,7 +317,10 @@ def inspector():
         st.error(f"Can't read `{f.name}`: {e}")
         return
     st.subheader(f.name)
-    st.caption(f"`{f}` · {len(df):,} rows × {df.shape[1]} columns" + (" (first 200,000 only)" if limit else ""))
+    st.caption(f"`{f}` · {len(df):,} rows × {df.shape[1]:,} columns" + (" (first 200,000 only)" if limit else ""))
+    if df.shape[1] > MAX_COLS:   # e.g. screenplay_words.json flattens to 160,000+ word columns, too big to send
+        st.warning(f"{df.shape[1]:,} columns is more than the browser can be sent; showing the first {MAX_COLS:,}.")
+        df = df.iloc[:, :MAX_COLS]
 
     schema = pd.DataFrame({"column": df.columns, "dtype": df.dtypes.astype(str).values,
                            "non-null": df.notna().sum().values, "missing %": (df.isna().mean() * 100).round(1).values,
