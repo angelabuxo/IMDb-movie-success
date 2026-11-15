@@ -64,6 +64,7 @@ Everything the code reads lives in `data/raw/`, which git ignores. There are two
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
 | `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph: node and edge tables, GraphML, credits, people, the company IDs and the Wikipedia producer matches |
 | `movie-graph-2026-11-15.tar.zst` | 12 MB | The graph and the infobox and movie tables after the 15 November parser fixes (see [TESTING.md](TESTING.md)). It replaces the same files from the two 11 November archives above |
+| `extra-tables-2026-11-15.tar.zst` | 0.5 MB | Franchise flags, MovieSum IDs and stats, and Tag Genome review counts per film, which no other archive holds |
 
 Unpack them from the repo root, oldest first, so a newer archive replaces the files it updates:
 
