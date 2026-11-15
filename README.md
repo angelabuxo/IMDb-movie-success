@@ -2,7 +2,7 @@
 
 **Working question:** what is the best predictor of a movie being highly profitable, and does profit agree with whether people liked the film?
 
-This is the final project for DTU 02805 Social Graphs and Interactions, autumn 2026, by Log-Log Legends: Àngela Buxó, Gyula Kürthy and Niklas Johansen. Course group repo: <https://github.com/horrrt/02805_social_graphs>
+This is the final project for DTU 02805 Social Graphs and Interactions, autumn 2026, by Log-Log Legends: Gyula Kürthy, Àngela Buxó and Niklas Johansen. Course group repo: <https://github.com/horrrt/02805_social_graphs>
 
 ## The plan
 
@@ -86,6 +86,10 @@ python3 scripts/get_data.py imdb genome
 
 `--all` fetches every dataset (about 4.5 GB), and `python3 scripts/get_data.py wikipedia` redoes the Wikipedia pull (about an hour) if you need fresher articles than the bundle's.
 
+## Explore and check everything locally
+
+`streamlit run explorer/app.py` opens a local app with every notebook step, the network results, a profit playground, an inspector for every data and output file, and automatic checks. See [explorer/README.md](explorer/README.md). `python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
+
 ## Scripts and reviews
 
 [`notebooks/scripts_and_reviews.ipynb`](notebooks/scripts_and_reviews.ipynb) works through the group's notes on screenplays and reviews: hits against flops on character networks and text measures, sentiment arcs, distinctive words, script and review embeddings against profit, and how review sentiment lines up with ratings and money. Two scripts build its inputs. Run them from the data folder after downloading the data:
@@ -135,7 +139,7 @@ cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_t
 ../../.venv/bin/python ../../scripts/network/build_graph.py
 ```
 
-`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. About 1% of company names arrive run together from the infobox parser ("Madras TalkiesLyca Productions"); they are split only when every piece is a Wikipedia article, and otherwise stay unmerged. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 1,800 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
+`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. The infobox parser used to run unlinked names together ("Madras TalkiesLyca Productions"); it now splits them at `<br>` (fixed 15 November 2026, see [TESTING.md](TESTING.md)). `resolve_companies.py` still splits any run-together name left over, but only when every piece is a Wikipedia article. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 2,000 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
 
 ## What predicts profit
 
@@ -195,7 +199,7 @@ The first takes several minutes and the other two under two. Each writes a JSON 
 [`pair_returns.py`](scripts/network/pair_returns.py) links two films when they share a key person (director, writer, producer, top-three cast, composer, cinematographer or editor) and measures the return correlation of film pairs, mean(z_i × z_j), which is 0 for random pairs.
 
 - **Only direct links count.** Films one step apart correlate at +0.036 (+0.043 with franchise films), against a shuffle null whose 95th percentile is +0.004. Two steps apart it's +0.001, and further out it's zero or slightly negative. The small negatives are arithmetic: standardised returns sum to zero, so if linked pairs sit above zero the rest must sit a little below.
-- **The more people two films share, the more alike their returns.** One shared person gives +0.029, two +0.081, three or four +0.157 and five or more +0.328 (634 pairs). With franchise films the top group reaches +0.467. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.017, +0.044, +0.067 and +0.152), though the top group is small and the franchise flag is rough, so some of it is still sequels.
+- **The more people two films share, the more alike their returns.** One shared person gives +0.029, two +0.081, three or four +0.157 and five or more +0.328 (634 pairs). With franchise films the top group reaches +0.467. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.017, +0.045, +0.066 and +0.154), though the top group is small and the franchise flag is rough, so some of it is still sequels.
 - **Companies and people both carry it.** Linked pairs with no studio or distributor in common still correlate at +0.022, and unlinked pairs that share a company at +0.033.
 - **Similar scripts don't.** On the 1,691 films with a screenplay embedding (1,174 without franchise films), pairs that share a person correlate at +0.041. The same number of unlinked pairs with the most similar scripts correlate at +0.004, inside the null (95th percentile +0.011). Across deciles of script similarity, unlinked pairs stay between -0.009 and +0.005.
 - **People do make somewhat similar films.** Within the same first genre, linked films' scripts have a cosine similarity of 0.664 against 0.648 for unlinked ones. That gap of 0.016 is about a sixth of the spread across all pairs (SD 0.093), and above a null that shuffles scripts within genre.
@@ -206,9 +210,9 @@ What it measures and misses: the pair correlation says returns cluster, using ev
 
 [`team_history.py`](scripts/network/team_history.py) asks whether a film returns more when its key people have shared an earlier film. `repeat_share` is the share of pairs in the team who have, built from earlier years only over all 12,673 films in the graph.
 
-- With franchise films, `repeat_share` goes with the adjusted return at ρ = +0.127, and adds 0.018 to out-of-time R² (fitted to 2010, tested on 2011 to 2017) over the team's own track record, experience and size.
-- Most of that is sequels. Without franchise films it's ρ = +0.077 (within-year shuffle null: -0.016 to +0.029). Net of track record, experience and team size it's +0.024 (p = 0.10), and the out-of-time gain is 0.001.
-- What's left sits after 2005: ρ = +0.136 (95% interval 0.097 to 0.172) for films from 2005 on, against +0.016 for 1990 to 2004 and -0.065 before 1990. We haven't tested why, and unflagged sequels are one candidate.
+- With franchise films, `repeat_share` goes with the adjusted return at ρ = +0.126, and adds 0.018 to out-of-time R² (fitted to 2010, tested on 2011 to 2017) over the team's own track record, experience and size.
+- Most of that is sequels. Without franchise films it's ρ = +0.076 (within-year shuffle null: -0.016 to +0.029). Net of track record, experience and team size it's +0.023 (p = 0.11), and the out-of-time gain is 0.001.
+- What's left sits after 2005: ρ = +0.134 (95% interval 0.095 to 0.170) for films from 2005 on, against +0.015 for 1990 to 2004 and -0.065 before 1990. We haven't tested why, and unflagged sequels are one candidate.
 
 What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's principals file lists about ten people a title, so teams are partial.
 
@@ -218,12 +222,12 @@ What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's pri
 
 | | Person's record | Studio's record |
 |---|---:|---:|
-| Movers (6,771 credits) | +0.041 (0.016 to 0.067) | +0.192 (0.160 to 0.225) |
-| Stayers (5,957 credits) | +0.171 (0.129 to 0.211) | +0.171 (0.133 to 0.212) |
+| Movers (6,775 credits) | +0.041 (0.013 to 0.065) | +0.191 (0.158 to 0.223) |
+| Stayers (5,965 credits) | +0.171 (0.127 to 0.212) | +0.171 (0.133 to 0.211) |
 
 - **A person's record mostly stays behind.** At a studio that's new to them it predicts about a quarter of what it predicts for stayers, while the new studio's own record predicts as much as ever.
-- **Directors keep the most.** Their record still gives +0.111 (0.039 to 0.181) after a move, and writers' +0.080 (0.027 to 0.137). Producers' (+0.019) and cast's (+0.024) can't be told from zero.
-- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 22, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.053 for the person and +0.116 for the studio, and stayers +0.176 and +0.084.
+- **Directors keep the most.** Their record still gives +0.111 (0.038 to 0.179) after a move, and writers' +0.081 (0.025 to 0.137). Producers' (+0.018) and cast's (+0.024) can't be told from zero.
+- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 22, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.053 for the person and +0.116 for the studio, and stayers +0.175 and +0.086.
 
 What it doesn't show: moves aren't random. A studio hires someone for a project it has already chosen, so this isn't what would happen if people were reassigned. "Studio" is the production company in the Wikipedia infobox, and a film with several studios counts as a stay if any of them is familiar.
 
