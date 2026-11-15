@@ -47,11 +47,13 @@ def md(text: str) -> str:
 
 
 def mtime(p: Path) -> float:
+    """A file's modification time. Cached loaders take it as an argument so a rebuilt file is read again; the
+    argument must not start with an underscore, or Streamlit leaves it out of the cache key."""
     return p.stat().st_mtime if p.exists() else 0.0
 
 
 @st.cache_data(show_spinner="Reading file…", max_entries=24)
-def read_table(path: str, _mtime: float, nrows: int | None = None) -> pd.DataFrame:
+def read_table(path: str, stamp: float, nrows: int | None = None) -> pd.DataFrame:
     p = Path(path)
     name = p.name.lower()
     if name.endswith(".parquet"):

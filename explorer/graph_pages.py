@@ -44,7 +44,7 @@ def _need_graph() -> bool:
 # ---------------------------------------------------------------- graph data
 
 @st.cache_resource(show_spinner="Indexing the movie graph…")
-def graph_data(_mt: float) -> dict:
+def graph_data(stamp: float) -> dict:
     n = pd.read_csv(NODES, low_memory=False)
     for c in ["year", "votes", "rating", "budget_usd", "gross_usd", "multiple", "rt", "mc", "birth_year", "death_year"]:
         n[c] = pd.to_numeric(n[c], errors="coerce")
@@ -65,10 +65,10 @@ def gd() -> dict:
 
 
 @st.cache_resource(show_spinner="Building the film-by-film links…")
-def incidence(_mt: float, kind: str):
+def incidence(stamp: float, kind: str):
     """Film x entity incidence, each pair once. kind: 'people' (key people), 'companies' (studios and
     distributors) or 'studios' (production companies only: the infobox 'studios' field)."""
-    g = graph_data(_mt)
+    g = graph_data(stamp)
     films = g["nodes"].loc[g["nodes"].type == "movie", "id"].to_numpy()
     fi = {t: k for k, t in enumerate(films)}
     ed = g["edges"]
@@ -88,12 +88,12 @@ def _layout(edges: np.ndarray, weights: np.ndarray, n: int, seed: int = 2805) ->
 
 
 @st.cache_data(show_spinner="Laying out the graph (cached after the first time)…", max_entries=16)
-def build_view(_mt: float, mode: str, tiers: tuple, clean_only: bool, years: tuple, genre: str,
+def build_view(stamp: float, mode: str, tiers: tuple, clean_only: bool, years: tuple, genre: str,
                min_w: int, max_nodes: int, max_edges: int, min_films: int) -> dict:
-    g = graph_data(_mt)
+    g = graph_data(stamp)
     by = g["by_id"]
     kind = {"Films sharing a company": "companies", "Companies that co-produce": "studios"}.get(mode, "people")
-    films, ents, B = incidence(_mt, kind)
+    films, ents, B = incidence(stamp, kind)
     f = by.loc[films]
     keep = f.tier.isin(tiers) & f.year.between(*years)
     if clean_only:
@@ -495,7 +495,7 @@ def node():
 # ---------------------------------------------------------------- screenplays
 
 @st.cache_data(show_spinner="Indexing the MovieSum screenplays (first time only)…")
-def _script_index(_mts: tuple) -> pd.DataFrame:
+def _script_index(stamps: tuple) -> pd.DataFrame:
     rows = []
     name_re = re.compile(rb'"movie_name"\s*:\s*"((?:[^"\\]|\\.)*)"')
     id_re = re.compile(rb'"imdb_id"\s*:\s*"(tt\d+)"')

@@ -513,7 +513,7 @@ def checks():
             show_df(df, key="chk_" + str(abs(hash(title))))
 
     st.subheader("Test suite")
-    st.caption("tests/: 115 tests on the functions behind every notebook, synthetic data only.")
+    st.caption("tests/: the functions behind every notebook and every explorer page, on synthetic data only.")
     fast = st.toggle("Skip the slow test", True)
     if st.button("Run tests"):
         with st.spinner("Running pytest…"):
