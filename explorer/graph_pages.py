@@ -537,19 +537,79 @@ CSS = """<style>
 .sp .pa {margin:0 0 0 30%; font-style:italic; color:#555}
 .sp .dl {margin:0 18% 0 20%}
 .sp mark {background:#ffe58a; padding:0 1px}
+.sp .sent {font-family:sans-serif; font-size:11px; margin:3px 0 7px; line-height:1.9}
+.sp .sent .in {display:inline-block; min-width:84px; color:#999}
+.sp .sent .b {display:inline-block; padding:0 6px; margin-right:4px; border-radius:8px; border:1px solid rgba(128,128,128,.35)}
+.sp .sent .none {color:#999; font-style:italic}
 </style>"""
 CLS = {"stage_direction": "hd", "scene_description": "ac", "character": "ch", "parenthetical": "pa", "dialogue": "dl"}
+
+
+# The arcs pipeline's per-scene sentiment (step 3). Every score runs from -1 to +1: VADER's compound score, the
+# models' P(positive) - P(negative). Scenes are numbered with the same <scene> regex as the reader, and scenes with
+# no scored sentence have no row. 'scene' columns score the whole scene in one pass (the context files).
+INSTRUMENTS = {"sst2": "SST-2", "vader": "VADER", "roberta3": "RoBERTa", "modernbert3": "ModernBERT"}
+PRIMARY = "sst2"
+LAYERS = (("dialogue", "dialogue"), ("action", "action"), ("both", "both"), ("scene", "whole scene"))
+
+
+@st.cache_data(show_spinner="Loading the saved scene sentiment…")
+def _all_scene_scores(stamps: tuple) -> pd.DataFrame:
+    parts = []
+    for k in INSTRUMENTS:
+        for name in (f"s03_scene_{k}.csv.gz", f"s03_scene_context_{k}.csv.gz"):
+            p = OUTPUT_DIRS["arcs"] / name
+            if p.exists():
+                d = pd.read_csv(p)
+                cols = [f"{k}_{lay}" for lay, _ in LAYERS if f"{k}_{lay}" in d]
+                parts.append(d.set_index(["movie_name", "scene"])[cols])
+    if not parts:
+        return pd.DataFrame()
+    return pd.concat(parts, axis=1).sort_index()
+
+
+def scene_scores(movie_name: str) -> pd.DataFrame:
+    """Per-scene scores of one script, indexed by scene number; empty if it isn't in the arcs sample."""
+    stamps = tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s03_scene_*.csv.gz")))
+    allsc = _all_scene_scores(stamps)
+    if allsc.empty or movie_name not in allsc.index.get_level_values(0):
+        return pd.DataFrame()
+    return allsc.xs(movie_name, level=0)
+
+
+def _badge(v: float, label: str) -> str:
+    """A score as a chip: blue for positive, orange for negative, stronger the further from zero."""
+    a = min(abs(v), 1) * 0.75
+    rgb = "0,114,178" if v >= 0 else "213,94,0"
+    return f'<span class="b" style="background:rgba({rgb},{a:.2f})">{label} {v:+.2f}</span>'
+
+
+def _sentiment_html(sc: pd.DataFrame, i: int, insts: list[str]) -> str:
+    if not insts:
+        return ""
+    if i not in sc.index:
+        return '<div class="sent"><span class="none">no scored sentences in this scene</span></div>'
+    row = sc.loc[i]
+    lines = []
+    for k in insts:
+        chips = [_badge(row[f"{k}_{lay}"], name) for lay, name in LAYERS
+                 if f"{k}_{lay}" in row and pd.notna(row[f"{k}_{lay}"])]
+        if chips:
+            lines.append(f'<span class="in">{INSTRUMENTS[k]}</span>{"".join(chips)}')
+    return '<div class="sent">' + "<br>".join(lines) + "</div>" if lines else ""
 
 
 def _scenes(script: str) -> list[list[tuple[str, str]]]:
     return [[(t, html.unescape(b).strip()) for t, b in TAG.findall(block)] for block in SCENE.findall(script)]
 
 
-def _render(scenes, which, query: str) -> str:
+def _render(scenes, which, query: str, sc: pd.DataFrame | None = None, insts: list[str] | None = None) -> str:
     qre = re.compile(re.escape(query), re.I) if query else None
     out = [CSS, '<div class="sp">']
     for i in which:
         out.append(f'<div class="scn"><span class="no">scene {i}</span>')
+        if sc is not None:
+            out.append(_sentiment_html(sc, i, insts or []))
         for t, b in scenes[i]:
             if not b:
                 continue
@@ -566,6 +626,30 @@ def _script_label(movie_name: str) -> str:
     """'Face_Off_1997' -> 'Face Off (1997)'. MovieSum joins the title words and the year with underscores."""
     title, _, year = movie_name.rpartition("_")
     return f"{title.replace('_', ' ')} ({year})" if title else movie_name
+
+
+def _reading_arc(sc: pd.DataFrame, k: str, which: list[int], n_scenes: int, pick: str):
+    """The script's arc for one instrument, with the scenes on this page shaded. A click jumps there."""
+    col = f"{k}_both" if f"{k}_both" in sc else f"{k}_scene"
+    y = sc[col].dropna()
+    fig = go.Figure()
+    fig.add_vrect(x0=which[0] - .5, x1=which[-1] + .5, fillcolor="#0072B2", opacity=.12, line_width=0)
+    fig.add_scatter(x=y.index, y=y.values, mode="markers", marker=dict(size=4, color="#999999"), name="scene",
+                    hovertemplate="scene %{x}: %{y:+.2f}<extra></extra>")
+    smooth = y.reindex(range(n_scenes)).rolling(9, center=True, min_periods=3).mean()
+    fig.add_scatter(x=smooth.index, y=smooth.values, mode="lines", line=dict(color="#0072B2", width=2),
+                    name="9-scene mean", hoverinfo="skip")
+    fig.add_hline(y=0, line_dash="dash", line_color="#aaa")
+    fig.update_layout(template="simple_white", height=170, margin=dict(l=0, r=0, t=4, b=0), showlegend=False,
+                      clickmode="event+select", dragmode="select", yaxis=dict(range=[-1.05, 1.05], title=INSTRUMENTS[k]),
+                      xaxis=dict(range=[-1, n_scenes], title=None))
+    ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"readarc_{pick}")
+    pts = ev.selection["points"] if ev and ev.selection else []
+    if pts:
+        first = int(min(p["x"] for p in pts))
+        if first != st.session_state.get("scene_clicked"):
+            st.session_state["scene_clicked"] = st.session_state["scene_focus"] = first
+            st.rerun()
 
 
 def screenplays():
@@ -643,8 +727,27 @@ def screenplays():
             page = st.number_input(f"Page (of {pages})", 1, pages, page0 + 1, key=f"page_{pick}_{who}_{query}_{per}_{start_scene}") - 1
             which = cand[page * per:(page + 1) * per]
             st.caption(f"Scenes {which[0]} to {which[-1]} of {len(scenes) - 1}")
+            sc = scene_scores(meta.movie_name)
+            insts = []
+            if sc.empty:
+                st.caption("No saved scene sentiment: this script isn't in the arcs sample.")
+            else:
+                have = [k for k in INSTRUMENTS if any(c.startswith(k + "_") for c in sc.columns)]
+                # kept under a second key too: a script without scores doesn't draw the box, and Streamlit then drops it
+                prev = st.session_state.get("sent_insts", st.session_state.get("sent_insts_keep"))
+                st.session_state["sent_insts"] = ([k for k in prev if k in have] if prev is not None
+                                                  else [PRIMARY] if PRIMARY in have else have[:1])
+                insts = st.multiselect("Sentiment beside each scene", have,
+                                       format_func=lambda k: INSTRUMENTS[k] + (" (primary)" if k == PRIMARY else ""),
+                                       key="sent_insts",
+                                       help="Saved by arcs Step 3, from -1 (negative) to +1 (positive): the mean over the "
+                                            "scene's sentences for dialogue, action and both, and the whole scene scored "
+                                            "in one pass where the model has that. Click the arc to jump to a scene.")
+                st.session_state["sent_insts_keep"] = insts
+                if insts:
+                    _reading_arc(sc, insts[0], which, len(scenes), pick)
             with st.container(height=760):
-                st.markdown(_render(scenes, which, query), unsafe_allow_html=True)
+                st.markdown(_render(scenes, which, query, None if sc.empty else sc, insts), unsafe_allow_html=True)
 
     with t2:
         if not chars:
