@@ -29,6 +29,7 @@ MOVIESUM = [DATA / "scripts" / "moviesum" / f"{s}.jsonl" for s in ("train", "val
 PEOPLE_ROLES = {"director", "writer", "producer", "composer", "cinematographer", "editor"}
 COMPANY_ROLES = {"studio", "distributor"}
 TYPE_COLOUR = {"movie": "#0072B2", "person": "#E69F00", "company": "#009E73"}
+ENTITY_MODES = ("People who worked together", "Companies that co-produce")   # nodes are people or companies
 QUAL = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999",
         "#882255", "#44AA99", "#117733", "#332288", "#AA4499", "#DDCC77", "#88CCEE", "#661100"]
 
@@ -65,11 +66,13 @@ def gd() -> dict:
 
 @st.cache_resource(show_spinner="Building the film-by-film links…")
 def incidence(_mt: float, kind: str):
-    """Film x entity incidence (key people or companies), each pair once."""
+    """Film x entity incidence, each pair once. kind: 'people' (key people), 'companies' (studios and
+    distributors) or 'studios' (production companies only: the infobox 'studios' field)."""
     g = graph_data(_mt)
     films = g["nodes"].loc[g["nodes"].type == "movie", "id"].to_numpy()
     fi = {t: k for k, t in enumerate(films)}
-    e = g["edges"][g["edges"]["key_person" if kind == "people" else "company"]]
+    ed = g["edges"]
+    e = ed[ed.role == "studio"] if kind == "studios" else ed[ed["key_person" if kind == "people" else "company"]]
     e = e[e.target.isin(fi)].drop_duplicates(["source", "target"])
     codes, ents = pd.factorize(e.source)
     B = sp.csr_matrix((np.ones(len(e), dtype=np.float32), (e.target.map(fi).to_numpy(), codes)),
@@ -89,7 +92,8 @@ def build_view(_mt: float, mode: str, tiers: tuple, clean_only: bool, years: tup
                min_w: int, max_nodes: int, max_edges: int, min_films: int) -> dict:
     g = graph_data(_mt)
     by = g["by_id"]
-    films, ents, B = incidence(_mt, "companies" if mode == "Films sharing a company" else "people")
+    kind = {"Films sharing a company": "companies", "Companies that co-produce": "studios"}.get(mode, "people")
+    films, ents, B = incidence(_mt, kind)
     f = by.loc[films]
     keep = f.tier.isin(tiers) & f.year.between(*years)
     if clean_only:
@@ -97,12 +101,18 @@ def build_view(_mt: float, mode: str, tiers: tuple, clean_only: bool, years: tup
     if genre != "any":
         keep &= f.genres.fillna("").str.split(",").apply(lambda s: genre in s)
     keep = keep.to_numpy()
-    if mode == "People who worked together":
+    node_lm = node_n = None
+    if mode in ENTITY_MODES:
         Bf = B[keep]
         nfilms = np.asarray(Bf.sum(0)).ravel()
         sel = np.flatnonzero(nfilms >= min_films)
         A = (Bf[:, sel].T @ Bf[:, sel]).tocsr()
         ids = ents[sel]
+        # each person's or company's films in the selection: how many, and their median ln(gross / budget)
+        inc = Bf[:, sel].tocoo()
+        lm = f.log_multiple.to_numpy()[keep][inc.row]
+        node_lm = pd.Series(lm).groupby(inc.col).median().reindex(range(len(sel))).to_numpy()
+        node_n = nfilms[sel].astype(int)
     else:
         idx = np.flatnonzero(keep)
         A = (B[idx] @ B[idx].T).tocsr()
@@ -122,7 +132,8 @@ def build_view(_mt: float, mode: str, tiers: tuple, clean_only: bool, years: tup
     r, c, w = pos_of[r[m]], pos_of[c[m]], w[m]
     nid = ids[top]
     if len(nid) == 0:
-        return {"ids": [], "r": [], "c": [], "w": [], "xy": np.zeros((0, 2)), "comm": [], "modularity": 0.0}
+        return {"ids": [], "r": [], "c": [], "w": [], "xy": np.zeros((0, 2)), "comm": [], "modularity": 0.0,
+                "node_lm": None, "node_n": None}
     edges = np.column_stack([r, c])
     xy = _layout(edges, w, len(nid))
     G = ig.Graph(n=len(nid), edges=edges.tolist())
@@ -130,7 +141,8 @@ def build_view(_mt: float, mode: str, tiers: tuple, clean_only: bool, years: tup
     order = np.argsort(-w)[:max_edges]
     return {"ids": nid.tolist(), "r": r[order], "c": c[order], "w": w[order], "n_links": int(len(w)),
             "xy": xy, "comm": np.array(part.membership), "modularity": float(part.modularity),
-            "deg": np.bincount(r, w, len(nid)) + np.bincount(c, w, len(nid))}
+            "deg": np.bincount(r, w, len(nid)) + np.bincount(c, w, len(nid)),
+            "node_lm": None if node_lm is None else node_lm[top], "node_n": None if node_n is None else node_n[top]}
 
 
 def _edge_trace(xy, r, c, width=0.5, opacity=0.25, colour="#888888"):
@@ -177,23 +189,26 @@ def whole_graph():
     st.markdown(f"**{len(n):,} nodes** (" + ", ".join(f"{int((n.type == t).sum()):,} {lab.lower()}" for t, lab in counts.items())
                 + f") and **{len(e):,} credits**.")
     st.caption("The full graph has about 110,000 nodes, too many to draw at once. Below it is projected: films linked "
-               "when they share people (or companies), or people linked when they made films together. Filter, then "
+               "when they share people (or companies), or people (or production companies) linked when they made films "
+               "together. Filter, then "
                "**click a node, or drag a box around several** (lasso is in the chart's toolbar), to see its details.")
 
     with st.sidebar:
         st.subheader("What to draw")
-        mode = st.radio("Network", ["Films sharing people", "Films sharing a company", "People who worked together"])
+        mode = st.radio("Network", ["Films sharing people", "Films sharing a company", "People who worked together",
+                                    "Companies that co-produce"], key="graph_mode")
         tiers = tuple(st.multiselect("Vote tier", ["100k+", "10k-100k"], default=["100k+", "10k-100k"]))
         clean_only = st.toggle("Clean films only", False)
         years = st.slider("Release year", 1915, 2026, (1990, 2026))
         genres = sorted({x for s in n.genres.dropna() for x in s.split(",") if x})
         genre = st.selectbox("Genre", ["any"] + genres)
         min_w = st.slider("Minimum shared people / companies / films on a link", 1, 6, 2 if mode != "Films sharing a company" else 1)
-        min_films = st.slider("People: minimum films in the selection", 1, 20, 5) if mode == "People who worked together" else 1
+        min_films = (st.slider("Minimum films in the selection (per person or company)", 1, 20,
+                               5 if mode == "People who worked together" else 3) if mode in ENTITY_MODES else 1)
         max_nodes = st.slider("Max nodes (most connected first)", 200, 8000, 2500, step=100)
         max_edges = st.slider("Max links drawn (strongest first)", 0, 40000, 8000, step=1000)
-        colour = st.selectbox("Colour by", ["community", "log(gross / budget)", "release year", "first genre"]
-                              if mode != "People who worked together" else ["community"])
+        colour = st.selectbox("Colour by", ["community", "median log(gross / budget) of their films"] if mode in ENTITY_MODES
+                              else ["community", "log(gross / budget)", "release year", "first genre"])
     if not tiers:
         st.info("Choose at least one tier.")
         return
@@ -206,20 +221,31 @@ def whole_graph():
     by = g["by_id"].loc[ids]
     st.caption(f"{len(ids):,} nodes, {v['n_links']:,} links ({len(v['r']):,} drawn), {comm.max() + 1} communities, "
                f"modularity {v['modularity']:.3f}")
+    entity = mode in ENTITY_MODES
+    node_lm = v["node_lm"] if entity else by.log_multiple.to_numpy()
+    if mode == "Companies that co-produce":
+        st.caption("Production companies (the infobox *studios* field; distributors left out), linked by how many films "
+                   "they co-produced in the selection. Colour by the median log(gross / budget) of each company's films to "
+                   "see whether co-producing circles share a return level.")
 
     fig = go.Figure()
     if len(v["r"]):
         fig.add_trace(_edge_trace(xy, v["r"], v["c"], opacity=.18 if len(v["r"]) > 3000 else .35))
     size = 4 + 14 * np.sqrt(v["deg"] / v["deg"].max())
-    hover = [f"<b>{html.escape(str(l))}</b><br>{t}" + (f" · {int(y)}" if y == y else "") +
-             (f"<br>gross/budget {m:.2f}" if m == m else "") + f"<br>community {k}"
-             for l, t, y, m, k in zip(by.label, by.type, by.year, by.multiple, comm)]
+    if entity:
+        hover = [f"<b>{html.escape(str(l))}</b><br>{t} · {k_n:,} films in the selection"
+                 + (f"<br>median ln(gross/budget) {lm:.2f}" if lm == lm else "") + f"<br>community {k}"
+                 for l, t, k_n, lm, k in zip(by.label, by.type, v["node_n"], node_lm, comm)]
+    else:
+        hover = [f"<b>{html.escape(str(l))}</b><br>{t}" + (f" · {int(y)}" if y == y else "") +
+                 (f"<br>gross/budget {m:.2f}" if m == m else "") + f"<br>community {k}"
+                 for l, t, y, m, k in zip(by.label, by.type, by.year, by.multiple, comm)]
     if colour == "community":
         big = pd.Series(comm).value_counts().index[:len(QUAL)]
         col = [QUAL[list(big).index(k)] if k in big else "#cccccc" for k in comm]
         marker = dict(color=col)
-    elif colour == "log(gross / budget)":
-        marker = dict(color=by.log_multiple.clip(-3, 3).to_numpy(), colorscale="RdBu", cmid=0, showscale=True,
+    elif colour in ("log(gross / budget)", "median log(gross / budget) of their films"):
+        marker = dict(color=np.clip(node_lm, -3, 3), colorscale="RdBu", cmid=0, showscale=True,
                       colorbar=dict(title="ln multiple"))
     elif colour == "release year":
         marker = dict(color=by.year.to_numpy(), colorscale="Viridis", showscale=True, colorbar=dict(title="year"))
@@ -245,7 +271,13 @@ def whole_graph():
         if sel:
             s = g["by_id"].loc[sel]
             st.markdown(f"**{len(sel):,} selected**")
-            cols = [c for c in ["id", "label", "type", "year", "genres", "multiple", "clean", "degree"] if c in s]
+            if entity:   # people and companies: their films in the selection, not film fields
+                pos = {x: k for k, x in enumerate(ids)}
+                s = s.assign(films_in_selection=[v["node_n"][pos[x]] for x in sel],
+                             median_log_multiple=[round(float(node_lm[pos[x]]), 3) for x in sel])
+                cols = ["id", "label", "type", "films_in_selection", "median_log_multiple", "degree"]
+            else:
+                cols = [c for c in ["id", "label", "type", "year", "genres", "multiple", "clean", "degree"] if c in s]
             pick = st.dataframe(s[cols], width="stretch", hide_index=True, on_select="rerun",
                                 selection_mode="single-row", key="sel_table")
             rows = pick.selection.rows if hasattr(pick, "selection") else []
@@ -261,7 +293,7 @@ def whole_graph():
     with right:
         st.markdown("**Communities** (Louvain on the drawn network)")
         cdf = pd.DataFrame({"community": comm, "id": ids, "label": by.label.values, "deg": v["deg"],
-                            "log_multiple": by.log_multiple.values})
+                            "log_multiple": node_lm})
         summ = (cdf.sort_values("deg", ascending=False).groupby("community")
                 .agg(size=("id", "size"), median_log_multiple=("log_multiple", "median"),
                      biggest=("label", lambda s: ", ".join(map(str, s.head(4)))))
