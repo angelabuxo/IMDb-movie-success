@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
 import streamlit as st  # noqa: E402
 
 from explorer import graph_pages, nav, pages  # noqa: E402
+from explorer.common import IDEAS  # noqa: E402
 
 st.set_page_config(page_title="Movie profit explorer", page_icon="🎬", layout="wide")
 
@@ -30,11 +31,13 @@ P = {
     "data": st.Page(pages.inspector, title="Data inspector", icon=":material/table_view:", url_path="data"),
     "checks": st.Page(pages.checks, title="Checks", icon=":material/fact_check:", url_path="checks"),
 }
+if IDEAS:   # the private topic-selection notes, only on a machine that has them
+    P["topic"] = st.Page(pages.topic_history, title="Topic history", icon=":material/history_edu:", url_path="topic")
 nav.PAGES.clear()
 nav.PAGES.update(P)
 
 st.navigation({
-    "Overview": [P["home"]],
+    "Overview": [P["home"]] + ([P["topic"]] if "topic" in P else []),
     "Notebooks": [P["arcs"], P["text"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
     "Explore and check": [P["profit"], P["data"], P["checks"]],

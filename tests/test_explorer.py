@@ -1,0 +1,360 @@
+"""The Streamlit explorer: every page runs without an exception, on a small synthetic data folder.
+
+Pages are driven with Streamlit's AppTest, headless. The data folder is built here (a few dozen films, people
+and studios, two screenplays, a very wide JSON) and handed to the explorer through IMDB_DATA_DIR, so nothing
+reads data/raw. Pages that show the committed notebook outputs (arcs, text, network results, checks) read
+those as they are in the repo. Clicks on charts can't be sent headlessly; their state hand-overs are tested
+by setting the session state the click would set.
+"""
+
+import json
+import os
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
+
+pytest.importorskip("streamlit")
+from streamlit.testing.v1 import AppTest  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+
+TIMEOUT = 120
+
+
+@pytest.fixture(scope="module")
+def data_dir(tmp_path_factory):
+    """A data folder shaped like data/raw, and an ideas folder for the Topic history page."""
+    rng = np.random.default_rng(2805)
+    root = tmp_path_factory.mktemp("explorer_data")
+    feat, graph = root / "features", root / "features" / "graph"
+    graph.mkdir(parents=True)
+
+    films = [f"tt{1000000 + i}" for i in range(40)]
+    directors = [f"nm{100 + i}" for i in range(6)]
+    writers = [f"nm{200 + i}" for i in range(6)]
+    actors = [f"nm{300 + i}" for i in range(18)]
+    studios = [f"company:Q{900 + i}" for i in range(6)]
+    distributors = ["company:name:Dist A", "company:name:Dist B"]
+    genres = ["Drama", "Comedy", "Horror", "Action"]
+
+    budget = rng.uniform(1e6, 2e8, len(films)).round()
+    gross = (budget * np.exp(rng.normal(0.5, 1.2, len(films)))).round()
+    gross[3] = np.nan                                   # a film with no gross
+    movies = pd.DataFrame({
+        "id": films, "type": "movie", "label": [f"Film {i}" for i in range(len(films))],
+        "year": rng.integers(1995, 2021, len(films)), "votes": rng.integers(10_000, 900_000, len(films)),
+        "rating": rng.uniform(4, 9, len(films)).round(1), "budget_usd": budget, "gross_usd": gross,
+        "multiple": (gross / budget).round(4), "rt": rng.integers(10, 100, len(films)),
+        "mc": rng.integers(20, 95, len(films)),
+        "genres": [",".join(rng.choice(genres, 2, replace=False)) for _ in films],
+    })
+    movies["tier"] = np.where(movies.votes >= 100_000, "100k+", "10k-100k")
+    movies["clean"] = movies.gross_usd.notna().astype(int)
+    movies.loc[0, ["id", "label"]] = ["tt0119094", "Face/Off"]   # matches the synthetic screenplay
+    films[0] = "tt0119094"
+    people = pd.DataFrame({"id": directors + writers + actors, "type": "person",
+                           "label": [f"Person {p}" for p in directors + writers + actors],
+                           "birth_year": 1960, "death_year": np.nan, "roles": "director"})
+    companies = pd.DataFrame({"id": studios + distributors, "type": "company",
+                              "label": [f"Studio {i}" for i in range(6)] + ["Dist A", "Dist B"],
+                              "qid": [s.split(":")[-1] for s in studios] + [None, None]})
+    nodes = pd.concat([movies, people, companies], ignore_index=True)
+    nodes.to_csv(graph / "nodes.csv", index=False)
+
+    rows = []
+    for f in films:
+        rows.append((rng.choice(directors), f, "director", 1, "imdb"))
+        rows.append((rng.choice(writers), f, "writer", 1, "imdb"))
+        for k, a in enumerate(rng.choice(actors, 3, replace=False), 1):
+            rows.append((a, f, "actor", k, "imdb"))
+        for s in rng.choice(studios, 2, replace=False):
+            rows.append((s, f, "studio", 1, "wikipedia"))
+        rows.append((rng.choice(distributors), f, "distributor", 1, "wikipedia"))
+    pd.DataFrame(rows, columns=["source", "target", "role", "ordering", "origin"]).to_csv(graph / "edges.csv", index=False)
+    pd.DataFrame({"qid": [s.split(":")[-1] for s in studios], "name": [f"Studio {i}" for i in range(6)],
+                  "method": "wikidata"}).to_csv(graph / "companies.csv", index=False)
+
+    track = rng.normal(0, 1, len(films))
+    pd.DataFrame({"tconst": films, "year": movies.year, "cast_track": track,
+                  "director_track": np.where(np.arange(len(films)) % 3, track, np.nan),
+                  "director_track_n": np.where(np.arange(len(films)) % 3, 2, 0)}).to_csv(
+        feat / "film_network_features.csv", index=False)
+    # one row per film with 600 word columns: wider than the inspector sends to the browser
+    words = {f: {"counts": {f"w{j}": int(j % 7) for j in range(600)}} for f in films[:5]}
+    (feat / "wide_words.json").write_text(json.dumps(words))
+
+    ms = root / "scripts" / "moviesum"
+    ms.mkdir(parents=True)
+
+    def script(names):
+        scenes = []
+        for i in range(30):
+            a, b = names[i % len(names)], names[(i + 1) % len(names)]
+            scenes.append(f"<scene><stage_direction>INT. ROOM {i} - DAY</stage_direction>"
+                          f"<scene_description>Something happens in scene {i}.</scene_description>"
+                          f"<character>{a}</character><dialogue>Line {i} from {a}.</dialogue>"
+                          f"<character>{b} (CONT'D)</character><dialogue>Reply {i}.</dialogue></scene>")
+        return "".join(scenes)
+
+    lines = [{"movie_name": "Face_Off_1997", "imdb_id": "tt0119094", "script": script(["SEAN", "CASTOR", "EVE"]),
+              "summary": "Two men swap faces."},
+             {"movie_name": "Film_Two_2005", "imdb_id": "tt1000001", "script": script(["ANNA", "BEN"]), "summary": ""}]
+    (ms / "train.jsonl").write_text("\n".join(json.dumps(x) for x in lines) + "\n")
+
+    ideas = root / "ideas"
+    ideas.mkdir()
+    (ideas / "README.md").write_text(
+        "# Idea files\n\n| File | Made | What it holds |\n| --- | --- | --- |\n"
+        "| [week8-inspired-ideas.md](week8-inspired-ideas.md) | 28 Oct | Ideas 76-100 |\n"
+        "| [missing.md](missing.md) | 28 Oct | Listed but not on disk |\n")
+    (ideas / "week8-inspired-ideas.md").write_text(
+        "# Ideas\n\n96. **Record deals.**\n    - one\n97. **Who co-finances films.**\n"
+        "    - **Question:** do co-financing networks decide what gets made? It costs $5 to ask.\n"
+        "98. **Novels.**\n")
+    return root
+
+
+@pytest.fixture(scope="module")
+def explorer(data_dir):
+    """Point the explorer at the synthetic folders and import it fresh (its paths are read at import)."""
+    old = {k: os.environ.get(k) for k in ("IMDB_DATA_DIR", "IDEAS_DIR")}
+    os.environ["IMDB_DATA_DIR"] = str(data_dir)
+    os.environ["IDEAS_DIR"] = str(data_dir / "ideas")
+    for m in [m for m in sys.modules if m == "explorer" or m.startswith("explorer.")]:
+        del sys.modules[m]
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    import explorer.common
+    assert explorer.common.DATA == data_dir
+    yield data_dir
+    for k, v in old.items():
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+    for m in [m for m in sys.modules if m == "explorer" or m.startswith("explorer.")]:
+        del sys.modules[m]
+
+
+def page(module: str, fn: str, state: dict | None = None) -> AppTest:
+    at = AppTest.from_string(f"from explorer import {module}\n{module}.{fn}()\n", default_timeout=TIMEOUT)
+    for k, v in (state or {}).items():
+        at.session_state[k] = v
+    return at.run()
+
+
+def ok(at: AppTest):
+    assert not at.exception, [e.value for e in at.exception]
+
+
+def widget(at: AppTest, kind: str, label: str):
+    hits = [w for w in getattr(at, kind) if w.label.startswith(label)]
+    assert hits, f"no {kind} labelled {label!r}: {[w.label for w in getattr(at, kind)]}"
+    return hits[0]
+
+
+PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
+         ("pages", "inspector"), ("pages", "checks"), ("pages", "topic_history"), ("graph_pages", "whole_graph"),
+         ("graph_pages", "node"), ("graph_pages", "screenplays")]
+
+
+@pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
+def test_every_page_runs(explorer, module, fn):
+    ok(page(module, fn))
+
+
+def test_app_registers_every_page(explorer):
+    """app.py builds the navigation; with an ideas folder the Topic history page is in it."""
+    at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
+    ok(at)
+    from explorer import nav
+    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks",
+            "topic"} <= set(nav.PAGES)
+
+
+@pytest.mark.parametrize("step", range(12))
+@pytest.mark.parametrize("fn", ["arcs", "text"])
+def test_every_notebook_step_renders(explorer, fn, step):
+    at = page("pages", fn)
+    radio = widget(at, "radio", "Step")
+    if step >= len(radio.options):
+        pytest.skip("fewer steps")
+    radio.set_value(radio.options[step]).run()
+    ok(at)
+
+
+@pytest.mark.parametrize("name", ["roi_similarity", "pair_returns", "team_history", "movers"])
+def test_network_result_files(explorer, name):
+    at = page("pages", "network")
+    widget(at, "selectbox", "Result file").set_value(name).run()
+    ok(at)
+
+
+@pytest.mark.parametrize("query", ["", "no such film", "Film", "tt0119094"])
+def test_network_film_lookup(explorer, query):
+    at = page("pages", "network")
+    widget(at, "text_input", "Film title or IMDb ID").set_value(query).run()
+    ok(at)
+
+
+def test_profit_never_plots_a_column_against_itself(explorer):
+    """Regression: x == y made plotly's trendline select the column twice (narwhals DuplicateError)."""
+    at = page("pages", "profit")
+    for x in widget(at, "selectbox", "x").options:
+        widget(at, "selectbox", "x").set_value(x).run()
+        ok(at)
+        assert x not in widget(at, "selectbox", "y").options
+
+
+@pytest.mark.parametrize("colour", ["first_genre", "tier", "clean", "none"])
+def test_profit_colours_and_empty_sample(explorer, colour):
+    at = page("pages", "profit")
+    widget(at, "selectbox", "colour").set_value(colour).run()
+    ok(at)
+    widget(at, "multiselect", "Vote tier").set_value([]).run()
+    ok(at)
+
+
+def test_inspector_caps_very_wide_files(explorer):
+    """Regression: a JSON flattening to 160,000+ columns could not be sent to the browser."""
+    at = page("pages", "inspector")
+    widget(at, "selectbox", "Folder").set_value("data/raw/features").run()
+    files = widget(at, "selectbox", "File")
+    files.select_index(next(i for i, o in enumerate(files.options) if "wide_words.json" in str(o))).run()
+    ok(at)
+    assert any("showing the first 500" in w.value for w in at.warning)
+
+
+def test_inspector_opens_every_graph_file(explorer):
+    at = page("pages", "inspector")
+    widget(at, "selectbox", "Folder").set_value("data/raw/features/graph").run()
+    for i in range(len(widget(at, "selectbox", "File").options)):
+        widget(at, "selectbox", "File").select_index(i).run()
+        ok(at)
+
+
+@pytest.mark.parametrize("mode", ["Films sharing people", "Films sharing a company", "People who worked together",
+                                  "Companies that co-produce"])
+def test_whole_graph_modes_and_colours(explorer, mode):
+    at = page("graph_pages", "whole_graph", {"graph_mode": mode})
+    ok(at)
+    widget(at, "slider", "Minimum shared").set_value(1).run()
+    ok(at)
+    for c in widget(at, "selectbox", "Colour by").options:
+        widget(at, "selectbox", "Colour by").set_value(c).run()
+        ok(at)
+
+
+def test_whole_graph_selection_of_a_company(explorer):
+    """Selecting a node (here with the finder) shows its row; companies get film counts, not film fields."""
+    at = page("graph_pages", "whole_graph", {"graph_mode": "Companies that co-produce"})
+    widget(at, "slider", "Minimum shared").set_value(1).run()
+    widget(at, "selectbox", "Or find a node").select_index(0).run()
+    ok(at)
+    sel = at.dataframe[0].value
+    assert {"films_in_selection", "median_log_multiple"} <= set(sel.columns)
+
+
+def test_whole_graph_with_nothing_to_draw(explorer):
+    at = page("graph_pages", "whole_graph")
+    widget(at, "multiselect", "Vote tier").set_value([]).run()
+    ok(at)
+    assert at.info
+
+
+def test_co_production_uses_studios_only(explorer):
+    """The co-production network links studios; distributors are left out."""
+    from explorer import graph_pages as gp
+    stamp = gp.mtime(gp.NODES) + gp.mtime(gp.EDGES)
+    v = gp.build_view(stamp, "Companies that co-produce", ("100k+", "10k-100k"), False, (1900, 2026), "any",
+                      1, 2500, 8000, 1)
+    assert v["ids"] and all(i.startswith("company:Q") for i in v["ids"])
+    assert np.isfinite(v["node_lm"]).any() and (np.asarray(v["node_n"]) >= 1).all()
+
+
+@pytest.mark.parametrize("kind", ["movie", "person", "company"])
+@pytest.mark.parametrize("hops", [1, 2])
+def test_node_explorer_on_each_node_type(explorer, kind, hops):
+    nid = {"movie": "tt0119094", "person": "nm100", "company": "company:Q900"}[kind]
+    at = page("graph_pages", "node", {"node_id": nid, "ego_hops": hops})
+    ok(at)
+    assert "Studio 0" in at.subheader[0].value or kind != "company"
+
+
+def test_node_explorer_search(explorer):
+    at = page("graph_pages", "node")
+    widget(at, "text_input", "Name, title or ID").set_value("Studio").run()
+    ok(at)
+    assert widget(at, "radio", "Matches").options
+
+
+def test_screenplay_titles(explorer):
+    """Regression: 'Face_Off_1997' showed as 'Face (Off (1997)'."""
+    from explorer.graph_pages import _script_label
+    assert _script_label("Face_Off_1997") == "Face Off (1997)"
+    assert _script_label("13_13_13_2013") == "13 13 13 (2013)"
+    assert _script_label("Inception_2010") == "Inception (2010)"
+    assert _script_label("odd") == "odd"
+    at = page("graph_pages", "screenplays")
+    ok(at)
+    assert at.subheader[0].value == "Face Off (1997)"
+
+
+def test_screenplay_character_click_reaches_read_tab(explorer):
+    """Regression: a character picked in the Characters tab didn't filter the Read tab, and the user can
+    still change the filter afterwards."""
+    at = page("graph_pages", "screenplays")
+    at.session_state["char_focus"] = "CASTOR"
+    at.run()
+    ok(at)
+    assert widget(at, "selectbox", "Only scenes with").value == "CASTOR"
+    widget(at, "selectbox", "Only scenes with").set_value("anyone").run()
+    ok(at)
+    assert widget(at, "selectbox", "Only scenes with").value == "anyone"
+
+
+def test_screenplay_scene_focus_opens_its_page(explorer):
+    at = page("graph_pages", "screenplays")
+    widget(at, "number_input", "Scenes per page").set_value(5).run()
+    at.session_state["scene_focus"] = 12
+    at.run()
+    ok(at)
+    assert any(str(c.value).startswith("Scenes 10 to 14") for c in at.caption)
+
+
+def test_screenplay_switch_and_search(explorer):
+    at = page("graph_pages", "screenplays")
+    at.session_state["char_focus"] = "CASTOR"
+    at.run()
+    widget(at, "selectbox", "Screenplay").set_value("tt1000001").run()   # CASTOR isn't in this one
+    ok(at)
+    assert widget(at, "selectbox", "Only scenes with").value == "anyone"
+    widget(at, "text_input", "Search in the script").set_value("Reply 3").run()
+    ok(at)
+    widget(at, "text_input", "Search in the script").set_value("nowhere at all").run()
+    ok(at)
+
+
+def test_topic_history_reads_the_ideas_folder(explorer):
+    at = page("pages", "topic_history")
+    ok(at)
+    assert "Who co-finances films" in at.info[0].value and "98." not in at.info[0].value
+    assert "\\$5" in at.info[0].value                      # money, not LaTeX
+    assert len(widget(at, "selectbox", "File").options) == 2      # README plus the one listed file on disk
+    widget(at, "selectbox", "File").select_index(1).run()
+    ok(at)
+
+
+def test_cached_loaders_see_a_rebuilt_file(explorer, tmp_path):
+    """Regression: the file time was passed as '_mt', which Streamlit leaves out of the cache key, so a
+    rebuilt file kept being served from the cache until the app restarted."""
+    from explorer.common import table
+    p = tmp_path / "t.csv"
+    p.write_text("a\n1\n")
+    assert table(p).a.tolist() == [1]
+    p.write_text("a\n2\n")
+    os.utime(p, (p.stat().st_atime, p.stat().st_mtime + 10))
+    assert table(p).a.tolist() == [2]

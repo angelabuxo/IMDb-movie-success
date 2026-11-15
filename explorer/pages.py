@@ -13,7 +13,9 @@ import plotly.graph_objects as go
 import streamlit as st
 from scipy.stats import spearmanr
 
-from .common import arrow_safe, DATA, FEATURES, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, render_step, show_df, steps, table
+from . import nav
+from .common import (arrow_safe, DATA, FEATURES, IDEAS, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, render_step,
+                     show_df, steps, table)
 
 GRAPH = FEATURES / "graph"
 HIGH, LOW, NEUTRAL = "#0072B2", "#D55E00", "#999999"
@@ -70,6 +72,46 @@ def home():
 - **Checks**: automatic sanity checks on the data and outputs, and the test suite.
 """)
     st.caption(f"Data folder: `{DATA}`. Nothing here writes to the repo or the data folder.")
+
+
+# ---------------------------------------------------------------- topic history (local only)
+
+def _idea(text: str, n: int) -> str | None:
+    """Numbered idea n from an ideas list ('97. **Title** ...' up to the next numbered idea)."""
+    m = re.search(rf"^{n}\. .*?(?=^\d+\. |^#|\Z)", text, re.M | re.S)
+    return m.group(0).strip() if m else None
+
+
+def topic_history():
+    st.title("Topic history")
+    st.caption(f"🔒 Local only. The topic-selection notes from before the movie question, read from `{IDEAS}`. "
+               "They are not part of the group repo and nothing here copies them into it.")
+    readme = (IDEAS / "README.md").read_text()
+    st.markdown("**How it led here.** On 28 October the search produced 108 candidate questions, mostly on founders "
+                "and venture capital, and a shortlist of ten. On 4 November the group settled on what makes a movie "
+                "highly profitable and dropped the founder study. One of the 108 is already a movie-network question "
+                "and carries over:")
+    w8 = IDEAS / "week8-inspired-ideas.md"
+    idea = _idea(w8.read_text(), 97) if w8.exists() else None
+    if idea:
+        st.info(md(idea))
+        if st.button("Open the co-production network (Whole graph)", type="primary"):
+            nav.go("graph", graph_mode="Companies that co-produce")
+
+    rows = re.findall(r"^\|\s*\[([^\]]+\.md)\]\([^)]+\)[^|]*\|\s*([^|]+?)\s*\|\s*(.+?)\s*\|\s*$", readme, re.M)
+    files = [("README.md", "", "Index of the idea files")] + [(f, d, w) for f, d, w in rows if (IDEAS / f).exists()]
+    st.subheader("The notes")
+    pick = st.selectbox("File", range(len(files)), format_func=lambda i: files[i][0] + (f" ({files[i][1]})" if files[i][1] else ""),
+                        key="ideas_file")
+    name, _, what = files[pick]
+    st.caption(md(what))
+    with st.container(height=760):
+        st.markdown(md((IDEAS / name).read_text()))
+    pdfs = [p for p in (IDEAS / "shortlist.pdf", IDEAS / "all-ideas.pdf") if p.exists()]
+    if pdfs:
+        cols = st.columns(len(pdfs))
+        for c, p in zip(cols, pdfs):
+            c.download_button(f"Download {p.name}", p.read_bytes(), file_name=p.name, mime="application/pdf")
 
 
 # ---------------------------------------------------------------- notebook series
@@ -265,7 +307,8 @@ def profit():
     num = [c for c in ["log_budget", "log_multiple", "budget_usd", "gross_usd", "multiple", "year", "votes", "rating", "rt", "mc"] if c in d]
     a, b, col, sz = st.columns(4)
     x = a.selectbox("x", num, index=num.index("log_budget"))
-    y = b.selectbox("y", num, index=num.index("log_multiple"))
+    ys = [c for c in num if c != x]  # same column on both axes breaks the trendline
+    y = b.selectbox("y", ys, index=ys.index("log_multiple") if "log_multiple" in ys else 0)
     colour = col.selectbox("colour", ["first_genre", "tier", "clean", "none"])
     trend = sz.toggle("Trend line", True)
     fig = px.scatter(d, x=x, y=y, color=None if colour == "none" else colour, hover_name="title",
@@ -297,6 +340,9 @@ def profit():
 
 # ---------------------------------------------------------------- data inspector
 
+MAX_COLS = 500
+
+
 def inspector():
     st.title("Data inspector")
     groups = data_files()
@@ -313,7 +359,10 @@ def inspector():
         st.error(f"Can't read `{f.name}`: {e}")
         return
     st.subheader(f.name)
-    st.caption(f"`{f}` · {len(df):,} rows × {df.shape[1]} columns" + (" (first 200,000 only)" if limit else ""))
+    st.caption(f"`{f}` · {len(df):,} rows × {df.shape[1]:,} columns" + (" (first 200,000 only)" if limit else ""))
+    if df.shape[1] > MAX_COLS:   # e.g. screenplay_words.json flattens to 160,000+ word columns, too big to send
+        st.warning(f"{df.shape[1]:,} columns is more than the browser can be sent; showing the first {MAX_COLS:,}.")
+        df = df.iloc[:, :MAX_COLS]
 
     schema = pd.DataFrame({"column": df.columns, "dtype": df.dtypes.astype(str).values,
                            "non-null": df.notna().sum().values, "missing %": (df.isna().mean() * 100).round(1).values,
@@ -464,7 +513,7 @@ def checks():
             show_df(df, key="chk_" + str(abs(hash(title))))
 
     st.subheader("Test suite")
-    st.caption("tests/: 115 tests on the functions behind every notebook, synthetic data only.")
+    st.caption("tests/: the functions behind every notebook and every explorer page, on synthetic data only.")
     fast = st.toggle("Skip the slow test", True)
     if st.button("Run tests"):
         with st.spinner("Running pytest…"):
