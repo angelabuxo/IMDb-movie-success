@@ -20,7 +20,7 @@ with z.open(pick('reviews.json')) as f:
 print('reviews',total,'empty',empty,'films with reviews',len(cnt),'median per film',S.median(cnt.values()),'max',max(cnt.values()))
 w=csv.writer(open('features/genome_review_counts.csv','w',newline=''));w.writerow(['tconst','reviews','chars']);[w.writerow([k,v,chars[k]]) for k,v in cnt.items()]
 rows=list(csv.DictReader(open('features/movies_features_10k.csv')))
-ok=lambda r:r['budget_cur']=='USD' and r['gross_cur']=='USD' and float(r['b'] or 0)>=1000 and float(r['g'] or 0)>=1000 and 'rentals' not in r['gross_flag'] and 'regional' not in r['gross_flag'] and not re.search('netflix|amazon|apple|hulu',r['distributors'] or '',re.I) and int(r['y'] or 0)<2026
+ok=lambda r:r['budget_cur']=='USD' and r['gross_cur']=='USD' and float(r['b'] or 0)>=1000 and float(r['g'] or 0)>=1000 and 'rentals' not in r['gross_flag'] and 'regional' not in r['gross_flag'] and 'direct_to_video' not in r['gross_flag'] and not re.search('netflix|amazon|apple|hulu',r['distributors'] or '',re.I) and 1975<=int(r['y'] or 0)<2026
 cl=[r for r in rows if ok(r)]
 for name,sub in (('100k+',[r for r in cl if r['tier']=='100k+']),('10k-100k',[r for r in cl if r['tier']!='100k+']),('all clean',cl)):
     n=[cnt[r['tconst']] for r in sub if r['tconst'] in cnt]

@@ -53,6 +53,26 @@ def test_scope_flags_partial_grosses(infobox, text, flags):
     assert infobox["scope"](text) == flags
 
 
+@pytest.mark.parametrize("raw, title, wikitext, flags", [
+    # rentals noted only in the citation (The Haunting, 1963): the ref-stripped figure looks like a gross
+    ('$1.02 million<ref>"Top Rental Features of 1963", Variety. Please note figures are rentals.</ref>',
+     "The Haunting (1963 film)", "", "rentals"),
+    ("$5 million<ref>{{cite book |page=295}} Please note figures are for rentals in US and Canada</ref>",
+     "X", "", "rentals"),
+    # not rentals: 'parental', a Variety headline on worldwide grosses, the film's own title, a ref name, a URL
+    ("$119.8 million<ref name=\"Parental Guidance Mojo\">x</ref>", "Parental Guidance", "", ""),
+    ("$94 million<ref>{{cite magazine|title=Worldwide rentals beat domestic take}}</ref>", "The Crow (1994 film)", "", ""),
+    ("$2.9 million<ref>{{cite web|title=''The Rental'' (2020)|url=https://x.com/the-rental}}</ref>", "The Rental", "", ""),
+    ("$2 million<ref name=rental>{{cite news|title=Opening weekend}}</ref>", "Y", "", ""),
+    # direct-to-video comes from the article's categories, wherever they sit
+    ("$1,035,846", "S. Darko", "...\n[[Category:2009 direct-to-video films]]\n", "direct_to_video"),
+    ("$12 million (US rentals)", "Z", "[[Category:Direct-to-video sequel films]]", "rentals;regional;direct_to_video"),
+])
+def test_gross_flags_rentals_in_refs_and_direct_to_video(infobox, raw, title, wikitext, flags):
+    shown = infobox["money"](raw)[2]
+    assert infobox["gross_flags"](raw, shown, wikitext, title) == flags
+
+
 def test_names_reads_links_and_list_templates(infobox):
     assert infobox["names"]("[[Warner Bros.|Warner Bros. Pictures]]<br>[[Legendary Pictures]]") == [
         "Warner Bros.", "Legendary Pictures"]

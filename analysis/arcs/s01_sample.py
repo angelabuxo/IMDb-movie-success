@@ -52,9 +52,9 @@ def run() -> dict:
     c, s = cfg(), cfg()["sample"]
     m = pd.read_csv(FEATURES / "movies_features.csv", dtype={"tconst": str})
     clean = ((m.budget_cur == "USD") & (m.gross_cur == "USD") & (m.b >= s["min_budget_usd"])
-             & ~m.gross_flag.fillna("").str.contains("rentals|regional")
+             & ~m.gross_flag.fillna("").str.contains("rentals|regional|direct_to_video")
              & ~m.distributors.fillna("").str.contains(s["streaming_distributors"], case=False)
-             & (m.y < s["max_year_exclusive"]))
+             & (m.y >= s["min_year_inclusive"]) & (m.y < s["max_year_exclusive"]))
     d = m[clean].rename(columns={"primaryTitle": "title_imdb", "y": "year", "b": "budget_usd", "g": "gross_usd",
                                  "votes": "imdb_votes", "rating": "imdb_rating", "rt": "rotten_tomatoes",
                                  "mc": "metacritic"}).copy()
