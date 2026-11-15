@@ -89,7 +89,23 @@ python3 scripts/get_data.py imdb genome
 
 ## Explore and check everything locally
 
-`streamlit run explorer/app.py` opens a local app with every notebook step, the network results, a profit playground, an inspector for every data and output file, and automatic checks. See [explorer/README.md](explorer/README.md). `python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
+The explorer is a local app with every notebook step, the network results, the whole graph and every node in it, the screenplays scene by scene, a profit playground, an inspector for every data and output file, and automatic checks. To run it, clone the repo and start it with one command:
+
+```bash
+git clone https://github.com/angelabuxo/IMDb-movie-success.git && cd IMDb-movie-success && ./explorer/run.sh
+```
+
+Then open <http://localhost:8501>. The first run takes a few minutes: it creates `.venv`, installs `requirements.txt` and unpacks `data/bundles/` into `data/raw/`, so nothing needs downloading. Later runs start in seconds. You need a recent Python 3 (we use 3.14) and `zstd` for the unpacking (`brew install zstd` on a Mac).
+
+If you already have a clone, pull and run:
+
+```bash
+git pull && ./explorer/run.sh
+```
+
+The script reinstalls the packages when `requirements.txt` changes. It unpacks the bundles only when `data/raw/` has no movie graph, so after a pull that adds a bundle, run the unpack command from [Get the data](#get-the-data) once. The app only listens on your own machine: `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. [explorer/README.md](explorer/README.md) describes every page.
+
+`python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
 
 ## Scripts and reviews
 

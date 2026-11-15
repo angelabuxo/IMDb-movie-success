@@ -14,6 +14,7 @@ ipykernel==7.3.0
 nbconvert==7.17.1
 # tests/ (python -m pytest; -m "not slow" skips the 8-second prediction self-test)
 pytest==9.2.0
-# explorer/ (streamlit run explorer/app.py; statsmodels draws the trend line)
+# explorer/ (./explorer/run.sh; plotly draws the charts, statsmodels the trend line)
+plotly==7.1.0
 streamlit==1.67.0
 statsmodels==0.15.0

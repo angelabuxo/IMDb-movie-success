@@ -2,12 +2,21 @@
 
 A Streamlit app that shows everything the notebooks show, lets you play with the data, and lets you open any data or output file to check it. It runs on your own machine only. Don't deploy it: `data/raw` holds licensed data and copyrighted script and review text.
 
+From a fresh clone:
+
 ```bash
-pip install -r requirements.txt          # streamlit, statsmodels and the analysis packages
-streamlit run explorer/app.py            # then open http://localhost:8501
+git clone https://github.com/angelabuxo/IMDb-movie-success.git && cd IMDb-movie-success && ./explorer/run.sh
 ```
 
-It reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `analysis/*/outputs` and `analysis/network`. It writes nothing.
+From a clone you already have:
+
+```bash
+git pull && ./explorer/run.sh
+```
+
+Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs `requirements.txt` (again only when it changes), unpacks `data/bundles/` into `data/raw/` when there's no movie graph there yet, and starts Streamlit on localhost only. Arguments go to Streamlit, so `./explorer/run.sh --server.port 8502` picks another port. The first run takes a few minutes and needs `zstd` (`brew install zstd` on a Mac).
+
+The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `analysis/*/outputs` and `analysis/network`. It writes nothing.
 
 ## Pages
 
