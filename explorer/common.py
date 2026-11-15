@@ -9,7 +9,6 @@ import importlib
 import json
 import os
 import re
-import subprocess
 from pathlib import Path
 
 import pandas as pd
@@ -23,22 +22,6 @@ OUTPUT_DIRS = {"arcs": REPO / "analysis" / "arcs" / "outputs",
                "network": REPO / "analysis" / "network"}
 TABULAR = (".csv", ".csv.gz", ".tsv", ".parquet", ".json")
 
-
-def _ideas_dir() -> Path | None:
-    """The private topic-selection notes (docs/ideas), if this machine has them: $IDEAS_DIR, else the main
-    checkout of this repo. They were never part of the group repo, so on other machines this is None."""
-    cands = [Path(os.environ["IDEAS_DIR"])] if os.environ.get("IDEAS_DIR") else []
-    try:
-        common = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=REPO,
-                                capture_output=True, text=True, timeout=5).stdout.strip()
-        if common:
-            cands.append(Path(common).parent / "docs" / "ideas")
-    except (OSError, subprocess.SubprocessError):
-        pass
-    return next((p for p in cands if (p / "README.md").exists()), None)
-
-
-IDEAS = _ideas_dir()
 
 
 def md(text: str) -> str:
@@ -130,6 +113,18 @@ def steps(pkg: str) -> list[tuple[str, str, str]]:
     return importlib.import_module(f"analysis.{pkg}.build_notebooks").STEPS
 
 
+def unavailable(kind: str, name: str, err) -> None:
+    """Why a table or figure can't be drawn here. A missing file in a private/ folder is expected on any machine
+    but the one that ran the step, so it gets a quiet note naming the file instead of a warning."""
+    if isinstance(err, FileNotFoundError) and "/private/" in str(err.filename or ""):
+        f = Path(err.filename)
+        shown = f.relative_to(REPO) if f.is_relative_to(REPO) else f.name
+        st.caption(f"🔒 {kind} `{name}` needs `{shown}`, which holds script text or sentence-level scores and "
+                   "stays on the machine that ran the step.")
+    else:
+        st.warning(f"{kind} `{name}` unavailable: {err if isinstance(err, Exception) else 'not produced'}")
+
+
 def render_step(pkg: str, module_name: str, show_private: bool):
     """The same SECTION items the notebook and static page render, from the saved outputs."""
     from analysis.scripts_text.report import Fig, Md, Private, Reading, Run, Table, takeaway_text
@@ -168,13 +163,13 @@ def render_step(pkg: str, module_name: str, show_private: bool):
         elif isinstance(item, Table):
             t = get("tables")
             if isinstance(t, Exception) or item.name not in t:
-                st.warning(f"Table `{item.name}` unavailable: {t if isinstance(t, Exception) else 'not produced'}")
+                unavailable("Table", item.name, t)
                 continue
             show_df(t[item.name], key=f"{pkg}_{module_name}_{item.name}_{i}", caption=item.caption)
         elif isinstance(item, Fig):
             f = get("figures")
             if isinstance(f, Exception) or item.name not in f:
-                st.warning(f"Figure `{item.name}` unavailable: {f if isinstance(f, Exception) else 'not produced'}")
+                unavailable("Figure", item.name, f)
                 continue
             st.plotly_chart(f[item.name], width="stretch", key=f"fig_{pkg}_{module_name}_{item.name}_{i}")
             st.caption(md(item.caption))

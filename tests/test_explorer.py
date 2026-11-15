@@ -26,7 +26,7 @@ TIMEOUT = 120
 
 @pytest.fixture(scope="module")
 def data_dir(tmp_path_factory):
-    """A data folder shaped like data/raw, and an ideas folder for the Topic history page."""
+    """A data folder shaped like data/raw."""
     rng = np.random.default_rng(2805)
     root = tmp_path_factory.mktemp("explorer_data")
     feat, graph = root / "features", root / "features" / "graph"
@@ -104,25 +104,14 @@ def data_dir(tmp_path_factory):
              {"movie_name": "Film_Two_2005", "imdb_id": "tt1000001", "script": script(["ANNA", "BEN"]), "summary": ""}]
     (ms / "train.jsonl").write_text("\n".join(json.dumps(x) for x in lines) + "\n")
 
-    ideas = root / "ideas"
-    ideas.mkdir()
-    (ideas / "README.md").write_text(
-        "# Idea files\n\n| File | Made | What it holds |\n| --- | --- | --- |\n"
-        "| [week8-inspired-ideas.md](week8-inspired-ideas.md) | 28 Oct | Ideas 76-100 |\n"
-        "| [missing.md](missing.md) | 28 Oct | Listed but not on disk |\n")
-    (ideas / "week8-inspired-ideas.md").write_text(
-        "# Ideas\n\n96. **Record deals.**\n    - one\n97. **Who co-finances films.**\n"
-        "    - **Question:** do co-financing networks decide what gets made? It costs $5 to ask.\n"
-        "98. **Novels.**\n")
     return root
 
 
 @pytest.fixture(scope="module")
 def explorer(data_dir):
     """Point the explorer at the synthetic folders and import it fresh (its paths are read at import)."""
-    old = {k: os.environ.get(k) for k in ("IMDB_DATA_DIR", "IDEAS_DIR")}
+    old = {k: os.environ.get(k) for k in ("IMDB_DATA_DIR",)}
     os.environ["IMDB_DATA_DIR"] = str(data_dir)
-    os.environ["IDEAS_DIR"] = str(data_dir / "ideas")
     for m in [m for m in sys.modules if m == "explorer" or m.startswith("explorer.")]:
         del sys.modules[m]
     if str(ROOT) not in sys.path:
@@ -157,7 +146,7 @@ def widget(at: AppTest, kind: str, label: str):
 
 
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
-         ("pages", "inspector"), ("pages", "checks"), ("pages", "topic_history"), ("graph_pages", "whole_graph"),
+         ("pages", "inspector"), ("pages", "checks"), ("graph_pages", "whole_graph"),
          ("graph_pages", "node"), ("graph_pages", "screenplays")]
 
 
@@ -167,12 +156,11 @@ def test_every_page_runs(explorer, module, fn):
 
 
 def test_app_registers_every_page(explorer):
-    """app.py builds the navigation; with an ideas folder the Topic history page is in it."""
+    """app.py builds the navigation with every page."""
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks",
-            "topic"} <= set(nav.PAGES)
+    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -338,16 +326,6 @@ def test_screenplay_switch_and_search(explorer):
     ok(at)
 
 
-def test_topic_history_reads_the_ideas_folder(explorer):
-    at = page("pages", "topic_history")
-    ok(at)
-    assert "Who co-finances films" in at.info[0].value and "98." not in at.info[0].value
-    assert "\\$5" in at.info[0].value                      # money, not LaTeX
-    assert len(widget(at, "selectbox", "File").options) == 2      # README plus the one listed file on disk
-    widget(at, "selectbox", "File").select_index(1).run()
-    ok(at)
-
-
 def test_cached_loaders_see_a_rebuilt_file(explorer, tmp_path):
     """Regression: the file time was passed as '_mt', which Streamlit leaves out of the cache key, so a
     rebuilt file kept being served from the cache until the app restarted."""
@@ -455,3 +433,75 @@ def test_arc_point_maps_to_a_scored_scene():
     assert scene_at(0, scored) == 0 and scene_at(99, scored) == 9
     assert scene_at(50, scored) == 4               # point 50 (centre 0.505) is the 4th of 6 scored scenes
     assert {scene_at(t, scored) for t in range(100)} == set(scored)
+
+
+def test_private_file_gap_is_a_quiet_note(explorer):
+    """A figure that needs a file in a private/ folder says which file, without a warning box."""
+    at = AppTest.from_string(
+        "from explorer.common import unavailable, REPO\n"
+        "unavailable('Figure', 'layers', FileNotFoundError(2, 'No such file', str(REPO / 'analysis/arcs/private/x.parquet')))\n"
+        "unavailable('Table', 'sizes', KeyError('year'))\n", default_timeout=TIMEOUT).run()
+    ok(at)
+    assert any("analysis/arcs/private/x.parquet" in c.value for c in at.caption)
+    assert len(at.warning) == 1 and "year" in at.warning[0].value
+
+
+@pytest.fixture
+def profit_arcs(explorer, tmp_path, monkeypatch):
+    """Saved arcs for every synthetic film, keyed by script name through a script table, as on a machine
+    without the screenplays. Films with a higher return get a rising arc."""
+    from explorer import common
+    nodes = pd.read_csv(explorer / "features" / "graph" / "nodes.csv")
+    films = nodes[nodes.type == "movie"].reset_index(drop=True)
+    names = [f"Film_{i}_2000" for i in range(len(films))]
+    arcs_dir, text_dir = tmp_path / "arcs", tmp_path / "text"
+    arcs_dir.mkdir()
+    text_dir.mkdir()
+    pd.DataFrame({"tconst": films.id, "movie_name": names}).to_csv(text_dir / "script_table.csv", index=False)
+    lift = np.log(films.multiple.fillna(1).clip(lower=.01)).to_numpy()
+    tt = np.arange(100)
+    pd.concat([pd.DataFrame({"movie_name": n, "t": tt, "raw": l * (tt / 99 - .5), "smooth": l * (tt / 99 - .5)})
+               for n, l in zip(names, lift)]).to_csv(arcs_dir / "s05_arcs_sst2.csv.gz", index=False)
+    pd.DataFrame({"movie_name": names, "in_primary": np.arange(len(names)) % 5 != 0, "scenes": 30, "D1": np.abs(lift) / 3,
+                  "D2": lift, "mean_level": 0.0, "min_position": np.where(lift > 0, .005, .995),
+                  "sign_changes": 1}).to_csv(arcs_dir / "s05_descriptors_sst2.csv", index=False)
+    monkeypatch.setitem(common.OUTPUT_DIRS, "arcs", arcs_dir)
+    monkeypatch.setitem(common.OUTPUT_DIRS, "scripts_text", text_dir)
+    monkeypatch.setattr("explorer.graph_pages.MOVIESUM", [tmp_path / "none.jsonl"])   # names from the table only
+    return arcs_dir
+
+
+def test_profit_playground_arcs(profit_arcs):
+    at = page("pages", "profit")
+    ok(at)
+    assert {"arc_swing", "arc_ending_lift", "arc_low_point"} <= set(widget(at, "selectbox", "x").options)
+    assert at.get("plotly_chart")
+    rho = next(df.value for df in at.dataframe if "descriptor" in df.value.columns).set_index("descriptor")
+    assert rho.loc["ending lift (D2)", "Spearman rho with log(gross / budget)"] > 0.99   # built that way
+    n_primary = rho.films.iloc[0]
+    widget(at, "toggle", "Primary arcs sample only").set_value(False).run()
+    ok(at)
+    rho = next(df.value for df in at.dataframe if "descriptor" in df.value.columns)
+    assert rho.films.iloc[0] > n_primary
+    for split in widget(at, "radio", "Compare").options:
+        widget(at, "radio", "Compare").set_value(split).run()
+        ok(at)
+    widget(at, "selectbox", "x").set_value("arc_ending_lift").run()
+    ok(at)
+
+
+def test_profit_playground_without_enough_arcs(arcs_scores):
+    """With one film's arc only, the section says so instead of drawing."""
+    at = page("pages", "profit")
+    ok(at)
+    assert any("Fewer than 20 films" in i.value for i in at.info)
+
+
+def test_pages_without_the_screenplays(explorer, monkeypatch, tmp_path):
+    """Regression: with no MovieSum files the script index raised a KeyError, so the Screenplays page and every
+    film in the node explorer crashed instead of saying the screenplays are missing."""
+    monkeypatch.setattr("explorer.graph_pages.MOVIESUM", [tmp_path / "none.jsonl"])
+    at = page("graph_pages", "screenplays")
+    ok(at)
+    assert any("No MovieSum files" in w.value for w in at.warning)
+    ok(page("graph_pages", "node", {"node_id": "tt0119094"}))

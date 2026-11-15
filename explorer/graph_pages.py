@@ -517,6 +517,8 @@ def _script_index(stamps: tuple) -> pd.DataFrame:
                     rows.append({"tconst": i.group(1).decode(), "movie_name": json.loads(b'"' + m.group(1) + b'"') if m else "",
                                  "file": str(path), "offset": off, "bytes": len(line)})
                 off += len(line)
+    if not rows:   # no MovieSum files on this machine
+        return pd.DataFrame(columns=["movie_name", "file", "offset", "bytes"], index=pd.Index([], name="tconst"))
     return pd.DataFrame(rows).drop_duplicates("tconst").set_index("tconst")
 
 
@@ -599,12 +601,32 @@ def _arc_tables(stamps: tuple) -> dict:
     return out
 
 
+def arc_tables() -> dict:
+    return _arc_tables(tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s05_*"))))
+
+
 def film_arcs(movie_name: str | None) -> dict:
     """The saved arcs of one film, by instrument; empty when it isn't in the arcs sample."""
     if not movie_name:
         return {}
-    stamps = tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s05_*")))
-    return {k: v for k, v in _arc_tables(stamps).items() if movie_name in v["desc"].index}
+    return {k: v for k, v in arc_tables().items() if movie_name in v["desc"].index}
+
+
+def script_names() -> pd.Series:
+    """IMDb ID -> MovieSum script name ('Face_Off_1997'), the key of every arcs output. From the screenplay
+    files when they're here, and from the text pipeline's committed script table otherwise."""
+    parts = []
+    idx = script_index()
+    if not idx.empty:
+        parts.append(idx.movie_name)
+    t = OUTPUT_DIRS["scripts_text"] / "script_table.csv"
+    if t.exists():
+        st_ = table(t).dropna(subset=["movie_name"])
+        parts.append(st_.set_index(st_.tconst.astype(str)).movie_name)
+    if not parts:
+        return pd.Series(dtype=str)
+    s = pd.concat(parts)
+    return s[~s.index.duplicated()]
 
 
 def scene_at(t: int, scored: list[int], points: int = 100) -> int:

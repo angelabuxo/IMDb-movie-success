@@ -125,3 +125,21 @@ def test_tfidf_follows_the_course_definitions():
 ])
 def test_no_clear_gain(text, base, expected):
     assert s09_logreg.no_clear_gain({"auc_text_repeat_range": text, "auc_baseline_repeat_range": base}) is expected
+
+
+def test_s01_imdb_fields_fall_back_to_the_data_folder(tmp_path, monkeypatch):
+    """Regression: without the private clean table, Step 1's load() had no 'year', and its tables and figures
+    failed in the explorer. The IMDb fields now come from movies_features.csv, the file Step 1 reads them from."""
+    import pandas as pd
+    from analysis.scripts_text import s01_groups
+    pd.DataFrame({"tconst": ["tt1", "tt2", "tt2"], "primaryTitle": ["A", "B", "B"], "y": [1999, 2005, 2005],
+                  "genres": ["Drama", "Horror,Comedy", "Horror,Comedy"], "b": [1, 2, 2]}).to_csv(
+        tmp_path / "movies_features.csv", index=False)
+    monkeypatch.setattr(s01_groups, "FEATURES", tmp_path)
+    f = s01_groups._imdb_fields(None)
+    assert f.set_index("tconst").year.to_dict() == {"tt1": 1999, "tt2": 2005}          # one row per film
+    assert list(f.columns) == ["tconst", "title_imdb", "year", "genres"]
+    private = pd.DataFrame({"tconst": ["tt9"], "title_imdb": ["Z"], "year": [1980], "genres": ["Drama"], "x": [0]})
+    assert s01_groups._imdb_fields(private).tconst.tolist() == ["tt9"]                  # the private table wins
+    monkeypatch.setattr(s01_groups, "FEATURES", tmp_path / "missing")
+    assert s01_groups._imdb_fields(None) is None

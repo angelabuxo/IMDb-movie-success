@@ -144,11 +144,27 @@ def run() -> dict:
     return load()
 
 
+def _imdb_fields(allc: pd.DataFrame | None) -> pd.DataFrame | None:
+    """IMDb title, year and genres per film, kept out of the committed table. From the private table when this
+    machine ran Step 1; otherwise from the data folder's movies_features.csv, the file Step 1 reads them from.
+    None when neither is on this machine."""
+    if allc is not None:
+        return allc[["tconst", "title_imdb", "year", "genres"]]
+    p = FEATURES / "movies_features.csv"
+    if not p.exists():
+        return None
+    m = pd.read_csv(p, dtype={"tconst": str}, usecols=["tconst", "primaryTitle", "y", "genres"])
+    m = m.rename(columns={"primaryTitle": "title_imdb", "y": "year"}).drop_duplicates("tconst")
+    m["year"] = pd.to_numeric(m.year, errors="coerce").astype("Int64")
+    return m
+
+
 def load() -> dict:
     sc = pd.read_csv(TABLE, dtype={"tconst": str})
     allc = pd.read_parquet(PRIVATE_TABLE) if PRIVATE_TABLE.exists() else None
-    if allc is not None:   # IMDb fields, kept out of the committed table
-        sc = sc.merge(allc[["tconst", "title_imdb", "year", "genres"]], on="tconst", how="left")
+    imdb = _imdb_fields(allc)
+    if imdb is not None:
+        sc = sc.merge(imdb, on="tconst", how="left")
     return {"scripts": sc, "clean": allc, "summary": json.loads(SUMMARY.read_text())}
 
 
