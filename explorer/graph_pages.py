@@ -381,7 +381,13 @@ def node():
         if cur in script_index().index and st.button("Read the screenplay", type="primary"):
             nav.open_script(cur)
 
-    t1, t2, t3, t4 = st.tabs(["Neighbours", "Network around it", "All fields", "Raw rows"])
+    sidx = script_index() if r.type == "movie" else pd.DataFrame()
+    arcs = film_arcs(sidx.movie_name.get(cur)) if not sidx.empty else {}
+    tabs = st.tabs(["Neighbours", "Network around it", "All fields", "Raw rows"] + (["Sentiment arc"] if arcs else []))
+    t1, t2, t3, t4 = tabs[:4]
+    if arcs:
+        with tabs[4]:
+            _arc_tab(cur, sidx.movie_name[cur], arcs)
     with t1:
         if r.type == "movie":
             rows = e[e.target == cur].assign(id=lambda d: d.source)
@@ -575,6 +581,89 @@ def scene_scores(movie_name: str) -> pd.DataFrame:
     if allsc.empty or movie_name not in allsc.index.get_level_values(0):
         return pd.DataFrame()
     return allsc.xs(movie_name, level=0)
+
+
+@st.cache_data(show_spinner="Loading the saved arcs…")
+def _arc_tables(stamps: tuple) -> dict:
+    """arcs Step 5 per instrument: every film's arc on 100 points of story time (raw and smoothed), its
+    descriptors, and the mean smoothed arc of the primary sample for reference."""
+    out = {}
+    for k in INSTRUMENTS:
+        a, d = OUTPUT_DIRS["arcs"] / f"s05_arcs_{k}.csv.gz", OUTPUT_DIRS["arcs"] / f"s05_descriptors_{k}.csv"
+        if a.exists() and d.exists():
+            arcs, desc = pd.read_csv(a), pd.read_csv(d)
+            prim = desc[desc.in_primary.astype(bool)]
+            out[k] = {"arcs": arcs.set_index("movie_name").sort_index(), "desc": desc.set_index("movie_name"),
+                      "primary": prim.set_index("movie_name"),
+                      "mean": arcs[arcs.movie_name.isin(prim.movie_name)].groupby("t").smooth.mean()}
+    return out
+
+
+def film_arcs(movie_name: str | None) -> dict:
+    """The saved arcs of one film, by instrument; empty when it isn't in the arcs sample."""
+    if not movie_name:
+        return {}
+    stamps = tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s05_*")))
+    return {k: v for k, v in _arc_tables(stamps).items() if movie_name in v["desc"].index}
+
+
+def scene_at(t: int, scored: list[int], points: int = 100) -> int:
+    """The scene under story-time point t. The arc is built from the scored scenes only, in order, with the
+    i-th of n covering [i/n, (i+1)/n) of the story, so point t (centre (t + 0.5) / points) falls in one of them."""
+    return scored[min(int((t + .5) / points * len(scored)), len(scored) - 1)]
+
+
+def _arc_tab(cur: str, movie_name: str, arcs: dict):
+    """A film's emotional arc as the paper builds it, with its descriptors; a click opens the reader there."""
+    have = list(arcs)
+    k = st.radio("Instrument", have, horizontal=True, key="arc_inst",
+                 format_func=lambda x: INSTRUMENTS[x] + (" (primary)" if x == PRIMARY else ""))
+    a, d = arcs[k]["arcs"].loc[[movie_name]], arcs[k]["desc"].loc[movie_name]
+    prim = arcs[k]["primary"]
+
+    def pct(col):
+        return f"{(prim[col] < d[col]).mean():.0%} of films below" if len(prim) else None
+
+    c = st.columns(5)
+    c[0].metric("Swing (D1)", f"{d.D1:.3f}", pct("D1"), delta_color="off", delta_arrow="off",
+                help="Standard deviation of the smoothed arc: how much the tone swings.")
+    c[1].metric("Ending lift (D2)", f"{d.D2:+.3f}", pct("D2"), delta_color="off", delta_arrow="off",
+                help="Mean of the last 20% minus the first 20% of the unsmoothed arc.")
+    c[2].metric("Mean level", f"{d.mean_level:+.3f}", pct("mean_level"), delta_color="off", delta_arrow="off")
+    c[3].metric("Low point", f"{d.min_position:.0%} into the story")
+    c[4].metric("Scored scenes", f"{int(d.scenes):,}", f"{int(d.sign_changes)} swings", delta_color="off", delta_arrow="off")
+    st.caption(("In the primary sample of the arcs analysis." if bool(d.in_primary) else
+                "Outside the primary sample of the arcs analysis (for example a possible transcript or too few "
+                "scene tags), so the paper's results don't use it.")
+               + f" Story time is cut into 100 points; the thick line averages 11 of them. Grey dashes: the mean arc "
+                 f"of the {len(prim):,} films in the primary sample.")
+    fig = go.Figure()
+    for x0, x1 in ((0, 20), (80, 100)):
+        fig.add_vrect(x0=x0 - .5, x1=x1 - .5, fillcolor="#999999", opacity=.08, line_width=0)
+    fig.add_scatter(x=arcs[k]["mean"].index, y=arcs[k]["mean"].values, mode="lines", name="mean of all films",
+                    line=dict(color="#999999", width=1.5, dash="dash"), hoverinfo="skip")
+    fig.add_scatter(x=a.t, y=a.raw, mode="lines", name="resampled", line=dict(color="#999999", width=1),
+                    hovertemplate="story %{x}%: %{y:+.2f}<extra></extra>")
+    fig.add_scatter(x=a.t, y=a.smooth, mode="lines+markers", name="smoothed", line=dict(color="#0072B2", width=3),
+                    marker=dict(size=5, color="#0072B2"),   # markers make the line clickable
+                    hovertemplate="story %{x}%: %{y:+.2f}<extra>smoothed</extra>")
+    lo = int(a.smooth.to_numpy().argmin())
+    fig.add_scatter(x=[a.t.iloc[lo]], y=[a.smooth.iloc[lo]], mode="markers", name="low point",
+                    marker=dict(color="#D55E00", size=10), hoverinfo="skip")
+    fig.add_hline(y=0, line_dash="dot", line_color="#aaa")
+    fig.update_layout(template="simple_white", height=420, margin=dict(l=0, r=0, t=30, b=0),
+                      xaxis=dict(title="story time (%)", range=[-1, 100]), yaxis_title=f"{INSTRUMENTS[k]} score",
+                      legend=dict(orientation="h", y=-0.22), clickmode="event+select", dragmode="select")
+    ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"arc_{cur}_{k}")
+    pts = ev.selection["points"] if ev and ev.selection else []
+    sc = scene_scores(movie_name)
+    scored = sorted(sc.index[sc[f"{k}_both"].notna()]) if f"{k}_both" in sc else []
+    if pts and scored:
+        t = min(int(p["x"]) for p in pts)
+        nav.go("scripts", script_tconst=cur, scene_focus=scene_at(t, scored))
+    st.caption("Click the arc, or drag a box over part of it, to read those scenes with their sentiment.")
+    if cur in script_index().index and st.button("Read it with scene sentiment", key="arc_read"):
+        nav.open_script(cur)
 
 
 def _badge(v: float, label: str) -> str:
