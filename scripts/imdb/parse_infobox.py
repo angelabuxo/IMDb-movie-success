@@ -1,5 +1,5 @@
 """Extract budget, gross, studios, stars and critic scores from wikitext. Run from build/imdb."""
-import csv,json,re,sys
+import csv,html,json,re,sys
 SRC=sys.argv[1] if len(sys.argv)>1 else 'wiki/articles.jsonl'; DST=sys.argv[2] if len(sys.argv)>2 else 'features/wiki_infobox.csv'
 MON={m:i+1 for i,m in enumerate('january february march april may june july august september october november december'.split())}
 import mwparserfromhell as M
@@ -45,7 +45,10 @@ def names(raw):
         if re.match(r'(?i)\s*(ubl|unbulleted list|plainlist|flatlist|hlist)\s*$',str(t.name)):
             out+=[M.parse(str(x.value)).strip_code().strip() for x in t.params if str(x.name).strip().isdigit()]
     if out: return [x for x in dict.fromkeys(out) if x and '\n' not in x]
-    t=re.split(r'<br\s*/?>|\n\*|\n|;',c.strip_code()); return [x.strip(' *,') for x in t if x.strip(' *,')]
+    # split on <br> BEFORE strip_code(), which deletes the tags and would merge the names around them;
+    # decode entities first so the ';' of '&nbsp;' isn't taken as a separator; drop bare '(...)' notes
+    t=[M.parse(x).strip_code().strip(' *,') for x in re.split(r'(?i)<br\s*/?>|\n\*|\n|;',html.unescape(s))]
+    return [x for x in t if x and not (x[0]=='(' and x[-1]==')')]
 IB=re.compile(r'(?i)^infobox[ _](?:film|movie|television|short film)')
 w=csv.writer(open(DST,'w',newline=''))
 w.writerow('tconst title has_infobox budget budget_cur budget_raw budget_flag gross gross_cur gross_raw gross_flag studios distributors producers starring rt_pct metacritic critic_chars release_month'.split())

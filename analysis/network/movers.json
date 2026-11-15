@@ -7,301 +7,301 @@
   "all": {
    "director": {
     "movers": {
-     "credits": 1320,
-     "people": 726,
-     "films": 1270,
+     "credits": 1322,
+     "people": 728,
+     "films": 1272,
      "person_films_median": 4.0,
      "studio_films_median": 26.0,
-     "track_correlation": 0.1178,
-     "person": 0.0897,
+     "track_correlation": 0.126,
+     "person": 0.0912,
      "person_ci": [
-      0.0284,
-      0.1498
+      0.0329,
+      0.1525
      ],
-     "person_null_95": 0.0547,
-     "person_p": 0.002,
-     "studio": 0.2145,
+     "person_null_95": 0.0519,
+     "person_p": 0.001,
+     "studio": 0.2114,
      "studio_ci": [
-      0.1469,
-      0.2794
+      0.1476,
+      0.2775
      ],
-     "studio_null_95": 0.0601,
+     "studio_null_95": 0.0566,
      "studio_p": 0.001,
      "matched": {
-      "credits": 998,
+      "credits": 999,
       "films_per_track": 3,
-      "person": 0.1354,
-      "studio": 0.1281,
+      "person": 0.1339,
+      "studio": 0.1294,
       "studio_draw_sd": 0.025
      }
     },
     "stayers": {
-     "credits": 1319,
-     "people": 554,
-     "films": 1244,
+     "credits": 1321,
+     "people": 555,
+     "films": 1246,
      "person_films_median": 6.0,
      "studio_films_median": 45.0,
-     "track_correlation": 0.1634,
-     "person": 0.1444,
+     "track_correlation": 0.1648,
+     "person": 0.1432,
      "person_ci": [
-      0.0694,
-      0.2161
+      0.0652,
+      0.2156
      ],
-     "person_null_95": 0.047,
+     "person_null_95": 0.0467,
      "person_p": 0.001,
-     "studio": 0.1547,
+     "studio": 0.1501,
      "studio_ci": [
-      0.0781,
-      0.2252
+      0.0826,
+      0.2202
      ],
-     "studio_null_95": 0.0555,
+     "studio_null_95": 0.0522,
      "studio_p": 0.001,
      "matched": {
-      "credits": 1147,
+      "credits": 1149,
       "films_per_track": 3,
-      "person": 0.1967,
-      "studio": 0.0786,
-      "studio_draw_sd": 0.0265
+      "person": 0.1958,
+      "studio": 0.0817,
+      "studio_draw_sd": 0.0297
      }
     }
    },
    "writer": {
     "movers": {
-     "credits": 2215,
-     "people": 1240,
-     "films": 1497,
+     "credits": 2219,
+     "people": 1243,
+     "films": 1500,
      "person_films_median": 3.0,
      "studio_films_median": 33.0,
-     "track_correlation": 0.0965,
-     "person": 0.0646,
+     "track_correlation": 0.0997,
+     "person": 0.0666,
      "person_ci": [
-      0.0225,
-      0.1079
+      0.0283,
+      0.1093
      ],
-     "person_null_95": 0.0516,
-     "person_p": 0.014,
-     "studio": 0.2231,
+     "person_null_95": 0.0503,
+     "person_p": 0.008,
+     "studio": 0.2189,
      "studio_ci": [
-      0.1689,
-      0.2778
+      0.1679,
+      0.2739
      ],
-     "studio_null_95": 0.0469,
+     "studio_null_95": 0.0483,
      "studio_p": 0.001,
      "matched": {
-      "credits": 1528,
+      "credits": 1531,
       "films_per_track": 3,
-      "person": 0.0789,
-      "studio": 0.1475,
-      "studio_draw_sd": 0.0201
+      "person": 0.0802,
+      "studio": 0.1441,
+      "studio_draw_sd": 0.0217
      }
     },
     "stayers": {
-     "credits": 2483,
-     "people": 1026,
-     "films": 1401,
+     "credits": 2486,
+     "people": 1028,
+     "films": 1404,
      "person_films_median": 5.0,
      "studio_films_median": 55.0,
-     "track_correlation": 0.187,
-     "person": 0.1802,
+     "track_correlation": 0.1884,
+     "person": 0.1795,
      "person_ci": [
-      0.1244,
-      0.2402
+      0.1229,
+      0.2395
      ],
-     "person_null_95": 0.0424,
+     "person_null_95": 0.0405,
      "person_p": 0.001,
-     "studio": 0.1779,
+     "studio": 0.175,
      "studio_ci": [
-      0.1238,
-      0.2329
+      0.118,
+      0.2258
      ],
-     "studio_null_95": 0.0577,
+     "studio_null_95": 0.0607,
      "studio_p": 0.001,
      "matched": {
-      "credits": 2052,
+      "credits": 2055,
       "films_per_track": 3,
-      "person": 0.2359,
-      "studio": 0.0965,
-      "studio_draw_sd": 0.02
+      "person": 0.2354,
+      "studio": 0.0975,
+      "studio_draw_sd": 0.0168
      }
     }
    },
    "producer": {
     "movers": {
-     "credits": 1831,
-     "people": 1064,
-     "films": 1310,
+     "credits": 1833,
+     "people": 1068,
+     "films": 1315,
      "person_films_median": 4.0,
      "studio_films_median": 26.0,
-     "track_correlation": 0.1067,
-     "person": 0.0343,
+     "track_correlation": 0.1066,
+     "person": 0.0354,
      "person_ci": [
-      -0.0179,
-      0.0835
+      -0.021,
+      0.0893
      ],
-     "person_null_95": 0.0455,
-     "person_p": 0.1009,
-     "studio": 0.1707,
+     "person_null_95": 0.0493,
+     "person_p": 0.1179,
+     "studio": 0.1684,
      "studio_ci": [
-      0.1113,
-      0.2333
+      0.11,
+      0.2266
      ],
-     "studio_null_95": 0.0612,
+     "studio_null_95": 0.0588,
      "studio_p": 0.001,
      "matched": {
-      "credits": 1415,
+      "credits": 1413,
       "films_per_track": 3,
-      "person": 0.0142,
-      "studio": 0.1078,
-      "studio_draw_sd": 0.0237
+      "person": 0.0136,
+      "studio": 0.1077,
+      "studio_draw_sd": 0.0236
      }
     },
     "stayers": {
-     "credits": 4687,
-     "people": 1171,
-     "films": 2454,
+     "credits": 4695,
+     "people": 1175,
+     "films": 2455,
      "person_films_median": 8.0,
      "studio_films_median": 50.0,
-     "track_correlation": 0.2428,
-     "person": 0.1897,
+     "track_correlation": 0.244,
+     "person": 0.1895,
      "person_ci": [
-      0.1429,
-      0.2334
+      0.1456,
+      0.2352
      ],
-     "person_null_95": 0.0292,
+     "person_null_95": 0.0307,
      "person_p": 0.001,
-     "studio": 0.1987,
+     "studio": 0.1962,
      "studio_ci": [
-      0.1624,
-      0.2367
+      0.1545,
+      0.2311
      ],
-     "studio_null_95": 0.0369,
+     "studio_null_95": 0.0364,
      "studio_p": 0.001,
      "matched": {
-      "credits": 4208,
+      "credits": 4215,
       "films_per_track": 3,
-      "person": 0.2335,
-      "studio": 0.1012,
-      "studio_draw_sd": 0.0139
+      "person": 0.2337,
+      "studio": 0.0986,
+      "studio_draw_sd": 0.0121
      }
     }
    },
    "cast": {
     "movers": {
-     "credits": 5499,
-     "people": 1938,
-     "films": 3022,
+     "credits": 5513,
+     "people": 1939,
+     "films": 3028,
      "person_films_median": 7.0,
-     "studio_films_median": 26.0,
-     "track_correlation": 0.007,
-     "person": 0.0366,
+     "studio_films_median": 25.0,
+     "track_correlation": 0.0085,
+     "person": 0.0356,
      "person_ci": [
-      0.0094,
-      0.0638
+      0.01,
+      0.0602
      ],
-     "person_null_95": 0.0232,
-     "person_p": 0.006,
-     "studio": 0.2414,
+     "person_null_95": 0.0252,
+     "person_p": 0.011,
+     "studio": 0.2401,
      "studio_ci": [
-      0.2119,
-      0.2727
+      0.2072,
+      0.272
      ],
-     "studio_null_95": 0.0316,
+     "studio_null_95": 0.0374,
      "studio_p": 0.001,
      "matched": {
-      "credits": 4789,
+      "credits": 4802,
       "films_per_track": 3,
-      "person": 0.0585,
-      "studio": 0.1397,
+      "person": 0.059,
+      "studio": 0.1406,
       "studio_draw_sd": 0.0112
      }
     },
     "stayers": {
-     "credits": 3038,
-     "people": 1044,
-     "films": 1951,
+     "credits": 3040,
+     "people": 1046,
+     "films": 1952,
      "person_films_median": 12.0,
-     "studio_films_median": 59.5,
-     "track_correlation": 0.1254,
-     "person": 0.1472,
+     "studio_films_median": 59.0,
+     "track_correlation": 0.1213,
+     "person": 0.1493,
      "person_ci": [
-      0.1071,
-      0.188
+      0.1055,
+      0.1909
      ],
-     "person_null_95": 0.0329,
+     "person_null_95": 0.0337,
      "person_p": 0.001,
-     "studio": 0.2461,
+     "studio": 0.2425,
      "studio_ci": [
-      0.1984,
-      0.2926
+      0.1947,
+      0.2901
      ],
-     "studio_null_95": 0.0384,
+     "studio_null_95": 0.0399,
      "studio_p": 0.001,
      "matched": {
-      "credits": 2875,
+      "credits": 2877,
       "films_per_track": 3,
-      "person": 0.1693,
-      "studio": 0.1319,
-      "studio_draw_sd": 0.0175
+      "person": 0.1707,
+      "studio": 0.1312,
+      "studio_draw_sd": 0.0142
      }
     }
    },
    "any": {
     "movers": {
-     "credits": 10865,
-     "people": 4098,
-     "films": 3439,
+     "credits": 10887,
+     "people": 4104,
+     "films": 3445,
      "person_films_median": 5.0,
      "studio_films_median": 27.0,
-     "track_correlation": 0.0601,
-     "person": 0.0478,
+     "track_correlation": 0.0626,
+     "person": 0.0482,
      "person_ci": [
-      0.0265,
-      0.0695
+      0.0251,
+      0.0702
      ],
-     "person_null_95": 0.0258,
-     "person_p": 0.002,
-     "studio": 0.2247,
+     "person_null_95": 0.026,
+     "person_p": 0.001,
+     "studio": 0.2226,
      "studio_ci": [
-      0.2014,
-      0.2511
+      0.1969,
+      0.2471
      ],
-     "studio_null_95": 0.0342,
+     "studio_null_95": 0.0355,
      "studio_p": 0.001,
      "matched": {
-      "credits": 8730,
+      "credits": 8745,
       "films_per_track": 3,
-      "person": 0.0624,
-      "studio": 0.1358,
-      "studio_draw_sd": 0.0094
+      "person": 0.0626,
+      "studio": 0.136,
+      "studio_draw_sd": 0.0087
      }
     },
     "stayers": {
-     "credits": 11527,
-     "people": 2917,
-     "films": 3056,
+     "credits": 11542,
+     "people": 2923,
+     "films": 3057,
      "person_films_median": 8.0,
      "studio_films_median": 53.0,
-     "track_correlation": 0.2041,
-     "person": 0.1723,
+     "track_correlation": 0.2043,
+     "person": 0.1724,
      "person_ci": [
-      0.1392,
-      0.2036
+      0.1378,
+      0.2077
      ],
-     "person_null_95": 0.0247,
+     "person_null_95": 0.0246,
      "person_p": 0.001,
-     "studio": 0.2026,
+     "studio": 0.1996,
      "studio_ci": [
-      0.1727,
-      0.2328
+      0.173,
+      0.2299
      ],
-     "studio_null_95": 0.0387,
+     "studio_null_95": 0.0372,
      "studio_p": 0.001,
      "matched": {
-      "credits": 10282,
+      "credits": 10296,
       "films_per_track": 3,
-      "person": 0.2147,
-      "studio": 0.1081,
-      "studio_draw_sd": 0.0088
+      "person": 0.2149,
+      "studio": 0.1074,
+      "studio_draw_sd": 0.009
      }
     }
    }
@@ -315,55 +315,55 @@
      "person_films_median": 4.0,
      "studio_films_median": 22.0,
      "track_correlation": 0.0814,
-     "person": 0.111,
+     "person": 0.1111,
      "person_ci": [
-      0.0389,
-      0.1813
+      0.0385,
+      0.1787
      ],
-     "person_null_95": 0.0637,
-     "person_p": 0.001,
-     "studio": 0.206,
+     "person_null_95": 0.0634,
+     "person_p": 0.003,
+     "studio": 0.205,
      "studio_ci": [
-      0.118,
-      0.2964
+      0.1193,
+      0.2893
      ],
-     "studio_null_95": 0.0681,
+     "studio_null_95": 0.0699,
      "studio_p": 0.001,
      "matched": {
       "credits": 544,
       "films_per_track": 3,
-      "person": 0.0761,
-      "studio": 0.1176,
-      "studio_draw_sd": 0.0325
+      "person": 0.076,
+      "studio": 0.1229,
+      "studio_draw_sd": 0.038
      }
     },
     "stayers": {
-     "credits": 722,
+     "credits": 723,
      "people": 349,
-     "films": 695,
+     "films": 696,
      "person_films_median": 6.0,
      "studio_films_median": 37.0,
-     "track_correlation": 0.1306,
-     "person": 0.1983,
+     "track_correlation": 0.1283,
+     "person": 0.1969,
      "person_ci": [
-      0.1138,
-      0.2706
+      0.1031,
+      0.2688
      ],
-     "person_null_95": 0.0669,
+     "person_null_95": 0.0627,
      "person_p": 0.001,
-     "studio": 0.0964,
+     "studio": 0.0976,
      "studio_ci": [
-      0.0154,
-      0.1725
+      0.0166,
+      0.177
      ],
      "studio_null_95": 0.0626,
      "studio_p": 0.006,
      "matched": {
-      "credits": 613,
+      "credits": 614,
       "films_per_track": 3,
-      "person": 0.2186,
-      "studio": 0.0328,
-      "studio_draw_sd": 0.029
+      "person": 0.218,
+      "studio": 0.0393,
+      "studio_draw_sd": 0.0364
      }
     }
    },
@@ -374,147 +374,147 @@
      "films": 811,
      "person_films_median": 3.0,
      "studio_films_median": 26.0,
-     "track_correlation": 0.0782,
-     "person": 0.0804,
+     "track_correlation": 0.0786,
+     "person": 0.0812,
      "person_ci": [
-      0.0272,
-      0.1367
+      0.025,
+      0.1372
      ],
-     "person_null_95": 0.0604,
-     "person_p": 0.016,
-     "studio": 0.2159,
+     "person_null_95": 0.0589,
+     "person_p": 0.015,
+     "studio": 0.215,
      "studio_ci": [
-      0.1315,
-      0.2922
+      0.14,
+      0.2936
      ],
-     "studio_null_95": 0.0636,
+     "studio_null_95": 0.0627,
      "studio_p": 0.001,
      "matched": {
       "credits": 668,
       "films_per_track": 3,
-      "person": 0.0702,
-      "studio": 0.1123,
-      "studio_draw_sd": 0.0336
+      "person": 0.07,
+      "studio": 0.1334,
+      "studio_draw_sd": 0.0285
      }
     },
     "stayers": {
-     "credits": 817,
+     "credits": 818,
      "people": 463,
-     "films": 622,
+     "films": 623,
      "person_films_median": 5.0,
-     "studio_films_median": 43.0,
-     "track_correlation": 0.1265,
-     "person": 0.1974,
+     "studio_films_median": 42.5,
+     "track_correlation": 0.1248,
+     "person": 0.1964,
      "person_ci": [
-      0.1057,
-      0.2883
+      0.1031,
+      0.2854
      ],
-     "person_null_95": 0.0679,
+     "person_null_95": 0.0585,
      "person_p": 0.001,
-     "studio": 0.1283,
+     "studio": 0.1291,
      "studio_ci": [
-      0.0546,
-      0.2032
+      0.0541,
+      0.2091
      ],
-     "studio_null_95": 0.0636,
-     "studio_p": 0.001,
+     "studio_null_95": 0.0707,
+     "studio_p": 0.003,
      "matched": {
-      "credits": 640,
+      "credits": 641,
       "films_per_track": 3,
-      "person": 0.183,
-      "studio": 0.0487,
-      "studio_draw_sd": 0.0313
+      "person": 0.1819,
+      "studio": 0.0587,
+      "studio_draw_sd": 0.0362
      }
     }
    },
    "producer": {
     "movers": {
-     "credits": 1276,
-     "people": 819,
-     "films": 918,
+     "credits": 1274,
+     "people": 820,
+     "films": 919,
      "person_films_median": 4.0,
      "studio_films_median": 21.0,
-     "track_correlation": 0.136,
-     "person": 0.0189,
+     "track_correlation": 0.1389,
+     "person": 0.0184,
      "person_ci": [
-      -0.0419,
-      0.0746
+      -0.0397,
+      0.0775
      ],
-     "person_null_95": 0.0557,
-     "person_p": 0.3367,
-     "studio": 0.1587,
+     "person_null_95": 0.0554,
+     "person_p": 0.3387,
+     "studio": 0.1579,
      "studio_ci": [
-      0.0897,
-      0.2222
+      0.0976,
+      0.2236
      ],
-     "studio_null_95": 0.0723,
+     "studio_null_95": 0.0762,
      "studio_p": 0.001,
      "matched": {
-      "credits": 916,
+      "credits": 912,
       "films_per_track": 3,
-      "person": 0.0497,
-      "studio": 0.1167,
-      "studio_draw_sd": 0.0272
+      "person": 0.0488,
+      "studio": 0.1125,
+      "studio_draw_sd": 0.0302
      }
     },
     "stayers": {
-     "credits": 2760,
-     "people": 876,
+     "credits": 2766,
+     "people": 877,
      "films": 1539,
      "person_films_median": 7.0,
      "studio_films_median": 35.0,
-     "track_correlation": 0.2126,
-     "person": 0.1663,
+     "track_correlation": 0.2113,
+     "person": 0.1659,
      "person_ci": [
-      0.1109,
-      0.2189
+      0.1145,
+      0.2242
      ],
-     "person_null_95": 0.0332,
+     "person_null_95": 0.0335,
      "person_p": 0.001,
-     "studio": 0.1721,
+     "studio": 0.1715,
      "studio_ci": [
-      0.1238,
-      0.2206
+      0.1262,
+      0.2225
      ],
-     "studio_null_95": 0.0488,
+     "studio_null_95": 0.048,
      "studio_p": 0.001,
      "matched": {
-      "credits": 2394,
+      "credits": 2400,
       "films_per_track": 3,
-      "person": 0.1862,
-      "studio": 0.0899,
-      "studio_draw_sd": 0.0196
+      "person": 0.1855,
+      "studio": 0.088,
+      "studio_draw_sd": 0.0192
      }
     }
    },
    "cast": {
     "movers": {
-     "credits": 3668,
+     "credits": 3674,
      "people": 1429,
-     "films": 2064,
+     "films": 2067,
      "person_films_median": 6.0,
      "studio_films_median": 21.0,
-     "track_correlation": 0.0247,
-     "person": 0.024,
+     "track_correlation": 0.024,
+     "person": 0.0241,
      "person_ci": [
-      -0.0064,
-      0.0531
+      -0.0053,
+      0.0555
      ],
-     "person_null_95": 0.0292,
-     "person_p": 0.0939,
+     "person_null_95": 0.0287,
+     "person_p": 0.0839,
      "studio": 0.1934,
      "studio_ci": [
-      0.1555,
-      0.2277
+      0.1541,
+      0.2304
      ],
-     "studio_null_95": 0.0453,
+     "studio_null_95": 0.0426,
      "studio_p": 0.001,
      "matched": {
-      "credits": 3139,
+      "credits": 3145,
       "films_per_track": 3,
-      "person": 0.0479,
-      "studio": 0.1158,
-      "studio_draw_sd": 0.0164
+      "person": 0.0485,
+      "studio": 0.1131,
+      "studio_draw_sd": 0.016
      }
     },
     "stayers": {
@@ -523,87 +523,87 @@
      "films": 1169,
      "person_films_median": 10.0,
      "studio_films_median": 49.0,
-     "track_correlation": 0.1148,
-     "person": 0.1496,
+     "track_correlation": 0.114,
+     "person": 0.1498,
      "person_ci": [
-      0.0906,
-      0.2091
+      0.0871,
+      0.2095
      ],
-     "person_null_95": 0.0411,
+     "person_null_95": 0.041,
      "person_p": 0.001,
-     "studio": 0.2184,
+     "studio": 0.2185,
      "studio_ci": [
-      0.1542,
-      0.2864
+      0.1457,
+      0.2833
      ],
-     "studio_null_95": 0.0571,
+     "studio_null_95": 0.0569,
      "studio_p": 0.001,
      "matched": {
       "credits": 1557,
       "films_per_track": 3,
-      "person": 0.1354,
-      "studio": 0.1042,
-      "studio_draw_sd": 0.0248
+      "person": 0.1343,
+      "studio": 0.1102,
+      "studio_draw_sd": 0.0215
      }
     }
    },
    "any": {
     "movers": {
-     "credits": 6771,
-     "people": 2843,
-     "films": 2284,
+     "credits": 6775,
+     "people": 2844,
+     "films": 2286,
      "person_films_median": 5.0,
      "studio_films_median": 22.0,
-     "track_correlation": 0.0645,
+     "track_correlation": 0.0648,
      "person": 0.0411,
      "person_ci": [
-      0.016,
-      0.0665
+      0.0132,
+      0.0651
      ],
-     "person_null_95": 0.0265,
-     "person_p": 0.002,
-     "studio": 0.1916,
+     "person_null_95": 0.0273,
+     "person_p": 0.005,
+     "studio": 0.1912,
      "studio_ci": [
-      0.1604,
-      0.2249
+      0.158,
+      0.2232
      ],
-     "studio_null_95": 0.0462,
+     "studio_null_95": 0.0473,
      "studio_p": 0.001,
      "matched": {
-      "credits": 5267,
+      "credits": 5269,
       "films_per_track": 3,
-      "person": 0.053,
-      "studio": 0.1159,
-      "studio_draw_sd": 0.0117
+      "person": 0.0532,
+      "studio": 0.1164,
+      "studio_draw_sd": 0.0096
      }
     },
     "stayers": {
-     "credits": 5957,
-     "people": 1789,
+     "credits": 5965,
+     "people": 1790,
      "films": 1909,
      "person_films_median": 7.0,
      "studio_films_median": 39.0,
-     "track_correlation": 0.1701,
-     "person": 0.1711,
+     "track_correlation": 0.1688,
+     "person": 0.1706,
      "person_ci": [
-      0.1288,
-      0.2107
+      0.1274,
+      0.2118
      ],
-     "person_null_95": 0.0301,
+     "person_null_95": 0.0324,
      "person_p": 0.001,
      "studio": 0.1708,
      "studio_ci": [
-      0.1327,
-      0.2122
+      0.1333,
+      0.2111
      ],
-     "studio_null_95": 0.0436,
+     "studio_null_95": 0.0414,
      "studio_p": 0.001,
      "matched": {
-      "credits": 5204,
+      "credits": 5212,
       "films_per_track": 3,
-      "person": 0.1758,
-      "studio": 0.0835,
-      "studio_draw_sd": 0.0137
+      "person": 0.1751,
+      "studio": 0.0863,
+      "studio_draw_sd": 0.0125
      }
     }
    }

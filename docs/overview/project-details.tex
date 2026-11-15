@@ -92,13 +92,13 @@ Trained on films to 2010, tested on 2011 to 2017.
 Model & Out-of-sample $R^2$ \\
 \midrule
 Budget, year, genre & $-0.010$ \\
-+ network & 0.202 \\
-All pre-release blocks (adds month, franchise) & 0.244 \\
-+ critic and audience scores & 0.312 \\
++ network & 0.203 \\
+All pre-release blocks (adds month, franchise) & 0.245 \\
++ critic and audience scores & 0.313 \\
 \bottomrule
 \end{tabularx}
 \begin{itemize}
-  \item On films with a screenplay, script features add nothing beyond the network ($R^2$ 0.037 against 0.036).
+  \item On films with a screenplay, script features add nothing beyond the network ($R^2$ 0.035 against 0.034).
   \item Director hit streaks beat a shuffle of each director's own films (+0.175 against +0.090). PageRank adds nothing beyond plain experience.
   \item Rotten Tomatoes goes with the multiple at $\rho = +0.25$. There are 158 loved flops and 205 panned hits.
 \end{itemize}
