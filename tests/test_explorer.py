@@ -358,3 +358,67 @@ def test_cached_loaders_see_a_rebuilt_file(explorer, tmp_path):
     p.write_text("a\n2\n")
     os.utime(p, (p.stat().st_atime, p.stat().st_mtime + 10))
     assert table(p).a.tolist() == [2]
+
+
+@pytest.fixture
+def arcs_scores(explorer, tmp_path, monkeypatch):
+    """Synthetic arcs Step 3 scene scores for the Face/Off screenplay; scene 7 has none (no scored sentence)."""
+    from explorer import common
+    d = tmp_path / "arcs"
+    d.mkdir()
+    scenes = [i for i in range(30) if i != 7]
+    base = pd.DataFrame({"movie_name": "Face_Off_1997", "scene": scenes})
+    base.assign(sst2_both=np.linspace(-0.9, 0.9, len(scenes)), sst2_dialogue=0.25, sst2_action=-0.5, n_both=3).to_csv(
+        d / "s03_scene_sst2.csv.gz", index=False)
+    base.assign(vader_both=0.1, vader_dialogue=0.2, vader_action=np.nan, n_both=3).to_csv(
+        d / "s03_scene_vader.csv.gz", index=False)
+    base.assign(sst2_scene=0.75, sst2_scene_neutral=np.nan, sst2_pieces=1).to_csv(
+        d / "s03_scene_context_sst2.csv.gz", index=False)
+    monkeypatch.setitem(common.OUTPUT_DIRS, "arcs", d)
+    return d
+
+
+def _script_html(at: AppTest) -> str:
+    return next(m.value for m in at.markdown if 'class="sp"' in m.value)
+
+
+def test_read_tab_shows_scene_sentiment(arcs_scores):
+    at = page("graph_pages", "screenplays")
+    ok(at)
+    assert widget(at, "multiselect", "Sentiment beside each scene").value == ["sst2"]   # the primary instrument
+    html = _script_html(at)
+    assert "SST-2" in html and "VADER" not in html
+    assert "both -0.90" in html and "dialogue +0.25" in html and "action -0.50" in html and "whole scene +0.75" in html
+    assert html.count("no scored sentences") == 1                                       # scene 7
+    assert at.get("plotly_chart"), "the reading arc is drawn"
+
+
+def test_read_tab_adds_and_removes_instruments(arcs_scores):
+    at = page("graph_pages", "screenplays")
+    widget(at, "multiselect", "Sentiment beside each scene").set_value(["sst2", "vader"]).run()
+    ok(at)
+    html = _script_html(at)
+    assert "VADER" in html and "both +0.10" in html and "action +nan" not in html   # a missing layer is skipped
+    widget(at, "multiselect", "Sentiment beside each scene").set_value([]).run()
+    ok(at)
+    assert 'class="b"' not in _script_html(at)
+
+
+def test_read_tab_without_saved_sentiment(arcs_scores):
+    """A script outside the arcs sample says so, and coming back keeps the instrument choice."""
+    at = page("graph_pages", "screenplays")
+    widget(at, "multiselect", "Sentiment beside each scene").set_value(["vader"]).run()
+    widget(at, "selectbox", "Screenplay").set_value("tt1000001").run()
+    ok(at)
+    assert any("isn't in the arcs sample" in str(c.value) for c in at.caption)
+    assert 'class="b"' not in _script_html(at)
+    widget(at, "selectbox", "Screenplay").set_value("tt0119094").run()
+    ok(at)
+    assert widget(at, "multiselect", "Sentiment beside each scene").value == ["vader"]
+
+
+def test_sentiment_badge_colours():
+    from explorer.graph_pages import _badge
+    assert "0,114,178" in _badge(0.4, "both") and "+0.40" in _badge(0.4, "both")
+    assert "213,94,0" in _badge(-0.4, "both") and "-0.40" in _badge(-0.4, "both")
+    assert "0.75)" in _badge(3.0, "both")          # opacity capped
