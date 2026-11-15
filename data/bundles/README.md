@@ -1,10 +1,10 @@
 # Data bundles
 
 Compressed data so the group doesn't have to re-pull or re-download it. Extract into `data/raw/` from the repo
-root:
+root, oldest first, so a newer bundle replaces the files it updates:
 
 ```bash
-mkdir -p data/raw && for f in data/bundles/*.tar.zst; do tar --zstd -xf "$f" -C data/raw; done
+mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$/\1 &/' | sort | cut -d" " -f2); do tar --zstd -xf "$f" -C data/raw; done
 ```
 
 | File | Size | What's inside | Licence |
@@ -14,6 +14,7 @@ mkdir -p data/raw && for f in data/bundles/*.tar.zst; do tar --zstd -xf "$f" -C 
 | `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay | Derived from MovieSum: non-commercial, with the credit above |
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) | Derived from MovieSum and MovieLens Tag Genome 2021 (CC BY-NC 3.0): non-commercial, cite both |
 | `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph (`features/graph/`): nodes, edges, GraphML, credits, people, company IDs, Wikipedia producer matches, as built by PR #9 | Built from IMDb's non-commercial datasets (personal, non-commercial use under IMDb's terms), Wikipedia (CC BY-SA 4.0) and Wikidata (CC0) |
+| `movie-graph-2026-11-15.tar.zst` | 12 MB | The movie graph, the parsed infobox tables (`features/wiki_infobox*.csv`), the movie tables (`features/movies_features*.csv`) and the network features (`film_network_features.csv`, `roi_by_entity.csv`) after the 15 November parser fixes: names split or recovered from lists, and currencies before `$` read correctly. It replaces the same files from `wikipedia-wikidata-2026-11-11` and `movie-graph-2026-11-11` | Same as `movie-graph-2026-11-11` |
 
 Not here: IMDb's raw files (1.9 GB; `python3 scripts/get_data.py imdb`) and the Tag Genome reviews (1.9 GB;
 `python3 scripts/get_data.py genome`), both over GitHub's file limit.

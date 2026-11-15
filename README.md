@@ -63,11 +63,12 @@ Everything the code reads lives in `data/raw/`, which git ignores. There are two
 | `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay |
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
 | `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph: node and edge tables, GraphML, credits, people, the company IDs and the Wikipedia producer matches |
+| `movie-graph-2026-11-15.tar.zst` | 12 MB | The graph and the infobox and movie tables after the 15 November parser fixes (see [TESTING.md](TESTING.md)). It replaces the same files from the two 11 November archives above |
 
-Unpack them from the repo root:
+Unpack them from the repo root, oldest first, so a newer archive replaces the files it updates:
 
 ```bash
-mkdir -p data/raw && for f in data/bundles/*.tar.zst; do tar --zstd -xf "$f" -C data/raw; done
+mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$/\1 &/' | sort | cut -d" " -f2); do tar --zstd -xf "$f" -C data/raw; done
 ```
 
 [`data/bundles/README.md`](data/bundles/README.md) lists each archive's licence: Wikipedia text is CC BY-SA, and MovieSum and the Tag Genome are non-commercial. The same archives are also on the [data-2026-11-11 release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11).
