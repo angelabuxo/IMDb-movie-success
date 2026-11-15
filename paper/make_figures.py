@@ -33,8 +33,8 @@ def panel(ax, letter):
 
 def fig_network():
     # A: out-of-time R2 (train <= 2010, test 2011-2017), ridge; notebooks/what_predicts_profit.ipynb summary.
-    ladder = [("Budget,\nyear,\ngenre", -0.010), ("+ net-\nwork", 0.202), ("+ month,\nfran-\nchise", 0.244),
-              ("+ critics,\naudi-\nence*", 0.312)]
+    ladder = [("Budget,\nyear,\ngenre", -0.013), ("+ net-\nwork", 0.196), ("+ month,\nfran-\nchise", 0.237),
+              ("+ critics,\naudi-\nence*", 0.309)]
     # B: return similarity by role, adjusted for ln budget, decade and genre (analysis/network/roi_similarity.json).
     r = json.loads((ROOT / "analysis/network/roi_similarity.json").read_text())["results"]
     adj, ws = r["adjusted"]["roles"], r["adjusted_within_studio"]["roles"]

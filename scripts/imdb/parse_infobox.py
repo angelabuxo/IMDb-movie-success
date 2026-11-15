@@ -3,9 +3,10 @@ import csv,html,json,re,sys
 SRC=sys.argv[1] if len(sys.argv)>1 else 'wiki/articles.jsonl'; DST=sys.argv[2] if len(sys.argv)>2 else 'features/wiki_infobox.csv'
 MON={m:i+1 for i,m in enumerate('january february march april may june july august september october november december'.split())}
 import mwparserfromhell as M
-SYM={'US$':'USD','$':'USD','USD':'USD','£':'GBP','GBP':'GBP','€':'EUR','EUR':'EUR','₹':'INR','INR':'INR','¥':'JPY','JP¥':'JPY','CN¥':'CNY','RMB':'CNY','A$':'AUD','AU$':'AUD','C$':'CAD','CA$':'CAD','HK$':'HKD','NZ$':'NZD','₩':'KRW','R$':'BRL'}
+SYM={'US$':'USD','$':'USD','USD':'USD','£':'GBP','GBP':'GBP','€':'EUR','EUR':'EUR','₹':'INR','INR':'INR','¥':'JPY','JP¥':'JPY','CN¥':'CNY','RMB':'CNY','A$':'AUD','AU$':'AUD','C$':'CAD','CA$':'CAD','HK$':'HKD','NZ$':'NZD','₩':'KRW','R$':'BRL','USD$':'USD','NT$':'TWD','S$':'SGD','MX$':'MXN','CAD$':'CAD','AUD$':'AUD','GBP$':'GBP','HUF$':'HUF'}
 MUL={'thousand':1e3,'million':1e6,'m':1e6,'billion':1e9,'bn':1e9,'crore':1e7,'lakh':1e5}
-CUR=r'(US\$|A\$|AU\$|C\$|CA\$|HK\$|NZ\$|JP¥|CN¥|R\$|RMB|USD|GBP|EUR|INR|\$|£|€|₹|¥|₩)'
+# A code written straight before '$' (HUF$, NT$, S$) is that currency, never US dollars.
+CUR=r'(US\$|A\$|AU\$|C\$|CA\$|HK\$|NZ\$|JP¥|CN¥|R\$|[A-Z]{1,4}\$|RMB|USD|GBP|EUR|INR|\$|£|€|₹|¥|₩)'
 NUM=r'(\d[\d,]*(?:\.\d+)?)'
 PAT=re.compile(CUR+r'\s*'+NUM+r'(?:\s*(?:[-–—−‒]|to)\s*'+CUR+r'?\s*'+NUM+r')?\s*(thousand|million|billion|crore|lakh|bn|m)?s?\b',re.I)
 def clean(raw):
@@ -24,7 +25,7 @@ def money(raw):
     s=clean(raw); ms=list(PAT.finditer(s))
     if not ms: return (None,None,s.strip()[:80])
     m=next((x for x in ms if SYM.get(x[1],SYM.get(x[1].upper()))=='USD'),ms[0])
-    cur=SYM.get(m[1],SYM.get(m[1].upper())); lo=float(m[2].replace(',','')); hi=float(m[4].replace(',','')) if m[4] else None
+    cur=SYM.get(m[1],SYM.get(m[1].upper())) or m[1].rstrip('$').upper(); lo=float(m[2].replace(',','')); hi=float(m[4].replace(',','')) if m[4] else None
     k=MUL.get((m[5] or '').lower(),1)
     if hi:
         if lo>=1000 and k>1: v=(lo+hi*k)/2
@@ -37,18 +38,34 @@ def scope(s):
     if re.search(r'\bu\.?s\.?\b|domestic|north america|canada|\buk\b|italy|japan',t) and not re.search(r'worldwide|global',t): f.append('regional')
     if re.search(r'\(net\)|\(gross\)',t): f.append('net_gross')
     return ';'.join(f)
+LIST_TPL=re.compile(r'(?i)\s*(ubl\w*|ubi\w*|blist|idp|pl|[\w ]*list)\s*$')  # ubl, ubli, ubil, idp, pl, plainlist, indented plainlist, unbulleted list, hlist...
+def _items(text):
+    # One name per line: a line's link titles if it has links, else its plain text. Bare '(...)' notes are dropped.
+    text=re.sub(r'\([^()]*\)',lambda m:m[0].replace(';',','),text)  # a ';' inside brackets is not a separator
+    for line in re.split(r'\n|;|\x1f',text):
+        c=M.parse(line)
+        links=[re.sub(r'^:?[a-z]{2,3}(?:-[a-z]+)?:','',str(l.title).split('#')[0].strip()) for l in c.filter_wikilinks()]  # drop ':de:' prefixes
+        if links: yield from links; continue
+        x=c.strip_code().strip(' *,\t')
+        if x and not (x[0]=='(' and x[-1]==')') and not re.search(r'\[\[|\]\]|\{\{|\}\}',x): yield x
 def names(raw):
     if not raw: return []
     s=re.sub(r'(?is)<ref[^>]*/>|<ref.*?</ref>|<!--.*?-->','',raw)
-    c=M.parse(s); out=[str(l.title).split('#')[0].strip() for l in c.filter_wikilinks()]
-    for t in c.filter_templates():
-        if re.match(r'(?i)\s*(ubl|unbulleted list|plainlist|flatlist|hlist)\s*$',str(t.name)):
-            out+=[M.parse(str(x.value)).strip_code().strip() for x in t.params if str(x.name).strip().isdigit()]
-    if out: return [x for x in dict.fromkeys(out) if x and '\n' not in x]
-    # split on <br> BEFORE strip_code(), which deletes the tags and would merge the names around them;
-    # decode entities first so the ';' of '&nbsp;' isn't taken as a separator; drop bare '(...)' notes
-    t=[M.parse(x).strip_code().strip(' *,') for x in re.split(r'(?i)<br\s*/?>|\n\*|\n|;',html.unescape(s))]
-    return [x for x in t if x and not (x[0]=='(' and x[-1]==')')]
+    s=html.unescape(s)  # before any split, so the ';' of '&nbsp;' isn't a separator
+    s=re.sub(r'(?i)\{\{\s*(?:nowrap|nobr|nobreak|small|ill|interlanguage link)\s*\|([^{}|]*)[^{}]*\}\}',r'\1',s)  # strip_code() would drop these names
+    s=re.sub(r'(?i)\{\{\s*break\s*\}\}','<br>',s)
+    s=re.sub(r'\[\[[^\]|]*\|([^\]]*<br[^\]]*)\]\]',r'\1',s,flags=re.I)  # [[Duo|A<br>B]]: keep both names as text
+    s=re.sub(r'(?i)<br\s*/?\s*>','\x1f',s)  # split on <br> ourselves: strip_code() deletes the tag and merges names
+    c=M.parse(s); out=[]
+    for t in c.filter_templates(recursive=False):
+        if LIST_TPL.match(str(t.name)):
+            for x in t.params:
+                if str(x.name).strip().isdigit(): out+=list(_items(str(x.value)))
+            c.remove(t)
+        else:
+            c.remove(t)  # any other template (a nested infobox, a citation) holds no names
+    out+=list(_items(str(c)))
+    return [x for x in dict.fromkeys(out) if x]
 IB=re.compile(r'(?i)^infobox[ _](?:film|movie|television|short film)')
 w=csv.writer(open(DST,'w',newline=''))
 w.writerow('tconst title has_infobox budget budget_cur budget_raw budget_flag gross gross_cur gross_raw gross_flag studios distributors producers starring rt_pct metacritic critic_chars release_month'.split())

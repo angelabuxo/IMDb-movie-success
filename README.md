@@ -33,7 +33,7 @@ Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 
 After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
 
-Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet.
+Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet. (After the 15 November infobox fixes it's 6,843, with 4,567 since 2000: nine films with non-USD budgets or a Netflix release left and one wrongly excluded film joined; see [TESTING.md](TESTING.md).)
 
 ## Decisions still open
 
@@ -139,7 +139,7 @@ cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_t
 ../../.venv/bin/python ../../scripts/network/build_graph.py
 ```
 
-`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. The infobox parser used to run unlinked names together ("Madras TalkiesLyca Productions"); it now splits them at `<br>` (fixed 15 November 2026, see [TESTING.md](TESTING.md)). `resolve_companies.py` still splits any run-together name left over, but only when every piece is a Wikipedia article. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 2,000 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
+`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. The infobox parser used to run unlinked names together ("Madras TalkiesLyca Productions") and to drop unlinked names in lists; since 15 November 2026 it reads every list item and every `<br>`-separated name (see [TESTING.md](TESTING.md)). `resolve_companies.py` still splits any run-together name left over, but only when every piece is a Wikipedia article. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 3,900 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
 
 ## What predicts profit
 
@@ -163,11 +163,11 @@ cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_t
 ../../.venv/bin/python ../../scripts/network/roi_similarity.py
 ```
 
-It uses the 6,851 clean movies in the graph, with return as ln(gross / budget). For each role it takes every person or company credited on at least two of those films and measures how much of the variance in return group membership accounts for (`similarity`, like an intraclass correlation, 0 for random films). As a second measure it correlates each film's return with the mean of the group's other films (`loo_r`). The null shuffles returns across films 1,000 times, which keeps every group's size and every overlap between groups. Results are in [`analysis/network/roi_similarity.json`](analysis/network/roi_similarity.json).
+It uses the 6,843 clean movies in the graph, with return as ln(gross / budget). For each role it takes every person or company credited on at least two of those films and measures how much of the variance in return group membership accounts for (`similarity`, like an intraclass correlation, 0 for random films). As a second measure it correlates each film's return with the mean of the group's other films (`loo_r`). The null shuffles returns across films 1,000 times, which keeps every group's size and every overlap between groups. Results are in [`analysis/network/roi_similarity.json`](analysis/network/roi_similarity.json).
 
-Every role clusters. After adjusting for ln(budget), release decade and genre, similarity runs from 0.09 for the top-three cast to 0.17 for producers, against a null whose 95th percentile is at most 0.02, and no shuffle reached the observed value for any role. The result holds when we drop franchise films (0.07 to 0.14), rank-transform returns so no single film dominates (0.08 to 0.16), keep only films from 1980 on (0.09 to 0.16) or keep only the 100k+ vote tier (0.03 to 0.14). The one role that weakens is distributor in the 100k+ tier, at 0.03 against 0.13 in the full sample, so distributors cluster mostly through the smaller films. Many of those had a limited or video-on-demand release and a tiny theatrical gross.
+Every role clusters. After adjusting for ln(budget), release decade and genre, similarity runs from 0.09 for the top-three cast to 0.17 for producers, against a null whose 95th percentile is at most 0.02, and no shuffle reached the observed value for any role. The result holds when we drop franchise films (0.07 to 0.14), rank-transform returns so no single film dominates (0.08 to 0.16), keep only films from 1980 on (0.09 to 0.17) or keep only the 100k+ vote tier (0.04 to 0.14). The one role that weakens is distributor in the 100k+ tier, at 0.04 against 0.13 in the full sample, so distributors cluster mostly through the smaller films. Many of those had a limited or video-on-demand release and a tiny theatrical gross.
 
-The roles overlap, since a director's films often share a studio, a composer and a cast. To see how much survives the studio, the `adjusted_within_studio` variant shuffles returns only among films of the same main studio. Directors then score 0.14 against a null of 0.07, and the other people roles look similar: roughly half their similarity is beyond what their studios share. We can't rank the roles against each other from this test.
+The roles overlap, since a director's films often share a studio, a composer and a cast. To see how much survives the studio, the `adjusted_within_studio` variant shuffles returns only among films of the same main studio. Directors then score 0.14 against a null of 0.06, and the other people roles look similar: roughly half their similarity is beyond what their studios share. We can't rank the roles against each other from this test.
 
 What it doesn't show:
 - It's descriptive. It uses every film at once, so it says returns cluster by group, not that a group's past predicts its next film. The `*_track` features in `film_features.py` test that with earlier films only.
@@ -178,7 +178,7 @@ What it doesn't show:
 
 ## How far the similarity reaches, and whether a record travels
 
-Three scripts follow up on the shared-people result. They use the same 6,851 clean movies and the same adjusted return (ln(gross / budget) net of ln(budget), decade and genre). Run them from the data folder after the graph and `franchise_flag.py`:
+Three scripts follow up on the shared-people result. They use the same 6,843 clean movies and the same adjusted return (ln(gross / budget) net of ln(budget), decade and genre). Run them from the data folder after the graph and `franchise_flag.py`:
 
 ```bash
 ../../.venv/bin/python ../../scripts/network/pair_returns.py
@@ -198,10 +198,10 @@ The first takes several minutes and the other two under two. Each writes a JSON 
 
 [`pair_returns.py`](scripts/network/pair_returns.py) links two films when they share a key person (director, writer, producer, top-three cast, composer, cinematographer or editor) and measures the return correlation of film pairs, mean(z_i × z_j), which is 0 for random pairs.
 
-- **Only direct links count.** Films one step apart correlate at +0.036 (+0.043 with franchise films), against a shuffle null whose 95th percentile is +0.004. Two steps apart it's +0.001, and further out it's zero or slightly negative. The small negatives are arithmetic: standardised returns sum to zero, so if linked pairs sit above zero the rest must sit a little below.
-- **The more people two films share, the more alike their returns.** One shared person gives +0.029, two +0.081, three or four +0.157 and five or more +0.328 (634 pairs). With franchise films the top group reaches +0.467. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.017, +0.045, +0.066 and +0.154), though the top group is small and the franchise flag is rough, so some of it is still sequels.
-- **Companies and people both carry it.** Linked pairs with no studio or distributor in common still correlate at +0.022, and unlinked pairs that share a company at +0.033.
-- **Similar scripts don't.** On the 1,691 films with a screenplay embedding (1,174 without franchise films), pairs that share a person correlate at +0.041. The same number of unlinked pairs with the most similar scripts correlate at +0.004, inside the null (95th percentile +0.011). Across deciles of script similarity, unlinked pairs stay between -0.009 and +0.005.
+- **Only direct links count.** Films one step apart correlate at +0.035 (+0.043 with franchise films), against a shuffle null whose 95th percentile is +0.004. Two steps apart it's +0.001, and further out it's zero or slightly negative. The small negatives are arithmetic: standardised returns sum to zero, so if linked pairs sit above zero the rest must sit a little below.
+- **The more people two films share, the more alike their returns.** One shared person gives +0.027, two +0.086, three or four +0.153 and five or more +0.327 (641 pairs). With franchise films the top group reaches +0.465. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.017, +0.046, +0.064 and +0.148), though the top group is small and the franchise flag is rough, so some of it is still sequels.
+- **Companies and people both carry it.** Linked pairs with no studio or distributor in common still correlate at +0.021, and unlinked pairs that share a company at +0.032.
+- **Similar scripts don't.** On the 1,689 films with a screenplay embedding (1,173 without franchise films), pairs that share a person correlate at +0.041. The same number of unlinked pairs with the most similar scripts correlate at +0.004, inside the null (95th percentile +0.012). Across deciles of script similarity, unlinked pairs stay between -0.009 and +0.006.
 - **People do make somewhat similar films.** Within the same first genre, linked films' scripts have a cosine similarity of 0.664 against 0.648 for unlinked ones. That gap of 0.016 is about a sixth of the spread across all pairs (SD 0.093), and above a null that shuffles scripts within genre.
 
 What it measures and misses: the pair correlation says returns cluster, using every year at once, so it isn't a prediction. Script similarity is the cosine between mean all-MiniLM-L6-v2 passage vectors, which captures shared topic and vocabulary and not quality or structure.
@@ -211,8 +211,8 @@ What it measures and misses: the pair correlation says returns cluster, using ev
 [`team_history.py`](scripts/network/team_history.py) asks whether a film returns more when its key people have shared an earlier film. `repeat_share` is the share of pairs in the team who have, built from earlier years only over all 12,673 films in the graph.
 
 - With franchise films, `repeat_share` goes with the adjusted return at ρ = +0.126, and adds 0.018 to out-of-time R² (fitted to 2010, tested on 2011 to 2017) over the team's own track record, experience and size.
-- Most of that is sequels. Without franchise films it's ρ = +0.076 (within-year shuffle null: -0.016 to +0.029). Net of track record, experience and team size it's +0.023 (p = 0.11), and the out-of-time gain is 0.001.
-- What's left sits after 2005: ρ = +0.134 (95% interval 0.095 to 0.170) for films from 2005 on, against +0.015 for 1990 to 2004 and -0.065 before 1990. We haven't tested why, and unflagged sequels are one candidate.
+- Most of that is sequels. Without franchise films it's ρ = +0.076 (within-year shuffle null: -0.017 to +0.028). Net of track record, experience and team size it's +0.022 (p = 0.11), and the out-of-time gain is 0.001.
+- What's left sits after 2005: ρ = +0.135 (95% interval 0.095 to 0.171) for films from 2005 on, against +0.013 for 1990 to 2004 and -0.063 before 1990. We haven't tested why, and unflagged sequels are one candidate.
 
 What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's principals file lists about ten people a title, so teams are partial.
 
@@ -222,12 +222,12 @@ What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's pri
 
 | | Person's record | Studio's record |
 |---|---:|---:|
-| Movers (6,775 credits) | +0.041 (0.013 to 0.065) | +0.191 (0.158 to 0.223) |
-| Stayers (5,965 credits) | +0.171 (0.127 to 0.212) | +0.171 (0.133 to 0.211) |
+| Movers (6,533 credits) | +0.045 (0.018 to 0.070) | +0.232 (0.199 to 0.262) |
+| Stayers (6,772 credits) | +0.162 (0.124 to 0.200) | +0.188 (0.152 to 0.224) |
 
-- **A person's record mostly stays behind.** At a studio that's new to them it predicts about a quarter of what it predicts for stayers, while the new studio's own record predicts as much as ever.
-- **Directors keep the most.** Their record still gives +0.111 (0.038 to 0.179) after a move, and writers' +0.081 (0.025 to 0.137). Producers' (+0.018) and cast's (+0.024) can't be told from zero.
-- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 22, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.053 for the person and +0.116 for the studio, and stayers +0.175 and +0.086.
+- **A person's record mostly stays behind.** At a studio that's new to them it predicts about a quarter of what it predicts for stayers, while the new studio's own record predicts at least as much as it does for stayers.
+- **Directors keep the most.** Their record still gives +0.090 (0.020 to 0.160) after a move, and writers' +0.080 (0.020 to 0.139). Cast's is small but just above zero (+0.032, 0.003 to 0.062), and producers' (+0.027) can't be told from zero.
+- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 21, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.063 for the person and +0.138 for the studio, and stayers +0.166 and +0.092.
 
 What it doesn't show: moves aren't random. A studio hires someone for a project it has already chosen, so this isn't what would happen if people were reassigned. "Studio" is the production company in the Wikipedia infobox, and a film with several studios counts as a stay if any of them is familiar.
 

@@ -70,11 +70,29 @@ Auditing: **Present in research form.** `log_run()` writes a run log per step wi
     - `paper/main.tex`: R² 0.202 → 0.203, 0.244 → 0.245, 0.312 → 0.313, and PageRank ρ −0.003 → −0.002.
     - `docs/overview/project-details.tex` and its rebuilt PDF.
   - The paper's other quoted numbers are unchanged: 0.09–0.17 vs at most 0.02, studio track ρ +0.27, and 0.090 of 0.175.
-- **Found by the explorer's Checks page, not fixed:**
-  - **Two "clean" films have implausible budgets.** *White God* (2014) has $700M against a $0.58M gross, almost certainly 700 million Hungarian forints read as dollars. *Desert Warrior* is also flagged. Both sit in the clean sample.
-  - **About 100 names still look run together** (24 in the 100k+ tier, 76 in the 10k+ tier). They come from cast and company lists written without any separator, such as `Alain DelonRenato Salvatori…`, which the `<br>` fix can't split.
-  - **Three arcs steps were saved under an older `config.yaml`.** `s03_compute_check`, `s05_arcs[vader]` and `s06_shuffle[vader]` predate the last pre-registration amendments. Rerun them, or confirm those amendments can't affect them.
-- **Not fixed: unlinked names inside templates such as `{{nowrap|...}}` are dropped by `strip_code()`.** This affects 1 field in the 100k+ tier and 24 in the 10k+ tier.
+- **Found by the explorer's Checks page and fixed on 2026-11-15** (the second pipeline rerun; the old data is in `data/raw/_backup_before_list_and_currency_fix_2026-11-15/`):
+  - **Currency codes written before `$` were read as US dollars.** Examples are `HUF$`, `NT$`, `S$`, `CAD$` and `GBP$`. *White God* is listed as "HUF$700 million (USD$2.5 million)" and was stored as a $700M budget; it now gets $2.5M.
+    - `money()` now reads any `XX$` as currency XX. 20 budget or gross fields change.
+    - 7 films leave the clean (USD) sample: *Videodrome*, *Scanners*, *The Brood*, *Shivers*, *Tideland*, *Creation* and *Gothic*.
+    - `refresh_name_columns.py` now also copies budget, gross and their currency into `movies_features*.csv`.
+  - **`names()` dropped unlinked names.** In a field with any wikilink, every unlinked name was dropped. In `{{Plainlist}}`, `{{ubl}}`, `{{ubil}}`, `{{idp}}` and `{{Indented plainlist}}` lists, items were dropped or merged. Names in `{{ill}}`, `{{nowrap}}` and `{{small}}` were dropped.
+    - It now reads every list item: a line's link targets if it has links, otherwise its text. It also skips footnotes (`{{efn}}`) and nested templates.
+    - On all 12,552 infoboxes this recovers about 28,000 names. About 1,700 names go, all of them merged runs, bracketed notes, link display texts kept next to their targets, footnote links or markup. A script checked each dropped name against those categories.
+    - The "run-together" check now looks for names that split into two names found elsewhere. That count is 0 in both tiers. The 29 CamelCase names left (Columbia TriStar, Alexa PenaVega, Irish DreamTime) are real.
+  - **The clean sample is now 6,843** (was 6,851). Nine films left: the seven above, *Videodrome*'s CAD budget counted among them, plus *Shaft* (2019), whose unlinked "Netflix (International)" distributor now triggers the streaming rule. *The Help* joined: a footnote saying it is "on Disney+ via Hulu" had wrongly matched that rule. The 100k+ count stays 2,446, and neither screenplay sample changes (*Videodrome* has no MovieSum script).
+  - **Graph after the fix:** company nodes 6,958 → 12,654, Wikipedia producer credits about 2,000 → 3,909, edges 280,891 → 292,795.
+  - **Network results hold.** The largest change is +0.043, in the movers' studio coefficients, which now rest on fuller studio lists. Two p-values cross 0.05:
+    - Cast's record after a move is now +0.032 (0.003 to 0.062), just above zero.
+    - Team history before 1989, net of the controls, crosses too.
+  - **What was updated to match:**
+    - README: every quoted network number and the clean-sample counts.
+    - Paper: R² 0.196 / 0.237 / 0.309, base −0.013, studio track ρ +0.28, PageRank ρ +0.002, and Fig. 1 redrawn.
+    - `project-details.tex` and its PDF.
+  - **Desert Warrior's $150M budget against a $759,228 gross is real.** That's what its cited sources report. The check lists it as verified.
+  - **Three arcs steps saved under an older `config.yaml`:**
+    - `s05_arcs[vader]` and `s06_shuffle[vader]` were rerun. Their outputs are byte-identical, so only `run_log.json` changes.
+    - `s03_compute_check` reads only `seed`, `instruments.compute_check_sentences`, `instruments.contextual` and `instruments.max_runtime_hours`, none of which changed. It's a timing benchmark that needs the private sentence table, so it's recorded as verified instead of rerun.
+- **Left as is:** about 9 names out of 150,000 come from one-off formatting (song-segment labels in *Moonwalker*, a bracket left open in *Layer Cake*).
 - **Quirk: the arcs sentence splitter drops a closing quote after end punctuation** (`'He said "Go."'` becomes `'He said "Go.'`). Words and sentiment are unchanged. A test pins the current behaviour.
 - **Checked and fine: contraction joining.** MovieSum splits contractions as `does n't`, which the parser handles (148k matches). The `doesn 't` form, which it doesn't handle, occurs only 54 times in 24 scripts.
 - **Note: on pandas 3, `s01_groups.quartile_labels` returns NaN, not `None`, for the middle half.** Callers use `isin(["low", "high"])`, so this is harmless.

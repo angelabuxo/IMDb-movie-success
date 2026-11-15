@@ -195,3 +195,38 @@ def test_arc_bins_and_descriptors():
     assert len(a) == sf.BINS and d["sent_swing"] == pytest.approx(0) and d["sent_ending"] == pytest.approx(0)
     a, d = sf.arc(np.linspace(-1, 1, 400))
     assert d["sent_ending"] > 0 and d["sent_low_point"] == 0.0
+
+
+# ---------------------------------------------------------------- infobox lists and currencies (fixed 2026-11-15)
+
+@pytest.mark.parametrize("raw, expected", [
+    ("{{ubil|\n* [[Columbia Pictures]]\n* [[Relativity Media]]\n}}", ["Columbia Pictures", "Relativity Media"]),
+    ("{{Indented plainlist|\n* [[Chris Hemsworth]]\n* Jane Roe\n}}", ["Chris Hemsworth", "Jane Roe"]),
+    ("{{idp|\n* Sacrebleu Productions\n* [[Dream Well Studio]]\n}}", ["Sacrebleu Productions", "Dream Well Studio"]),
+    ("{{ubli\n|Constantin Film (Germany and Austria)\n|[[01 Distribution]] (Italy)\n}}",
+     ["Constantin Film (Germany and Austria)", "01 Distribution"]),
+    ("[[Irish DreamTime]]<br />Infinity Features", ["Irish DreamTime", "Infinity Features"]),       # unlinked kept
+    ("{{Plainlist|\n* [[Russo brothers|Joe Russo<br>Anthony Russo]]\n* Daniel Kwan\n}}",
+     ["Joe Russo", "Anthony Russo", "Daniel Kwan"]),
+    ("[[Paramount Pictures]]{{efn|Distributed under the [[DreamWorks Pictures]] banner}}", ["Paramount Pictures"]),
+    ("{{ill|Benjamin Munz|de}}<br>[[Kim Lee]]", ["Benjamin Munz", "Kim Lee"]),
+    ("[[:de:Benjamin Munz|Benjamin Munz]]", ["Benjamin Munz"]),
+    ("Fox Searchlight<br />(International; through [[Buena Vista International]])", ["Fox Searchlight", "Buena Vista International"]),
+    ("Kim Lee{{break}}Ann Roe", ["Kim Lee", "Ann Roe"]),
+    ("{{nowrap|Jane Doe}}<br>John Roe", ["Jane Doe", "John Roe"]),
+])
+def test_names_reads_every_list_item(infobox, raw, expected):
+    assert infobox["names"](raw) == expected
+
+
+@pytest.mark.parametrize("raw, value, cur", [
+    ("{{Plainlist|\n* HUF$700 million\n* (USD$2.5 million)\n}}", 2.5e6, "USD"),   # White God: forints, not dollars
+    ("NT$44 million", 44e6, "TWD"),
+    ("S$4,500,000", 4.5e6, "SGD"),
+    ("CAD$8 million", 8e6, "CAD"),
+    ("NT$50 million <small>(approx. US$1.7 million)</small>", 1.7e6, "USD"),
+    ("HK$7.6 million", 7.6e6, "HKD"),
+])
+def test_money_reads_a_currency_code_before_the_dollar_sign(infobox, raw, value, cur):
+    v, c, _ = infobox["money"](raw)
+    assert c == cur and v == pytest.approx(value)

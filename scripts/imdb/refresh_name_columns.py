@@ -1,10 +1,10 @@
-"""Copy the name columns (studios, distributors, producers, starring) from the infobox tables into
-features/movies_features.csv and features/movies_features_10k.csv, matched by tconst. Run from the data
+"""Copy the infobox columns (names, and budget and gross with their currency and flags) from the infobox tables
+into features/movies_features.csv and features/movies_features_10k.csv, matched by tconst. Run from the data
 folder after parse_infobox.py:
 
     cd data/raw && python /path/to/repo/scripts/imdb/refresh_name_columns.py
 
-Those columns were copied from wiki_infobox*.csv when the movie tables were built, and nothing in the
+Those columns were copied from wiki_infobox*.csv when the movie tables were built (b = budget, g = gross), and nothing in the
 repo rebuilds the movie tables, so a parser fix only reaches them through this script. Every value is
 read and written as text, so no other column changes; rows missing from the infobox keep their values.
 """
@@ -12,6 +12,8 @@ read and written as text, so no other column changes; rows missing from the info
 import pandas as pd
 
 NAMES = ["studios", "distributors", "producers", "starring"]
+COPY = {c: c for c in NAMES} | {"b": "budget", "budget_cur": "budget_cur", "budget_flag": "budget_flag",
+                                "g": "gross", "gross_cur": "gross_cur", "gross_flag": "gross_flag"}
 TABLES = {"features/movies_features.csv": ["features/wiki_infobox.csv"],
           "features/movies_features_10k.csv": ["features/wiki_infobox.csv", "features/wiki_infobox_10k.csv"]}
 
@@ -23,8 +25,10 @@ def main():
               .drop_duplicates("tconst").set_index("tconst"))
         hit = m.tconst.isin(ib.index)
         changed = {}
-        for c in [c for c in NAMES if c in m.columns]:
-            new = m.tconst.map(ib[c]).where(hit, m[c])
+        for c, src in COPY.items():
+            if c not in m.columns:
+                continue
+            new = m.tconst.map(ib[src]).where(hit, m[c])
             changed[c] = int((new != m[c]).sum())
             m[c] = new
         m.to_csv(table, index=False)
