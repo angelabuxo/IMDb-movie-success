@@ -374,6 +374,14 @@ def arcs_scores(explorer, tmp_path, monkeypatch):
         d / "s03_scene_vader.csv.gz", index=False)
     base.assign(sst2_scene=0.75, sst2_scene_neutral=np.nan, sst2_pieces=1).to_csv(
         d / "s03_scene_context_sst2.csv.gz", index=False)
+    tt = np.arange(100)
+    arc = np.sin(tt / 100 * 2 * np.pi) * 0.4
+    pd.DataFrame({"movie_name": "Face_Off_1997", "t": tt, "raw": arc, "smooth": arc}).to_csv(
+        d / "s05_arcs_sst2.csv.gz", index=False)
+    pd.DataFrame([{"movie_name": "Face_Off_1997", "in_primary": True, "primary_genre": "Action", "sentences_both": 90,
+                   "mean_sentences_per_scene": 3.0, "n_scene_tags": 30, "possible_transcript": False,
+                   "scenes": len(scenes), "D1": 0.28, "D2": -0.05, "mean_level": 0.0, "min_position": 0.755,
+                   "sign_changes": 1}]).to_csv(d / "s05_descriptors_sst2.csv", index=False)
     monkeypatch.setitem(common.OUTPUT_DIRS, "arcs", d)
     return d
 
@@ -422,3 +430,28 @@ def test_sentiment_badge_colours():
     assert "0,114,178" in _badge(0.4, "both") and "+0.40" in _badge(0.4, "both")
     assert "213,94,0" in _badge(-0.4, "both") and "-0.40" in _badge(-0.4, "both")
     assert "0.75)" in _badge(3.0, "both")          # opacity capped
+
+
+def test_node_explorer_shows_a_films_arc(arcs_scores):
+    at = page("graph_pages", "node", {"node_id": "tt0119094"})
+    ok(at)
+    assert [t.label for t in at.tabs][-1] == "Sentiment arc"
+    m = {x.label: x.value for x in at.metric}
+    assert m["Swing (D1)"] == "0.280" and m["Ending lift (D2)"] == "-0.050" and m["Low point"] == "76% into the story"
+    assert any("In the primary sample" in str(c.value) for c in at.caption)
+
+
+@pytest.mark.parametrize("nid", ["tt1000001", "nm100", "company:Q900"])
+def test_no_arc_tab_without_an_arc(arcs_scores, nid):
+    """A film with a screenplay but no saved arc, a person and a company get no arc tab."""
+    at = page("graph_pages", "node", {"node_id": nid})
+    ok(at)
+    assert "Sentiment arc" not in [t.label for t in at.tabs]
+
+
+def test_arc_point_maps_to_a_scored_scene():
+    from explorer.graph_pages import scene_at
+    scored = [0, 1, 2, 4, 5, 9]                    # scenes 3, 6, 7 and 8 have no scored sentence
+    assert scene_at(0, scored) == 0 and scene_at(99, scored) == 9
+    assert scene_at(50, scored) == 4               # point 50 (centre 0.505) is the 4th of 6 scored scenes
+    assert {scene_at(t, scored) for t in range(100)} == set(scored)
