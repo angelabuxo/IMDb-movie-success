@@ -24,7 +24,7 @@ None of these are in the project yet. "Tested" means I tried the source myself o
 |---|---|---|---|
 | [Wikipedia Pageviews API](https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/reference/page-views.html) | Attention before release, from July 2015. Older dumps go back to December 2007 | Reported CC0, no key needed | Tested on one movie |
 | [Wikidata](https://www.wikidata.org/wiki/Property:P749) | Parent companies for merging studio names | CC0 | Not tested for this use |
-| [BLS CPI API](https://www.bls.gov/developers/api_signature_v2.htm) | Inflation adjustment by year | Open, key optional | Not tested |
+| [BLS CPI-U via FRED (CPIAUCNS)](https://fred.stlouisfed.org/series/CPIAUCNS) | Inflation adjustment by year | Public domain, no key | In use: yearly means in `data/cpi_us_annual.csv`, built by `python -m analysis.attribution.cpi` |
 | [IMDB Spoiler Dataset](https://www.kaggle.com/datasets/rmisra/imdb-spoiler-dataset) | Reported 573,913 reviews for 1,572 movies, with dates and ratings | Labelled CC BY 4.0, scraped | Not tested, Kaggle login likely |
 | [Clapper Rotten Tomatoes](https://www.kaggle.com/datasets/andrezaza/clapper-massive-rotten-tomatoes-movies-and-reviews) | Short critic quotes, scraped April 2023, reported about 1.4 million rows | Labelled CC0, which doesn't clear Rotten Tomatoes' terms or critics' copyright | Not tested, IDs need mapping through Wikidata |
 | [CMU Movie Summary Corpus](https://www.cs.cmu.edu/~ark/personas/) | 42,306 plots with revenue and actor data | CC BY-SA 3.0 US | Not tested |
