@@ -1,0 +1,60 @@
+{
+ "sample": {
+  "clean_films": 6443,
+  "in_100k_tier": 2353,
+  "gross_below_budget": 1815,
+  "franchise": 1743
+ },
+ "screenplays": {
+  "clean_films_with_a_moviesum_script": 1630,
+  "dropped_too_short": 0,
+  "films": 1630,
+  "median_words_raw": 22941.5,
+  "median_words_clean": 20752.0,
+  "share_of_raw_words_removed": 0.09562713505633669,
+  "median_distinct_names_masked": 22.0,
+  "share_of_clean_words_that_are_name_placeholders": 0.0502307044804112,
+  "films_with_no_name_masked": 7,
+  "name_rule_vs_spacy": {
+   "scripts": 40,
+   "words_per_script": 3000,
+   "masked_by_both": 3287,
+   "masked_by_label_rule_only": 2948,
+   "tagged_person_by_spacy_only": 1266,
+   "share_of_rule_words_spacy_also_tags": 0.5271852445870088,
+   "share_of_spacy_person_words_the_rule_masks": 0.7219415769822095
+  }
+ },
+ "summaries": {
+  "clean_films_with_a_moviesum_summary": 1630,
+  "dropped_too_short": 5,
+  "films": 1625,
+  "median_words_raw": 662.0,
+  "median_words_clean": 654.0,
+  "removed": {
+   "brackets": 25,
+   "actor_parens": 1451,
+   "titles": 2353,
+   "people": 66880
+  },
+  "share_of_clean_words_that_are_name_placeholders": 0.06417169767147314,
+  "films_with_no_name_masked": 1
+ },
+ "reviews": {
+  "reviews_read_for_clean_films": 1538690,
+  "dropped_empty_or_short": 1686,
+  "dropped_not_english": 297,
+  "dropped_duplicate": 3788,
+  "clean_films_with_any_valid_review": 5435,
+  "films_dropped_fewer_than_min_reviews": 30,
+  "films": 5405,
+  "reviews_sampled": 160532,
+  "median_reviews_per_film": 30.0,
+  "sampled_reviews_with_a_money_sentence": 18682,
+  "share_of_sentences_dropped_for_money": 0.011113109719295215,
+  "title_mentions_masked": 140039,
+  "cast_and_director_mentions_masked": 450654,
+  "sampled_reviews_too_short_after_cleaning": 386,
+  "latest_film_year": 2017
+ }
+}

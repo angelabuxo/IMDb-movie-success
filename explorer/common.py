@@ -90,8 +90,9 @@ def arrow_safe(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def show_df(df: pd.DataFrame, key: str, caption: str | None = None, height: int | None = None):
-    """A sortable table with a text filter and a CSV download."""
+def show_df(df: pd.DataFrame, key: str, caption: str | None = None, height: int | None = None, select: bool = False):
+    """A sortable table with a text filter and a CSV download. With select=True a click on a row selects it,
+    and the selected row comes back as a Series (None when nothing is selected)."""
     df = arrow_safe(df)
     if caption:
         st.caption(md(caption))
@@ -102,9 +103,19 @@ def show_df(df: pd.DataFrame, key: str, caption: str | None = None, height: int 
         mask = df.astype(str).apply(lambda c: c.str.contains(q, case=False, regex=False)).any(axis=1)
         view = df[mask]
         st.caption(f"{len(view):,} of {len(df):,} rows match “{q}”")
-    st.dataframe(view, width="stretch", hide_index=True, **({"height": height} if height else {}))
+    extra = {"height": height} if height else {}
+    picked = None
+    if select:
+        ev = st.dataframe(view, width="stretch", hide_index=True, on_select="rerun", selection_mode="single-row",
+                          key=f"sel_{key}", **extra)
+        rows = ev.selection.rows if hasattr(ev, "selection") else []
+        if rows and rows[0] < len(view):
+            picked = view.iloc[rows[0]]
+    else:
+        st.dataframe(view, width="stretch", hide_index=True, **extra)
     st.download_button("Download CSV", view.to_csv(index=False).encode(), file_name=f"{key}.csv",
                        mime="text/csv", key=f"dl_{key}")
+    return picked
 
 
 # ---------------------------------------------------------------- notebook steps

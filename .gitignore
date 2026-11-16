@@ -10,3 +10,6 @@ analysis/scripts_text/private/
 # Screenplay arcs: anything holding script text (scene text, KWIC windows, previews) stays local.
 analysis/arcs/private/
 site/arcs/private/
+
+# Embedding analysis: cleaned review, screenplay and summary text stays local.
+analysis/embeddings/private/

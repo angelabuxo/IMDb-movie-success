@@ -1,0 +1,1675 @@
+{
+ "sample": {
+  "films": 6443,
+  "with_tag_scores": 4271,
+  "years": [
+   1975,
+   2025
+  ],
+  "first_year": 1975,
+  "shuffles": 1000
+ },
+ "usual_mix": {
+  "genre shares (Tag Genome, to 2014)": {
+   "director": {
+    "films": 2137,
+    "median_departure": 0.34604609404729847,
+    "median_prior_films": 4.0,
+    "against_adjusted": {
+     "rho": -0.16609522709103847,
+     "p": 0.000999000999000999,
+     "films": 2137,
+     "null_95": 0.041399639229581835
+    },
+    "against_adjusted_genre_fixed": {
+     "rho": -0.12720800592679682,
+     "p": 0.000999000999000999,
+     "films": 2137,
+     "null_95": 0.0439482497806448
+    },
+    "against_budget": {
+     "rho": 0.016354031027480908,
+     "p": 0.5024875621890548,
+     "films": 2137,
+     "null_95": 0.044842511456337546
+    },
+    "by_quartile": [
+     {
+      "quartile": 1,
+      "films": 534,
+      "mean_departure": 0.09535222578205818,
+      "median_multiple": 2.5118993003777237,
+      "grossed_under_budget": 0.20037453183520598,
+      "mean_adjusted": 0.25010758218766554,
+      "mean_adjusted_genre_fixed": 0.20246186422604148
+     },
+     {
+      "quartile": 2,
+      "films": 534,
+      "mean_departure": 0.261061615026791,
+      "median_multiple": 2.1806314927223354,
+      "grossed_under_budget": 0.20599250936329588,
+      "mean_adjusted": 0.16007699697677724,
+      "mean_adjusted_genre_fixed": 0.20541105232983403
+     },
+     {
+      "quartile": 3,
+      "films": 534,
+      "mean_departure": 0.45158622221169054,
+      "median_multiple": 1.9956474377134288,
+      "grossed_under_budget": 0.2565543071161049,
+      "mean_adjusted": -0.022235752687545077,
+      "mean_adjusted_genre_fixed": 0.06447965539130981
+     },
+     {
+      "quartile": 4,
+      "films": 535,
+      "mean_departure": 0.7297982172173325,
+      "median_multiple": 1.667142857142857,
+      "grossed_under_budget": 0.3252336448598131,
+      "mean_adjusted": -0.19480575372551268,
+      "mean_adjusted_genre_fixed": -0.14587394267087042
+     }
+    ],
+    "track_record": {
+     "films": 1996,
+     "rho_track_when_staying": 0.1347174545348662,
+     "rho_track_when_leaving": 0.04070999246534457,
+     "difference": 0.09400746206952162,
+     "p": 0.04395604395604396,
+     "rho_departure_net_of_track": -0.1532078037800444
+    }
+   },
+   "studio": {
+    "films": 3053,
+    "median_departure": 0.44307900929663,
+    "median_prior_films": 15.0,
+    "against_adjusted": {
+     "rho": -0.1671418373769836,
+     "p": 0.000999000999000999,
+     "films": 3053,
+     "null_95": 0.03662024148957865
+    },
+    "against_adjusted_genre_fixed": {
+     "rho": -0.129250968617245,
+     "p": 0.000999000999000999,
+     "films": 3053,
+     "null_95": 0.036087752979659306
+    },
+    "against_budget": {
+     "rho": -0.10087365312849793,
+     "p": 0.004975124378109453,
+     "films": 3053,
+     "null_95": 0.03257178754304756
+    },
+    "by_quartile": [
+     {
+      "quartile": 1,
+      "films": 763,
+      "mean_departure": 0.1656388935228885,
+      "median_multiple": 2.6875,
+      "grossed_under_budget": 0.182175622542595,
+      "mean_adjusted": 0.3299834183341802,
+      "mean_adjusted_genre_fixed": 0.26394499092109436
+     },
+     {
+      "quartile": 2,
+      "films": 763,
+      "mean_departure": 0.3663289307026416,
+      "median_multiple": 2.3076923076923075,
+      "grossed_under_budget": 0.21363040629095675,
+      "mean_adjusted": 0.2090355800626431,
+      "mean_adjusted_genre_fixed": 0.22420515620107936
+     },
+     {
+      "quartile": 3,
+      "films": 763,
+      "mean_departure": 0.5225784026333156,
+      "median_multiple": 2.04,
+      "grossed_under_budget": 0.23591087811271297,
+      "mean_adjusted": 0.0676758370283474,
+      "mean_adjusted_genre_fixed": 0.11315907270670424
+     },
+     {
+      "quartile": 4,
+      "films": 764,
+      "mean_departure": 0.7376174522987201,
+      "median_multiple": 1.633570023111395,
+      "grossed_under_budget": 0.31413612565445026,
+      "mean_adjusted": -0.1038655705806922,
+      "mean_adjusted_genre_fixed": -0.08347711429576302
+     }
+    ],
+    "track_record": {
+     "films": 2990,
+     "rho_track_when_staying": 0.17488829763572739,
+     "rho_track_when_leaving": 0.12047017772818454,
+     "difference": 0.05441811990754285,
+     "p": 0.15084915084915085,
+     "rho_departure_net_of_track": -0.1389671771799317
+    }
+   }
+  },
+  "IMDb genre labels (all years)": {
+   "director": {
+    "films": 3340,
+    "median_departure": 0.3876275643042055,
+    "median_prior_films": 4.0,
+    "against_adjusted": {
+     "rho": -0.06305067342966801,
+     "p": 0.000999000999000999,
+     "films": 3340,
+     "null_95": 0.035209970896006505
+    },
+    "against_adjusted_genre_fixed": {
+     "rho": -0.05141235264027385,
+     "p": 0.004995004995004995,
+     "films": 3340,
+     "null_95": 0.03373833475091945
+    },
+    "against_budget": {
+     "rho": 0.06227140343850158,
+     "p": 0.004975124378109453,
+     "films": 3340,
+     "null_95": 0.0344756855111164
+    },
+    "by_quartile": [
+     {
+      "quartile": 1,
+      "films": 826,
+      "mean_departure": 0.13289202880922532,
+      "median_multiple": 2.380443936187814,
+      "grossed_under_budget": 0.24334140435835352,
+      "mean_adjusted": 0.17367413432476905,
+      "mean_adjusted_genre_fixed": 0.14323205019061538
+     },
+     {
+      "quartile": 2,
+      "films": 844,
+      "mean_departure": 0.310014072270892,
+      "median_multiple": 1.8808423471366784,
+      "grossed_under_budget": 0.2713270142180095,
+      "mean_adjusted": -0.044869758212422145,
+      "mean_adjusted_genre_fixed": -0.003998526322869391
+     },
+     {
+      "quartile": 3,
+      "films": 835,
+      "mean_departure": 0.46750977406922006,
+      "median_multiple": 1.831578947368421,
+      "grossed_under_budget": 0.2874251497005988,
+      "mean_adjusted": -0.08789678855211139,
+      "mean_adjusted_genre_fixed": -0.027137271881360614
+     },
+     {
+      "quartile": 4,
+      "films": 835,
+      "mean_departure": 0.7308426116057649,
+      "median_multiple": 2.0716981132075474,
+      "grossed_under_budget": 0.2958083832335329,
+      "mean_adjusted": 0.0037550407505697577,
+      "mean_adjusted_genre_fixed": 0.0077752988758904365
+     }
+    ],
+    "track_record": {
+     "films": 3106,
+     "rho_track_when_staying": 0.21420617358009514,
+     "rho_track_when_leaving": 0.11548437775659266,
+     "difference": 0.09872179582350248,
+     "p": 0.007992007992007992,
+     "rho_departure_net_of_track": -0.048990933526955445
+    }
+   },
+   "studio": {
+    "films": 4897,
+    "median_departure": 0.4439615625144673,
+    "median_prior_films": 17.0,
+    "against_adjusted": {
+     "rho": -0.10315128385403559,
+     "p": 0.000999000999000999,
+     "films": 4897,
+     "null_95": 0.02695448807631686
+    },
+    "against_adjusted_genre_fixed": {
+     "rho": -0.10098498223577781,
+     "p": 0.000999000999000999,
+     "films": 4897,
+     "null_95": 0.026475869163530213
+    },
+    "against_budget": {
+     "rho": -0.05962522220600077,
+     "p": 0.004975124378109453,
+     "films": 4897,
+     "null_95": 0.026330918816840097
+    },
+    "by_quartile": [
+     {
+      "quartile": 1,
+      "films": 1224,
+      "mean_departure": 0.208105095915502,
+      "median_multiple": 2.503331114069145,
+      "grossed_under_budget": 0.2238562091503268,
+      "mean_adjusted": 0.26301612573998995,
+      "mean_adjusted_genre_fixed": 0.2102785533655327
+     },
+     {
+      "quartile": 2,
+      "films": 1222,
+      "mean_departure": 0.38215099504792116,
+      "median_multiple": 1.9703293638876223,
+      "grossed_under_budget": 0.2618657937806874,
+      "mean_adjusted": 0.019729418550288775,
+      "mean_adjusted_genre_fixed": 0.07023069982415091
+     },
+     {
+      "quartile": 3,
+      "films": 1226,
+      "mean_departure": 0.5073949318384224,
+      "median_multiple": 1.9824984237068135,
+      "grossed_under_budget": 0.28792822185970635,
+      "mean_adjusted": -0.026642853529362902,
+      "mean_adjusted_genre_fixed": 0.006958982970423267
+     },
+     {
+      "quartile": 4,
+      "films": 1225,
+      "mean_departure": 0.7176250109283819,
+      "median_multiple": 1.814054054054054,
+      "grossed_under_budget": 0.31020408163265306,
+      "mean_adjusted": -0.05454576023636432,
+      "mean_adjusted_genre_fixed": -0.0969180500297234
+     }
+    ],
+    "track_record": {
+     "films": 4782,
+     "rho_track_when_staying": 0.2681822325871988,
+     "rho_track_when_leaving": 0.21329067473525284,
+     "difference": 0.054891557851945966,
+     "p": 0.06893106893106893,
+     "rho_departure_net_of_track": -0.07153243863471376
+    }
+   }
+  }
+ },
+ "audience": {
+  "votes_vs_adjusted": {
+   "rho": 0.5271042975475088,
+   "p": 0.000999000999000999,
+   "films": 6443,
+   "null_95": 0.024073747560692884
+  },
+  "votes_vs_gross": {
+   "rho": 0.6975032555669378,
+   "p": 0.004975124378109453,
+   "films": 6443,
+   "null_95": 0.02434944837635763
+  },
+  "rating_vs_adjusted": {
+   "rho": 0.26073906256677687,
+   "p": 0.000999000999000999,
+   "films": 6443,
+   "null_95": 0.023700193270271473
+  },
+  "rating_vs_gross": {
+   "rho": 0.13789550029018166,
+   "p": 0.000999000999000999,
+   "films": 6443,
+   "null_95": 0.023627862998344604
+  },
+  "rating_vs_budget": {
+   "rho": -0.07937178347701696,
+   "p": 0.004975124378109453,
+   "films": 6443,
+   "null_95": 0.02273561309948295
+  },
+  "rating_vs_votes": {
+   "rho": 0.4116917920664798,
+   "p": 0.004975124378109453,
+   "films": 6443,
+   "null_95": 0.02659938697932268
+  },
+  "rating_vs_adjusted_by_decade": {
+   "1970": 0.1085550051466386,
+   "1980": 0.21225980966334057,
+   "1990": 0.2942831221057589,
+   "2000": 0.2791824892537025,
+   "2010": 0.2630377015881556,
+   "2020": 0.23768370530442473
+  },
+  "quadrants": {
+   "liked and earned": 0.335713177091417,
+   "liked, didn't earn": 0.1975787676548192,
+   "not liked, earned": 0.2230327487195406,
+   "not liked, didn't earn": 0.2436753065342232
+  },
+  "per_genre": {
+   "Action": {
+    "films": 1716,
+    "mean_attention": 0.08403156378812186,
+    "mean_rating_z": -0.18704749189239744,
+    "mean_adjusted": -0.06617890399777188,
+    "median_multiple": 1.9174240927648616,
+    "lift": {
+     "liked and earned": 0.9443070413944202,
+     "liked, didn't earn": 0.5810435309649764,
+     "not liked, earned": 1.1130730786263148,
+     "not liked, didn't earn": 1.3129359494009176
+    },
+    "lift_q": {
+     "liked and earned": 0.08678201300550695,
+     "liked, didn't earn": 1.8422713164202894e-24,
+     "not liked, earned": 0.006767230911474786,
+     "not liked, didn't earn": 3.3424534185903953e-16
+    }
+   },
+   "Adventure": {
+    "films": 1384,
+    "mean_attention": -0.018952318487908487,
+    "mean_rating_z": -0.06941142530431942,
+    "mean_adjusted": 0.14783778081136745,
+    "median_multiple": 2.2922082376283273,
+    "lift": {
+     "liked and earned": 1.1127204375212119,
+     "liked, didn't earn": 0.6034031621630213,
+     "not liked, earned": 1.1921834586345188,
+     "not liked, didn't earn": 0.9903731453186555
+    },
+    "lift_q": {
+     "liked and earned": 0.0017581844130211814,
+     "liked, didn't earn": 6.82280085763608e-17,
+     "not liked, earned": 6.0408978886709085e-05,
+     "not liked, didn't earn": 0.9505658385233594
+    }
+   },
+   "Animation": {
+    "films": 364,
+    "mean_attention": -0.31822032034094777,
+    "mean_rating_z": 0.3271033586771147,
+    "mean_adjusted": 0.4776643454760877,
+    "median_multiple": 2.8726092166649915,
+    "lift": {
+     "liked and earned": 1.4811832873552706,
+     "liked, didn't earn": 0.72303894063517,
+     "not liked, earned": 1.0839584910566122,
+     "not liked, didn't earn": 0.48479211870931616
+    },
+    "lift_q": {
+     "liked and earned": 3.7661140347162346e-10,
+     "liked, didn't earn": 0.01091029342115986,
+     "not liked, earned": 0.5076305948097385,
+     "not liked, didn't earn": 4.660886359531051e-09
+    }
+   },
+   "Biography": {
+    "films": 471,
+    "mean_attention": -0.031422189101639554,
+    "mean_rating_z": 0.6730196711463777,
+    "mean_adjusted": -0.17046164622079918,
+    "median_multiple": 1.568,
+    "lift": {
+     "liked and earned": 1.3154490745239618,
+     "liked, didn't earn": 2.1813977380946423,
+     "not liked, earned": 0.1808689665158157,
+     "not liked, didn't earn": 0.357232883010805
+    },
+    "lift_q": {
+     "liked and earned": 2.783389338798648e-06,
+     "liked, didn't earn": 5.986524300106633e-32,
+     "not liked, earned": 4.8803499170912234e-29,
+     "not liked, didn't earn": 2.248325672786515e-18
+    }
+   },
+   "Comedy": {
+    "films": 2514,
+    "mean_attention": -0.165017940624754,
+    "mean_rating_z": -0.16670542812119477,
+    "mean_adjusted": 0.0409685651162031,
+    "median_multiple": 2.1261360599581924,
+    "lift": {
+     "liked and earned": 0.9170801624632985,
+     "liked, didn't earn": 0.7831483831939411,
+     "not liked, earned": 1.2002760878675798,
+     "not liked, didn't earn": 1.1067585850447685
+    },
+    "lift_q": {
+     "liked and earned": 0.0003644654492063482,
+     "liked, didn't earn": 1.782943599273435e-11,
+     "not liked, earned": 4.4203977709999675e-11,
+     "not liked, didn't earn": 0.0002709413311147555
+    }
+   },
+   "Crime": {
+    "films": 1282,
+    "mean_attention": 0.09708774559762402,
+    "mean_rating_z": 0.07891381536943713,
+    "mean_adjusted": -0.24444074448210656,
+    "median_multiple": 1.6565713300152733,
+    "lift": {
+     "liked and earned": 0.9247549374929228,
+     "liked, didn't earn": 1.2357085171073772,
+     "not liked, earned": 0.685487294230809,
+     "not liked, didn't earn": 1.2004158510289455
+    },
+    "lift_q": {
+     "liked and earned": 0.05311470901461105,
+     "liked, didn't earn": 1.5041201894744997e-05,
+     "not liked, earned": 2.1421461134059826e-11,
+     "not liked, didn't earn": 2.255642860258439e-05
+    }
+   },
+   "Documentary": {
+    "films": 60,
+    "mean_attention": -0.4529270429453085,
+    "mean_rating_z": 0.7737896211450672,
+    "mean_adjusted": 1.1694926604384208,
+    "median_multiple": 6.111628260946506,
+    "lift": {
+     "liked and earned": 1.9858221605794422,
+     "liked, didn't earn": 0.9278999738151349,
+     "not liked, earned": 0.6725469728601253,
+     "not liked, didn't earn": 0.0
+    },
+    "lift_q": {
+     "liked and earned": 9.915113507007097e-07,
+     "liked, didn't earn": 0.9928918563079109,
+     "not liked, earned": 0.2844399883880814,
+     "not liked, didn't earn": 3.52664850287507e-07
+    }
+   },
+   "Drama": {
+    "films": 3273,
+    "mean_attention": 0.022460810230430294,
+    "mean_rating_z": 0.2981880290182519,
+    "mean_adjusted": -0.1527066891732306,
+    "median_multiple": 1.7666666666666666,
+    "lift": {
+     "liked and earned": 1.1312451629698654,
+     "liked, didn't earn": 1.509258185890462,
+     "not liked, earned": 0.5369964626971567,
+     "not liked, didn't earn": 0.8300427547527444
+    },
+    "lift_q": {
+     "liked and earned": 1.8551948412108408e-13,
+     "liked, didn't earn": 2.166346023143732e-96,
+     "not liked, earned": 1.2849185673220373e-91,
+     "not liked, didn't earn": 2.70111264455536e-14
+    }
+   },
+   "Family": {
+    "films": 374,
+    "mean_attention": -0.4572248354271677,
+    "mean_rating_z": -0.3622973395517967,
+    "mean_adjusted": 0.28374433186742976,
+    "median_multiple": 2.327193706219001,
+    "lift": {
+     "liked and earned": 0.9079561215483545,
+     "liked, didn't earn": 0.527779761479683,
+     "not liked, earned": 1.5944518251407604,
+     "not liked, didn't earn": 0.9656050955414013
+    },
+    "lift_q": {
+     "liked and earned": 0.27698746803019486,
+     "liked, didn't earn": 2.783389338798648e-06,
+     "not liked, earned": 9.309392452983967e-09,
+     "not liked, didn't earn": 0.8514796200038176
+    }
+   },
+   "Fantasy": {
+    "films": 560,
+    "mean_attention": 0.12174792497910743,
+    "mean_rating_z": -0.2611779901713999,
+    "mean_adjusted": -0.02786893019531323,
+    "median_multiple": 2.024180820036275,
+    "lift": {
+     "liked and earned": 0.8351091407436761,
+     "liked, didn't earn": 0.6416970598137134,
+     "not liked, earned": 1.265028829903569,
+     "not liked, didn't earn": 1.2751160145586897
+    },
+    "lift_q": {
+     "liked and earned": 0.006595029004125265,
+     "liked, didn't earn": 1.5041201894744997e-05,
+     "not liked, earned": 0.00139027359070595,
+     "not liked, didn't earn": 0.0004125683731425926
+    }
+   },
+   "History": {
+    "films": 199,
+    "mean_attention": -0.13165990569009725,
+    "mean_rating_z": 0.6557676896459659,
+    "mean_adjusted": -0.38068739024234904,
+    "median_multiple": 1.2625,
+    "lift": {
+     "liked and earned": 1.1376066648545549,
+     "liked, didn't earn": 2.31445128233469,
+     "not liked, earned": 0.20277798176687195,
+     "not liked, didn't earn": 0.47431104567423105
+    },
+    "lift_q": {
+     "liked and earned": 0.25301092613909054,
+     "liked, didn't earn": 4.327546723527403e-16,
+     "not liked, earned": 1.7291796636401824e-11,
+     "not liked, didn't earn": 1.827836039100944e-05
+    }
+   },
+   "Horror": {
+    "films": 824,
+    "mean_attention": 0.16583860753474153,
+    "mean_rating_z": -0.5778764554226407,
+    "mean_adjusted": 0.19701688573127699,
+    "median_multiple": 2.6383075383030437,
+    "lift": {
+     "liked and earned": 0.5675499014762847,
+     "liked, didn't earn": 0.4483894401269076,
+     "not liked, earned": 1.8881375370749471,
+     "not liked, didn't earn": 1.2301504235977985
+    },
+    "lift_q": {
+     "liked and earned": 1.2534736905428798e-21,
+     "liked, didn't earn": 1.5193777824581764e-18,
+     "not liked, earned": 2.9212118950577035e-41,
+     "not liked, didn't earn": 0.00023803711754792904
+    }
+   },
+   "Music": {
+    "films": 217,
+    "mean_attention": -0.3150847110835147,
+    "mean_rating_z": 0.1497491957816192,
+    "mean_adjusted": 0.06432392021225339,
+    "median_multiple": 2.2133333333333334,
+    "lift": {
+     "liked and earned": 0.9883354531916119,
+     "liked, didn't earn": 1.492725554859706,
+     "not liked, earned": 0.9711123724862024,
+     "not liked, didn't earn": 0.6429950981830991
+    },
+    "lift_q": {
+     "liked and earned": 1.0,
+     "liked, didn't earn": 0.0012458885948133987,
+     "not liked, earned": 0.9750443955546688,
+     "not liked, didn't earn": 0.003796603061330475
+    }
+   },
+   "Musical": {
+    "films": 55,
+    "mean_attention": -0.15057189302390234,
+    "mean_rating_z": -0.06366125496867873,
+    "mean_adjusted": -0.10747427138368562,
+    "median_multiple": 2.005161290322581,
+    "lift": {
+     "liked and earned": 1.029016937754802,
+     "liked, didn't earn": 1.012254516889238,
+     "not liked, earned": 0.5706459163661669,
+     "not liked, didn't earn": 1.3430689056166762
+    },
+    "lift_q": {
+     "liked and earned": 1.0,
+     "liked, didn't earn": 1.0,
+     "not liked, earned": 0.15456922863352737,
+     "not liked, didn't earn": 0.2680753425285698
+    }
+   },
+   "Mystery": {
+    "films": 738,
+    "mean_attention": 0.1453778820062016,
+    "mean_rating_z": -0.14973343332256256,
+    "mean_adjusted": 0.024020805385214013,
+    "median_multiple": 2.122839838422069,
+    "lift": {
+     "liked and earned": 0.8112810046269672,
+     "liked, didn't earn": 0.898410174203863,
+     "not liked, earned": 1.2029295449530697,
+     "not liked, didn't earn": 1.1566326618680198
+    },
+    "lift_q": {
+     "liked and earned": 0.00024367350962813786,
+     "liked, didn't earn": 0.2166202914937698,
+     "not liked, earned": 0.004137901405507278,
+     "not liked, didn't earn": 0.020542795383480663
+    }
+   },
+   "Romance": {
+    "films": 1008,
+    "mean_attention": -0.2188539430930558,
+    "mean_rating_z": -0.01734763088292656,
+    "mean_adjusted": 0.04621144538665639,
+    "median_multiple": 2.1164477454063455,
+    "lift": {
+     "liked and earned": 0.9663152477819605,
+     "liked, didn't earn": 0.9941785433733588,
+     "not liked, earned": 1.0630868155659388,
+     "not liked, didn't earn": 0.9933854008694772
+    },
+    "lift_q": {
+     "liked and earned": 0.522597213885745,
+     "liked, didn't earn": 1.0,
+     "not liked, earned": 0.33117417281064654,
+     "not liked, didn't earn": 0.9928918563079109
+    }
+   },
+   "Sci-Fi": {
+    "films": 507,
+    "mean_attention": 0.4958949717563235,
+    "mean_rating_z": -0.19593867197207046,
+    "mean_adjusted": -0.07680677780610057,
+    "median_multiple": 2.0366666666666666,
+    "lift": {
+     "liked and earned": 0.9752854398112052,
+     "liked, didn't earn": 0.5191048804560194,
+     "not liked, earned": 1.0700615873251171,
+     "not liked, didn't earn": 1.3598462292239852
+    },
+    "lift_q": {
+     "liked and earned": 0.8278684910360752,
+     "liked, didn't earn": 1.1729627920001759e-08,
+     "not liked, earned": 0.5076305948097385,
+     "not liked, didn't earn": 1.279181287399993e-05
+    }
+   },
+   "Sport": {
+    "films": 175,
+    "mean_attention": -0.16247718663655397,
+    "mean_rating_z": 0.20049646939881033,
+    "mean_adjusted": -0.1362364073455262,
+    "median_multiple": 1.6,
+    "lift": {
+     "liked and earned": 1.055322633907932,
+     "liked, didn't earn": 1.590685669397374,
+     "not liked, earned": 0.5124167412267621,
+     "not liked, didn't earn": 0.8911155595996361
+    },
+    "lift_q": {
+     "liked and earned": 0.7697391113754853,
+     "liked, didn't earn": 0.0005621752360830534,
+     "not liked, earned": 0.0005621752360830534,
+     "not liked, didn't earn": 0.5562899245357253
+    }
+   },
+   "Thriller": {
+    "films": 1080,
+    "mean_attention": 0.17837050127496168,
+    "mean_rating_z": -0.1262675956735996,
+    "mean_adjusted": 0.04772877681301003,
+    "median_multiple": 2.214832695931623,
+    "lift": {
+     "liked and earned": 0.9212008356021301,
+     "liked, didn't earn": 0.8294863402286811,
+     "not liked, earned": 1.1707299157194773,
+     "not liked, didn't earn": 1.090552606746874
+    },
+    "lift_q": {
+     "liked and earned": 0.06980188574374141,
+     "liked, didn't earn": 0.004016149468607416,
+     "not liked, earned": 0.0024628902765652374,
+     "not liked, didn't earn": 0.10338554773952932
+    }
+   },
+   "War": {
+    "films": 104,
+    "mean_attention": 0.15593748832866305,
+    "mean_rating_z": 0.526173846749443,
+    "mean_adjusted": -0.6070118888730734,
+    "median_multiple": 1.6698687189301855,
+    "lift": {
+     "liked and earned": 1.0310999679931718,
+     "liked, didn't earn": 2.14130763188108,
+     "not liked, earned": 0.3448958835180129,
+     "not liked, didn't earn": 0.631357177853993
+    },
+    "lift_q": {
+     "liked and earned": 0.9750443955546688,
+     "liked, didn't earn": 6.941384571297772e-07,
+     "not liked, earned": 0.0002709413311147555,
+     "not liked, didn't earn": 0.05311470901461105
+    }
+   },
+   "Western": {
+    "films": 39,
+    "mean_attention": 0.12871819303913015,
+    "mean_rating_z": 0.3261278347458847,
+    "mean_adjusted": -0.5223065300833781,
+    "median_multiple": 1.399676956521739,
+    "lift": {
+     "liked and earned": 0.9929110802897211,
+     "liked, didn't earn": 1.5573146413680585,
+     "not liked, earned": 0.3448958835180129,
+     "not liked, didn't earn": 1.1574881593989874
+    },
+    "lift_q": {
+     "liked and earned": 1.0,
+     "liked, didn't earn": 0.19080552324522906,
+     "not liked, earned": 0.048068178298008184,
+     "not liked, didn't earn": 0.8043685840052504
+    }
+   }
+  },
+  "attention_by_label": {
+   "familywise_95": 0.03784879161208898,
+   "rho": {
+    "Action": 0.07490554383410947,
+    "Adventure": 0.0035031970300519054,
+    "Animation": -0.07621749140886319,
+    "Biography": -0.010173826598242881,
+    "Comedy": -0.14684167467739895,
+    "Crime": 0.04949489582995987,
+    "Documentary": -0.041767913039427014,
+    "Drama": 0.013144358506186385,
+    "Family": -0.1336525790841498,
+    "Fantasy": 0.046330017956844605,
+    "Film-Noir": 0.0,
+    "History": -0.024399158664778053,
+    "Horror": 0.06814580131419849,
+    "Music": -0.0721588970220098,
+    "Musical": -0.012711617364319461,
+    "Mystery": 0.05311449973864932,
+    "Romance": -0.1112866147216255,
+    "Sci-Fi": 0.1648989517737772,
+    "Sport": -0.032770105638399126,
+    "Thriller": 0.09465781156149287,
+    "War": 0.015409569202464033,
+    "Western": 0.005444786677181912
+   }
+  },
+  "attention_by_share": {
+   "films": 4271,
+   "familywise_95": 0.04628936315281788,
+   "rho": {
+    "Action": 0.027459726154092416,
+    "Adventure": 0.039375907299768545,
+    "Animation": -0.35263259861566243,
+    "Biography": 0.07688505539667365,
+    "Comedy": -0.14072173003329916,
+    "Crime": 0.193409324242832,
+    "Documentary": -0.033644133519485066,
+    "Drama": 0.051072601632609356,
+    "Family": -0.16011068499962558,
+    "Fantasy": -0.09831884425256139,
+    "Film-Noir": 0.22039270814610745,
+    "History": 0.16844366601838737,
+    "Horror": -0.02823165233699984,
+    "Music": -0.10415073789686045,
+    "Musical": -0.25624199421636873,
+    "Mystery": 0.23334252495936886,
+    "Romance": -0.1574459268260326,
+    "Sci-Fi": -0.08913492171557398,
+    "Sport": -0.263854238936124,
+    "Thriller": 0.27928623334365316,
+    "War": 0.19241802400441663,
+    "Western": -0.2099421082649811
+   }
+  }
+ },
+ "critics": {
+  "metacritic": {
+   "films": 5103,
+   "rho_score_vs_rating": 0.744965568608945,
+   "gap_vs_adjusted": {
+    "rho": -0.05656852895086385,
+    "p": 0.000999000999000999,
+    "films": 5103,
+    "null_95": 0.02644651890668647
+   },
+   "score_vs_adjusted": {
+    "rho": 0.1976861982355914,
+    "p": 0.000999000999000999,
+    "films": 5103,
+    "null_95": 0.02786758210816516
+   },
+   "rating_vs_adjusted_same_films": {
+    "rho": 0.2500320940786481,
+    "p": 0.004975124378109453,
+    "films": 5103,
+    "null_95": 0.02680719043602809
+   },
+   "gap_vs_budget": {
+    "rho": -0.17558157981724185,
+    "p": 0.004975124378109453,
+    "films": 5103,
+    "null_95": 0.02541940468978969
+   },
+   "gap_vs_votes": {
+    "rho": -0.2238832570525132,
+    "p": 0.004975124378109453,
+    "films": 5103,
+    "null_95": 0.026260814761562872
+   },
+   "familywise_95": 0.04281689531075858,
+   "per_genre": {
+    "Action": {
+     "films": 1357,
+     "mean_gap": -0.10245776691473595,
+     "rho": -0.0994624211787293,
+     "q": 0.004395604395604396
+    },
+    "Adventure": {
+     "films": 1157,
+     "mean_gap": -0.021563702966124053,
+     "rho": -0.02596863963192083,
+     "q": 0.15384615384615385
+    },
+    "Animation": {
+     "films": 312,
+     "mean_gap": -0.007700736740390859,
+     "rho": -0.001214570640039889,
+     "q": 0.9837781266352694
+    },
+    "Biography": {
+     "films": 404,
+     "mean_gap": -0.11863502367574415,
+     "rho": -0.04398370642264434,
+     "q": 0.012558869701726844
+    },
+    "Comedy": {
+     "films": 1980,
+     "mean_gap": 0.05467199634856751,
+     "rho": 0.06382461924771408,
+     "q": 0.004395604395604396
+    },
+    "Crime": {
+     "films": 985,
+     "mean_gap": -0.07747514035145853,
+     "rho": -0.050009368820340405,
+     "q": 0.004395604395604396
+    },
+    "Documentary": {
+     "films": 43,
+     "mean_gap": 0.3667885521051442,
+     "rho": 0.026341844698215357,
+     "q": 0.15140415140415142
+    },
+    "Drama": {
+     "films": 2554,
+     "mean_gap": -0.013855583172756376,
+     "rho": -0.0016478052307517424,
+     "q": 0.9837781266352694
+    },
+    "Family": {
+     "films": 301,
+     "mean_gap": 0.17912758619100808,
+     "rho": 0.05169099485513684,
+     "q": 0.004395604395604396
+    },
+    "Fantasy": {
+     "films": 449,
+     "mean_gap": 0.010467909667970334,
+     "rho": -0.0041580794346927534,
+     "q": 0.9438339438339438
+    },
+    "History": {
+     "films": 166,
+     "mean_gap": -0.10440146528961326,
+     "rho": -0.02793973884013138,
+     "q": 0.1346153846153846
+    },
+    "Horror": {
+     "films": 665,
+     "mean_gap": 0.19850579595294066,
+     "rho": 0.10361847735678055,
+     "q": 0.004395604395604396
+    },
+    "Music": {
+     "films": 172,
+     "mean_gap": 0.10086238015738101,
+     "rho": 0.013558066238558163,
+     "q": 0.5832628909551987
+    },
+    "Musical": {
+     "films": 42,
+     "mean_gap": 0.07154466716750867,
+     "rho": 0.0046527462543504445,
+     "q": 0.9438339438339438
+    },
+    "Mystery": {
+     "films": 601,
+     "mean_gap": 0.012745730945344385,
+     "rho": 0.006070686290489952,
+     "q": 0.9438339438339438
+    },
+    "Romance": {
+     "films": 789,
+     "mean_gap": -0.01199629234569994,
+     "rho": 0.002725391342921438,
+     "q": 0.9820705610179296
+    },
+    "Sci-Fi": {
+     "films": 407,
+     "mean_gap": -0.004936406238392627,
+     "rho": -0.005001092461934858,
+     "q": 0.9438339438339438
+    },
+    "Sport": {
+     "films": 131,
+     "mean_gap": -0.21529001274598691,
+     "rho": -0.04438777035717154,
+     "q": 0.01098901098901099
+    },
+    "Thriller": {
+     "films": 871,
+     "mean_gap": -0.01109954605069329,
+     "rho": -0.009320095457603057,
+     "q": 0.7864992150706437
+    },
+    "War": {
+     "films": 72,
+     "mean_gap": -0.09248699737076777,
+     "rho": -0.014463662146606736,
+     "q": 0.5622710622710623
+    },
+    "Western": {
+     "films": 30,
+     "mean_gap": 0.18001427700316358,
+     "rho": 0.023111892924472476,
+     "q": 0.1998001998001998
+    }
+   },
+   "by_share": {
+    "films": 3217,
+    "familywise_95": 0.05190219419960716,
+    "rho": {
+     "Action": -0.13819720757607815,
+     "Adventure": -0.06516329360892148,
+     "Animation": 0.2651918070469085,
+     "Biography": 0.10006970585330952,
+     "Comedy": 0.016024744086936427,
+     "Crime": 0.0025046487982298502,
+     "Documentary": 0.26875816185940926,
+     "Drama": 0.07058296973316439,
+     "Family": 0.09779740122389094,
+     "Fantasy": 0.055069848028427466,
+     "Film-Noir": 0.14157785018986327,
+     "History": -0.06415686622804036,
+     "Horror": 0.05405995658937476,
+     "Music": 0.17294809560189686,
+     "Musical": 0.20762594995363054,
+     "Mystery": -0.04628413249721278,
+     "Romance": 0.026119933657371103,
+     "Sci-Fi": -0.0353604204522541,
+     "Sport": -0.019023313763562304,
+     "Thriller": -0.14098246783694288,
+     "War": -0.09079068967118516,
+     "Western": 0.14680753381215114
+    }
+   }
+  },
+  "rotten_tomatoes": {
+   "films": 4550,
+   "rho_score_vs_rating": 0.7638720721913383,
+   "gap_vs_adjusted": {
+    "rho": -0.004664922164692335,
+    "p": 0.7452547452547452,
+    "films": 4550,
+    "null_95": 0.029909279402370023
+   },
+   "score_vs_adjusted": {
+    "rho": 0.21942128215720919,
+    "p": 0.000999000999000999,
+    "films": 4550,
+    "null_95": 0.029234279988159313
+   },
+   "rating_vs_adjusted_same_films": {
+    "rho": 0.22994588005016833,
+    "p": 0.004975124378109453,
+    "films": 4550,
+    "null_95": 0.03169243478358868
+   },
+   "gap_vs_budget": {
+    "rho": -0.22659587258046676,
+    "p": 0.004975124378109453,
+    "films": 4550,
+    "null_95": 0.026142624715800526
+   },
+   "gap_vs_votes": {
+    "rho": -0.21751093829746118,
+    "p": 0.004975124378109453,
+    "films": 4550,
+    "null_95": 0.03059915403910978
+   },
+   "familywise_95": 0.04557678243206542,
+   "per_genre": {
+    "Action": {
+     "films": 1140,
+     "mean_gap": -0.07855560751525938,
+     "rho": -0.07908216312799785,
+     "q": 0.002747252747252747
+    },
+    "Adventure": {
+     "films": 877,
+     "mean_gap": 0.01263942627237169,
+     "rho": 0.00035929602512527686,
+     "q": 1.0
+    },
+    "Animation": {
+     "films": 176,
+     "mean_gap": 0.037200692174691685,
+     "rho": 0.010808852048764249,
+     "q": 0.5571428571428572
+    },
+    "Biography": {
+     "films": 359,
+     "mean_gap": -0.14830836322525515,
+     "rho": -0.05774941351025236,
+     "q": 0.002747252747252747
+    },
+    "Comedy": {
+     "films": 1781,
+     "mean_gap": 0.08377590134515168,
+     "rho": 0.09403687211838967,
+     "q": 0.002747252747252747
+    },
+    "Crime": {
+     "films": 898,
+     "mean_gap": -0.08088083262348868,
+     "rho": -0.05520752992421033,
+     "q": 0.002747252747252747
+    },
+    "Documentary": {
+     "films": 43,
+     "mean_gap": 0.32916484034198656,
+     "rho": 0.013346822798161805,
+     "q": 0.48480930833872016
+    },
+    "Drama": {
+     "films": 2367,
+     "mean_gap": -0.06438427756057963,
+     "rho": -0.06968758718810115,
+     "q": 0.002747252747252747
+    },
+    "Family": {
+     "films": 264,
+     "mean_gap": 0.19370547560105975,
+     "rho": 0.05522598051829732,
+     "q": 0.002747252747252747
+    },
+    "Fantasy": {
+     "films": 387,
+     "mean_gap": 0.05032700305802557,
+     "rho": 0.015342182985647329,
+     "q": 0.4380952380952381
+    },
+    "History": {
+     "films": 146,
+     "mean_gap": -0.2158617292577303,
+     "rho": -0.0510337696145298,
+     "q": 0.004884004884004884
+    },
+    "Horror": {
+     "films": 636,
+     "mean_gap": 0.2737438906312791,
+     "rho": 0.15407098208691974,
+     "q": 0.002747252747252747
+    },
+    "Music": {
+     "films": 157,
+     "mean_gap": 0.11978348356869051,
+     "rho": 0.01606229969962279,
+     "q": 0.4380952380952381
+    },
+    "Musical": {
+     "films": 43,
+     "mean_gap": 0.10100901058170593,
+     "rho": 0.016969099487601367,
+     "q": 0.4327979712595097
+    },
+    "Mystery": {
+     "films": 529,
+     "mean_gap": 0.011098837976104723,
+     "rho": 0.011552229404286038,
+     "q": 0.5347985347985348
+    },
+    "Romance": {
+     "films": 759,
+     "mean_gap": -0.04899597852819945,
+     "rho": -0.024196178898026038,
+     "q": 0.18581418581418585
+    },
+    "Sci-Fi": {
+     "films": 332,
+     "mean_gap": 0.05075512173476388,
+     "rho": 0.013577237729647276,
+     "q": 0.48480930833872016
+    },
+    "Sport": {
+     "films": 134,
+     "mean_gap": -0.21846013807658157,
+     "rho": -0.0564229455536222,
+     "q": 0.002747252747252747
+    },
+    "Thriller": {
+     "films": 780,
+     "mean_gap": 0.015045636449133194,
+     "rho": 0.016827647810909042,
+     "q": 0.4327979712595097
+    },
+    "War": {
+     "films": 69,
+     "mean_gap": -0.19845025567447247,
+     "rho": -0.027978255694787273,
+     "q": 0.14065934065934066
+    }
+   },
+   "by_share": {
+    "films": 3107,
+    "familywise_95": 0.05422349763617738,
+    "rho": {
+     "Action": -0.1299680649889421,
+     "Adventure": -0.04868026016417497,
+     "Animation": 0.23991500144030328,
+     "Biography": 0.06958904047964605,
+     "Comedy": 0.07112692639031183,
+     "Crime": 0.002936496863703261,
+     "Documentary": 0.22971099959189795,
+     "Drama": 0.021747586369117625,
+     "Family": 0.11658586205880128,
+     "Fantasy": 0.0684884763844722,
+     "Film-Noir": 0.15031591713923334,
+     "History": -0.07808549812493602,
+     "Horror": 0.06653332640140854,
+     "Music": 0.12991061752265443,
+     "Musical": 0.1854602033225219,
+     "Mystery": -0.03180006220173539,
+     "Romance": 0.01665020821430722,
+     "Sci-Fi": -0.015997789603306414,
+     "Sport": -0.012470850461853544,
+     "Thriller": -0.10001470085403771,
+     "War": -0.09290787348849751,
+     "Western": 0.12135727376799045
+    }
+   }
+  },
+  "two_methods": {
+   "films": 3743,
+   "rho_between_gaps": 0.8143263953379173,
+   "rho_per_genre_mean_gaps": 0.9578947368421051
+  }
+ },
+ "controls": {
+  "franchise": {
+   "films_with_flag": 6443,
+   "flagged": 0.270526152413472,
+   "follows_another_film": 0.12463138289616638,
+   "numbered_title": 0.05447772776656837,
+   "numbered_titles_flagged": 0.9344729344729344,
+   "flagged_with_numbered_title": 0.18818129661503155,
+   "follows_with_numbered_title": 0.35118306351183065,
+   "tag_check": {
+    "sequel": {
+     "auc_for_flag": 0.8735998077103488,
+     "auc_for_follows": 0.9324355962581218,
+     "flagged_among_tag_at_0.5": 0.9882352941176471,
+     "films_tag_at_0.5": 340,
+     "tag_at_0.5_among_flagged": 0.2904062229904927,
+     "tag_at_0.5_among_follows": 0.6125541125541125
+    },
+    "sequels": {
+     "auc_for_flag": 0.8614419558921735,
+     "auc_for_follows": 0.9145223377305289,
+     "flagged_among_tag_at_0.5": 0.9619952494061758,
+     "films_tag_at_0.5": 421,
+     "tag_at_0.5_among_flagged": 0.3500432152117545,
+     "tag_at_0.5_among_follows": 0.6363636363636364
+    },
+    "franchise": {
+     "auc_for_flag": 0.8171685681914947,
+     "auc_for_follows": 0.8861860551280347,
+     "flagged_among_tag_at_0.5": 0.8138461538461539,
+     "films_tag_at_0.5": 650,
+     "tag_at_0.5_among_flagged": 0.45721694036300775,
+     "tag_at_0.5_among_follows": 0.7186147186147186
+    },
+    "series": {
+     "auc_for_flag": 0.778270714297213,
+     "auc_for_follows": 0.8372986512918253,
+     "flagged_among_tag_at_0.5": 0.8108974358974359,
+     "films_tag_at_0.5": 312,
+     "tag_at_0.5_among_flagged": 0.21866897147796024,
+     "tag_at_0.5_among_follows": 0.3181818181818182
+    }
+   },
+   "films_scored_with_flag": 4271,
+   "mean_adjusted": {
+    "flagged": 0.7076852926426379,
+    "not_flagged": -0.2624458436332197,
+    "follows": 0.5701604147025372,
+    "numbered_title": 0.6253593346865048,
+    "flag_vs_adjusted": {
+     "rho": 0.3548794552285986,
+     "p": 0.000999000999000999,
+     "films": 6443,
+     "null_95": 0.024735352083466073
+    },
+    "follows_vs_adjusted": {
+     "rho": 0.18280009691897434,
+     "p": 0.000999000999000999,
+     "films": 6443,
+     "null_95": 0.022958051214132715
+    }
+   }
+  },
+  "release_month": {
+   "films_with_month": 6440,
+   "share_of_variance_in_adjusted": 0.015697458198913772,
+   "share_null_95": 0.003039920261542327,
+   "share_of_variance_in_budget": 0.07763731629332382,
+   "by_month": {
+    "1": {
+     "films": 594,
+     "mean_adjusted": -0.0022876183967767754,
+     "median_budget_musd": 8.0,
+     "median_multiple": 1.990652067081014
+    },
+    "2": {
+     "films": 400,
+     "mean_adjusted": 0.06285646269716198,
+     "median_budget_musd": 23.0,
+     "median_multiple": 2.1042592465625964
+    },
+    "3": {
+     "films": 502,
+     "mean_adjusted": 0.1363027058381929,
+     "median_budget_musd": 20.0,
+     "median_multiple": 2.162381727827468
+    },
+    "4": {
+     "films": 394,
+     "mean_adjusted": -0.03680663471266565,
+     "median_budget_musd": 22.6,
+     "median_multiple": 2.034791144073514
+    },
+    "5": {
+     "films": 627,
+     "mean_adjusted": 0.049603173871037375,
+     "median_budget_musd": 16.0,
+     "median_multiple": 2.2666666666666666
+    },
+    "6": {
+     "films": 440,
+     "mean_adjusted": 0.2502495257134933,
+     "median_budget_musd": 35.0,
+     "median_multiple": 2.8585884239914248
+    },
+    "7": {
+     "films": 480,
+     "mean_adjusted": 0.2802503197631493,
+     "median_budget_musd": 24.0,
+     "median_multiple": 2.4549949083450255
+    },
+    "8": {
+     "films": 548,
+     "mean_adjusted": -0.1476948103284893,
+     "median_budget_musd": 20.0,
+     "median_multiple": 1.7483134730362286
+    },
+    "9": {
+     "films": 940,
+     "mean_adjusted": -0.30558562805639655,
+     "median_budget_musd": 15.0,
+     "median_multiple": 1.441665703275208
+    },
+    "10": {
+     "films": 519,
+     "mean_adjusted": -0.14180147870877235,
+     "median_budget_musd": 20.0,
+     "median_multiple": 1.814054054054054
+    },
+    "11": {
+     "films": 428,
+     "mean_adjusted": 0.10039168759944753,
+     "median_budget_musd": 30.0,
+     "median_multiple": 2.2021656007969366
+    },
+    "12": {
+     "films": 568,
+     "mean_adjusted": 0.08045556194786863,
+     "median_budget_musd": 30.0,
+     "median_multiple": 2.336211594737218
+    }
+   },
+   "sample_to_check": [
+    {
+     "title": "The Social Network",
+     "year": 2010,
+     "month": 9
+    },
+    {
+     "title": "Harry Potter and the Deathly Hallows: Part 1",
+     "year": 2010,
+     "month": 11
+    },
+    {
+     "title": "Batman Begins",
+     "year": 2005,
+     "month": 5
+    },
+    {
+     "title": "Good Will Hunting",
+     "year": 1997,
+     "month": 12
+    },
+    {
+     "title": "Fight Club",
+     "year": 1999,
+     "month": 9
+    },
+    {
+     "title": "Sweeney Todd: The Demon Barber of Fleet Street",
+     "year": 2007,
+     "month": 12
+    },
+    {
+     "title": "Fantastic Four: Rise of the Silver Surfer",
+     "year": 2007,
+     "month": 6
+    },
+    {
+     "title": "About Time",
+     "year": 2013,
+     "month": 6
+    },
+    {
+     "title": "The Last Samurai",
+     "year": 2003,
+     "month": 11
+    },
+    {
+     "title": "The Terminator",
+     "year": 1984,
+     "month": 10
+    },
+    {
+     "title": "Constantine",
+     "year": 2005,
+     "month": 2
+    },
+    {
+     "title": "Hugo",
+     "year": 2011,
+     "month": 10
+    },
+    {
+     "title": "Logan",
+     "year": 2017,
+     "month": 2
+    },
+    {
+     "title": "Toy Story 2",
+     "year": 1999,
+     "month": 11
+    },
+    {
+     "title": "Ant-Man and the Wasp",
+     "year": 2018,
+     "month": 6
+    },
+    {
+     "title": "Fargo",
+     "year": 1996,
+     "month": 3
+    },
+    {
+     "title": "The Lion King",
+     "year": 1994,
+     "month": 6
+    },
+    {
+     "title": "Salt",
+     "year": 2010,
+     "month": 7
+    },
+    {
+     "title": "The Perks of Being a Wallflower",
+     "year": 2012,
+     "month": 9
+    },
+    {
+     "title": "Bohemian Rhapsody",
+     "year": 2018,
+     "month": 10
+    },
+    {
+     "title": "Captain America: Civil War",
+     "year": 2016,
+     "month": 4
+    },
+    {
+     "title": "Poor Things",
+     "year": 2023,
+     "month": 9
+    },
+    {
+     "title": "Catch Me If You Can",
+     "year": 2002,
+     "month": 12
+    },
+    {
+     "title": "Mission: Impossible",
+     "year": 1996,
+     "month": 5
+    },
+    {
+     "title": "John Wick: Chapter 3 - Parabellum",
+     "year": 2019,
+     "month": 5
+    }
+   ]
+  },
+  "with_controls": {
+   "films": 6440,
+   "controls": "follows another film, release month",
+   "variance_of_adjusted_explained_by_follows_and_month": 0.035960378225647904,
+   "by_follows_alone": 0.023831901227060026,
+   "by_full_flag_alone": 0.0956464797243215,
+   "by_full_flag_follows_and_month": 0.10563308626286538,
+   "tags": {
+    "films": 4270,
+    "rho_between_before_and_after": 0.9381287278839201,
+    "median_abs_rho_content": {
+     "before": 0.0665415487930957,
+     "after": 0.06543372619755466
+    },
+    "top_40_content_same_sign": 1.0,
+    "top_40_content_mean_shrink": 0.9345956063991601,
+    "commercial": {
+     "sequel": {
+      "before": 0.25777418290515575,
+      "after": 0.14739953051247398
+     },
+     "franchise": {
+      "before": 0.13511708338393996,
+      "after": 0.032218183174477236
+     },
+     "sequels": {
+      "before": 0.20340183274803095,
+      "after": 0.09660664638706729
+     },
+     "series": {
+      "before": 0.1712607325290193,
+      "after": 0.08016948465263403
+     },
+     "trilogy": {
+      "before": 0.19707302942951138,
+      "after": 0.13351002977300702
+     }
+    },
+    "largest_changes": [
+     {
+      "tag": "sequel",
+      "before": 0.25777418290515575,
+      "after": 0.14739953051247398
+     },
+     {
+      "tag": "sequels",
+      "before": 0.20340183274803095,
+      "after": 0.09660664638706729
+     },
+     {
+      "tag": "franchise",
+      "before": 0.13511708338393996,
+      "after": 0.032218183174477236
+     },
+     {
+      "tag": "series",
+      "before": 0.1712607325290193,
+      "after": 0.08016948465263403
+     },
+     {
+      "tag": "crappy sequel",
+      "before": -0.011842687197026774,
+      "after": -0.09976584174472301
+     },
+     {
+      "tag": "prequel",
+      "before": 0.11467902252670564,
+      "after": 0.03018917689738892
+     },
+     {
+      "tag": "bad sequel",
+      "before": 0.09156509857257213,
+      "after": 0.007162838943208219
+     },
+     {
+      "tag": "good sequel",
+      "before": 0.07643429201662838,
+      "after": -0.0034265036825577083
+     },
+     {
+      "tag": "not as good as the first",
+      "before": 0.11802907567286056,
+      "after": 0.03950927354782317
+     },
+     {
+      "tag": "mad scientist",
+      "before": 0.025359349618467603,
+      "after": -0.05231738879837942
+     }
+    ],
+    "strict_full_flag": {
+     "top_40_content_same_sign": 1.0,
+     "top_40_content_mean_shrink": 0.7962755329070234,
+     "sequel": 0.025985895783361353
+    }
+   },
+   "genre_shares": {
+    "Action": {
+     "before": -0.0029407369123498625,
+     "after": -0.05386779999378743,
+     "strict": -0.10527490356152033
+    },
+    "Adventure": {
+     "before": 0.07451956419490503,
+     "after": 0.018217890863856643,
+     "strict": -0.038996859390249536
+    },
+    "Animation": {
+     "before": -0.0732580361062513,
+     "after": -0.10965118362400683,
+     "strict": -0.16629810820809085
+    },
+    "Biography": {
+     "before": -0.023413973329300435,
+     "after": 0.029059629907604804,
+     "strict": 0.09522942193775168
+    },
+    "Comedy": {
+     "before": 0.06371236436314218,
+     "after": 0.03958662971696835,
+     "strict": 0.02921758478044929
+    },
+    "Crime": {
+     "before": -0.05678796183218141,
+     "after": -0.04160268606207543,
+     "strict": -0.021976847127788374
+    },
+    "Documentary": {
+     "before": -0.13168524628965358,
+     "after": -0.0864732882724341,
+     "strict": -0.033877496812671555
+    },
+    "Drama": {
+     "before": -0.06244010097158689,
+     "after": 0.006233625758884802,
+     "strict": 0.0901117137676846
+    },
+    "Family": {
+     "before": 0.18352016753123374,
+     "after": 0.13864957188561444,
+     "strict": 0.07491175986543944
+    },
+    "Fantasy": {
+     "before": -0.03951701125198096,
+     "after": -0.08591208782383158,
+     "strict": -0.12898495580335065
+    },
+    "Film-Noir": {
+     "before": -0.15131364346529025,
+     "after": -0.10697329569514451,
+     "strict": -0.07629093471906997
+    },
+    "History": {
+     "before": 0.04153837601454997,
+     "after": 0.07513792880141626,
+     "strict": 0.10690683042790804
+    },
+    "Horror": {
+     "before": -0.13566210453906571,
+     "after": -0.15222742284596527,
+     "strict": -0.18906316578752427
+    },
+    "Music": {
+     "before": -0.055918458857450754,
+     "after": -0.06004540342561154,
+     "strict": -0.07991112746306134
+    },
+    "Musical": {
+     "before": -0.05230133774020493,
+     "after": -0.04198067008727764,
+     "strict": -0.03428389755434309
+    },
+    "Mystery": {
+     "before": -0.06625960457924568,
+     "after": -0.03803973501014156,
+     "strict": -0.008312478974146996
+    },
+    "Romance": {
+     "before": 0.05670154697882958,
+     "after": 0.06080919287532726,
+     "strict": 0.0925025486510957
+    },
+    "Sci-Fi": {
+     "before": -0.16702383421911554,
+     "after": -0.20791172808334346,
+     "strict": -0.2401911210291322
+    },
+    "Sport": {
+     "before": 0.08988675982166243,
+     "after": 0.07925383076839998,
+     "strict": 0.07314304087614452
+    },
+    "Thriller": {
+     "before": 0.01274046241200773,
+     "after": 0.030277618570913767,
+     "strict": 0.03739252289806123
+    },
+    "War": {
+     "before": 0.019755260372111425,
+     "after": 0.021996136663370015,
+     "strict": 0.02532558183060957
+    },
+    "Western": {
+     "before": -0.20245595662023846,
+     "after": -0.22093582979826973,
+     "strict": -0.2105688064585085
+    }
+   },
+   "content_tags_r2": {
+    "before": {
+     "random_folds": 0.34753681805063863,
+     "in_time": 0.2514069119974167
+    },
+    "after": {
+     "random_folds": 0.32099374566817296,
+     "in_time": 0.2173850168830791
+    }
+   }
+  }
+ }
+}
