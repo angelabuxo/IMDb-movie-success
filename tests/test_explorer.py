@@ -177,7 +177,8 @@ def widget(at: AppTest, kind: str, label: str):
 
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
-         ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"), ("embedding_page", "embeddings")]
+         ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"), ("embedding_page", "embeddings"),
+         ("pipeline_page", "pipeline")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -190,7 +191,7 @@ def test_app_registers_every_page(explorer):
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution", "calendar",
+    assert {"home", "pipeline", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution", "calendar",
             "tags", "followups", "data", "checks"} <= set(nav.PAGES)
 
 

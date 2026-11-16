@@ -14,12 +14,14 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st  # noqa: E402
 
-from explorer import attribution_page, embedding_page, graph_pages, nav, pages  # noqa: E402
+from explorer import attribution_page, embedding_page, graph_pages, nav, pages, pipeline_page  # noqa: E402
 
 st.set_page_config(page_title="Movie profit explorer", page_icon="🎬", layout="wide")
 
 P = {
     "home": st.Page(pages.home, title="Home", icon=":material/home:", url_path="home", default=True),
+    "pipeline": st.Page(pipeline_page.pipeline, title="Data pipeline", icon=":material/account_tree:",
+                        url_path="pipeline"),
     "arcs": st.Page(pages.arcs, title="Screenplay arcs", icon=":material/show_chart:", url_path="arcs"),
     "text": st.Page(pages.text, title="Screenplay text", icon=":material/text_fields:", url_path="text"),
     "embeddings": st.Page(embedding_page.embeddings, title="Text embeddings", icon=":material/scatter_plot:",
@@ -41,7 +43,7 @@ nav.PAGES.clear()
 nav.PAGES.update(P)
 
 st.navigation({
-    "Overview": [P["home"]],
+    "Overview": [P["home"], P["pipeline"]],
     "Notebooks": [P["arcs"], P["text"], P["embeddings"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
     "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"], P["checks"]],

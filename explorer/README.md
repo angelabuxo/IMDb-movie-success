@@ -23,6 +23,7 @@ The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `ana
 | Page | What it shows | Where it comes from |
 |---|---|---|
 | Home | Data status and sample sizes | `data/raw/features/graph/nodes.csv` |
+| Data pipeline | Each cleaning and processing step at a glance: a flow diagram from sources to analyses, what each step does, drops and can miss, the clean-rule funnel (checked against the clean flag in `nodes.csv`), the clean sample each analysis started from, and each analysis's own text-cleaning counts | `movies_features_10k.csv` and `nodes.csv` for the funnel; `analysis/*/outputs` summaries for the rest |
 | Screenplay arcs | Every step of `notebooks/arcs/` | The step modules' `load()`, `tables()`, `figures()` and `reading()`, the same calls the notebooks and `site/arcs` make |
 | Screenplay text | Every step of `notebooks/scripts_text/` | Same as above, from `analysis/scripts_text` |
 | Text embeddings | Reviews, screenplays and summaries against profit and revenue: what the text adds beyond budget, year, genre and franchise against its shuffle null, the checks (TF-IDF, later films, rating, OCR damage, other samples), the similarity network, the words along the direction, a film map and a nearest-films lookup | `analysis/embeddings/outputs`, and the vectors in `data/raw/features/text_vectors` for the map and lookup |
