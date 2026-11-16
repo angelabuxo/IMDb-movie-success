@@ -31,6 +31,7 @@ P = {
                            url_path="attribution"),
     "data": st.Page(pages.inspector, title="Data inspector", icon=":material/table_view:", url_path="data"),
     "checks": st.Page(pages.checks, title="Checks", icon=":material/fact_check:", url_path="checks"),
+    "tmdb": st.Page(pages.tmdb, title="Second money source", icon=":material/compare_arrows:", url_path="tmdb"),
 }
 nav.PAGES.clear()
 nav.PAGES.update(P)
@@ -39,5 +40,5 @@ st.navigation({
     "Overview": [P["home"]],
     "Notebooks": [P["arcs"], P["text"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
-    "Explore and check": [P["profit"], P["attribution"], P["data"], P["checks"]],
+    "Explore and check": [P["profit"], P["attribution"], P["data"], P["checks"], P["tmdb"]],
 }).run()

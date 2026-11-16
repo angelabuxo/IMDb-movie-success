@@ -83,6 +83,6 @@
   },
   "not_downloadable": {
     "opusdata": "Paid extract. Ask sales@opusdata.com; a person has to arrange it.",
-    "tmdb_kaggle": "Don't use until the group settles TMDB's terms, which bar use in connection with machine learning applications."
+    "tmdb_kaggle": "Allowed: TMDB permitted the download by email (reported by Gyula, 16 November 2026; the email isn't in the repo). Not fetched by this script; the Kaggle file needs a Kaggle account. Put it in data/raw/tmdb/ and never commit it."
   }
 }

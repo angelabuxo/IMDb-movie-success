@@ -40,7 +40,7 @@ cd data/raw && mkdir -p features && ../../.venv/bin/python ../../scripts/imdb/pa
 ## What the script can't fetch
 
 - OpusData is a paid extract, so a person has to arrange it with sales@opusdata.com.
-- Don't download the TMDB Kaggle file unless the group has settled TMDB's terms, which bar use in connection with machine learning applications.
+- The TMDB Kaggle file may be downloaded: TMDB said so by email (reported by Gyula on 16 November 2026; the email isn't in the repo). `get_data.py` doesn't fetch it, because it needs a Kaggle account. Never commit the file or a bundle of it: this repo is public. It goes in `data/raw/tmdb/`, and `scripts/imdb/tmdb_compare.py` reads it.
 - Don't scrape IMDb pages, Rotten Tomatoes, Letterboxd, The Numbers or Box Office Mojo. Their terms or robots rules forbid it.
 
 ## Rules

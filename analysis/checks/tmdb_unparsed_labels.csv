@@ -1,0 +1,31 @@
+tconst,missing,category,note,labelled_by
+tt0401233,budget,non_usd,JPY currency template,coding agent 2026-11-16
+tt31969779,budget,non_usd,crore with no currency symbol,coding agent 2026-11-16
+tt0871510,budget,non_usd,rupee figure with a leaked link=yes,coding agent 2026-11-16
+tt0060107,both,non_usd,Soviet roubles written as Rbls,coding agent 2026-11-16
+tt6697582,gross,non_usd,Turkish lira with a decimal comma,coding agent 2026-11-16
+tt3541262,budget,non_usd,KRW currency template,coding agent 2026-11-16
+tt0109759,both,non_usd,CAD written before the number,coding agent 2026-11-16
+tt6537238,budget,non_usd,rouble sign after the number,coding agent 2026-11-16
+tt5813916,both,non_usd,Turkish lira template,coding agent 2026-11-16
+tt2668134,gross,usd_missed,dollar gross computed by a conversion template from yen,coding agent 2026-11-16
+tt0082966,gross,non_usd,Italian lire,coding agent 2026-11-16
+tt0857376,budget,non_usd,AUD currency template,coding agent 2026-11-16
+tt0308152,gross,no_money_figure,number with no currency,coding agent 2026-11-16
+tt7601480,budget,non_usd,RUB template inside a list,coding agent 2026-11-16
+tt10648714,both,non_usd,RUB template,coding agent 2026-11-16
+tt28228231,both,non_usd,BDT conversion template,coding agent 2026-11-16
+tt5456546,budget,non_usd,rupee figure with a leaked link=yes,coding agent 2026-11-16
+tt0118799,budget,non_usd,Italian lire,coding agent 2026-11-16
+tt0082432,budget,non_usd,AUD currency template,coding agent 2026-11-16
+tt0040525,both,no_money_figure,admissions only,coding agent 2026-11-16
+tt2471640,both,non_usd,Turkish lira template,coding agent 2026-11-16
+tt0117420,budget,no_money_figure,"budget given as debated, no figure",coding agent 2026-11-16
+tt3595298,both,non_usd,rupee figure with a leaked link=yes,coding agent 2026-11-16
+tt0803061,budget,non_usd,Australian dollars written $A,coding agent 2026-11-16
+tt7218518,budget,non_usd,crore with no currency symbol,coding agent 2026-11-16
+tt0065761,both,non_usd,Italian lire,coding agent 2026-11-16
+tt0057345,gross,no_money_figure,admissions only,coding agent 2026-11-16
+tt0017136,budget,non_usd,Reichsmark template,coding agent 2026-11-16
+tt0081318,both,non_usd,Italian lire with a converted dollar figure in brackets,coding agent 2026-11-16
+tt0117786,budget,usd_missed,dollar budget given as a lower bound,coding agent 2026-11-16

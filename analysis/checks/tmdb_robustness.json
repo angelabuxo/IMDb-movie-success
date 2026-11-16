@@ -1,0 +1,298 @@
+{
+ "tmdb_films_with_both": 8023,
+ "arcs_step7": {
+  "instrument": "sst2",
+  "covariates": [
+   "log_budget",
+   "mean_sentences_per_scene"
+  ],
+  "flops_wikipedia": 60,
+  "flops_tmdb": 68,
+  "D1": {
+   "reproduce": {
+    "rho": 0.0353,
+    "n": 834,
+    "z": 0.9749,
+    "p": 0.3187,
+    "ci_low": -0.0332,
+    "ci_high": 0.1059
+   },
+   "wikipedia": {
+    "rho": 0.0401,
+    "n": 831,
+    "z": 1.0555,
+    "p": 0.2787,
+    "ci_low": -0.0335,
+    "ci_high": 0.109
+   },
+   "tmdb": {
+    "rho": 0.0304,
+    "n": 831,
+    "z": 0.7568,
+    "p": 0.4026,
+    "ci_low": -0.0435,
+    "ci_high": 0.0995
+   }
+  },
+  "D2": {
+   "reproduce": {
+    "rho": 0.0783,
+    "n": 834,
+    "z": 2.2296,
+    "p": 0.028,
+    "ci_low": 0.0097,
+    "ci_high": 0.1531
+   },
+   "wikipedia": {
+    "rho": 0.0795,
+    "n": 831,
+    "z": 2.2904,
+    "p": 0.016,
+    "ci_low": 0.011,
+    "ci_high": 0.1557
+   },
+   "tmdb": {
+    "rho": 0.0722,
+    "n": 831,
+    "z": 2.0532,
+    "p": 0.03,
+    "ci_low": 0.0008,
+    "ci_high": 0.1489
+   }
+  }
+ },
+ "scripts_and_reviews": {
+  "reproduce": {
+   "films": 6413,
+   "hits_with_script": 537,
+   "flops_with_script": 214,
+   "hit_cut_multiple": 4.055,
+   "features_q_partial_below_005": 3,
+   "features": {
+    "speaking characters": {
+     "rho": -0.0472,
+     "q_partial": 0.1185
+    },
+    "network density": {
+     "rho": 0.0978,
+     "q_partial": 0.0009
+    },
+    "lead's share of lines": {
+     "rho": -0.0566,
+     "q_partial": 0.0783
+    },
+    "degree centralisation": {
+     "rho": -0.1001,
+     "q_partial": 0.0009
+    },
+    "clustering": {
+     "rho": 0.068,
+     "q_partial": 0.0374
+    },
+    "modularity": {
+     "rho": 0.0078,
+     "q_partial": 0.8235
+    },
+    "inequality of lines": {
+     "rho": -0.0574,
+     "q_partial": 0.0783
+    },
+    "scenes": {
+     "rho": -0.0434,
+     "q_partial": 0.1327
+    },
+    "words": {
+     "rho": -0.0433,
+     "q_partial": 0.1327
+    },
+    "speeches per scene": {
+     "rho": 0.0057,
+     "q_partial": 0.8235
+    },
+    "words per speech": {
+     "rho": -0.0498,
+     "q_partial": 0.1074
+    },
+    "dialogue share": {
+     "rho": -0.0353,
+     "q_partial": 0.2257
+    },
+    "mean sentiment": {
+     "rho": 0.0509,
+     "q_partial": 0.1074
+    },
+    "sentiment swing": {
+     "rho": 0.0123,
+     "q_partial": 0.7873
+    },
+    "ending vs average": {
+     "rho": 0.0061,
+     "q_partial": 0.8235
+    }
+   },
+   "review_sentiment": {
+    "rho": 0.1803,
+    "p": 3.89e-40,
+    "n": 5326
+   }
+  },
+  "wikipedia": {
+   "films": 5890,
+   "hits_with_script": 513,
+   "flops_with_script": 222,
+   "hit_cut_multiple": 4.234,
+   "features_q_partial_below_005": 2,
+   "features": {
+    "speaking characters": {
+     "rho": -0.0456,
+     "q_partial": 0.1279
+    },
+    "network density": {
+     "rho": 0.1025,
+     "q_partial": 0.001
+    },
+    "lead's share of lines": {
+     "rho": -0.061,
+     "q_partial": 0.0665
+    },
+    "degree centralisation": {
+     "rho": -0.0983,
+     "q_partial": 0.001
+    },
+    "clustering": {
+     "rho": 0.0613,
+     "q_partial": 0.0665
+    },
+    "modularity": {
+     "rho": -0.0055,
+     "q_partial": 0.8306
+    },
+    "inequality of lines": {
+     "rho": -0.0548,
+     "q_partial": 0.0999
+    },
+    "scenes": {
+     "rho": -0.0462,
+     "q_partial": 0.1279
+    },
+    "words": {
+     "rho": -0.0387,
+     "q_partial": 0.1994
+    },
+    "speeches per scene": {
+     "rho": 0.0128,
+     "q_partial": 0.7147
+    },
+    "words per speech": {
+     "rho": -0.0496,
+     "q_partial": 0.1155
+    },
+    "dialogue share": {
+     "rho": -0.031,
+     "q_partial": 0.3114
+    },
+    "mean sentiment": {
+     "rho": 0.0498,
+     "q_partial": 0.1155
+    },
+    "sentiment swing": {
+     "rho": 0.0085,
+     "q_partial": 0.7949
+    },
+    "ending vs average": {
+     "rho": 0.0153,
+     "q_partial": 0.6896
+    }
+   },
+   "review_sentiment": {
+    "rho": 0.1867,
+    "p": 7.31e-40,
+    "n": 4923
+   }
+  },
+  "tmdb": {
+   "films": 5890,
+   "hits_with_script": 514,
+   "flops_with_script": 241,
+   "hit_cut_multiple": 4.138,
+   "features_q_partial_below_005": 3,
+   "features": {
+    "speaking characters": {
+     "rho": -0.0336,
+     "q_partial": 0.2869
+    },
+    "network density": {
+     "rho": 0.0907,
+     "q_partial": 0.0031
+    },
+    "lead's share of lines": {
+     "rho": -0.0674,
+     "q_partial": 0.0442
+    },
+    "degree centralisation": {
+     "rho": -0.0999,
+     "q_partial": 0.0015
+    },
+    "clustering": {
+     "rho": 0.0561,
+     "q_partial": 0.0733
+    },
+    "modularity": {
+     "rho": 0.0004,
+     "q_partial": 0.9875
+    },
+    "inequality of lines": {
+     "rho": -0.0563,
+     "q_partial": 0.0733
+    },
+    "scenes": {
+     "rho": -0.0426,
+     "q_partial": 0.1843
+    },
+    "words": {
+     "rho": -0.0287,
+     "q_partial": 0.3603
+    },
+    "speeches per scene": {
+     "rho": 0.0117,
+     "q_partial": 0.7496
+    },
+    "words per speech": {
+     "rho": -0.0614,
+     "q_partial": 0.064
+    },
+    "dialogue share": {
+     "rho": -0.0362,
+     "q_partial": 0.266
+    },
+    "mean sentiment": {
+     "rho": 0.0503,
+     "q_partial": 0.1091
+    },
+    "sentiment swing": {
+     "rho": 0.0005,
+     "q_partial": 0.9875
+    },
+    "ending vs average": {
+     "rho": 0.0248,
+     "q_partial": 0.4184
+    }
+   },
+   "review_sentiment": {
+    "rho": 0.1849,
+    "p": 3.97e-39,
+    "n": 4923
+   }
+  },
+  "group_changes": {
+   "flop -> hit": 5,
+   "flop -> middle": 126,
+   "hit -> flop": 6,
+   "hit -> middle": 93,
+   "middle -> flop": 125,
+   "middle -> hit": 94
+  },
+  "films_same_group": 0.9238
+ },
+ "not_covered": "network results: their predictors use earlier films' Wikipedia returns"
+}

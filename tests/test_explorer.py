@@ -146,7 +146,7 @@ def widget(at: AppTest, kind: str, label: str):
 
 
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
-         ("pages", "inspector"), ("pages", "checks"), ("graph_pages", "whole_graph"),
+         ("pages", "inspector"), ("pages", "checks"), ("pages", "tmdb"), ("graph_pages", "whole_graph"),
          ("graph_pages", "node"), ("graph_pages", "screenplays")]
 
 
@@ -160,7 +160,7 @@ def test_app_registers_every_page(explorer):
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "attribution", "data", "checks"} <= set(nav.PAGES)
+    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "attribution", "data", "checks", "tmdb"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))

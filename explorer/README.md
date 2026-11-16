@@ -33,6 +33,7 @@ The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `ana
 | Profit attribution | Optional. How a film's return splits between budget, year, genre, franchise, each person and company on it, and what's left: shares by role against a shuffle null, a table of people and companies with bootstrap intervals, one film as a dollar waterfall, three profit measures compared, and the checks. A sidebar slider sets the share of gross the studio keeps | `analysis/attribution/outputs/` (no raw data needed) |
 | Data inspector | Any CSV, TSV, Parquet or JSON file: rows with a text filter, column types and missing values, one column's distribution, duplicate keys | `data/raw/features`, `features/graph`, every outputs folder |
 | Checks | Automatic sanity checks (stale outputs, unique IDs, budget and gross, README counts, run-together names) and a button that runs `pytest` | Everything above |
+| Second money source | Wikipedia's budget and gross against TMDB's: agreement by tier, how far apart the figures are, and (with the TMDB file on your machine) a film-by-film scatter and the largest disagreements | `analysis/checks/tmdb_compare.json`, `data/raw/features/tmdb_compare.csv` |
 
 ## Notes
 
