@@ -621,7 +621,7 @@ def test_embedding_page_widgets(explorer, corpus):
     """The text embeddings page with each corpus in the word list, the film map and the neighbour lookup.
     (Streamlit runs every tab's code on each run, so this covers all tabs.)"""
     at = page("embedding_page", "embeddings", {"emb_words_corpus": corpus, "emb_map_corpus": corpus,
-                                                "emb_map_color": "year", "emb_nb_corpus": corpus,
+                                                "emb_map_color": "year", "emb_nb_corpus": corpus, "emb_leak_corpus": corpus,
                                                 "emb_nb_variant": "raw"})
     ok(at)
 

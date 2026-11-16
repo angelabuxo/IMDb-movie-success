@@ -41,7 +41,8 @@ def embeddings():
         return
     res = _load(mtime(OUTPUTS / "s03_results.csv"))
     r, say = res["results"], R.reading(res)
-    t = st.tabs(["Result", "Checks", "Cleaning", "Network", "Words", "Film map", "Neighbours", "All measurements"])
+    t = st.tabs(["Result", "Checks", "Cleaning", "Network", "Words", "Leak checks", "Film map", "Neighbours",
+                 "All measurements"])
 
     with t[0]:
         st.plotly_chart(R.fig_net(res), width="stretch")
@@ -85,6 +86,9 @@ def embeddings():
         show_df(R.words_table(res["words"], c), key="emb_words")
 
     with t[5]:
+        leaks()
+
+    with t[6]:
         c1, c2, c3 = st.columns(3)
         corpus = c1.selectbox("Corpus", R.CORPORA, format_func=R.LABEL.get, key="emb_map_corpus")
         variant = c2.radio("Text", ["clean", "raw"], horizontal=True, key="emb_map_variant")
@@ -97,11 +101,34 @@ def embeddings():
         else:
             st.plotly_chart(R.fig_map(d, corpus, color), width="stretch")
 
-    with t[6]:
+    with t[7]:
         neighbours()
 
-    with t[7]:
+    with t[8]:
         show_df(r, key="emb_all", caption="analysis/embeddings/outputs/s03_results.csv")
+
+
+def leaks():
+    """Names that slipped through the cleaning, and entity tags in the Tag Genome (s04, tag_entity_check)."""
+    import json
+    if not (OUTPUTS / "s04_leaks.csv").exists():
+        st.info("Run `python -m analysis.embeddings.s04_leak_audit` and `tag_entity_check`.")
+        return
+    c = st.radio("Corpus", R.CORPORA, format_func=R.LABEL.get, horizontal=True, key="emb_leak_corpus")
+    st.caption("Top 50 words at each end. * capitalised in 80%+ of uses, † used by fewer than 30 films. A flag "
+               "is a prompt to read the word: places, agencies and nationalities are capitalised too.")
+    show_df(R.leak_table(c), key="emb_leak_table")
+    if (OUTPUTS / "tag_entity_check.csv").exists():
+        st.subheader("Entity tags in the Tag Genome")
+        flags, ext = R.tag_entities()
+        show_df(flags, key="emb_tag_flags", caption="The three flags against the hand labels of the 922 content tags")
+        show_df(ext, key="emb_tag_ext", caption="Entity tags in the top or bottom 25 of the tag-profit result")
+    p = OUTPUTS / "tag_entity_typing.json"
+    if p.exists():
+        typing = json.loads(p.read_text())
+        st.caption("Entity typing in context against the same hand labels")
+        show_df(pd.DataFrame({m: {k: v[k] for k in ("precision", "recall", "kappa", "tp", "fp", "fn")}
+                              for m, v in typing.items()}).T.reset_index(names="model"), key="emb_typing")
 
 
 def neighbours():

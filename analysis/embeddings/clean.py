@@ -16,6 +16,8 @@ import re
 import unicodedata
 from collections import Counter
 
+import pandas as pd
+
 TAG = re.compile(r"<[^<>]{1,80}>")
 URL = re.compile(r"https?://\S+|www\.\S+")
 WS = re.compile(r"\s+")
@@ -114,7 +116,17 @@ def people_pattern(names: list[str]) -> re.Pattern | None:
             alts.append(re.escape(parts[0]))
     if not alts:
         return None
-    return re.compile(r"(?<![A-Za-z])(?:" + "|".join(sorted(set(alts), key=len, reverse=True)) + r")(?:'s)?(?![A-Za-z])")
+    return re.compile(r"(?<![A-Za-z])(?:" + "|".join(sorted(set(alts), key=len, reverse=True))
+                      + r")(?:'s|s'|es|s)?(?![A-Za-z])")     # "Coen's", "the Coens", "the Joneses"
+
+
+def extra_names_pattern(names: list[str]) -> re.Pattern | None:
+    """Names added by hand after the leak audit (s04), matched with a capital letter, plural or possessive."""
+    names = [n for n in names if n]
+    if not names:
+        return None
+    return re.compile(r"(?<![A-Za-z])(?:" + "|".join(map(re.escape, sorted(names, key=len, reverse=True)))
+                      + r")(?:'s|s'|es|s)?(?![A-Za-z])")
 
 
 def mask(text: str, pattern: re.Pattern | None, placeholder: str) -> tuple[str, int]:
@@ -123,11 +135,202 @@ def mask(text: str, pattern: re.Pattern | None, placeholder: str) -> tuple[str, 
     return pattern.subn(placeholder, text)
 
 
-def clean_review(raw: str, title_pat, people_pat, name_ph: str, title_ph: str) -> tuple[str, dict]:
+def clean_review(raw: str, title_pat, people_pat, name_ph: str, title_ph: str,
+                 others: "OtherNames | None" = None) -> tuple[str, dict]:
     t, dropped, seen = drop_money_sentences(basic(raw))
     t, n_title = mask(t, title_pat, title_ph)
     t, n_people = mask(t, people_pat, name_ph)
-    return WS.sub(" ", t).strip(), {"sentences": seen, "money_sentences": dropped, "titles": n_title, "people": n_people}
+    n_other = {"other_titles": 0, "other_people": 0}
+    if others is not None:
+        t, n_other = others.mask(t)
+    return WS.sub(" ", t).strip(), {"sentences": seen, "money_sentences": dropped, "titles": n_title,
+                                    "people": n_people, **n_other}
+
+
+# ------------------------------------------------------------------ other films' titles and people
+
+# Small words a title or name may hold in lower case ("The Lord of the Rings", "Guillermo del Toro")
+JOINERS = {"of", "the", "and", "a", "an", "in", "on", "to", "for", "at", "with", "from", "de", "del", "da", "van",
+           "von", "der", "le", "la", "di", "du", "&"}
+GAP = re.compile(r"\s+|\s*[-:]\s*|\s*&\s*")
+
+
+def _key(words) -> tuple[str, ...]:
+    return tuple(w.lower() for w in words)
+
+
+def _variants(w: str) -> list[str]:
+    """A word and the forms it could be the plural or possessive of: Coens -> coen, Joneses -> jones."""
+    w = w.lower()
+    out = [w]
+    for suf in ("'s", "s'", "es", "s"):
+        if w.endswith(suf) and len(w) - len(suf) >= 3:
+            out.append(w[: -len(suf)])
+    return out
+
+
+class OtherNames:
+    """Masks the titles of any film and the names of any person in a reference list, inside text about some
+    other film: "better than The Shawshank Redemption", "the Coens' best".
+
+    - Phrases (titles and full names of two words or more) match in title case: every word capitalised
+      except small joiners, so "the end" or "will smith a door" are left alone.
+    - Single words (a surname or a word from a title on its own, "Shawshank", "Spielberg") match only if the
+      corpus statistics in `singles` say the word is distinctive: written with a capital almost always, and
+      used as part of the full title or name a large share of the time. That keeps "Paris", "Christmas" or
+      "John", which are common in titles and names but mean something on their own.
+    """
+
+    def __init__(self, phrases: dict[tuple[str, ...], str], singles: dict[str, str] | None = None):
+        self.phrases = phrases
+        self.singles = singles or {}
+        self.max_len = max((len(k) for k in phrases), default=1)
+
+    def _phrase_at(self, toks, i):
+        if not toks[i].group()[:1].isupper():
+            return None
+        for n in range(min(self.max_len, len(toks) - i), 1, -1):
+            words = [t.group() for t in toks[i:i + n]]
+            if not words[-1][:1].isupper():
+                continue
+            if any(not (w[:1].isupper() or w.lower() in JOINERS) for w in words):
+                continue
+            if any(not GAP.fullmatch(toks[j].string[toks[j].end():toks[j + 1].start()]) for j in range(i, i + n - 1)):
+                continue
+            kind = self.phrases.get(_key(words))
+            if kind:
+                return n, kind
+        return None
+
+    def matches(self, text: str):
+        """(start, end, kind, words) for every match, longest phrase first, left to right."""
+        toks = list(WORD.finditer(text))
+        i, out = 0, []
+        while i < len(toks):
+            hit = self._phrase_at(toks, i)
+            if hit:
+                n, kind = hit
+                out.append((toks[i].start(), toks[i + n - 1].end(), kind, [t.group() for t in toks[i:i + n]]))
+                i += n
+                continue
+            w = toks[i].group()
+            if w[:1].isupper():
+                kind = next((self.singles[v] for v in _variants(w) if v in self.singles), None)
+                if kind:
+                    out.append((toks[i].start(), toks[i].end(), kind, [w]))
+            i += 1
+        return out
+
+    def mask(self, text: str, placeholders: dict[str, str] | None = None) -> tuple[str, dict]:
+        ph = placeholders or {"title": "another film", "person": "Person"}
+        parts, last, n = [], 0, {"other_titles": 0, "other_people": 0}
+        for a, b, kind, _ in self.matches(text):
+            parts.append(text[last:a] + ph[kind])
+            last = b
+            n["other_titles" if kind == "title" else "other_people"] += 1
+        parts.append(text[last:])
+        return "".join(parts), n
+
+
+def name_phrases(titles: list[str], people: list[str], min_title_chars: int = 8) -> dict[tuple[str, ...], str]:
+    """Full titles (two words or more, without the year) and full names (two words or more)."""
+    out = {}
+    for t in titles:
+        t = re.sub(r"\s*\(\d{4}\)\s*$", "", t or "").strip()
+        m = re.match(r"^(.*), (The|A|An)$", t)
+        if m:
+            t = f"{m.group(2)} {m.group(1)}"
+        w = WORD.findall(t)
+        if len(w) >= 2 and len(t) >= min_title_chars:
+            bare = w[1:] if w[0].lower() in ("the", "a", "an") else w
+            for form in (w, bare, ["The"] + bare):     # reviewers add or drop the article
+                if len(form) >= 2:
+                    out[_key(form)] = "title"
+    for p in people:
+        w = WORD.findall(p or "")
+        if len(w) >= 2:
+            out.setdefault(_key(w), "person")
+    return out
+
+
+COMMON_PROPER = {"GPE", "LOC", "NORP", "DATE", "EVENT", "FAC", "LANGUAGE", "TIME"}
+
+
+def drop_places_and_dates(phrases: dict[tuple[str, ...], str], singles: dict[str, str], nlp,
+                          max_words: int = 3) -> tuple[dict, dict, list[str]]:
+    """Leave out titles and name words that are, on their own, a place, a nationality, a date or an event
+    ("New York", "Christmas", "Friday", "Paris"): masking them as a film or a person would delete meaning.
+    spaCy's NER reads each candidate alone, title-cased; only short phrases are checked."""
+    short = [k for k, kind in phrases.items() if len(k) <= max_words and kind == "title"]
+    cands = [" ".join(w.capitalize() for w in k) for k in short] + [w.capitalize() for w in singles]
+    keys = short + [(w,) for w in singles]
+    drop = set()
+    for key, doc in zip(keys, nlp.pipe(cands, batch_size=2000)):
+        if len(doc.ents) == 1 and doc.ents[0].label_ in COMMON_PROPER and len(doc.ents[0]) == len(doc):
+            drop.add(key)
+    phrases = {k: v for k, v in phrases.items() if k not in drop}
+    singles = {w: v for w, v in singles.items() if (w,) not in drop}
+    return phrases, singles, sorted(" ".join(k) for k in drop)
+
+
+def context_labels(texts, words: set[str], nlp, per_word: int = 20) -> dict[str, str]:
+    """The entity label spaCy gives each word in context: up to `per_word` sentences that use it, capitalised,
+    and the most common label of the word's token there ("" when it isn't part of an entity). Read in context,
+    "Tarantino" is a PERSON and "Paris" a GPE, which spaCy can't tell from the bare word."""
+    found = {w: [] for w in words}
+    for t in texts:
+        for sent in sentences(t):
+            for w in WORD.findall(sent):
+                if not w[:1].isupper():
+                    continue
+                v = next((x for x in _variants(w) if x in found), None)
+                if v and len(found[v]) < per_word and sent not in found[v]:
+                    found[v].append(sent[:400])
+        if all(len(v) >= per_word for v in found.values()):
+            break
+    jobs = [(w, x) for w, xs in found.items() for x in xs]
+    votes = {w: Counter() for w in words}
+    for (w, _), doc in zip(jobs, nlp.pipe([x for _, x in jobs], batch_size=256)):
+        labs = [tok.ent_type_ for tok in doc if w in _variants(tok.text)]
+        if labs:
+            votes[w][labs[0]] += 1
+    return {w: (c.most_common(1)[0][0] if c else "") for w, c in votes.items()}
+
+
+def distinctive_singles(texts, phrases: dict[tuple[str, ...], str], min_count: int, max_lower: float,
+                        min_share: float, min_len: int,
+                        famous: set[str] | frozenset = frozenset()) -> tuple[dict[str, str], pd.DataFrame]:
+    """Single words from titles and names that can be masked on their own (see OtherNames). For every word
+    of every phrase it counts, over the texts: how often it appears, how often in lower case, and how often
+    as part of a full phrase. Returns the words kept and the table of counts, for checking."""
+    kinds = {}
+    for k, kind in phrases.items():
+        for w in k:
+            if len(w) >= min_len and w not in JOINERS:
+                kinds.setdefault(w, set()).add(kind)
+    total, lower, inside = Counter(), Counter(), Counter()
+    finder = OtherNames(phrases)
+    for t in texts:
+        for w in WORD.findall(t):
+            for v in dict.fromkeys(_variants(w)):
+                if v in kinds:
+                    total[v] += 1
+                    lower[v] += w.islower()
+                    break
+        for _, _, _, words in finder.matches(t):
+            for w in words:
+                if w.lower() in kinds:
+                    inside[w.lower()] += 1
+    rows = [{"word": w, "count": total[w], "lower_share": lower[w] / total[w], "share_in_full_phrase": inside[w] / total[w],
+             "kind": "person" if "person" in kinds[w] else "title"} for w in total if total[w] >= min_count]
+    tab = pd.DataFrame(rows)
+    if tab.empty:
+        return {}, tab
+    # Famous surnames (many credits) are used alone far more than with the first name ("the Coens",
+    # "Tarantino's"), so for them being capitalised is enough.
+    tab["famous_surname"] = tab.word.isin(famous)
+    tab["masked"] = (tab.lower_share <= max_lower) & ((tab.share_in_full_phrase >= min_share) | tab.famous_surname)
+    return dict(zip(tab.word[tab.masked], tab.kind[tab.masked])), tab.sort_values("count", ascending=False)
 
 
 # ------------------------------------------------------------------ screenplays

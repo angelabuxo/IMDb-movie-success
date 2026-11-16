@@ -1,0 +1,1085 @@
+tag,class,hand_label,capitalised,capitalised_share,mentions,genome_name,few_films,films_high,rho_adjusted,q_adjusted,rho_adjusted_votes,rank_rho_adjusted_of_content,rank_rho_adjusted_votes_of_content
+007,content,franchise,False,,0,False,True,15,0.2192,0.0015,-0.0306,33.0,337.0
+007 (series),commercial,,False,,0,False,True,15,0.1329,0.0015,0.0849,,
+18th century,content,,False,0.0,146,False,False,56,0.1255,0.0015,-0.0073,190.0,287.0
+1920s,content,,False,0.0,138,False,False,46,0.0999,0.0015,-0.1125,267.0,530.0
+1930s,content,,False,0.0,301,False,False,89,0.0042,0.8176,-0.0951,576.0,479.0
+1950s,content,,False,0.0,546,False,False,38,0.0571,0.0015,-0.1427,388.0,596.0
+1960s,content,,False,0.0,496,False,False,59,0.0248,0.1205,-0.1122,516.0,528.5
+1970s,content,,False,0.0,675,False,False,489,-0.0094,0.5698,-0.191,619.5,714.5
+1980s,content,,False,0.0,921,False,False,227,0.0228,0.1701,-0.1281,520.0,562.0
+19th century,content,,False,0.0,359,False,True,26,-0.0498,0.0044,-0.1318,747.0,567.5
+3d,content,,False,0.0,2978,False,False,106,0.1313,0.0015,0.1668,172.0,59.0
+70mm,content,,False,0.0,40,False,False,123,0.0749,0.0015,0.0468,339.0,208.0
+80s,content,,False,0.0,3553,False,False,265,0.0263,0.1197,0.0322,509.0,229.0
+9/11,content,,False,,0,False,True,10,0.0532,0.0015,0.0196,402.5,250.0
+aardman,content,studio,True,0.9915,118,False,True,4,0.0259,0.1041,0.1012,510.0,130.0
+abortion,content,,False,0.025,320,False,True,7,0.0479,0.0015,-0.0068,422.5,284.0
+absurd,content,,False,0.015,1536,False,False,431,-0.0253,0.1175,-0.2241,679.5,782.0
+action,content,,False,0.036,42767,False,False,1237,0.1215,0.0015,-0.0003,201.0,273.5
+action packed,content,,False,0.0435,712,False,False,700,0.2026,0.0015,0.0422,49.0,212.0
+adaptation,content,,False,0.05,3119,False,False,641,0.0365,0.0275,-0.1617,473.0,640.0
+adapted from:book,content,,False,,0,False,False,1197,0.0991,0.0015,-0.0756,270.5,441.5
+adapted from:comic,content,,False,,0,False,False,131,0.0413,0.0162,0.1224,442.0,105.5
+adapted from:game,content,,False,,0,False,True,21,-0.0404,0.0111,0.0901,720.0,140.0
+addiction,content,,False,0.0266,714,False,False,164,-0.1164,0.0015,-0.1969,872.5,730.0
+adolescence,content,,False,0.0149,201,False,False,440,0.0451,0.0015,-0.1549,432.0,623.0
+adoption,content,,False,0.0047,213,False,False,82,0.105,0.0015,0.1656,248.0,61.0
+adultery,content,,False,0.0579,190,False,False,192,-0.0432,0.0085,-0.1896,731.0,707.0
+adventure,content,,False,0.0802,5174,False,False,778,0.184,0.0015,0.0616,66.0,184.0
+affectionate,content,,False,0.0067,149,False,False,224,0.0773,0.0015,-0.1224,331.0,555.0
+afi 100,reception,,True,1.0,2,False,True,0,0.0412,0.0085,-0.0957,,
+afi 100 (movie quotes),reception,,False,,0,False,False,37,0.1671,0.0015,-0.0262,,
+africa,content,,True,0.9946,1109,False,False,56,0.1954,0.0015,0.1046,61.0,124.0
+afterlife,content,,False,0.2339,248,False,False,69,0.0522,0.0015,0.1095,407.0,116.0
+aging,content,,False,0.0138,940,False,False,52,0.0509,0.0015,-0.1012,410.5,496.5
+aids,content,,False,0.7441,426,False,False,47,0.1211,0.0015,-0.0057,208.0,282.0
+airplane,content,,False,0.4479,681,False,True,3,0.1339,0.0015,0.0217,164.0,247.0
+airport,content,,False,0.1469,810,False,True,13,0.1116,0.0015,-0.053,228.0,396.0
+alaska,content,,True,0.991,333,False,True,11,0.0836,0.0015,0.0691,309.0,169.0
+alcatraz,content,,True,0.9833,120,False,True,5,0.1873,0.0015,0.1033,65.0,127.0
+alcoholism,content,,False,0.0095,211,False,False,44,-0.0486,0.0058,-0.2091,742.0,751.5
+alien,content,,False,0.3086,4002,False,False,189,0.0918,0.0015,-0.028,292.0,329.0
+alien invasion,content,,False,0.0926,162,True,False,125,0.1025,0.0015,-0.0277,255.5,327.0
+aliens,content,,False,0.2399,2555,False,False,175,0.1249,0.0015,-0.1473,192.0,606.0
+allegory,content,,False,0.0326,307,False,False,552,-0.035,0.0175,-0.2755,705.0,876.0
+almodovar,content,person,True,0.9969,324,False,True,4,-0.149,0.0015,-0.0856,898.0,458.0
+alone in the world,content,,False,0.0,20,False,False,76,0.0051,0.7829,-0.207,569.0,747.0
+alter ego,content,,False,0.0,188,True,False,205,0.0915,0.0015,0.0586,294.0,190.5
+alternate endings,content,,False,0.04,25,False,False,260,0.0762,0.0015,-0.1388,334.0,587.0
+alternate history,content,,False,0.0,8,False,False,530,0.0501,0.003,-0.1242,414.0,560.0
+alternate reality,content,,False,0.0638,47,False,False,273,-0.0787,0.0015,-0.0729,812.0,432.0
+alternate universe,content,,False,0.0196,51,False,False,159,0.1672,0.0015,-0.0008,96.5,275.0
+amazing cinematography,reception,,False,0.0278,36,False,False,69,0.15,0.0015,-0.1702,,
+amazing photography,reception,,False,0.0,3,False,False,351,0.1386,0.0015,-0.1639,,
+american civil war,content,,True,0.9825,57,False,True,16,0.1444,0.0015,0.1239,143.0,104.0
+amnesia,content,,False,0.0123,163,False,False,53,0.022,0.1848,-0.0964,524.0,484.0
+amy smart,content,person,True,0.9787,47,True,True,20,0.0401,0.0085,0.0912,451.5,138.0
+android(s)/cyborg(s),content,,False,,0,False,True,21,0.1114,0.0015,0.0099,229.5,262.0
+androids,content,,False,0.1321,53,False,False,34,0.0327,0.0411,-0.1201,485.0,552.0
+animal movie,content,,False,0.1154,26,False,False,90,0.2235,0.0015,0.2828,26.0,14.0
+animals,content,,False,0.0303,2709,False,False,240,0.2079,0.0015,0.2869,40.0,12.0
+animated,content,,False,0.0501,5214,False,False,174,0.2375,0.0015,0.0601,20.0,188.0
+animation,content,,False,0.0507,6981,False,False,229,0.0565,0.0015,0.2041,392.0,37.0
+anime,content,,False,0.0977,972,False,True,26,-0.0882,0.0015,-0.0105,835.5,293.0
+antarctica,content,,True,1.0,77,False,False,301,-0.1097,0.0015,0.0677,866.0,171.0
+anti-hero,content,,False,0.0303,264,False,False,148,0.1006,0.0015,-0.2221,265.0,778.0
+anti-semitism,content,,False,0.0909,77,False,True,20,0.0688,0.0015,-0.1126,352.0,531.0
+anti-war,content,,False,0.0376,213,False,False,45,-0.0465,0.0085,-0.1843,739.0,697.0
+apocalypse,content,,False,0.5701,635,False,False,203,0.1524,0.0015,-0.1579,128.0,633.0
+archaeology,content,,False,0.0,7,False,True,12,0.1694,0.0015,0.0989,90.5,132.0
+argentina,content,,True,1.0,101,False,True,7,-0.0297,0.0686,-0.143,691.5,597.5
+arms dealer,content,,False,0.0,83,False,False,515,-0.1518,0.0015,-0.0261,899.0,321.0
+arnold,content,person,True,0.9941,1529,True,True,19,0.0642,0.0015,0.0995,367.0,131.0
+art,content,,False,0.0952,7429,False,False,653,-0.0609,0.0015,-0.2085,769.0,750.0
+art house,content,,False,0.1221,172,True,False,156,-0.1854,0.0015,-0.2567,914.0,851.0
+artificial intelligence,content,,False,0.3131,99,False,False,54,0.0821,0.0015,-0.1168,312.0,540.5
+artist,content,,False,0.0923,2113,False,False,58,-0.1045,0.0015,-0.198,860.0,731.0
+artistic,content,,False,0.0144,1808,False,False,282,-0.0248,0.111,-0.2671,676.0,868.0
+artsy,content,,False,0.0499,341,False,False,134,-0.0392,0.0187,-0.2675,715.0,869.0
+assassin,content,,False,0.129,961,False,False,363,-0.0327,0.0411,-0.1542,699.0,621.0
+assassination,content,,False,0.1343,700,False,False,268,0.028,0.0805,-0.1835,504.0,696.0
+astronauts,content,,False,0.0732,164,False,False,53,0.0695,0.0015,0.0391,349.0,221.0
+atheism,content,,False,0.1591,44,False,False,33,-0.0044,0.7853,-0.0595,601.0,410.0
+atmospheric,content,,False,0.0248,686,False,False,537,-0.0161,0.3277,-0.2989,647.0,902.0
+australia,content,,True,1.0,680,False,False,104,-0.1188,0.0015,-0.0439,874.0,375.0
+australian,content,,True,0.9989,897,False,False,110,-0.0637,0.0015,0.0864,778.0,148.0
+author:alan moore,content,person,False,,0,True,True,16,0.0001,0.997,-0.1101,590.0,520.0
+author:neil gaiman,content,person,False,,0,True,True,2,-0.0151,0.3821,-0.0779,645.5,447.5
+autism,content,,False,0.1368,95,False,True,13,0.1223,0.0015,-0.0325,198.5,340.5
+aviation,content,,False,0.1556,90,False,False,30,0.1884,0.0015,0.1532,64.0,74.0
+awesome,reception,,False,0.068,5777,False,False,44,0.2946,0.0015,-0.1064,,
+awesome soundtrack,reception,,False,0.0833,36,False,False,338,0.2115,0.0015,-0.0345,,
+bad,reception,,False,0.0571,49529,False,False,154,0.0079,0.6521,0.1549,,
+bad acting,reception,,False,0.0414,773,False,False,730,0.0015,0.9317,0.0841,,
+bad cgi,reception,,False,0.0,70,False,False,266,0.0812,0.0015,0.1595,,
+bad ending,reception,,False,0.08,75,False,False,942,-0.0151,0.3666,-0.3002,,
+bad plot,reception,,False,0.0521,96,False,False,669,0.0168,0.3063,0.1615,,
+bad science,reception,,False,0.08,25,False,False,57,0.054,0.0015,0.0714,,
+bad script,reception,,False,0.0702,228,False,False,79,0.0036,0.8588,0.099,,
+bad sequel,reception,,False,0.1429,49,False,True,1,0.1211,0.0015,0.2241,,
+ballet,content,,False,0.1456,371,False,True,7,0.0715,0.0015,-0.0158,346.0,300.0
+bank robbery,content,,False,0.0233,215,False,False,347,-0.2333,0.0015,-0.1297,920.0,563.0
+baseball,content,,False,0.083,1928,False,True,29,0.1604,0.0015,0.1839,108.0,42.0
+based on a book,content,,False,0.0062,162,False,False,625,0.0002,0.9908,-0.0755,588.5,439.5
+based on a comic,content,,False,0.0323,62,False,False,449,0.0966,0.0015,0.0229,281.0,245.0
+based on a play,content,,False,0.0,39,False,False,106,0.04,0.0071,-0.0104,454.0,292.0
+based on a true story,content,,False,0.0737,787,True,False,192,0.0524,0.0015,-0.0134,405.5,297.0
+based on a tv show,content,,False,0.0,5,False,False,120,0.1097,0.0015,0.1626,236.0,65.0
+based on a video game,content,,False,0.0,40,False,False,614,-0.003,0.869,0.1693,595.0,57.0
+based on book,content,,False,0.0,4,False,False,731,0.1299,0.0015,-0.041,173.0,365.0
+based on comic,content,,False,0.0,13,False,False,88,0.1002,0.0015,0.056,266.0,195.0
+based on true story,content,,False,0.0526,19,False,False,228,0.0896,0.0015,-0.0544,297.0,397.0
+basketball,content,,False,0.0942,1306,False,True,25,0.1067,0.0015,0.1504,245.0,77.0
+batman,content,franchise,True,0.9274,2148,False,True,11,0.1157,0.0015,0.0586,221.0,190.5
+beatles,content,person,True,0.9909,220,False,True,12,-0.0224,0.1711,-0.1012,663.0,496.5
+beautiful,reception,,False,0.0428,13940,False,False,130,0.0033,0.8188,-0.1116,,
+beautiful scenery,reception,,False,0.0203,197,False,False,773,0.1096,0.0015,-0.1382,,
+beautifully filmed,reception,,False,0.0314,191,False,False,766,0.1139,0.0015,-0.1653,,
+beauty pageant,content,,False,0.0462,65,False,True,7,0.0411,0.0137,0.0666,444.0,172.0
+beer,content,,False,0.0478,753,False,False,49,-0.0839,0.0015,-0.2467,825.5,833.0
+berlin,content,,True,0.9914,463,True,True,21,0.0558,0.003,-0.1053,395.0,510.0
+best war films,reception,,False,0.0667,15,False,False,106,-0.1201,0.0015,-0.006,,
+betrayal,content,,False,0.0371,566,False,False,1099,0.0255,0.1142,-0.2249,512.0,787.0
+better than expected,reception,,False,0.0819,171,False,False,1011,0.2591,0.0015,0.0925,,
+better than the american version,reception,,True,1.0,1,False,True,1,-0.0144,0.3554,-0.1548,,
+biblical,content,,False,0.4027,298,False,False,41,0.0748,0.0015,-0.0659,340.5,424.0
+big budget,commercial,,False,0.0197,558,False,False,1389,0.1032,0.0015,0.1927,,
+biographical,content,,False,0.0273,256,False,False,249,0.0679,0.0015,-0.0931,356.0,473.0
+biography,content,,False,0.05,580,False,False,154,0.0301,0.0533,-0.1344,493.5,578.5
+biopic,content,,False,0.0699,887,False,False,200,0.0385,0.0162,-0.1217,460.0,554.0
+birds,content,,False,0.2314,700,False,True,25,0.1084,0.0015,0.0771,241.0,164.0
+biting,content,,False,0.0158,506,False,False,112,-0.0382,0.0124,-0.2836,713.0,883.0
+bittersweet,content,,False,0.0373,322,False,False,437,0.0647,0.0015,-0.0427,366.0,371.0
+black and white,content,,False,0.0314,1211,True,False,46,0.0239,0.1259,-0.2242,519.0,783.0
+black comedy,content,,False,0.0644,714,False,False,413,-0.3459,0.0015,-0.2123,922.0,758.0
+blaxploitation,content,,False,0.2213,122,False,True,8,-0.0884,0.0015,-0.1577,837.0,632.0
+bleak,content,,False,0.0236,805,False,False,368,-0.0705,0.0015,-0.3127,796.0,912.0
+blindness,content,,False,0.0917,120,False,True,29,-0.0049,0.7688,-0.2341,603.0,804.0
+blood,content,,False,0.1621,5922,False,False,360,-0.0509,0.003,-0.3121,749.0,910.0
+bloody,content,,False,0.0698,2062,False,False,365,-0.0393,0.0137,-0.2701,716.0,872.0
+boarding school,content,,False,0.0395,152,True,False,32,0.1608,0.0015,0.1107,107.0,114.0
+boat,content,,False,0.0439,1459,False,True,16,0.0382,0.0262,-0.0755,461.5,439.5
+bollywood,content,,True,0.8661,224,False,True,24,0.1787,0.0015,0.1376,76.0,90.0
+bombs,content,,False,0.0401,549,False,False,57,0.0481,0.0015,-0.1066,421.0,513.0
+bond,content,franchise,False,0.7508,5695,True,True,15,0.1993,0.0015,-0.0054,57.0,281.0
+book was better,reception,,False,0.0541,37,False,False,104,0.1097,0.0015,-0.0478,,
+books,content,,False,0.0165,4234,False,False,1521,0.1047,0.0015,-0.0507,251.0,391.0
+boring,reception,,False,0.0305,10661,False,False,31,-0.1144,0.0015,0.0301,,
+boring!,reception,,False,0.2826,138,False,False,53,0.0002,0.9867,-0.0913,,
+boston,content,,True,0.9937,630,False,True,25,0.0217,0.2025,-0.05,525.0,388.0
+bowling,content,,False,0.2228,202,False,True,7,-0.0378,0.015,-0.1038,712.0,506.5
+boxing,content,,False,0.0636,1226,False,True,25,-0.0285,0.0816,-0.2246,688.0,786.0
+brainwashing,content,,False,0.0137,73,False,False,223,-0.045,0.0124,-0.2211,733.0,776.0
+brazil,content,,True,0.9921,632,False,True,7,0.1044,0.0015,0.041,252.0,214.5
+breathtaking,reception,,False,0.0234,1113,False,False,353,0.0993,0.0015,-0.1457,,
+brilliant,reception,,False,0.0371,9763,False,True,6,0.0994,0.0015,-0.2234,,
+british,content,,True,0.9925,4393,False,False,234,0.0301,0.0686,-0.1916,493.5,717.5
+british comedy,content,,True,0.961,77,False,False,74,-0.011,0.5083,-0.1644,629.5,649.0
+broadway,content,,True,0.9815,813,False,False,39,-0.0109,0.4963,0.1439,627.5,80.0
+brothers,content,,False,0.3169,4575,False,False,106,0.0816,0.0015,-0.133,315.0,571.5
+brutal,content,,False,0.0186,2318,False,False,358,-0.0341,0.0349,-0.2915,701.0,891.0
+brutality,content,,False,0.0142,635,False,False,844,-0.0518,0.003,-0.2516,751.0,842.5
+buddy movie,content,,False,0.0533,150,False,False,509,0.1214,0.0015,0.0425,203.0,211.0
+bullshit history,reception,,False,,0,False,False,44,0.2132,0.0015,0.1118,,
+bullying,content,,False,0.0183,436,False,False,215,0.169,0.0015,0.0789,92.5,161.0
+business,content,,False,0.054,4946,False,False,67,0.0336,0.0312,-0.1163,482.0,538.5
+c.s. lewis,content,person,True,1.0,46,False,True,3,0.1099,0.0015,0.1804,234.0,44.0
+california,content,,True,0.9936,1251,False,False,439,0.0586,0.0015,-0.0986,383.0,487.0
+camp,content,,False,0.167,2521,True,False,563,-0.0085,0.6203,-0.0407,616.0,363.0
+campy,content,,False,0.0199,855,False,False,215,0.0253,0.1494,0.0522,514.0,198.0
+canada,content,,True,0.9955,669,False,True,26,0.0759,0.0015,-0.1015,335.0,498.0
+cancer,content,,False,0.0416,986,False,False,120,0.0815,0.0015,-0.0423,316.0,369.0
+cannibalism,content,,False,0.0467,107,False,False,76,-0.0754,0.0015,-0.237,801.0,812.0
+caper,content,,False,0.1715,513,False,False,206,0.0663,0.0015,-0.112,361.0,527.0
+capitalism,content,,False,0.1903,247,False,False,137,-0.0011,0.9551,-0.1333,592.0,575.0
+car chase,content,,False,0.011,727,False,False,409,0.101,0.0015,0.0302,262.0,234.0
+carrie-anne moss,content,person,True,1.0,32,True,True,4,0.114,0.0015,-0.0955,222.0,480.5
+cars,content,,False,0.1668,2506,False,False,66,0.1518,0.0015,-0.0304,129.5,336.0
+cartoon,content,,False,0.0309,2881,False,False,263,0.1518,0.0015,0.1939,129.5,41.0
+casino,content,,False,0.4093,816,False,False,39,-0.025,0.1142,-0.0817,678.0,450.0
+catastrophe,content,,False,0.0102,196,False,False,4268,0.2768,0.0015,0.1321,6.0,96.0
+catholicism,content,,True,0.9524,63,False,False,47,0.0519,0.003,-0.0368,408.0,348.0
+censorship,content,,False,0.0368,136,False,False,75,0.0305,0.0665,-0.1597,491.0,636.0
+cerebral,content,,False,0.0389,257,False,False,862,-0.0281,0.0816,-0.2828,686.0,882.0
+cgi,content,,True,0.9335,4825,False,False,303,0.2042,0.0015,0.0517,47.0,199.0
+character study,content,,False,0.038,843,False,False,699,-0.098,0.0015,-0.1743,852.0,677.0
+chase,content,,False,0.215,4168,False,False,1499,0.0319,0.0533,-0.0955,487.0,480.5
+cheating,content,,False,0.015,731,False,False,108,0.0374,0.0187,-0.0683,468.5,427.0
+cheerleading,content,,False,0.0625,80,False,False,49,0.0018,0.9223,0.0105,582.0,261.0
+cheesy,reception,,False,0.0156,3721,False,False,207,0.1557,0.0015,0.173,,
+chess,content,,False,0.1667,600,False,True,7,0.1014,0.0015,-0.0747,260.0,436.0
+chicago,content,,True,0.9935,1234,False,True,18,0.1189,0.0015,0.1088,214.5,118.0
+chick flick,content,,False,0.0751,692,False,False,412,0.2005,0.0015,0.3349,55.0,2.0
+child abuse,content,,False,0.0157,127,False,False,83,-0.0658,0.0015,-0.133,784.0,571.5
+childhood,content,,False,0.0194,2738,False,False,590,0.1348,0.0015,0.0608,160.5,187.0
+children,content,,False,0.0378,12258,False,False,458,0.1963,0.0015,0.2206,59.5,29.0
+china,content,,True,0.9248,1051,False,False,45,0.2025,0.0015,0.0127,50.5,256.0
+chocolate,content,,False,0.4126,538,False,True,13,0.1772,0.0015,-0.0003,79.0,273.5
+chris tucker,content,person,True,0.9833,239,True,True,6,0.1314,0.0015,-0.0593,170.5,408.0
+christian,content,,True,0.9928,2779,True,False,82,0.096,0.0015,-0.0422,282.0,368.0
+christianity,content,,True,0.9853,341,False,False,76,-0.0678,0.0015,-0.0943,788.5,475.0
+christmas,content,,True,0.989,3997,False,False,62,0.1356,0.0015,0.2285,159.0,24.0
+cia,content,,True,0.9994,1667,False,False,51,0.0329,0.0386,0.0879,483.0,143.0
+cinematography,content,,False,0.038,6981,False,False,1416,-0.0536,0.0015,-0.2871,755.5,888.0
+circus,content,,False,0.1294,595,False,True,3,0.0586,0.0015,-0.1108,383.0,523.0
+civil war,content,,False,0.708,678,False,False,150,-0.1471,0.0015,-0.0511,893.0,392.0
+classic,reception,,False,0.058,12359,False,False,246,0.1868,0.0015,-0.0755,,
+classic car,content,,False,0.0,12,False,False,159,0.0392,0.0124,-0.0906,457.0,468.0
+classical music,content,,False,0.0136,147,False,False,34,0.0991,0.0015,-0.1378,270.5,585.0
+claustrophobic,content,,False,0.0022,447,False,False,281,0.0053,0.7784,-0.1515,567.5,617.0
+claymation,content,,False,0.131,84,False,True,13,0.0016,0.9368,-0.0997,584.0,492.0
+clever,reception,,False,0.017,4875,False,False,815,0.1634,0.0015,-0.122,,
+clones,content,,False,0.207,285,False,False,386,-0.0086,0.6308,-0.1239,617.5,559.0
+clowns,content,,False,0.0773,220,False,True,5,0.04,0.0085,-0.1637,454.0,645.0
+coen bros,content,person,True,0.9512,41,False,False,145,-0.1247,0.0015,-0.2427,882.0,823.0
+coen brothers,content,person,True,0.9869,535,False,True,19,-0.1227,0.0015,-0.2616,881.0,858.0
+cold war,content,,False,0.6943,507,True,False,94,-0.1066,0.0015,-0.0774,862.0,446.0
+college,content,,False,0.0666,3710,False,False,104,0.2159,0.0015,0.1725,35.0,51.5
+colonialism,content,,False,0.0714,42,False,True,4,0.0574,0.0015,-0.1516,386.0,618.0
+colourful,content,,False,0.0,427,False,False,318,0.0483,0.0044,-0.1728,420.0,673.5
+comedy,content,,False,0.0502,33971,False,False,1241,0.1473,0.0015,0.1725,139.0,51.5
+comic,content,,False,0.0291,7221,False,True,29,0.1106,0.0015,-0.0226,233.0,313.0
+comic book,content,,False,0.043,1696,False,False,107,0.15,0.0015,-0.0085,134.0,289.0
+comic book adaption,content,,False,0.0,7,False,False,75,0.1963,0.0015,0.0402,59.5,218.0
+comics,content,,False,0.1124,1041,False,False,97,0.0766,0.0015,0.0724,333.0,167.0
+coming of age,content,,False,0.0622,611,False,False,257,0.154,0.0015,-0.0391,120.0,359.0
+coming-of-age,content,,False,0.0272,404,False,False,71,0.1247,0.0015,-0.1321,193.0,569.0
+communism,content,,False,0.3636,176,False,True,19,-0.0524,0.0015,-0.1871,752.0,703.0
+compassionate,content,,False,0.0,237,False,False,112,0.0969,0.0015,-0.1114,279.0,526.0
+competition,content,,False,0.0214,1168,False,False,106,0.2204,0.0015,0.2923,30.0,10.0
+complex,content,,False,0.0188,3515,False,False,679,-0.0231,0.1701,-0.2601,666.0,856.0
+complex characters,content,,False,0.0103,97,False,False,202,0.0484,0.0044,-0.1341,419.0,577.0
+complicated,content,,False,0.0184,1952,False,False,426,0.0002,0.9908,-0.2687,588.5,870.0
+complicated plot,content,,False,0.0,91,False,False,152,-0.0175,0.3121,-0.257,652.0,852.0
+computer animation,content,,False,0.0284,176,False,False,556,0.175,0.0015,0.272,83.0,16.0
+computer game,content,,False,0.02,100,False,False,667,-0.0728,0.0015,0.1585,798.0,71.0
+computers,content,,False,0.0205,440,False,False,48,0.1296,0.0015,-0.0834,175.0,455.0
+con artists,content,,False,0.0317,63,False,False,51,-0.1131,0.0015,-0.0181,870.0,304.5
+con men,content,,False,0.0,44,False,False,62,0.043,0.0124,-0.1008,439.0,495.0
+confrontational,content,,False,0.0323,62,False,False,64,0.0387,0.0162,-0.2156,459.0,765.5
+confusing,content,,False,0.0151,2317,False,False,206,-0.0785,0.0015,-0.3521,810.0,921.0
+conspiracy,content,,False,0.0803,1058,False,False,629,0.0631,0.0015,-0.1103,372.0,521.5
+controversial,content,,False,0.0128,860,False,False,143,-0.0364,0.0225,-0.157,708.0,629.0
+cooking,content,,False,0.0169,356,False,True,19,0.0487,0.003,-0.0623,417.0,418.0
+cool,reception,,False,0.0557,8048,False,False,643,0.187,0.0015,-0.1086,,
+corny,reception,,False,0.0368,1548,False,True,18,0.2092,0.0015,0.1817,,
+corporate america,content,,False,0.1786,56,False,False,143,-0.0367,0.0237,-0.1749,710.0,679.0
+corruption,content,,False,0.0142,987,False,False,862,-0.0056,0.7619,-0.2316,605.0,801.0
+costume drama,content,,False,0.0508,59,False,False,99,0.0586,0.003,-0.0119,383.0,295.0
+courage,content,,False,0.0411,1094,False,False,445,0.1798,0.0015,-0.0136,72.0,298.0
+court,content,,False,0.1508,1545,False,False,68,0.0532,0.003,-0.0506,402.5,390.0
+courtroom,content,,False,0.0478,712,False,False,69,0.0186,0.247,-0.0046,536.0,280.0
+courtroom drama,content,,False,0.0829,205,False,True,18,0.0637,0.0015,-0.0276,369.0,326.0
+crappy sequel,reception,,False,0.0,7,False,False,160,0.0209,0.1973,0.1689,,
+crazy,content,,False,0.0967,4831,False,False,135,0.0183,0.2673,-0.1606,537.0,639.0
+creativity,content,,False,0.0348,948,False,False,2869,0.2205,0.0015,-0.006,29.0,283.0
+creepy,content,,False,0.0158,3739,False,False,278,-0.0548,0.0015,-0.2555,758.0,848.0
+crime,content,,False,0.0578,5846,False,False,530,0.0017,0.9139,-0.1986,583.0,734.0
+crime gone awry,content,,False,,0,False,False,327,-0.0973,0.0015,-0.319,851.0,914.0
+criterion,reception,,False,0.6769,65,False,False,805,-0.053,0.0015,-0.2422,,
+cross dressing,content,,False,0.0,22,False,False,101,0.1414,0.0015,0.1407,148.5,87.0
+crude humor,content,,False,0.0214,140,False,False,607,0.1794,0.0015,0.1059,73.0,122.0
+cuba,content,,True,0.9928,555,False,True,22,0.0918,0.0015,-0.0428,292.0,372.0
+cult,reception,,False,0.062,2692,False,False,211,0.0058,0.7543,-0.2751,,
+cult classic,reception,,False,0.0942,626,False,False,563,-0.0893,0.0015,-0.2191,,
+cult film,reception,,False,0.0847,118,False,False,821,-0.2041,0.0015,-0.2458,,
+culture clash,content,,False,0.0566,53,False,False,809,0.1435,0.0015,-0.0336,146.0,343.0
+cute,content,,False,0.0244,5131,False,False,341,0.2249,0.0015,0.2867,25.0,13.0
+cute!,content,,False,0.15,80,False,False,301,0.1806,0.0015,0.3095,70.0,5.0
+cyberpunk,content,,False,0.1356,59,False,False,96,-0.0864,0.0015,-0.1863,831.0,700.0
+cyborgs,content,,False,0.1163,43,False,False,37,0.0491,0.0044,-0.043,416.0,373.0
+cynical,content,,False,0.0127,1106,False,False,145,-0.0712,0.0015,-0.2877,797.0,889.0
+dance,content,,False,0.1017,3598,False,False,64,0.0998,0.0015,-0.0111,268.0,294.0
+dancing,content,,False,0.0778,2418,False,False,130,0.0003,0.9929,-0.0264,586.5,322.5
+dark,content,,False,0.1595,11043,False,False,437,-0.0928,0.0015,-0.3333,846.0,920.0
+dark comedy,content,,False,0.0661,575,False,False,292,-0.1721,0.0015,-0.3251,909.0,916.0
+dark fantasy,content,,False,0.0526,38,False,False,132,-0.12,0.0015,-0.1906,876.0,712.0
+dark hero,content,,False,0.2,5,False,False,353,0.0898,0.0015,-0.2629,296.0,862.0
+dark humor,content,,False,0.0165,242,False,False,435,-0.0867,0.0015,-0.327,833.0,919.0
+dc comics,content,studio,True,1.0,47,False,False,32,0.1263,0.0015,0.0419,188.0,213.0
+deadpan,content,,False,0.0085,353,False,False,67,-0.0827,0.0015,-0.2554,821.0,847.0
+death,content,,False,0.1144,11755,False,False,751,-0.0607,0.003,-0.1834,768.0,695.0
+death penalty,content,,False,0.028,107,False,False,73,0.0636,0.003,-0.162,370.0,641.5
+demons,content,,False,0.0885,1028,False,False,144,-0.0678,0.0015,-0.166,788.5,654.5
+depp & burton,content,person,False,,0,False,True,17,-0.0182,0.2801,-0.1099,653.0,519.0
+depressing,content,,False,0.0263,1860,False,False,240,-0.0209,0.1902,-0.2714,657.5,873.0
+depression,content,,False,0.2137,964,False,False,513,-0.0245,0.1205,-0.2007,674.0,736.0
+desert,content,,False,0.1066,1257,False,False,109,-0.0061,0.7209,-0.166,608.0,654.5
+destiny,content,,False,0.1561,583,False,False,746,0.165,0.0015,0.0404,100.0,217.0
+detective,content,,False,0.2129,2748,False,False,265,-0.0412,0.0137,-0.1476,724.0,608.0
+devil,content,,False,0.5247,1677,False,False,158,-0.1129,0.0015,-0.0688,869.0,428.0
+dialogue,content,,False,0.0067,9605,False,False,1929,0.1214,0.0015,-0.1496,203.0,614.0
+dialogue driven,content,,False,0.0233,43,False,False,139,0.0088,0.6135,-0.2034,558.5,741.0
+dinosaurs,content,,False,0.1365,469,False,True,23,0.1127,0.0015,0.208,223.0,35.5
+directorial debut,content,,False,0.0195,461,False,False,57,-0.0106,0.5111,-0.2558,624.5,849.0
+disability,content,,False,0.0,118,False,False,63,0.2218,0.0015,-0.0219,27.0,312.0
+disappointing,reception,,False,0.0485,3568,False,True,8,0.1321,0.0015,-0.031,,
+disaster,content,,False,0.0708,2274,False,False,158,0.0215,0.1803,0.1406,526.0,88.0
+disney,content,studio,True,0.9906,6672,True,False,190,0.2459,0.0015,0.2896,16.0,11.0
+disney animated feature,content,studio,True,0.9412,17,False,False,36,0.22,0.0015,0.303,31.0,8.0
+distopia,content,,False,,0,False,False,270,-0.188,0.0015,-0.2858,916.0,885.0
+disturbing,content,,False,0.024,3171,False,False,465,-0.0858,0.0015,-0.2349,829.0,808.0
+divorce,content,,False,0.0204,979,False,False,191,0.0128,0.4155,-0.0295,551.0,333.0
+doctors,content,,False,0.0705,397,False,False,201,-0.0199,0.2329,-0.0893,655.0,464.0
+documentary,content,,False,0.0307,3719,False,False,44,-0.0622,0.0015,-0.1317,775.0,566.0
+dog,content,,False,0.1651,5465,False,False,111,0.0223,0.1539,-0.0281,521.0,330.0
+dogs,content,,False,0.3256,2064,False,False,48,0.1214,0.0015,0.1302,203.0,100.0
+dolphins,content,,False,0.1364,88,False,True,6,0.0873,0.0015,0.0539,302.0,197.0
+downbeat,content,,False,0.0335,179,False,False,323,-0.0357,0.0225,-0.2538,707.0,846.0
+dr. seuss,content,person,True,0.9867,75,False,True,14,0.1185,0.0015,0.1428,216.5,82.0
+dragon,content,,False,0.6052,1702,False,True,16,0.1552,0.0015,0.1743,118.0,48.0
+dragons,content,,False,0.2956,362,False,False,109,0.1285,0.0015,0.1606,178.0,68.0
+drama,content,,False,0.0498,14217,False,False,1387,0.0244,0.1391,-0.1187,518.0,547.0
+dramatic,content,,False,0.0111,4964,False,False,777,0.1367,0.0015,-0.104,157.0,508.0
+dreamlike,content,,False,0.0141,142,False,False,260,-0.182,0.0015,-0.1554,912.0,625.0
+dreams,content,,False,0.1134,3123,False,False,273,0.0034,0.8372,-0.1544,579.0,622.0
+dreamworks,content,studio,True,0.9705,543,False,True,23,0.1822,0.0015,0.2537,68.0,21.0
+drinking,content,,False,0.0358,1313,False,False,422,-0.0535,0.0015,-0.2464,754.0,832.0
+drug abuse,content,,False,0.0128,78,False,False,429,-0.0428,0.0044,-0.2314,730.0,800.0
+drugs,content,,False,0.0482,2762,False,False,282,-0.1275,0.0015,-0.2995,883.0,904.0
+dumb,reception,,False,0.0908,4099,False,False,364,0.2162,0.0015,0.1464,,
+dumb but funny,reception,,False,0.3333,3,False,False,296,0.1066,0.0015,0.1693,,
+dynamic cgi action,content,,False,,0,False,False,438,0.1703,0.0015,0.0896,89.0,141.0
+dysfunctional family,content,,False,0.012,249,False,False,328,-0.1089,0.0015,-0.1827,865.0,694.0
+dystopia,content,,False,0.0519,77,False,False,176,-0.0536,0.003,-0.2929,755.5,896.0
+dystopic future,content,,False,0.0,2,False,False,158,-0.0201,0.2216,-0.2273,656.0,794.0
+earnest,content,,False,0.1114,377,False,False,559,0.1672,0.0015,-0.0612,96.5,415.0
+easily confused with other movie(s) (title),content,,False,,0,False,True,0,0.084,0.0015,0.0775,308.0,162.5
+east germany,content,,True,1.0,47,False,True,19,0.0381,0.015,-0.068,463.0,426.0
+eccentricity,content,,False,0.0,73,False,False,187,-0.0425,0.0111,-0.2224,729.0,780.0
+ecology,content,,False,0.0588,17,False,True,23,0.1443,0.0015,-0.0526,144.0,395.0
+educational,content,,False,0.0407,344,False,True,28,0.2318,0.0015,0.0609,22.0,186.0
+eerie,content,,False,0.0183,820,False,False,178,-0.0033,0.8678,-0.2205,596.0,774.0
+effects,content,,False,0.0252,15006,False,False,257,0.1246,0.0015,-0.1194,194.5,548.0
+egypt,content,,True,0.9933,300,False,True,25,0.0338,0.0312,0.082,480.5,156.0
+emma watson,content,person,True,0.9787,141,True,True,7,0.2802,0.0015,0.1628,5.0,64.0
+emotional,content,,False,0.0125,7290,False,False,735,0.1185,0.0015,-0.0407,216.5,363.0
+end of the world,content,,False,0.2598,254,True,False,563,0.0979,0.0015,-0.0915,273.0,469.0
+england,content,,True,0.9807,1657,True,False,172,0.1659,0.0015,-0.1047,98.0,509.0
+enigmatic,content,,False,0.0061,326,False,False,467,-0.0322,0.0435,-0.2778,698.0,878.0
+ennio morricone,content,person,True,1.0,88,True,True,3,-0.0659,0.0015,-0.2156,785.0,765.5
+enormously long battle scene,content,,False,,0,False,False,140,0.2504,0.0015,0.041,10.0,214.5
+ensemble cast,content,,False,0.0061,493,False,False,323,0.0596,0.0015,-0.1694,380.0,663.0
+entertaining,reception,,False,0.0255,14890,False,False,1031,0.3077,0.0015,0.0657,,
+entirely dialogue,content,,False,0.0,1,False,False,1370,0.0164,0.3277,-0.2261,542.0,791.0
+environment,content,,False,0.0068,1622,False,False,43,0.0568,0.0015,-0.1304,390.5,564.0
+environmental,content,,False,0.0492,305,False,False,30,0.1682,0.0015,0.151,94.0,76.0
+epic,content,,False,0.0999,3224,False,False,154,0.1388,0.0015,-0.108,152.0,517.0
+erotic,content,,False,0.0288,660,False,False,115,-0.0997,0.0015,-0.0382,856.0,354.0
+espionage,content,,False,0.0381,394,False,False,178,0.1112,0.0015,0.0825,231.0,154.0
+ethnic conflict,content,,False,0.0,1,False,False,75,-0.0239,0.1321,-0.1344,670.0,578.5
+evolution,content,,False,0.2114,577,False,True,9,-0.0991,0.0015,-0.1752,855.0,680.5
+excellent,reception,,False,0.0416,15350,False,False,420,0.1974,0.0015,-0.073,,
+excellent script,reception,,False,0.025,80,False,False,531,0.1732,0.0015,-0.1225,,
+exceptional acting,reception,,False,0.0741,27,False,False,177,0.0985,0.0015,-0.143,,
+exciting,reception,,False,0.0163,4487,False,False,172,0.245,0.0015,-0.0261,,
+existentialism,content,,False,0.14,50,False,False,528,-0.0753,0.0015,-0.3132,800.0,913.0
+explosions,content,,False,0.0184,1519,False,False,267,0.1625,0.0015,0.0375,102.0,224.0
+factual,content,,False,0.0094,319,False,False,230,0.0807,0.0015,-0.003,319.0,279.0
+fairy tale,content,,False,0.0355,818,False,False,277,0.1529,0.0015,0.1409,127.0,86.0
+fairy tales,content,,False,0.0698,315,True,False,48,0.1495,0.0015,0.0662,136.5,173.0
+fake documentary,content,,False,0.0667,15,False,True,21,-0.0418,0.0124,-0.2195,725.0,773.0
+family,content,,False,0.0444,27528,False,False,967,0.2416,0.0015,0.3221,19.0,4.0
+family bonds,content,,False,0.0,25,False,False,80,0.2061,0.0015,0.0276,45.0,237.0
+family drama,content,,False,0.0272,294,False,False,501,0.0266,0.1052,-0.1562,508.0,627.0
+fantasy,content,,False,0.0615,4896,False,False,416,0.0724,0.0015,0.0647,344.0,176.0
+fantasy world,content,,False,0.019,211,False,False,982,-0.0455,0.0071,0.0617,734.0,183.0
+farce,content,,False,0.0431,742,False,False,74,-0.1596,0.0015,-0.0574,904.0,402.5
+fascism,content,,False,0.1235,81,False,False,67,0.011,0.5111,-0.2391,555.0,817.0
+fashion,content,,False,0.0121,2157,False,False,75,0.1531,0.0015,0.2118,125.5,33.0
+fast paced,content,,False,0.0133,752,False,False,1045,0.121,0.0015,-0.0941,209.0,474.0
+father daughter relationship,content,,False,0.0,6,False,False,222,0.0664,0.0015,-0.1602,359.5,637.0
+father son relationship,content,,False,0.0,10,False,False,102,0.0222,0.1683,-0.1921,522.0,719.0
+father-son relationship,content,,False,0.0185,54,False,True,22,0.248,0.0015,-0.0595,13.0,410.0
+fbi,content,,True,0.9965,2001,False,False,59,0.0367,0.0237,0.0799,472.0,160.0
+feel good movie,reception,,False,0.0551,345,False,False,426,0.2379,0.0015,0.1488,,
+feel-good,reception,,False,0.0272,735,False,False,848,0.2054,0.0015,0.1548,,
+fight scenes,content,,False,0.0085,1522,False,False,907,0.0967,0.0015,-0.007,280.0,285.0
+fighting,content,,False,0.0177,4569,False,False,601,0.1263,0.0015,-0.0282,188.0,331.0
+fighting the system,content,,False,0.0,4,False,True,18,0.0935,0.0015,-0.2141,288.5,763.0
+figure skating,content,,False,0.0,16,False,True,1,-0.0675,0.0015,0.2209,786.0,28.0
+film noir,content,,False,0.1672,610,True,False,33,-0.1475,0.0015,-0.1231,894.0,556.5
+finnish,content,,True,0.963,54,False,True,0,-0.257,0.0015,-0.0803,921.0,449.0
+firefly,content,franchise,False,0.7765,85,False,True,4,0.0398,0.0162,-0.162,456.0,641.5
+first contact,content,,False,0.7714,70,True,False,479,-0.0015,0.9235,-0.039,593.0,357.5
+fish,content,,False,0.2346,1594,False,True,20,0.1268,0.0015,0.1072,184.5,119.0
+flashbacks,content,,False,0.0033,1537,False,False,50,0.03,0.072,-0.1783,495.0,688.0
+food,content,,False,0.0438,2785,False,True,10,0.0431,0.0071,-0.1406,437.5,593.0
+football,content,,False,0.0552,2355,False,False,32,0.1616,0.0015,0.1753,104.0,47.0
+forceful,content,,False,0.0,104,False,False,394,0.1015,0.0015,-0.1752,259.0,680.5
+foreign,content,,False,0.1278,1581,False,False,238,-0.0256,0.1205,-0.1945,681.0,723.0
+foul language,content,,False,0.0135,222,False,False,572,0.2495,0.0015,0.0143,12.0,254.0
+fountain of youth,content,,False,0.4595,37,False,False,208,-0.0253,0.1165,-0.0256,679.5,319.0
+france,content,,True,0.9956,1600,False,False,101,0.1297,0.0015,-0.0751,174.0,437.0
+franchise,commercial,,False,0.0293,3750,False,False,650,0.1691,0.0015,0.1856,,
+francis ford copolla,content,person,True,1.0,2,True,False,45,0.0161,0.3561,-0.1536,543.0,619.0
+free speech,content,,False,0.0606,33,False,False,85,-0.1483,0.0015,-0.0921,895.0,470.0
+french,content,,True,0.8775,6090,True,False,95,-0.0464,0.003,-0.1994,738.0,735.0
+friendship,content,,False,0.0271,3095,False,False,961,0.2074,0.0015,0.0635,42.0,178.5
+frightening,content,,False,0.0164,1345,False,False,51,0.095,0.0015,-0.1495,285.0,613.0
+fun,reception,,False,0.034,27108,False,False,774,0.2057,0.0015,0.1602,,
+fun movie,reception,,False,0.0474,1076,False,False,1306,0.1973,0.0015,0.1787,,
+funniest movies,reception,,False,0.0085,352,False,False,192,0.1688,0.0015,0.0159,,
+funny,reception,,False,0.0278,39416,False,False,1125,0.2203,0.0015,0.1679,,
+funny as hell,reception,,False,0.0328,122,False,False,333,0.0505,0.003,0.0333,,
+future,content,,False,0.083,6690,False,False,288,0.0044,0.8086,-0.1025,574.5,503.0
+futuristic,content,,False,0.0176,568,False,False,293,0.0611,0.003,-0.1572,375.0,630.0
+gambling,content,,False,0.0132,608,False,False,37,0.0548,0.0015,-0.1329,397.0,570.0
+gangs,content,,False,0.1228,570,False,False,169,-0.0107,0.535,-0.1798,626.0,691.0
+gangster,content,,False,0.1038,2033,False,False,218,-0.0913,0.0015,-0.2582,841.0,854.0
+gangsters,content,,False,0.0312,673,False,False,448,-0.1286,0.0015,-0.1983,884.0,732.0
+gay,content,,False,0.0911,3423,False,False,128,0.0044,0.7921,-0.0264,574.5,322.5
+gay character,content,,False,0.0,34,False,False,146,0.0776,0.0015,-0.0275,330.0,325.0
+geek,content,,False,0.057,596,False,False,394,0.0793,0.0015,-0.0216,324.0,311.0
+geeks,content,,False,0.1057,246,False,False,154,0.1314,0.0015,0.0351,170.5,226.0
+genetics,content,,False,0.0222,45,False,False,98,0.0446,0.0071,-0.0483,434.5,382.0
+genius,reception,,False,0.0614,3305,False,False,45,0.0495,0.0015,-0.195,,
+genocide,content,,False,0.1386,202,False,False,84,0.1346,0.0015,-0.1232,163.0,558.0
+george orwell,content,person,True,0.96,25,False,True,18,-0.1566,0.0015,-0.2008,903.0,737.0
+german,content,,True,0.9802,2068,False,False,51,-0.0396,0.0124,-0.2044,717.0,743.0
+germany,content,,True,0.9905,843,False,False,59,0.0813,0.0015,-0.1702,317.0,666.5
+ghosts,content,,False,0.1385,960,False,False,101,0.0412,0.0098,0.0362,443.0,225.0
+ghosts/afterlife,content,,False,,0,False,False,142,0.1811,0.0015,0.1315,69.0,97.5
+giant robots,content,,False,0.0,37,False,False,167,0.2078,0.0015,0.0253,41.0,243.0
+gilliam,content,person,True,0.9885,524,True,True,8,-0.119,0.0015,-0.3055,875.0,906.0
+girlie movie,content,,False,0.0,5,False,False,826,0.2639,0.0015,0.3507,9.0,1.0
+glbt,content,,True,0.8333,12,False,False,34,-0.0168,0.308,-0.1501,650.5,615.0
+global warming,content,,False,0.1053,133,False,False,63,0.1679,0.0015,0.0858,95.0,152.0
+god,content,,False,0.6876,6741,False,False,150,-0.0747,0.0015,-0.0753,799.0,438.0
+golden palm,reception,,True,0.9231,13,False,False,696,-0.0171,0.308,-0.2108,,
+golf,content,,False,0.0519,462,False,False,37,0.0726,0.0015,-0.0232,343.0,316.0
+good,reception,,False,0.0338,124760,False,False,2828,0.3193,0.0015,0.1061,,
+good acting,reception,,False,0.0343,1313,False,False,748,0.1596,0.0015,-0.1807,,
+good action,reception,,False,0.0307,879,False,False,771,0.2058,0.0015,0.1201,,
+good dialogue,reception,,False,0.0319,94,False,False,154,0.1795,0.0015,-0.1333,,
+good music,reception,,False,0.0268,224,False,False,816,0.1378,0.0015,-0.1261,,
+good romantic comedies,reception,,False,0.0,9,False,False,50,0.227,0.0015,0.3035,,
+good sequel,reception,,False,0.0815,184,False,False,482,0.1058,0.0015,0.0844,,
+good soundtrack,reception,,False,0.0187,107,False,False,2017,0.1664,0.0015,-0.196,,
+good story,reception,,False,0.0295,1557,False,False,55,0.2018,0.0015,-0.0272,,
+good versus evil,content,,False,0.0377,53,False,False,262,0.2071,0.0015,-0.0412,43.0,366.0
+goofy,content,,False,0.0857,1552,False,False,347,0.0793,0.0015,0.0097,324.0,263.5
+gore,content,,False,0.0797,4416,False,False,218,-0.0404,0.0162,-0.2803,720.0,880.0
+goretastic,content,,False,0.0,1,False,True,3,-0.0761,0.0015,-0.1884,805.0,705.0
+gory,content,,False,0.0223,1438,False,False,368,0.0795,0.0015,-0.2381,322.0,815.0
+goth,content,,False,0.3548,155,False,False,150,-0.102,0.0015,-0.1736,859.0,675.0
+gothic,content,,True,0.8563,536,False,False,78,-0.049,0.0015,-0.143,743.0,597.5
+graphic design,content,,False,0.0,5,False,True,3,0.1075,0.0015,-0.0171,244.0,301.0
+graphic novel,content,,False,0.0246,284,False,False,130,-0.028,0.1031,-0.2312,685.0,799.0
+gratuitous violence,content,,False,0.021,143,False,False,138,0.0057,0.754,-0.2959,566.0,899.0
+great,reception,,False,0.0434,78272,False,False,1761,0.2722,0.0015,-0.0122,,
+great acting,reception,,False,0.0591,1201,False,False,1276,0.0915,0.0015,-0.1799,,
+great cinematography,reception,,False,0.0331,181,False,False,368,0.0034,0.8237,-0.2738,,
+great dialogue,reception,,False,0.0171,117,False,False,237,0.0914,0.0015,-0.2001,,
+great ending,reception,,False,0.0629,143,False,False,2209,0.1078,0.0015,-0.2252,,
+great movie,reception,,False,0.0765,4730,False,False,820,0.2423,0.0015,-0.0652,,
+great music,reception,,False,0.0546,366,False,False,132,0.0681,0.0015,-0.1812,,
+great soundtrack,reception,,False,0.0386,233,False,False,355,0.106,0.0015,-0.1929,,
+greed,content,,False,0.0451,710,False,False,447,0.0112,0.4913,-0.1869,554.0,702.0
+grim,content,,False,0.0619,711,False,False,173,-0.011,0.5253,-0.3063,629.5,907.0
+grindhouse,content,,False,0.5274,201,False,False,330,-0.1372,0.0015,-0.2918,890.0,893.0
+gritty,content,,False,0.0201,1490,False,False,225,0.003,0.8722,-0.2913,581.0,890.0
+gross-out,content,,False,0.0155,323,False,False,44,0.1253,0.0015,0.0803,191.0,159.0
+gruesome,content,,False,0.0094,957,False,False,167,-0.0059,0.7139,-0.2407,607.0,819.0
+guilt,content,,False,0.041,1123,False,False,317,-0.1113,0.0015,-0.2115,867.0,756.0
+guilty pleasure,reception,,False,0.0923,455,False,False,159,0.0532,0.003,0.2883,,
+gulf war,content,,True,0.8889,81,False,True,19,-0.1164,0.0015,-0.2516,872.5,842.5
+gunfight,content,,False,0.0472,127,False,False,1072,0.047,0.0044,-0.1163,427.5,538.5
+guns,content,,False,0.1239,1993,False,False,249,0.0258,0.1289,-0.2063,511.0,744.0
+hackers,content,,False,0.358,81,False,True,17,0.0088,0.6055,-0.0629,558.5,420.0
+hacking,content,,False,0.0143,140,False,True,23,0.1377,0.0015,-0.0415,154.0,367.0
+halloween,content,,True,0.9656,1655,False,False,52,0.1497,0.0015,0.03,135.0,235.0
+hallucinatory,content,,False,0.0,45,False,False,107,-0.1889,0.0015,-0.2243,917.0,784.0
+handycam,content,,False,0.5,2,False,True,22,0.0058,0.731,-0.062,565.0,416.0
+hannibal lecter,content,franchise,True,0.9847,131,False,True,5,0.1213,0.0015,-0.0351,205.5,344.0
+happy ending,content,,False,0.0122,1063,True,False,2581,0.298,0.0015,0.2137,3.0,32.0
+harry potter,content,franchise,True,0.9331,1046,False,True,7,0.159,0.0015,0.1551,112.5,73.0
+harsh,content,,False,0.0161,1369,False,False,669,-0.0106,0.5334,-0.2338,624.5,803.0
+haunted house,content,,False,0.2448,339,True,False,58,-0.0404,0.0111,-0.1075,720.0,516.0
+hawaii,content,,True,0.9929,283,False,False,84,0.1241,0.0015,0.1956,196.5,39.0
+heartbreaking,reception,,False,0.0206,729,False,False,277,0.0649,0.0015,-0.0939,,
+heartwarming,reception,,False,0.0341,850,False,False,354,0.2277,0.0015,0.1523,,
+heist,content,,False,0.0925,1405,False,False,146,0.0817,0.0015,-0.1493,313.5,612.0
+heroin,content,,False,0.0312,353,False,False,45,-0.1224,0.0015,-0.2919,879.0,894.0
+heroine,content,,False,0.0138,1161,False,False,39,0.1535,0.0015,0.0409,122.5,216.0
+heroine in tight suit,content,,False,,0,False,False,50,0.0633,0.0015,0.1377,371.0,89.0
+high fantasy,content,,False,0.125,8,True,False,185,0.0757,0.0015,-0.0488,336.0,384.0
+high school,content,,False,0.1289,4352,True,False,296,0.0568,0.003,0.1733,390.5,49.5
+highly quotable,reception,,False,0.0,13,False,False,336,0.1164,0.0015,-0.1577,,
+hilarious,reception,,False,0.034,9189,False,False,566,0.174,0.0015,0.0861,,
+hillarious,reception,,False,0.0789,38,False,True,25,0.102,0.0015,-0.0284,,
+hip hop,content,,False,0.1667,264,False,False,388,-0.0342,0.0399,0.1649,702.0,62.0
+historical,content,,False,0.0216,2643,False,False,256,0.042,0.0085,-0.0448,440.0,378.0
+history,content,,False,0.0719,8440,False,False,207,0.1271,0.0015,-0.0819,181.0,451.0
+hit men,content,,False,0.0316,158,False,False,148,-0.1003,0.0015,-0.2923,857.0,895.0
+hitchcock,content,person,True,0.9939,1154,True,False,38,-0.0321,0.0486,0.0557,697.0,196.0
+hitman,content,,False,0.181,105,False,False,339,-0.0859,0.0015,-0.2562,830.0,850.0
+holiday,content,,False,0.2433,1414,False,False,84,0.1567,0.0015,0.3,116.0,9.0
+hollywood,content,,True,0.9869,13564,False,False,42,0.0536,0.0015,-0.0929,401.0,471.5
+holocaust,content,,False,0.6997,646,False,True,29,-0.021,0.1954,-0.1621,659.0,643.0
+homeless,content,,False,0.0091,659,False,False,41,-0.0494,0.0015,-0.0976,745.0,485.0
+homophobia,content,,False,0.0341,88,False,False,37,0.0274,0.0874,-0.2208,506.0,775.0
+homosexuality,content,,False,0.0293,376,False,False,64,-0.0461,0.003,-0.1474,737.0,607.0
+honest,content,,False,0.0204,4222,False,False,364,0.1532,0.0015,-0.0486,124.0,383.0
+hong kong,content,,True,0.9785,558,False,True,13,0.0119,0.4886,0.0811,553.0,158.0
+horrible,reception,,False,0.0648,5339,False,False,408,-0.0176,0.2832,0.1529,,
+horror,content,,False,0.0724,21303,False,False,436,-0.0539,0.0015,-0.0962,757.0,483.0
+horses,content,,False,0.1082,564,False,True,28,0.0791,0.0015,0.009,326.5,265.0
+hospital,content,,False,0.0489,2125,False,False,304,-0.0236,0.165,-0.1348,669.0,580.0
+hostage,content,,False,0.0448,782,False,False,78,0.0303,0.0583,-0.1156,492.0,535.0
+hotel,content,,False,0.2188,2335,False,False,101,-0.0299,0.0498,-0.1817,693.0,693.0
+humanity,content,,False,0.022,2140,False,False,331,0.0003,0.9846,-0.1946,586.5,724.0
+humor,content,,False,0.012,12711,False,False,569,0.2004,0.0015,0.0426,56.0,210.0
+humorous,content,,False,0.0094,2136,False,False,685,0.1414,0.0015,0.0619,148.5,182.0
+hunting,content,,False,0.1991,929,False,False,367,0.0032,0.8653,-0.191,580.0,714.5
+idealism,content,,False,0.0507,138,False,False,314,0.1212,0.0015,-0.1177,207.0,544.0
+identity,content,,False,0.1095,2037,False,False,224,0.0287,0.0852,-0.201,501.0,738.0
+idiotic,reception,,False,0.0225,799,False,False,399,0.0432,0.0058,0.1191,,
+imaginary friend,content,,False,0.0,65,True,True,5,0.0306,0.0607,-0.1932,490.0,720.5
+imagination,content,,False,0.0127,2367,False,False,424,0.0402,0.0124,-0.2297,449.5,797.0
+imdb top 250,reception,,True,0.9737,38,False,False,508,-0.0259,0.1197,-0.1641,,
+immigrants,content,,False,0.0182,329,False,True,26,0.0267,0.1087,0.0111,507.0,260.0
+immortality,content,,False,0.0,137,False,False,123,-0.0128,0.4378,-0.1071,637.5,514.0
+incest,content,,False,0.0312,160,False,True,22,-0.0606,0.0015,-0.2439,767.0,824.0
+independent film,commercial,,False,0.0871,264,False,False,903,-0.1588,0.0015,-0.3145,,
+india,content,,True,0.9988,838,False,True,22,0.1642,0.0015,0.1102,101.0,115.0
+indiana jones,content,franchise,True,0.9878,655,False,True,4,0.0889,0.0015,0.1245,299.0,103.0
+indians,content,,True,0.9407,472,False,False,396,0.1198,0.0015,0.0979,212.0,133.0
+indie,commercial,,False,0.1128,1268,False,False,425,-0.1117,0.0015,-0.2774,,
+innocence lost,content,,False,0.0,11,False,False,121,0.038,0.02,-0.2264,464.0,793.0
+insanity,content,,False,0.018,556,False,False,675,-0.0839,0.0015,-0.2916,825.5,892.0
+inspirational,reception,,False,0.0362,745,False,False,292,0.1401,0.0015,0.0788,,
+inspiring,reception,,False,0.025,1478,False,False,167,0.1852,0.0015,-0.0326,,
+intellectual,content,,False,0.0147,1159,False,False,265,0.0569,0.0015,-0.2064,389.0,745.0
+intelligent,reception,,False,0.0223,3895,False,False,400,0.0295,0.072,-0.2342,,
+intelligent sci-fi,reception,,False,0.0,10,False,False,218,-0.0504,0.003,-0.2899,,
+intense,content,,False,0.0201,3782,False,False,1346,0.1246,0.0015,-0.1758,194.5,683.0
+interesting,reception,,False,0.0102,21462,False,False,804,0.0483,0.0015,-0.264,,
+internet,content,,False,0.3108,1274,False,False,132,0.1076,0.0015,0.0775,243.0,162.5
+interracial romance,content,,False,0.0,5,False,True,28,0.0179,0.296,-0.0434,539.0,374.0
+intimate,content,,False,0.0086,696,False,False,476,-0.0411,0.0124,-0.1456,723.0,600.0
+investigation,content,,False,0.0174,1092,False,False,443,0.0076,0.6593,-0.172,560.0,671.0
+iran,content,,True,0.9967,302,False,True,5,0.0247,0.1175,-0.1022,517.0,500.0
+iraq,content,,True,0.9873,864,False,False,38,-0.0084,0.6229,-0.0357,614.5,345.0
+iraq war,content,,True,0.9924,132,False,False,41,0.0221,0.1693,0.0208,523.0,249.0
+ireland,content,,True,0.9984,625,True,False,56,-0.0232,0.1549,-0.0843,667.0,456.0
+irish,content,,True,0.9809,1257,False,False,69,-0.078,0.0015,-0.1899,807.0,709.5
+irish accent,content,,True,0.9667,90,False,False,753,-0.0268,0.1133,-0.1984,684.0,733.0
+ironic,content,,False,0.0184,926,False,False,191,-0.0556,0.0015,-0.2726,761.0,874.0
+irreverent,content,,False,0.0109,184,False,False,105,-0.047,0.0058,-0.2489,740.0,838.0
+islam,content,,True,0.996,249,False,False,905,-0.1226,0.0015,-0.0096,880.0,291.0
+island,content,,False,0.4012,2642,False,False,124,0.1495,0.0015,0.1632,136.5,63.0
+isolation,content,,False,0.0023,435,False,False,48,-0.0258,0.1087,-0.2456,682.5,830.0
+israel,content,,True,0.9921,253,True,False,197,-0.0347,0.0386,-0.0001,703.0,272.0
+italian,content,,True,0.9765,1530,False,True,4,0.0006,0.9724,-0.1695,585.0,664.0
+italy,content,,True,0.9978,465,False,True,4,0.0493,0.0015,-0.0948,415.0,478.0
+james bond,content,franchise,True,0.9886,1224,True,True,18,0.1111,0.0015,-0.0202,232.0,307.0
+jane austen,content,person,True,1.0,302,False,True,8,0.1096,0.0015,0.3043,237.0,7.0
+japan,content,,True,0.9771,1050,False,False,57,-0.0228,0.1425,-0.2124,664.0,759.0
+japanese,content,,True,0.9847,3004,False,False,40,-0.116,0.0015,-0.155,871.0,624.0
+jay and silent bob,content,franchise,True,0.9537,108,False,True,7,-0.1843,0.0015,-0.023,913.0,314.0
+jazz,content,,False,0.2064,717,False,True,21,0.1016,0.0015,0.0097,258.0,263.5
+jewish,content,,True,0.987,1233,False,False,81,0.1317,0.0015,0.0622,169.0,181.0
+jews,content,,True,0.9677,713,False,False,117,0.1125,0.0015,0.0017,224.0,270.0
+journalism,content,,False,0.0752,226,False,False,67,-0.0168,0.2875,-0.2137,650.5,762.0
+judaism,content,,True,1.0,44,False,False,39,-0.0058,0.7418,-0.1657,606.0,653.0
+jungle,content,,False,0.329,1225,False,False,85,0.1596,0.0015,0.1067,110.0,120.0
+justice,content,,False,0.1466,3035,False,False,483,-0.0101,0.5506,-0.1759,623.0,684.0
+kick-butt women,content,,False,,0,False,False,50,0.0802,0.0015,-0.0249,320.5,318.0
+kidnapping,content,,False,0.0112,537,False,False,262,-0.01,0.5683,-0.1176,622.0,543.0
+kids,content,,False,0.0502,17776,False,False,302,0.2424,0.0015,0.2563,18.0,20.0
+kids and family,content,,False,0.0909,11,False,False,366,0.2753,0.0015,0.2718,7.0,17.0
+king arthur,content,,True,0.9702,168,True,True,5,0.0349,0.0349,0.0043,477.0,269.0
+kubrick,content,person,True,0.9846,714,True,True,5,-0.0856,0.0015,-0.2222,828.0,779.0
+kung fu,content,,False,0.5719,584,False,False,106,0.1048,0.0015,-0.0072,250.0,286.0
+kurosawa,content,person,True,0.9974,381,True,True,7,-0.1737,0.0015,-0.1383,910.0,586.0
+lame,reception,,False,0.0338,3110,False,False,425,0.093,0.0015,0.1827,,
+las vegas,content,,True,0.9803,761,False,False,52,0.0545,0.0015,0.076,398.0,166.0
+latin america,content,,True,0.9756,41,False,False,35,0.122,0.0015,0.0216,200.0,248.0
+lawyer,content,,False,0.0316,1961,False,False,145,-0.0151,0.3673,-0.0719,645.5,431.0
+lawyers,content,,False,0.0226,310,False,False,137,0.0994,0.0015,0.0766,269.0,165.0
+lesbian,content,,False,0.0483,662,False,True,19,-0.1086,0.0015,-0.2472,864.0,834.0
+life,content,,False,0.0425,52240,False,False,444,0.0168,0.3205,-0.1159,541.0,536.0
+life & death,content,,False,0.0,7,False,False,2655,0.0131,0.4378,-0.1645,549.5,650.0
+life philosophy,content,,False,0.0,8,False,False,3799,0.0432,0.0098,-0.1313,436.0,565.0
+light,content,,False,0.0776,7357,False,False,215,0.1597,0.0015,0.0821,109.0,155.0
+lions,content,,False,0.2538,264,False,False,59,0.2735,0.0015,0.208,8.0,35.5
+literary adaptation,content,,False,0.0,7,False,False,114,0.1038,0.0015,-0.1725,254.0,672.0
+literature,content,,False,0.0875,606,False,False,229,0.1098,0.0015,-0.1332,235.0,574.0
+liv tyler,content,person,True,0.9868,151,True,False,31,0.1213,0.0015,0.0485,205.5,204.0
+london,content,,True,0.9991,2178,True,False,188,0.0649,0.0015,0.0183,365.0,251.0
+lone hero,content,,False,0.1818,11,True,False,1139,0.0716,0.0015,0.051,345.0,201.0
+loneliness,content,,False,0.0211,522,False,False,602,0.0038,0.8234,-0.2043,577.5,742.0
+long,content,,False,0.0532,24191,False,False,159,0.0912,0.0015,-0.0773,295.0,445.0
+los angeles,content,,True,0.9974,1155,False,False,174,0.0564,0.0015,-0.0598,393.0,412.0
+love,content,,False,0.0731,48541,True,False,650,0.1609,0.0015,0.0054,106.0,268.0
+love story,content,,False,0.0468,3076,True,False,1564,0.2208,0.0015,0.1619,28.0,66.0
+low budget,commercial,,False,0.0173,1154,False,False,150,0.0388,0.0187,-0.2282,,
+lynch,content,person,True,0.9689,1030,True,False,36,-0.1749,0.0015,-0.2695,911.0,871.0
+lyrical,content,,False,0.0125,160,False,False,70,-0.0759,0.0015,-0.1746,803.0,678.0
+macabre,content,,False,0.0417,216,False,False,252,-0.0258,0.1041,-0.2498,682.5,840.0
+mad scientist,content,,False,0.0299,134,False,False,364,0.0573,0.0015,0.0613,387.0,185.0
+made for tv,commercial,,False,0.039,154,False,True,0,-0.0206,0.2025,-0.0975,,
+mafia,content,,False,0.4036,1043,False,False,115,-0.0865,0.0015,-0.139,832.0,588.0
+magic,content,,False,0.1122,3493,False,False,235,0.112,0.0015,0.1422,227.0,83.0
+male nudity,content,,False,0.025,40,False,False,224,-0.0931,0.0015,-0.2532,847.0,844.5
+man versus machine,content,,False,0.3333,3,False,True,12,0.1458,0.0015,-0.0334,140.0,342.0
+manipulation,content,,False,0.0161,372,False,False,921,0.0102,0.5404,-0.2294,556.0,796.0
+marijuana,content,,False,0.0442,181,False,False,62,-0.0891,0.0015,-0.2344,839.0,806.0
+marriage,content,,False,0.0174,2926,False,False,178,0.0401,0.0071,0.0307,451.5,233.0
+mars,content,,True,0.9176,837,False,False,227,-0.0766,0.0015,-0.0141,806.0,299.0
+martial arts,content,,False,0.0734,1676,False,False,158,0.0884,0.0015,0.086,301.0,150.5
+marvel,content,studio,False,0.6935,1256,False,False,41,0.1774,0.0015,0.128,78.0,101.0
+marx brothers,content,person,True,1.0,48,False,True,0,-0.0812,0.0015,-0.1198,813.5,549.5
+masterpiece,reception,,False,0.0829,4910,False,False,394,0.0454,0.003,-0.2223,,
+math,content,,False,0.0843,249,False,True,14,0.1561,0.0015,0.0063,117.0,267.0
+mathematics,content,,False,0.0583,103,False,True,15,0.1347,0.0015,-0.059,162.0,406.5
+medieval,content,,False,0.1366,454,False,False,77,0.0463,0.0071,-0.0325,430.0,340.5
+meditative,content,,False,0.0,52,False,False,159,-0.0869,0.0015,-0.2235,834.0,781.0
+melancholic,content,,False,0.0287,174,False,False,795,-0.0552,0.0015,-0.2077,760.0,748.0
+melancholy,content,,False,0.0234,342,False,False,392,-0.0166,0.2951,-0.2623,649.0,860.5
+memory,content,,False,0.0199,2208,False,False,291,-0.0402,0.0111,-0.1675,718.0,659.0
+memory loss,content,,False,0.0299,67,False,False,440,0.1783,0.0015,-0.064,77.0,421.0
+mental hospital,content,,False,0.0272,147,False,True,25,-0.2189,0.0015,-0.1036,919.0,505.0
+mental illness,content,,False,0.0221,317,False,False,112,-0.0901,0.0015,-0.2862,840.0,886.0
+mentor,content,,False,0.0261,613,False,False,2024,0.138,0.0015,-0.0257,153.0,320.0
+metaphysics,content,,False,0.0909,22,False,False,48,-0.0914,0.0015,-0.2971,842.0,900.0
+mexico,content,,True,0.996,1003,False,False,30,-0.0889,0.0015,-0.1915,838.0,716.0
+middle east,content,,False,0.7875,320,False,False,38,0.06,0.0015,0.0001,379.0,271.0
+midlife crisis,content,,False,0.0,54,False,False,149,-0.0037,0.8122,-0.1185,598.0,546.0
+military,content,,False,0.0472,2905,False,False,158,0.018,0.3055,-0.0493,538.0,385.0
+mindfuck,content,,False,0.0,1,False,False,144,-0.1856,0.0015,-0.356,915.0,922.0
+mining,content,,False,0.0209,239,False,True,11,0.1736,0.0015,-0.0274,85.0,324.0
+minnesota,content,,True,1.0,174,False,True,25,-0.0927,0.0015,-0.0574,845.0,402.5
+mission from god,content,,False,0.0,12,False,True,21,0.0518,0.0044,-0.1681,409.0,660.0
+mistaken identity,content,,False,0.0141,71,False,True,16,-0.0285,0.0757,-0.1169,688.0,542.0
+miyazaki,content,person,True,0.998,509,True,True,7,-0.1537,0.0015,-0.0377,901.0,352.0
+mob,content,,False,0.1109,1614,False,False,171,-0.0642,0.0015,-0.2095,779.0,754.0
+mockumentary,content,,False,0.0654,153,False,True,24,-0.1666,0.0015,-0.1555,908.0,626.0
+modern fantasy,content,,False,0.0,8,False,True,26,0.0135,0.4206,-0.2069,548.0,746.0
+money,content,,False,0.0381,15122,False,False,122,-0.137,0.0015,-0.1103,889.0,521.5
+monkey,content,,False,0.2003,704,False,True,23,0.1328,0.0015,0.0814,166.0,157.0
+monster,content,,False,0.1694,3590,False,False,316,0.0479,0.0044,-0.0904,422.5,467.0
+monty python,content,person,True,0.9966,293,False,True,3,-0.0686,0.0015,-0.2125,790.0,760.0
+moody,content,,False,0.0901,555,False,False,58,-0.0094,0.5768,-0.2852,619.5,884.0
+moon,content,,False,0.5522,1293,False,False,38,0.0509,0.003,0.0318,410.5,230.0
+moral ambiguity,content,,False,0.0,58,False,False,136,0.1207,0.0015,-0.2117,211.0,757.0
+morality,content,,False,0.0158,886,False,False,134,0.0652,0.0015,-0.1916,363.0,717.5
+mother daughter relationship,content,,False,0.0,2,False,True,23,0.0292,0.063,-0.1643,498.0,648.0
+mother-son relationship,content,,False,0.0,9,False,False,42,0.032,0.0324,-0.1719,486.0,670.0
+motorcycle,content,,False,0.1857,490,False,False,83,0.0539,0.0015,-0.1024,400.0,501.5
+mountain climbing,content,,False,0.0,34,False,False,55,0.1501,0.0015,0.159,133.0,70.0
+movie business,content,,False,0.0326,92,False,True,8,-0.0646,0.0015,-0.1803,780.0,692.0
+movielens top pick,reception,,False,,0,False,False,637,0.0779,0.0015,-0.2042,,
+moving,reception,,False,0.0291,6053,False,True,20,0.1352,0.0015,-0.0425,,
+mtv,content,studio,True,0.9834,483,False,True,10,-0.0585,0.0015,0.0117,764.0,259.0
+multiple storylines,content,,False,0.0,2,False,False,84,-0.0935,0.0015,-0.2166,848.0,769.5
+mummy,content,,False,0.678,649,False,True,17,0.0802,0.0015,0.1482,320.5,78.0
+muppets,content,studio,True,0.8638,646,False,True,8,0.005,0.7664,0.1579,570.0,72.0
+murder,content,,False,0.0596,5132,False,False,907,-0.0493,0.003,-0.2572,744.0,853.0
+murder mystery,content,,False,0.135,363,True,False,174,0.0562,0.0015,-0.0903,394.0,466.0
+music,content,,False,0.0334,18542,False,False,206,0.0447,0.0058,0.0147,433.0,253.0
+music business,content,,False,0.0541,37,False,True,22,-0.023,0.1321,-0.052,665.0,393.0
+musical,content,,False,0.072,4626,False,False,153,0.1114,0.0015,0.161,229.5,67.0
+musicians,content,,False,0.0126,396,False,False,124,-0.0072,0.6942,0.0265,610.0,240.0
+mutants,content,,False,0.0255,275,False,False,113,0.1183,0.0015,0.0482,218.0,205.0
+mystery,content,,False,0.0893,4724,False,False,259,0.0207,0.2216,-0.2148,529.5,764.0
+mythology,content,,False,0.0583,480,False,False,352,0.1543,0.0015,-0.0177,119.0,303.0
+narrated,content,,False,0.0072,278,False,False,508,-0.0079,0.6449,-0.2593,613.0,855.0
+nasa,content,,True,1.0,223,False,True,25,0.0772,0.0015,0.171,332.0,54.0
+native americans,content,,True,0.8,125,False,False,32,0.0075,0.6628,-0.0279,561.0,328.0
+natural disaster,content,,False,0.0,31,False,False,497,0.1318,0.0015,0.2503,168.0,22.0
+nature,content,,False,0.0578,5073,False,True,10,-0.0009,0.9613,-0.0369,591.0,349.0
+nazi,content,,True,0.9368,1298,False,False,48,0.0687,0.0015,-0.1703,354.0,668.0
+nazis,content,,True,0.9842,697,False,False,71,0.1079,0.0015,-0.1038,242.0,506.5
+neil gaiman,content,person,True,1.0,41,True,True,4,-0.0694,0.0015,-0.1642,792.0,647.0
+neo-nazis,content,,False,0.1923,26,False,True,3,-0.1655,0.0015,-0.1111,907.0,524.0
+neo-noir,content,,False,0.2348,247,False,False,81,-0.1309,0.0015,-0.3201,885.0,915.0
+nerds,content,,False,0.3277,473,False,False,84,0.2191,0.0015,0.031,34.0,232.0
+new jersey,content,,True,0.9896,385,False,False,175,-0.0409,0.0111,-0.0176,722.0,302.0
+new orleans,content,,True,0.9912,454,True,True,26,-0.053,0.003,-0.059,753.0,406.5
+new york,content,,True,0.9861,5244,True,False,212,0.0625,0.0015,0.0134,373.0,255.0
+new york city,content,,True,0.9917,1081,False,False,296,0.0371,0.0175,0.0628,471.0,180.0
+new zealand,content,,True,0.9728,184,False,True,3,0.0833,0.0015,-0.1122,310.0,528.5
+ninja,content,,False,0.5427,995,False,False,51,0.0892,0.0015,0.1772,298.0,46.0
+no dialogue,content,,False,0.0085,118,False,True,2,-0.0086,0.6344,-0.0471,617.5,380.0
+no plot,reception,,False,0.049,531,False,True,8,0.0181,0.2781,0.069,,
+nocturnal,content,,False,0.4667,60,False,False,487,-0.0383,0.0187,-0.2513,714.0,841.0
+noir,content,,False,0.1711,1835,False,False,56,-0.0948,0.0015,-0.3264,849.0,918.0
+noir thriller,content,,False,0.037,27,False,False,31,-0.0786,0.0015,-0.2653,811.0,865.5
+non-hollywood ending,content,,False,0.0,6,False,False,67,-0.0119,0.4814,-0.0579,634.0,404.0
+non-linear,content,,False,0.007,142,False,False,127,-0.014,0.3924,-0.2653,643.0,865.5
+nonlinear,content,,False,0.0,20,False,False,139,-0.0676,0.0015,-0.2642,787.0,864.0
+nostalgia,content,,False,0.0502,956,False,True,29,0.1425,0.0015,0.0635,147.0,178.5
+nostalgic,content,,False,0.0183,763,False,False,248,0.2195,0.0015,0.0877,32.0,144.0
+not as good as the first,reception,,False,0.0422,166,False,False,132,0.1493,0.0015,0.2247,,
+not funny,reception,,False,0.0819,1294,False,True,0,0.1573,0.0015,-0.0033,,
+notable nudity,reception,,False,,0,False,False,49,0.0161,0.3055,0.0441,,
+notable soundtrack,reception,,False,,0,False,True,10,-0.0106,0.522,-0.1849,,
+nuclear,content,,False,0.0696,1078,False,True,11,0.0209,0.1994,-0.0323,528.0,339.0
+nuclear bomb,content,,False,0.0154,65,False,True,27,0.0935,0.0015,0.0581,288.5,192.0
+nuclear war,content,,False,0.075,80,False,True,24,0.1413,0.0015,-0.1477,150.0,609.0
+nudity,content,,False,0.0799,2141,False,False,214,-0.061,0.0015,-0.2458,770.0,831.0
+nudity (full frontal - brief),content,,False,,0,False,False,157,0.0374,0.0225,-0.0696,468.5,430.0
+nudity (full frontal - notable),reception,,False,,0,False,False,246,-0.1343,0.0015,-0.1937,,
+nudity (full frontal),content,,False,,0,False,False,114,-0.1392,0.0015,-0.1958,892.0,727.5
+nudity (rear),content,,False,,0,False,False,53,-0.0954,0.0015,-0.0385,850.0,355.5
+nudity (topless - brief),content,,False,,0,False,False,93,-0.0551,0.0015,-0.2342,759.0,805.0
+nudity (topless - notable),reception,,False,,0,False,False,508,-0.0851,0.0015,-0.1239,,
+nudity (topless),content,,False,,0,False,False,271,-0.135,0.0015,-0.2372,888.0,813.0
+obsession,content,,False,0.0324,1019,False,False,578,-0.0596,0.0015,-0.2443,765.0,826.0
+ocean,content,,False,0.3467,1246,False,False,53,0.2477,0.0015,0.1733,14.0,49.5
+off-beat comedy,content,,False,0.0,9,False,False,330,-0.1527,0.0015,-0.28,900.0,879.0
+office,content,,False,0.1116,4885,False,False,40,0.0046,0.7837,-0.0867,573.0,461.0
+oil,content,,False,0.0746,912,False,False,47,-0.0146,0.3736,-0.167,644.0,658.0
+olympics,content,,True,0.956,273,False,True,8,0.0851,0.0015,0.1375,306.0,91.0
+ominous,content,,False,0.0105,381,False,False,215,0.0808,0.0015,-0.1932,318.0,720.5
+opera,content,,False,0.1711,1315,False,True,4,-0.0356,0.0262,-0.0691,706.0,429.0
+organized crime,content,,False,0.0619,113,False,False,211,-0.0421,0.0085,-0.2319,727.0,802.0
+original,reception,,False,0.0252,25742,False,False,4268,0.0733,0.0015,-0.2044,,
+original plot,reception,,False,0.0164,183,False,False,512,0.188,0.0015,-0.1288,,
+orphans,content,,False,0.0303,165,False,True,9,0.0312,0.0533,0.1091,488.0,117.0
+oscar,reception,,True,0.9764,8120,False,False,408,0.2186,0.0015,-0.0654,,
+oscar (best actor),reception,,False,,0,False,False,223,0.1375,0.0015,-0.1037,,
+oscar (best actress),reception,,False,,0,False,False,390,0.1112,0.0015,-0.0714,,
+oscar (best cinematography),reception,,False,,0,False,False,266,0.1072,0.0015,-0.0443,,
+oscar (best directing),reception,,False,,0,False,False,667,0.149,0.0015,-0.0707,,
+oscar (best effects - visual effects),reception,,False,,0,False,False,134,0.229,0.0015,-0.0312,,
+oscar (best foreign language film),reception,,False,,0,False,False,53,0.0293,0.0533,-0.1976,,
+oscar (best music - original score),reception,,False,,0,False,True,0,0.2749,0.0015,0.1063,,
+oscar (best music - original song),reception,,False,,0,False,False,54,0.2932,0.0015,0.2099,,
+oscar (best picture),reception,,False,,0,False,False,261,0.1972,0.0015,-0.0465,,
+oscar (best sound),reception,,False,,0,False,False,46,0.1903,0.0015,-0.0009,,
+oscar (best supporting actor),reception,,False,,0,False,False,440,0.117,0.0015,-0.1095,,
+oscar (best supporting actress),reception,,False,,0,False,False,1071,0.119,0.0015,-0.0506,,
+oscar (best writing - screenplay written directly for the screen),reception,,False,,0,False,False,113,0.0354,0.0287,-0.2153,,
+oscar winner,reception,,True,0.97,267,False,False,348,0.2722,0.0015,0.0311,,
+over the top,content,,False,0.0142,3033,True,False,77,0.1121,0.0015,-0.0181,226.0,304.5
+overrated,reception,,False,0.0566,936,False,True,2,0.1276,0.0015,0.0629,,
+palestine,content,,True,1.0,40,False,True,1,-0.0983,0.0015,-0.2219,853.0,777.0
+parallel universe,content,,False,0.0192,52,False,False,147,0.0504,0.0044,-0.1466,412.5,603.0
+paranoia,content,,False,0.0448,558,False,False,246,-0.1118,0.0015,-0.2938,868.0,897.0
+paranoid,content,,False,0.0526,513,False,False,111,-0.0248,0.1312,-0.235,676.0,809.0
+parenthood,content,,False,0.3019,106,False,False,290,0.0601,0.0015,-0.0457,378.0,379.0
+paris,content,,True,0.9982,2180,True,False,82,0.1263,0.0015,-0.0077,188.0,288.0
+parody,content,,False,0.0233,1887,False,False,366,-0.0048,0.7831,-0.0283,602.0,332.0
+passionate,content,,False,0.0067,742,False,False,416,0.0817,0.0015,-0.0821,313.5,452.0
+penguins,content,,False,0.2837,624,False,True,8,0.1089,0.0015,0.2228,239.0,27.0
+perfect,reception,,False,0.0502,14968,False,True,13,0.1435,0.0015,-0.1393,,
+period piece,content,,False,0.0323,372,False,False,465,0.1375,0.0015,-0.0447,155.0,377.0
+peter pan,content,,True,0.9333,270,True,True,4,0.1009,0.0015,0.1416,263.0,84.0
+pg,content,,True,0.9658,2134,False,False,189,0.2147,0.0015,0.1347,36.0,94.0
+pg-13,content,,True,0.9669,1208,False,False,3387,0.2474,0.0015,0.1039,15.0,125.0
+philip k. dick,content,person,True,1.0,67,False,False,50,-0.0139,0.4071,-0.2094,642.0,753.0
+philosophical,content,,False,0.0215,837,False,False,206,-0.0243,0.128,-0.2992,673.0,903.0
+philosophy,content,,False,0.0472,742,False,False,345,0.0359,0.0299,-0.2532,475.0,844.5
+photographer,content,,False,0.0046,435,False,True,5,-0.0613,0.0015,-0.1003,771.5,494.0
+photography,content,,False,0.0233,1977,False,False,190,-0.0217,0.191,-0.1768,660.0,687.0
+pigs,content,,False,0.0949,295,False,True,8,0.0918,0.0015,-0.0732,292.0,433.0
+pirates,content,,False,0.555,872,False,True,20,0.0688,0.0015,0.085,352.0,153.0
+pixar,content,studio,True,0.9691,1487,False,True,26,0.3066,0.0015,0.1959,2.0,38.0
+pixar animation,content,studio,True,0.9583,24,False,True,24,0.289,0.0015,0.1529,4.0,75.0
+plot,content,,False,0.0151,44316,False,False,828,0.193,0.0015,-0.1024,63.0,501.5
+plot holes,reception,,False,0.0114,1314,False,False,498,0.0386,0.015,-0.0162,,
+plot twist,content,,False,0.0076,523,False,False,348,0.0289,0.072,-0.2245,500.0,785.0
+poetry,content,,False,0.024,583,False,False,66,-0.0989,0.0015,-0.2162,854.0,767.0
+poignant,content,,False,0.0179,1226,False,False,318,0.0293,0.0665,-0.1487,496.0,610.0
+pointless,reception,,False,0.0187,2725,False,False,675,-0.126,0.0015,0.0118,,
+poker,content,,False,0.0764,445,False,True,11,0.041,0.0111,-0.1363,445.0,582.0
+police,content,,False,0.1285,7020,False,False,203,-0.0039,0.8122,-0.2017,599.5,740.0
+police corruption,content,,False,0.0833,84,False,False,339,-0.0112,0.5204,-0.2285,631.0,795.0
+police investigation,content,,False,0.0,33,False,False,273,0.0752,0.0015,-0.1698,337.0,665.0
+political,content,,False,0.0236,4362,False,False,326,0.0062,0.7142,-0.1728,564.0,673.5
+politics,content,,False,0.0352,1536,False,False,323,-0.013,0.4299,-0.1331,640.0,573.0
+pornography,content,,False,0.034,235,False,False,571,-0.1484,0.0015,-0.2867,896.0,887.0
+post apocalyptic,content,,False,0.0674,89,False,False,119,0.0073,0.6938,-0.1741,562.0,676.0
+post-apocalyptic,content,,False,0.0242,207,False,False,148,0.0478,0.0015,-0.1605,424.0,638.0
+poverty,content,,False,0.0191,524,False,False,85,0.0704,0.0015,-0.1472,348.0,604.5
+powerful ending,reception,,False,0.0,20,False,False,497,0.0599,0.0015,-0.2396,,
+predictable,reception,,False,0.015,8338,False,False,2270,0.0032,0.861,0.2376,,
+pregnancy,content,,False,0.0058,344,False,False,55,0.0403,0.0124,-0.1029,448.0,504.0
+prejudice,content,,False,0.3546,626,False,False,75,0.1613,0.0015,-0.077,105.0,443.5
+prequel,commercial,,False,0.0688,770,False,True,21,0.1449,0.0015,0.0784,,
+president,content,,False,0.5917,2787,False,False,85,0.1348,0.0015,0.1162,160.5,111.0
+pretentious,reception,,False,0.0357,1206,False,False,63,-0.1297,0.0015,-0.2676,,
+prison,content,,False,0.0417,4128,False,False,154,0.0379,0.0111,-0.2091,465.0,751.5
+prison escape,content,,False,0.0455,22,False,False,149,0.1739,0.0015,-0.0546,84.0,398.5
+private detective,content,,False,0.0526,95,True,False,46,-0.0235,0.1517,-0.1649,668.0,652.0
+prohibition,content,,False,0.4624,93,False,True,10,0.0049,0.7924,-0.116,571.0,537.0
+propaganda,content,,False,0.0533,994,False,False,116,0.1694,0.0015,-0.0442,90.5,376.0
+prostitution,content,,False,0.0249,241,False,False,90,-0.0084,0.6413,-0.1907,614.5,713.0
+psychedelic,content,,False,0.0496,121,False,True,13,-0.0445,0.003,-0.2958,732.0,898.0
+psychiatrist,content,,False,0.0163,491,False,False,73,-0.0567,0.0015,-0.2185,763.0,772.0
+psychiatry,content,,False,0.0571,35,False,False,76,-0.033,0.0435,-0.1958,700.0,727.5
+psychological,content,,False,0.0205,2051,False,False,799,-0.0495,0.003,-0.2454,746.0,829.0
+psychology,content,,False,0.036,444,False,False,658,-0.0165,0.3197,-0.2308,648.0,798.0
+pulp,content,,False,0.6157,817,False,False,263,-0.0511,0.0044,-0.1142,750.0,532.0
+punk,content,,False,0.2042,720,False,True,9,-0.1336,0.0015,-0.1391,887.0,589.5
+puppets,content,,False,0.0255,274,False,True,26,0.034,0.0349,-0.1591,479.0,634.0
+queer,content,,False,0.1519,79,False,False,137,-0.0564,0.0015,-0.1143,762.0,533.0
+quirky,content,,False,0.0216,1991,False,False,664,-0.1067,0.0015,-0.2134,863.0,761.0
+quotable,reception,,False,0.0082,243,False,False,659,0.1509,0.0015,-0.1384,,
+rabbits,content,,False,0.11,100,False,True,6,0.053,0.0015,-0.1472,404.0,604.5
+race,content,,False,0.0907,3218,False,False,55,0.0793,0.0015,0.0508,324.0,202.0
+race issues,content,,False,0.0,11,False,False,132,0.1535,0.0015,-0.1212,122.5,553.0
+racing,content,,False,0.0394,863,False,False,44,0.2439,0.0015,0.146,17.0,79.0
+racism,content,,False,0.0201,1046,False,False,77,0.0974,0.0015,-0.1231,276.5,556.5
+rags to riches,content,,False,0.0889,45,False,False,49,0.2503,0.0015,0.1597,11.0,69.0
+rape,content,,False,0.038,1210,False,False,102,-0.0656,0.0015,-0.2987,782.5,901.0
+rats,content,,False,0.0764,301,False,True,10,-0.0114,0.5111,0.0516,632.0,200.0
+realistic,content,,False,0.014,6372,False,False,512,0.1223,0.0015,-0.1369,198.5,584.0
+realistic action,content,,False,0.0417,24,False,False,354,0.1124,0.0015,-0.0359,225.0,346.0
+rebellion,content,,False,0.1226,318,False,False,171,0.0951,0.0015,-0.1756,284.0,682.0
+redemption,content,,False,0.2235,1311,False,False,1155,0.0952,0.0015,-0.1259,283.0,561.0
+reflective,content,,False,0.0116,173,False,False,683,0.0214,0.191,-0.1902,527.0,711.0
+relationships,content,,False,0.0105,3332,False,False,1092,0.0292,0.063,-0.0548,498.0,400.0
+religion,content,,False,0.0347,1440,False,False,103,-0.0822,0.0015,-0.1795,819.5,690.0
+remade,commercial,,False,0.0084,357,False,True,0,-0.0931,0.0015,0.0154,,
+remake,commercial,,False,0.0355,5778,False,False,319,-0.0016,0.9211,0.1373,,
+revenge,content,,False,0.0864,4050,False,False,1132,0.0576,0.0015,-0.1878,385.0,704.0
+revolution,content,,False,0.3433,600,False,False,85,0.1364,0.0015,-0.1367,158.0,583.0
+ridiculous,reception,,False,0.0134,5088,False,False,533,-0.0144,0.391,0.079,,
+rio de janeiro,content,,True,1.0,72,False,True,8,0.1195,0.0015,-0.0859,213.0,459.0
+road movie,content,,False,0.0442,249,True,False,118,-0.0781,0.0015,-0.1318,808.5,567.5
+road trip,content,,False,0.1745,636,True,False,115,-0.0297,0.0686,-0.0929,691.5,471.5
+roald dahl,content,person,True,1.0,91,False,True,4,0.1241,0.0015,0.0274,196.5,238.0
+robbery,content,,False,0.0532,959,False,False,75,-0.0812,0.0015,-0.2477,813.5,836.0
+robert downey jr,content,person,True,0.9949,396,False,True,14,0.1008,0.0015,-0.2164,264.0,768.0
+robert ludlum,content,person,True,1.0,21,False,True,3,0.1531,0.0015,0.0861,125.5,149.0
+robot,content,,False,0.1396,1454,False,False,124,0.075,0.0015,-0.001,338.0,276.0
+robots,content,,False,0.0751,746,False,False,86,0.0693,0.0015,0.0259,350.0,241.0
+rock and roll,content,,False,0.1928,223,False,False,120,0.0446,0.0111,-0.0655,434.5,423.0
+romance,content,,False,0.0519,6595,False,False,712,0.1583,0.0015,0.1775,115.0,45.0
+romantic,content,,False,0.0394,8394,False,False,772,0.2015,0.0015,0.2244,53.0,25.0
+romantic comedy,content,,False,0.054,2483,True,False,685,0.2025,0.0015,0.2688,50.5,18.0
+rome,content,,True,0.9826,461,False,True,25,0.0832,0.0015,0.0315,311.0,231.0
+runaway,content,,False,0.2766,329,False,False,417,0.0712,0.0015,-0.1397,347.0,591.0
+russia,content,,True,0.9961,772,False,False,62,-0.0647,0.0015,-0.0215,781.0,310.0
+russian,content,,True,0.9892,2498,False,False,52,-0.0063,0.7275,-0.0546,609.0,398.5
+sacrifice,content,,False,0.0629,874,False,False,572,0.1833,0.0015,-0.0847,67.0,457.0
+sad,content,,False,0.0181,6203,False,False,143,0.0552,0.0015,-0.0627,396.0,419.0
+sad but good,reception,,True,1.0,1,False,False,41,0.1623,0.0015,-0.0107,,
+samurai,content,,False,0.4908,601,False,True,11,-0.0218,0.1892,-0.1168,661.0,540.5
+san francisco,content,,True,0.9941,510,True,False,211,-0.0115,0.5067,0.2187,633.0,31.0
+sappy,reception,,False,0.0136,736,False,False,92,0.2393,0.0015,0.1366,,
+sarcasm,content,,False,0.0275,364,False,False,224,0.0177,0.2781,-0.1792,540.0,689.0
+satire,content,,False,0.0316,1962,False,False,343,-0.0924,0.0015,-0.2176,844.0,771.0
+satirical,content,,False,0.0198,555,False,False,373,-0.1062,0.0015,-0.1488,861.0,611.0
+saturn award (best special effects),reception,,False,,0,False,False,84,0.1824,0.0015,0.0742,,
+scary,content,,False,0.093,7158,False,False,302,0.0207,0.1973,-0.0378,529.5,353.0
+scenic,content,,False,0.0161,124,False,False,248,0.1322,0.0015,-0.0866,167.0,460.0
+schizophrenia,content,,False,0.0926,108,False,False,41,-0.1202,0.0015,-0.3071,877.5,909.0
+school,content,,False,0.0916,13271,False,False,246,0.0476,0.0015,0.111,425.0,113.0
+sci fi,content,,False,0.2821,312,False,False,419,0.0101,0.5398,-0.077,557.0,443.5
+sci-fi,content,,False,0.223,3884,False,False,350,-0.0456,0.0044,-0.0604,735.5,413.0
+science,content,,False,0.1462,3358,False,False,227,0.0594,0.0015,-0.0499,381.0,386.5
+science fiction,content,,False,0.1095,1379,True,False,584,-0.1489,0.0015,-0.0549,897.0,401.0
+scifi,content,,False,0.3974,229,False,False,372,0.0402,0.025,-0.0401,449.5,361.0
+scifi cult,reception,,False,0.0,1,False,False,55,0.089,0.0015,-0.1367,,
+scotland,content,,True,1.0,344,False,False,53,0.0475,0.003,0.0125,426.0,257.0
+screwball,content,,False,0.0533,319,False,False,104,0.047,0.0044,0.0246,427.5,244.0
+screwball comedy,content,,False,0.0417,144,False,True,10,0.1208,0.0015,-0.0296,210.0,334.0
+script,content,,False,0.0137,19356,False,False,240,0.1162,0.0015,0.0574,220.0,193.0
+secret service,content,,False,0.6834,398,False,False,104,0.1268,0.0015,0.1674,184.5,58.0
+secrets,content,,False,0.1175,1089,False,False,931,0.067,0.0015,-0.1415,358.0,595.0
+segregation,content,,False,0.0,92,False,False,95,0.1658,0.0015,-0.0393,99.0,360.0
+self discovery,content,,False,0.0167,60,False,False,254,0.1049,0.0015,-0.1682,249.0,661.5
+sentimental,content,,False,0.0164,1218,False,False,440,0.2056,0.0015,0.1341,46.0,95.0
+sequel,commercial,,False,0.043,10752,False,False,340,0.2894,0.0015,0.221,,
+sequels,commercial,,False,0.0277,2777,False,False,421,0.2331,0.0015,0.2187,,
+serial killer,content,,False,0.0423,1228,False,False,366,-0.1541,0.0015,-0.2447,902.0,827.0
+series,commercial,,False,0.0383,14109,False,False,312,0.2072,0.0015,0.113,,
+sex,content,,False,0.0529,9655,False,False,173,-0.0601,0.0015,-0.1702,766.0,666.5
+sex comedy,content,,False,0.0838,167,False,True,18,0.0848,0.0015,0.1303,307.0,99.0
+sexual,content,,False,0.0234,3937,False,False,186,-0.07,0.0015,-0.1407,793.0,594.0
+sexual abuse,content,,False,0.0,80,False,False,58,-0.0816,0.0015,-0.2735,817.0,875.0
+sexuality,content,,False,0.0249,802,False,False,132,0.0328,0.0361,-0.1357,484.0,581.0
+sexualized violence,content,,False,,0,False,False,440,-0.0456,0.0044,-0.2442,735.5,825.0
+sexy,content,,False,0.0474,2660,False,False,715,0.0136,0.4008,-0.0499,547.0,386.5
+shakespeare,content,person,True,0.9864,1249,False,False,33,0.169,0.0015,0.0871,92.5,146.0
+shallow,reception,,False,0.0369,1976,False,False,808,0.1494,0.0015,0.0792,,
+shark,content,,False,0.1799,1462,False,False,30,0.2295,0.0015,0.1704,23.0,56.0
+shopping,content,,False,0.041,415,False,False,30,0.1189,0.0015,0.234,214.5,23.0
+short-term memory loss,content,,False,0.0,8,False,True,25,0.0867,0.0015,-0.211,303.0,755.0
+silly,content,,False,0.0174,6162,False,False,713,0.1287,0.0015,0.1434,177.0,81.0
+silly fun,reception,,False,0.0299,67,False,False,1643,0.1175,0.0015,0.1971,,
+simple,content,,False,0.0235,8676,False,True,1,0.3234,0.0015,0.1224,1.0,105.5
+single father,content,,False,0.0132,76,False,False,692,0.2371,0.0015,0.308,21.0,6.0
+sisters,content,,False,0.1869,1348,False,False,54,0.0374,0.0187,0.0931,468.5,136.0
+skinhead,content,,False,0.0,37,False,True,3,0.0281,0.0863,-0.2016,503.0,739.0
+slackers,content,,False,0.1975,81,False,False,117,0.0454,0.0071,-0.0946,431.0,476.0
+slapstick,content,,False,0.0122,1888,False,False,352,0.0736,0.0015,0.224,342.0,26.0
+slasher,content,,False,0.0506,1997,False,False,145,-0.0287,0.063,0.04,690.0,219.0
+slavery,content,,False,0.0468,406,False,False,63,0.1012,0.0015,-0.0828,261.0,453.0
+slow,content,,False,0.0176,8081,False,True,28,-0.0305,0.0595,-0.2252,695.0,788.0
+slow paced,content,,False,0.0295,237,False,False,115,-0.0222,0.1628,-0.2423,662.0,822.0
+small town,content,,False,0.0095,1258,False,False,391,-0.0828,0.0015,-0.1646,822.0,651.0
+so bad it's funny,reception,,False,0.0,14,False,False,1643,-0.1131,0.0015,0.1409,,
+so bad it's good,reception,,False,0.058,69,False,False,40,0.0052,0.754,0.1111,,
+soccer,content,,False,0.0769,507,False,True,8,-0.024,0.1215,-0.0027,671.5,278.0
+social commentary,content,,False,0.0156,449,False,False,921,0.0206,0.2099,-0.2621,531.0,859.0
+solitude,content,,False,0.1216,148,False,False,241,0.0641,0.0015,-0.1335,368.0,576.0
+sophia coppola,content,person,True,1.0,28,False,True,3,-0.0506,0.003,-0.176,748.0,685.0
+south africa,content,,True,0.9746,315,False,True,10,0.1337,0.0015,-0.0889,165.0,463.0
+south america,content,,True,0.9427,157,False,True,8,0.0406,0.015,0.046,447.0,209.0
+southern theme,content,,False,,0,False,True,13,0.1539,0.0015,-0.0011,121.0,277.0
+space,content,,False,0.1952,4294,False,False,166,-0.005,0.7834,-0.106,604.0,511.0
+space opera,content,,False,0.0571,35,False,False,140,-0.0036,0.8232,0.029,597.0,236.0
+space program,content,,False,0.1154,26,False,True,10,0.1273,0.0015,0.1017,180.0,128.0
+space travel,content,,False,0.0,39,False,False,199,0.0382,0.025,-0.0988,461.5,488.0
+spaghetti western,content,,False,0.3059,85,True,True,10,-0.0285,0.0874,-0.0651,688.0,422.0
+spain,content,,True,0.9918,365,False,True,28,-0.0656,0.0015,-0.1897,782.5,708.0
+spanish,content,,True,0.9882,1187,False,False,115,-0.042,0.0098,-0.2422,726.0,821.0
+spanish civil war,content,,True,1.0,8,False,True,0,-0.0613,0.0015,-0.2374,771.5,814.0
+special,reception,,False,0.0471,13819,False,True,25,0.0528,0.003,-0.2431,,
+special effects,content,,False,0.0196,7032,True,False,1632,0.0431,0.0058,0.1066,437.5,121.0
+spelling bee,content,,False,0.2353,68,False,True,2,0.0201,0.208,0.0656,533.0,175.0
+spielberg,content,person,True,0.9919,1857,True,False,57,0.1488,0.0015,0.0329,138.0,227.5
+spies,content,,False,0.195,441,False,False,134,0.1412,0.0015,0.0872,151.0,145.0
+splatter,content,,False,0.0529,208,False,False,396,-0.0301,0.0523,-0.0947,694.0,477.0
+spock,content,franchise,True,0.9943,352,False,True,9,0.0064,0.7019,0.0395,563.0,220.0
+spoof,content,,False,0.0319,1473,False,False,203,0.0344,0.025,-0.0125,478.0,296.0
+sports,content,,False,0.0611,2357,False,False,158,0.1983,0.0015,0.2739,58.0,15.0
+spy,content,,False,0.2677,2514,False,False,134,0.1595,0.0015,0.0476,111.0,206.0
+spying,content,,False,0.0,180,False,False,299,0.1757,0.0015,0.0683,80.5,170.0
+stage magic,content,,False,0.0,1,False,True,28,0.0419,0.0098,-0.0376,441.0,351.0
+stand-up comedy,content,,False,0.0244,41,False,False,40,-0.1202,0.0015,0.0495,877.5,203.0
+star trek,content,franchise,True,0.9694,1208,True,True,12,0.0927,0.0015,-0.0297,290.0,335.0
+star wars,content,franchise,True,0.9314,1617,False,True,8,0.0791,0.0015,0.0658,326.5,174.0
+steampunk,content,,False,0.3704,27,False,False,39,-0.0817,0.0015,-0.1575,818.0,631.0
+stereotypes,content,,False,0.0063,1585,False,False,1550,0.2094,0.0015,0.1706,39.0,55.0
+stoner movie,content,,False,0.0,15,False,False,160,-0.0917,0.0015,-0.1856,843.0,699.0
+stop motion,content,,False,0.0213,188,False,True,18,-0.0476,0.0015,-0.1398,741.0,592.0
+stop-motion,content,,False,0.0353,255,False,True,14,0.0504,0.0015,-0.0521,412.5,394.0
+story,content,,False,0.0301,98069,True,False,428,0.2261,0.0015,-0.0385,24.0,355.5
+storytelling,content,,False,0.0198,1663,False,False,1198,0.0543,0.0015,-0.2654,399.0,867.0
+stranded,content,,False,0.0128,390,False,False,64,0.1269,0.0015,0.0711,182.5,168.0
+strange,content,,False,0.0379,5256,False,False,84,-0.1014,0.0015,-0.3066,858.0,908.0
+strippers,content,,False,0.0246,122,False,False,30,-0.0209,0.2099,-0.0779,657.5,447.5
+studio ghibli,content,studio,True,0.9565,184,False,True,6,-0.132,0.0015,-0.1509,886.0,616.0
+stunning,reception,,False,0.0244,3070,False,False,432,0.0871,0.0015,-0.1528,,
+stupid,reception,,False,0.0306,9348,False,False,410,0.0581,0.0015,0.0745,,
+stupid as hell,reception,,False,0.1667,6,False,False,349,0.0967,0.0015,0.1337,,
+stupidity,reception,,False,0.0134,967,False,False,377,-0.044,0.0058,-0.0926,,
+stylish,content,,False,0.0366,1146,False,False,411,-0.0704,0.0015,-0.3259,795.0,917.0
+stylized,content,,False,0.0144,418,False,False,831,-0.0814,0.0015,-0.3124,816.0,911.0
+submarine,content,,False,0.1538,351,False,True,25,0.0144,0.3891,0.0268,545.0,239.0
+suburbia,content,,False,0.087,184,False,False,451,-0.0635,0.0015,-0.2166,776.0,769.5
+suicide,content,,False,0.0487,1868,False,False,111,-0.0621,0.0015,-0.2641,773.5,863.0
+suicide attempt,content,,False,0.0125,80,False,False,70,0.0338,0.0299,-0.2258,480.5,790.0
+super hero,content,,False,0.0944,233,False,False,180,0.1704,0.0015,0.0909,88.0,139.0
+super-hero,content,,False,0.0737,95,False,False,105,0.1085,0.0015,0.0882,240.0,142.0
+superhero,content,,False,0.0739,1394,False,False,124,0.1618,0.0015,0.0377,103.0,223.0
+superheroes,content,,False,0.0566,265,False,False,437,0.2024,0.0015,0.0978,52.0,134.0
+supernatural,content,,False,0.0392,1555,False,False,388,0.0859,0.0015,-0.024,305.0,317.0
+suprisingly clever,reception,,False,0.0,1,False,False,369,0.1343,0.0015,-0.1535,,
+surfing,content,,False,0.0256,391,False,True,7,0.0053,0.785,-0.0999,567.5,493.0
+surprise ending,content,,False,0.008,125,False,False,337,0.0409,0.0111,-0.2476,446.0,835.0
+surreal,content,,False,0.0176,1081,False,False,302,-0.1631,0.0015,-0.2809,905.0,881.0
+surrealism,content,,False,0.0248,161,False,False,122,-0.2041,0.0015,-0.2452,918.0,828.0
+surveillance,content,,False,0.044,273,False,False,560,0.0362,0.0187,-0.0375,474.0,350.0
+survival,content,,False,0.0368,1249,False,False,527,0.1269,0.0015,-0.1459,182.5,601.0
+suspense,content,,False,0.0201,5910,False,False,1187,0.0688,0.0015,-0.1713,352.0,669.0
+suspenseful,content,,False,0.0238,1684,False,False,388,0.1017,0.0015,-0.1461,257.0,602.0
+swashbuckler,content,,False,0.0541,37,False,False,43,0.1757,0.0015,0.1951,80.5,40.0
+swedish,content,,True,0.9779,407,False,True,9,-0.0027,0.8678,-0.1182,594.0,545.0
+sweet,content,,False,0.0772,4561,False,False,302,0.1792,0.0015,0.1315,74.0,97.5
+switching places,content,,False,0.0,7,False,False,236,0.2121,0.0015,0.2671,37.0,19.0
+sword fight,content,,False,0.0189,53,False,False,91,0.1504,0.0015,-0.0961,132.0,482.0
+sword fighting,content,,False,0.0238,42,False,False,43,0.0977,0.0015,-0.0364,274.0,347.0
+talking animals,content,,False,0.01,100,False,False,250,0.1714,0.0015,0.3296,86.0,3.0
+talky,content,,False,0.0189,159,False,False,885,-0.0039,0.7988,-0.2369,599.5,810.5
+tarantino,content,person,True,0.9961,1537,True,True,14,-0.0834,0.0015,-0.2403,824.0,818.0
+teacher,content,,False,0.0545,2883,False,False,114,0.1025,0.0015,0.0388,255.5,222.0
+tear jerker,content,,False,0.055,109,False,False,93,0.1515,0.0015,0.2096,131.0,34.0
+technology,content,,False,0.0243,1773,False,False,629,0.1368,0.0015,-0.0319,156.0,338.0
+teen,content,,False,0.082,4635,False,False,707,0.097,0.0015,0.1714,278.0,53.0
+teen movie,content,,False,0.1826,471,False,False,526,0.1066,0.0015,0.1814,246.0,43.0
+teenager,content,,False,0.0093,1828,False,False,469,0.0748,0.0015,0.0166,340.5,252.0
+teenagers,content,,False,0.0136,1910,False,False,491,0.094,0.0015,0.0868,286.5,147.0
+teens,content,,False,0.0152,1908,False,False,1207,0.0659,0.0015,0.1352,362.0,93.0
+teleportation,content,,False,0.0,36,False,False,68,0.0389,0.0213,-0.0207,458.0,309.0
+television,content,,False,0.0431,2735,False,False,38,0.1041,0.0015,-0.0678,253.0,425.0
+tense,content,,False,0.0145,1657,False,False,717,0.065,0.0015,-0.1968,364.0,729.0
+terminal illness,content,,False,0.0167,60,False,False,47,0.1278,0.0015,-0.1064,179.0,512.0
+terrorism,content,,False,0.0651,461,False,False,129,0.1181,0.0015,-0.0231,219.0,315.0
+thought-provoking,reception,,False,0.0226,664,False,False,588,0.0151,0.358,-0.2173,,
+thriller,content,,False,0.0697,10920,False,False,625,0.0974,0.0015,-0.1682,276.5,661.5
+time,content,,False,0.0266,88847,False,False,77,0.0788,0.0015,-0.0611,328.0,414.0
+time loop,content,,False,0.037,27,True,False,39,-0.1387,0.0015,-0.1391,891.0,589.5
+time travel,content,,False,0.0586,734,False,False,82,0.1449,0.0015,-0.0407,142.0,363.0
+tokyo,content,,True,0.9877,407,False,False,79,0.0249,0.1249,-0.2369,515.0,810.5
+tolkien,content,person,True,0.9947,187,False,True,8,-0.0855,0.0015,0.1197,827.0,109.0
+too long,reception,,False,0.0127,2443,False,True,13,-0.0219,0.1571,-0.0254,,
+torture,content,,False,0.0255,1530,False,False,132,0.0606,0.0015,-0.2345,377.0,807.0
+touching,reception,,False,0.0251,3901,False,False,525,0.1639,0.0015,0.067,,
+toys,content,,False,0.0597,770,False,False,41,0.2012,0.0015,0.1357,54.0,92.0
+tragedy,content,,False,0.0228,2190,False,False,379,0.0486,0.0044,-0.1937,418.0,722.0
+train,content,,False,0.1279,3457,False,False,34,-0.0422,0.0044,-0.1667,728.0,657.0
+trains,content,,False,0.2599,481,False,True,18,0.0131,0.4213,-0.1899,549.5,709.5
+transformation,content,,False,0.0052,955,False,False,311,0.1057,0.0015,-0.0505,247.0,389.0
+transgender,content,,False,0.1343,67,False,True,17,-0.0831,0.0015,-0.1018,823.0,499.0
+travel,content,,False,0.0238,2351,False,False,32,0.0608,0.0015,-0.0992,376.0,490.0
+treasure,content,,False,0.2043,1150,False,False,51,0.1753,0.0015,0.1663,82.0,60.0
+treasure hunt,content,,False,0.087,46,True,False,114,0.1706,0.0015,0.141,87.0,85.0
+tricky,content,,False,0.049,306,False,False,286,0.1452,0.0015,-0.1198,141.0,549.5
+trilogy,commercial,,False,0.1495,2227,False,False,112,0.2131,0.0015,-0.0349,,
+true story,content,,False,0.0416,2790,True,False,300,0.0311,0.0619,0.0469,489.0,207.0
+truman capote,content,person,True,1.0,105,True,True,2,-0.0759,0.0015,-0.0481,803.0,381.0
+twist,content,,False,0.0369,5199,False,False,376,0.0122,0.4665,-0.2083,552.0,749.0
+twist ending,content,,False,0.0171,175,False,False,660,-0.0248,0.1238,-0.1662,676.0,656.0
+twists & turns,content,,False,0.0,20,False,False,1851,0.0292,0.0698,-0.2492,498.0,839.0
+undercover cop,content,,False,0.0,73,False,False,309,0.0147,0.384,0.086,544.0,150.5
+underdog,content,,False,0.1192,604,False,False,221,0.2036,0.0015,0.0227,48.0,246.0
+underrated,reception,,False,0.0819,2648,False,False,207,-0.0773,0.0015,-0.2816,,
+understated,content,,False,0.0066,756,False,True,19,0.0282,0.0686,-0.261,502.0,857.0
+underwater,content,,False,0.0127,552,False,True,21,0.1293,0.0015,0.1273,176.0,102.0
+unfunny,reception,,False,0.0345,1480,False,True,8,0.1309,0.0015,0.1869,,
+unintentionally funny,reception,,False,0.0,113,False,True,17,0.1595,0.0015,0.1028,,
+unique,reception,,False,0.0095,5078,False,False,44,-0.0289,0.0641,-0.3063,,
+united nations,content,,True,0.9833,60,False,True,15,0.1803,0.0015,-0.0187,71.0,306.0
+unlikely friendships,content,,False,0.0,2,False,False,485,0.1789,0.0015,0.0599,75.0,189.0
+unrealistic,reception,,False,0.0139,2010,False,False,125,0.1441,0.0015,0.0068,,
+unusual plot structure,content,,False,,0,False,False,158,-0.0075,0.6536,-0.2263,611.0,792.0
+us history,content,,True,0.9412,34,False,False,181,0.1585,0.0015,-0.0595,114.0,410.0
+utopia,content,,False,0.2653,98,False,False,151,0.0195,0.247,-0.0756,535.0,441.5
+vampire,content,,False,0.2407,2567,False,False,52,-0.0759,0.0015,0.0255,803.0,242.0
+vampire human love,content,,False,,0,False,True,8,-0.0691,0.0015,0.1186,791.0,110.0
+vampires,content,,False,0.1283,1263,False,False,54,-0.0636,0.0015,0.0119,777.0,258.0
+vengeance,content,,False,0.2528,815,False,False,1475,0.0683,0.0015,-0.2408,355.0,820.0
+very funny,reception,,False,0.0355,3408,False,False,575,0.2437,0.0015,0.1257,,
+very good,reception,,False,0.0263,9657,False,False,113,0.2039,0.0015,-0.1028,,
+very interesting,reception,,False,0.0115,1476,False,False,1091,-0.0725,0.0015,-0.2986,,
+video game,content,,False,0.0321,1214,False,False,59,-0.0077,0.6506,0.0329,612.0,227.5
+video game adaptation,content,,False,0.0769,26,False,False,41,0.0351,0.0275,0.1213,476.0,107.0
+video games,content,,False,0.0253,474,False,False,79,0.078,0.0015,-0.0833,329.0,454.0
+videogame,content,,False,0.0345,29,False,True,25,-0.0098,0.5837,0.1051,621.0,123.0
+vienna,content,,True,1.0,105,False,True,24,0.0885,0.0015,-0.1199,300.0,551.0
+vietnam,content,,True,0.9869,1676,False,False,30,-0.0109,0.5236,-0.0871,627.5,462.0
+vietnam war,content,,True,0.9833,478,False,False,48,-0.0822,0.0015,-0.1592,819.5,635.0
+view askew,content,studio,True,0.8462,26,False,True,7,-0.0134,0.4252,-0.0901,641.0,465.0
+vigilante,content,,False,0.0471,361,False,False,234,0.094,0.0015,-0.1153,286.5,534.0
+vigilantism,content,,False,0.0541,37,False,False,284,0.0199,0.2198,-0.1638,534.0,646.0
+violence,content,,False,0.0518,8609,False,False,1188,0.0048,0.7856,-0.2487,572.0,837.0
+violent,content,,False,0.0314,4516,False,False,865,-0.0121,0.4743,-0.2623,635.0,860.5
+virtual reality,content,,False,0.0741,108,False,False,81,0.0376,0.0187,-0.1073,466.0,515.0
+virus,content,,False,0.1163,619,False,False,56,0.04,0.0111,-0.0424,454.0,370.0
+visceral,content,,False,0.0169,415,False,False,514,0.0664,0.0015,-0.2388,359.5,816.0
+visual,content,,False,0.0243,4692,False,False,760,0.0468,0.003,-0.2257,429.0,789.0
+visually appealing,content,,False,0.0,67,False,False,1405,-0.0365,0.02,-0.2771,709.0,877.0
+visually stunning,reception,,False,0.0552,344,False,False,880,0.0898,0.0015,-0.2261,,
+visuals,content,,False,0.0221,2710,False,False,470,0.0976,0.0015,-0.0996,275.0,491.0
+voodoo,content,,False,0.1784,269,False,True,10,0.1934,0.0015,0.057,62.0,194.0
+voyeurism,content,,False,0.0125,80,False,False,51,-0.0621,0.0015,-0.1868,773.5,701.0
+war,content,,False,0.2766,14130,False,False,212,0.1092,0.0015,-0.1086,238.0,518.0
+wartime,content,,False,0.0321,156,False,False,104,0.0672,0.0015,-0.1626,357.0,644.0
+waste of time,reception,,False,0.0252,1786,False,True,0,0.0367,0.0299,-0.0506,,
+watch the credits,content,,False,0.0,14,False,False,200,0.2069,0.0015,0.1038,44.0,126.0
+weapons,content,,False,0.0365,1177,False,False,461,0.0202,0.212,-0.189,532.0,706.0
+wedding,content,,False,0.2646,2642,False,False,136,0.2103,0.0015,0.2197,38.0,30.0
+weed,content,,False,0.0213,328,False,False,149,-0.024,0.1289,-0.1849,671.5,698.0
+weird,content,,False,0.0533,4257,False,False,1716,-0.0882,0.0015,-0.305,835.5,905.0
+werewolf,content,,False,0.2777,1091,False,False,36,0.0277,0.1031,0.0644,505.0,177.0
+werewolves,content,,False,0.1171,316,False,False,65,0.0254,0.128,0.121,513.0,108.0
+western,content,,False,0.4238,3204,False,False,54,-0.0781,0.0015,-0.0204,808.5,308.0
+whimsical,content,,False,0.0152,328,False,False,365,0.0142,0.3917,-0.039,546.0,357.5
+wilderness,content,,False,0.1069,449,False,False,143,-0.0348,0.0213,-0.1113,704.0,525.0
+wine,content,,False,0.0797,640,False,True,7,-0.031,0.0686,-0.099,696.0,489.0
+wistful,content,,False,0.0225,89,False,False,32,0.0038,0.8073,-0.1438,577.5,599.0
+witch,content,,False,0.5019,2160,False,False,137,0.0524,0.003,0.0918,405.5,137.0
+witches,content,,False,0.1417,515,False,False,137,0.1436,0.0015,0.0962,145.0,135.0
+witty,content,,False,0.0167,2393,False,False,561,0.159,0.0015,-0.0745,112.5,435.0
+wizards,content,,False,0.3361,122,False,False,158,0.1264,0.0015,0.1014,186.0,129.0
+women,content,,False,0.052,9910,False,False,221,0.0374,0.0162,0.1137,468.5,112.0
+working class,content,,False,0.019,316,False,False,91,-0.0701,0.0015,-0.0984,794.0,486.0
+workplace,content,,False,0.0072,139,False,False,102,-0.0128,0.4292,-0.1566,637.5,628.0
+world politics,content,,False,0.0,10,False,False,430,-0.0368,0.0237,-0.1539,711.0,620.0
+world war i,content,,True,0.989,91,False,False,49,-0.1637,0.0015,0.0079,906.0,266.0
+world war ii,content,,True,0.9675,523,False,False,77,0.0614,0.0015,-0.0739,374.0,434.0
+writer's life,content,,False,0.0,4,False,True,8,-0.0197,0.2406,-0.1951,654.0,725.0
+writers,content,,False,0.0252,4209,False,False,462,-0.0813,0.0015,-0.009,815.0,290.0
+wuxia,content,,False,0.7143,7,False,True,14,-0.0129,0.4527,-0.1957,639.0,726.0
+wwii,content,,True,0.9988,814,False,False,62,0.0985,0.0015,-0.0586,272.0,405.0
+zombie,content,,False,0.2699,2901,True,False,135,-0.0123,0.4715,-0.0621,636.0,417.0
+zombies,content,,False,0.1269,1568,False,False,43,0.0863,0.0015,-0.1766,304.0,686.0

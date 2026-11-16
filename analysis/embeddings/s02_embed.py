@@ -1,6 +1,7 @@
 """Step 2: one vector per film for each corpus, from the raw and the cleaned text.
 
-    python -m analysis.embeddings.s02_embed
+    python -m analysis.embeddings.s02_embed            # all three corpora
+    python -m analysis.embeddings.s02_embed reviews    # one
 
 Each text is cut into passages of 180 words (the model reads about 190), every passage is embedded and
 L2-normalised, and a film's vector is the normalised mean of its passages. For reviews the mean is taken
@@ -43,16 +44,18 @@ def embed(model, texts: list[str], e: dict) -> tuple[np.ndarray, int]:
     return unit(out), len(chunks)
 
 
-def run() -> dict:
+def run(corpora=CORPORA) -> dict:
     import torch
     from sentence_transformers import SentenceTransformer
     e = cfg()["embed"]
     device = "mps" if torch.backends.mps.is_available() else ("cuda" if torch.cuda.is_available() else "cpu")
     model = SentenceTransformer(e["model"], device=device)
     VECTORS.mkdir(parents=True, exist_ok=True)
-    report = {"model": e["model"], "device": device, "passage_words": e["passage_words"],
-              "max_seq_length": model.max_seq_length}
-    for corpus in CORPORA:
+    path = OUTPUTS / "s02_embedding.json"
+    report = json.loads(path.read_text()) if path.exists() else {}
+    report.update({"model": e["model"], "device": device, "passage_words": e["passage_words"],
+                   "max_seq_length": model.max_seq_length})
+    for corpus in corpora:
         df = pd.read_parquet(PRIVATE / f"{corpus}.parquet", columns=["tconst", "raw", "clean"])
         ids = sorted(df.tconst.unique())
         pos = {t: i for i, t in enumerate(ids)}
@@ -64,9 +67,10 @@ def run() -> dict:
             np.save(VECTORS / f"{corpus}_{variant}.npy", unit(film).astype(np.float32))
             report[f"{corpus}_{variant}"] = {"films": len(ids), "texts": len(df), "passages": n}
             print(corpus, variant, report[f"{corpus}_{variant}"], flush=True)
-    (OUTPUTS / "s02_embedding.json").write_text(json.dumps(report, indent=1) + "\n")
+    path.write_text(json.dumps(report, indent=1) + "\n")
     return report
 
 
 if __name__ == "__main__":
-    run()
+    import sys
+    run(tuple(a for a in sys.argv[1:] if a in CORPORA) or CORPORA)

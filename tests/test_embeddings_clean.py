@@ -2,6 +2,7 @@
 import re
 
 import numpy as np
+import pandas as pd
 
 from analysis.embeddings import clean as C
 
@@ -127,3 +128,113 @@ def test_junk_share_counts_ocr_damage_only():
     assert C.junk_share("gest:ure and dart:s away M~ralda ~ot::s we~") == 5 / 7
     assert C.junk_share("\\* Person(35) walks in \\* M-16 lounge/club") == 0
     assert C.junk_share("") == 0.0
+
+
+def test_people_mask_takes_plurals_and_possessives():
+    p = C.people_pattern(["Joel Coen", "Ethan Coen"])
+    assert C.mask("The Coens and Coen's style; Coen", p, "Person")[0] == "The Person and Person style; Person"
+
+
+def test_other_titles_and_people_are_masked_in_title_case_only():
+    ph = C.name_phrases(["Shawshank Redemption, The (1994)", "The End (2010)", "Lord of the Rings (2001)"],
+                        ["Steven Spielberg", "Will Smith"])
+    o = C.OtherNames(ph)
+    out, n = o.mask("Better than The Shawshank Redemption, worse than The Lord of the Rings. Steven Spielberg "
+                    "liked it; I will smith a door. In the end it ends.")
+    assert out == ("Better than another film, worse than another film. Person liked it; I will smith a door. "
+                   "In the end it ends.")
+    assert n == {"other_titles": 2, "other_people": 1}
+
+
+def test_distinctive_singles_keep_common_words():
+    ph = C.name_phrases(["The Shawshank Redemption (1994)", "Midnight in Paris (2011)"], ["Paris Hilton"])
+    texts = (["The Shawshank Redemption is great. Shawshank again."] * 3
+             + ["Paris is lovely. I went to Paris. Paris in spring."] * 3)
+    singles, tab = C.distinctive_singles(texts, ph, min_count=3, max_lower=0.1, min_share=0.2, min_len=4)
+    assert singles == {"shawshank": "title", "redemption": "title"} or "shawshank" in singles
+    assert "paris" not in singles
+    out, _ = C.OtherNames(ph, singles).mask("Shawshank's ending and the Shawshanks; Paris and redemption")
+    assert out.startswith("another film ending and the another film; Paris") and out.endswith("redemption")
+
+
+def test_places_and_dates_are_not_masked_as_films_or_people():
+    class Ent:
+        def __init__(self, label, n):
+            self.label_, self.n = label, n
+
+        def __len__(self):
+            return self.n
+
+    class Doc:
+        LABELS = {"New York": "GPE", "Christmas": "DATE", "Spielberg": "PERSON"}
+
+        def __init__(self, t):
+            self.n = len(t.split())
+            self.ents = [Ent(self.LABELS[t], self.n)] if t in self.LABELS else []
+
+        def __len__(self):
+            return self.n
+
+    class NLP:
+        def pipe(self, texts, batch_size=0):
+            return [Doc(t) for t in texts]
+
+    ph = {("new", "york"): "title", ("the", "dark", "knight"): "title", ("steven", "spielberg"): "person"}
+    phrases, singles, dropped = C.drop_places_and_dates(ph, {"christmas": "title", "spielberg": "person"}, NLP())
+    assert ("new", "york") not in phrases and ("the", "dark", "knight") in phrases and ("steven", "spielberg") in phrases
+    assert singles == {"spielberg": "person"} and dropped == ["christmas", "new york"]
+
+
+def test_context_labels_vote_over_sentences():
+    class Tok:
+        def __init__(self, text, ent):
+            self.text, self.ent_type_ = text, ent
+
+    class NLP:
+        def pipe(self, texts, batch_size=0):
+            return [[Tok(w, "GPE" if w == "Paris" else ("PERSON" if w.startswith("Tarantino") else ""))
+                     for w in t.replace(".", "").split()] for t in texts]
+
+    texts = ["Tarantino's dialogue sings. I love Paris. Paris in spring.", "Tarantino again. Back to Paris."]
+    assert C.context_labels(texts, {"tarantino", "paris"}, NLP(), per_word=5) == {"tarantino": "PERSON", "paris": "GPE"}
+
+
+def test_hand_added_names_take_plurals_and_need_a_capital():
+    p = C.extra_names_pattern(["Brando", "Churchill"])
+    assert C.mask("A Brando type. Churchill's speech; the Brandos. churchill", p, "Person")[0] == \
+        "A Person type. Person speech; the Person. churchill"
+
+
+def test_entity_types_vote_in_context_and_agreement():
+    from analysis.embeddings import entities as E
+
+    class Ent:
+        def __init__(self, a, b, label):
+            self.start_char, self.end_char, self.label_ = a, b, label
+
+    class Doc:
+        def __init__(self, t):
+            self.ents = [Ent(m.start(), m.end(), "GPE" if "city" in t else "PERSON") for m in re.finditer("Paris", t)]
+
+    class NLP:
+        def pipe(self, texts, batch_size=0):
+            return [Doc(t) for t in texts]
+
+    texts = ["We flew to Paris, a lovely city.", "The city of Paris at night.", "Paris Hilton cameos here."]
+    ctx = E.contexts(["paris"], texts, per_item=5, seed=1)
+    v = E.type_votes(ctx, NLP()).iloc[0]
+    assert (v.contexts, v.type, v.n_place, v.n_person) == (3, "place", 2, 1) and abs(v.share - 2 / 3) < 1e-9
+    a = E.agreement(pd.Series([1, 1, 0, 0]), pd.Series([1, 0, 1, 0]))
+    assert (a["tp"], a["fp"], a["fn"], a["tn"], a["precision"], a["recall"], a["kappa"]) == (1, 1, 1, 1, .5, .5, 0.0)
+
+
+def test_parallel_shuffles_match_serial(monkeypatch):
+    from analysis.embeddings import stats as S
+    rng = np.random.default_rng(3)
+    Z, y = rng.normal(size=(120, 4)), rng.normal(size=120)
+    ctrl, strata = np.ones((120, 1)), np.repeat([0, 1, 2], 40)
+    alphas = np.logspace(-2, 2, 5)
+    monkeypatch.setenv("EMBED_JOBS", "1")
+    serial = S.shuffle_gains(Z, y, ctrl, strata, alphas, folds=3, perms=6, seed=9)
+    monkeypatch.setenv("EMBED_JOBS", "3")
+    assert np.allclose(serial, S.shuffle_gains(Z, y, ctrl, strata, alphas, folds=3, perms=6, seed=9))

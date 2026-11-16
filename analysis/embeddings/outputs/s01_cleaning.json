@@ -8,13 +8,15 @@
  "screenplays": {
   "clean_films_with_a_moviesum_script": 1630,
   "dropped_too_short": 0,
+  "genome_people_masked": 10241,
+  "hand_added_names_masked": 86,
   "films": 1630,
   "median_words_raw": 22941.5,
-  "median_words_clean": 20752.0,
-  "share_of_raw_words_removed": 0.09562713505633669,
+  "median_words_clean": 20746.0,
+  "share_of_raw_words_removed": 0.09590735170294451,
   "median_distinct_names_masked": 22.0,
-  "share_of_clean_words_that_are_name_placeholders": 0.0502307044804112,
-  "films_with_no_name_masked": 7,
+  "share_of_clean_words_that_are_name_placeholders": 0.050548147592098615,
+  "films_with_no_name_masked": 1,
   "name_rule_vs_spacy": {
    "scripts": 40,
    "words_per_script": 3000,
@@ -35,9 +37,9 @@
    "brackets": 25,
    "actor_parens": 1451,
    "titles": 2353,
-   "people": 66880
+   "people": 66975
   },
-  "share_of_clean_words_that_are_name_placeholders": 0.06417169767147314,
+  "share_of_clean_words_that_are_name_placeholders": 0.06426864726372455,
   "films_with_no_name_masked": 1
  },
  "reviews": {
@@ -48,13 +50,17 @@
   "clean_films_with_any_valid_review": 5435,
   "films_dropped_fewer_than_min_reviews": 30,
   "films": 5405,
-  "reviews_sampled": 160532,
+  "reviews_sampled": 160527,
   "median_reviews_per_film": 30.0,
   "sampled_reviews_with_a_money_sentence": 18682,
   "share_of_sentences_dropped_for_money": 0.011113109719295215,
   "title_mentions_masked": 140039,
-  "cast_and_director_mentions_masked": 450654,
-  "sampled_reviews_too_short_after_cleaning": 386,
+  "cast_and_director_mentions_masked": 453004,
+  "other_film_title_mentions_masked": 137848,
+  "other_people_mentions_masked": 452327,
+  "reference_titles_and_names": 276180,
+  "single_words_masked_on_their_own": 4409,
+  "sampled_reviews_too_short_after_cleaning": 391,
   "latest_film_year": 2017
  }
 }
