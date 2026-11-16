@@ -1,8 +1,8 @@
 {
  "tmdb_source": "tmdb/tmdb_project_movies.csv",
  "tmdb_snapshot": "2026-11-15",
- "clean_movies": 6413,
- "matched_to_tmdb_row": 6413,
+ "clean_movies": 6414,
+ "matched_to_tmdb_row": 6414,
  "tmdb_revenue_under_1000": 4,
  "tmdb_budget_under_1000": 0,
  "identical_tolerance": 0.005,
@@ -11,10 +11,10 @@
  "outside_clean": [
   {
    "reason": "no budget or gross parsed",
-   "films": 4231,
-   "tmdb_has_both": 740,
+   "films": 4230,
+   "tmdb_has_both": 739,
    "tmdb_has_both_100k": 55,
-   "tmdb_has_both_10k_100k": 685
+   "tmdb_has_both_10k_100k": 684
   },
   {
    "reason": "budget or gross not in USD",
@@ -71,9 +71,9 @@
   },
   {
    "group": "no infobox field for the missing figure",
-   "films": 657,
+   "films": 656,
    "missing_budget": 489,
-   "missing_gross": 86,
+   "missing_gross": 85,
    "missing_both": 82,
    "tier_100k": 45
   },
@@ -131,7 +131,7 @@
  ],
  "tiers": {
   "all clean": {
-   "n": 6413,
+   "n": 6414,
    "flips": {
     "flips": 231,
     "near_break_even_films": 632,
@@ -141,9 +141,9 @@
     "flop_on_tmdb_only": 165
    },
    "budget": {
-    "n": 6014,
+    "n": 6015,
     "tmdb_missing": 399,
-    "within_1pct": 0.7253,
+    "within_1pct": 0.7254,
     "within_10pct": 0.8324,
     "within_25pct": 0.9232,
     "exactly_equal": 0.7185,
@@ -174,7 +174,7 @@
      57,
      163,
      621,
-     4861,
+     4862,
      116,
      43,
      34,
@@ -197,7 +197,7 @@
     ]
    },
    "gross": {
-    "n": 6131,
+    "n": 6132,
     "tmdb_missing": 282,
     "within_1pct": 0.6983,
     "within_10pct": 0.854,
@@ -229,7 +229,7 @@
      101,
      126,
      203,
-     2468,
+     2469,
      3012,
      26,
      13,
@@ -252,9 +252,9 @@
      3
     ]
    },
-   "both_tmdb_fields": 5890,
-   "under_budget_wikipedia": 1532,
-   "under_budget_tmdb": 1631,
+   "both_tmdb_fields": 5891,
+   "under_budget_wikipedia": 1533,
+   "under_budget_tmdb": 1632,
    "same_under_budget_call": 0.9608,
    "spearman_log_multiple": 0.9593
   },
@@ -387,7 +387,7 @@
    "spearman_log_multiple": 0.9701
   },
   "10k-100k": {
-   "n": 4061,
+   "n": 4062,
    "flips": {
     "flips": 196,
     "near_break_even_films": 473,
@@ -397,13 +397,13 @@
     "flop_on_tmdb_only": 140
    },
    "budget": {
-    "n": 3666,
+    "n": 3667,
     "tmdb_missing": 395,
     "within_1pct": 0.736,
     "within_10pct": 0.8178,
-    "within_25pct": 0.9034,
-    "exactly_equal": 0.7297,
-    "identical_within_half_pct": 0.7324,
+    "within_25pct": 0.9035,
+    "exactly_equal": 0.7298,
+    "identical_within_half_pct": 0.7325,
     "median_ratio_tmdb_over_wiki": 1.0,
     "tmdb_higher_2x": 62,
     "tmdb_lower_2x": 65,
@@ -430,7 +430,7 @@
      47,
      106,
      287,
-     2980,
+     2981,
      87,
      32,
      29,
@@ -453,13 +453,13 @@
     ]
    },
    "gross": {
-    "n": 3785,
+    "n": 3786,
     "tmdb_missing": 276,
-    "within_1pct": 0.6446,
+    "within_1pct": 0.6447,
     "within_10pct": 0.809,
-    "within_25pct": 0.8705,
-    "exactly_equal": 0.153,
-    "identical_within_half_pct": 0.5797,
+    "within_25pct": 0.8706,
+    "exactly_equal": 0.1529,
+    "identical_within_half_pct": 0.5798,
     "median_ratio_tmdb_over_wiki": 1.0,
     "tmdb_higher_2x": 27,
     "tmdb_lower_2x": 214,
@@ -485,7 +485,7 @@
      74,
      100,
      159,
-     1368,
+     1369,
      1883,
      19,
      13,
@@ -508,16 +508,16 @@
      3
     ]
    },
-   "both_tmdb_fields": 3547,
-   "under_budget_wikipedia": 1367,
-   "under_budget_tmdb": 1451,
-   "same_under_budget_call": 0.9447,
+   "both_tmdb_fields": 3548,
+   "under_budget_wikipedia": 1368,
+   "under_budget_tmdb": 1452,
+   "same_under_budget_call": 0.9448,
    "spearman_log_multiple": 0.9419
   }
  },
  "no_field_wikitext_check": {
-  "films": 657,
-  "article_found": 657,
+  "films": 656,
+  "article_found": 656,
   "nonempty_line_for_missing_figure": 1
  },
  "unparsed_sample_labels": {

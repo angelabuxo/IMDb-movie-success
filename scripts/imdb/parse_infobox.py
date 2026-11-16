@@ -81,6 +81,16 @@ def names(raw):
     out+=list(_items(str(c)))
     return [x for x in dict.fromkeys(out) if x]
 IB=re.compile(r'(?i)^infobox[ _](?:film|movie|television|short film)')
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]))  # repo root, for analysis.wiki_links
+from analysis.wiki_links import best_article
+# IMDb titles, to pick one article when two Wikidata items share a film's IMDb ID (see analysis/wiki_links.py)
+TITLES={}
+for f in ('features/movies_features.csv','features/movies_features_10k.csv'):
+    try: TITLES.update({r['tconst']:r['primaryTitle'] for r in csv.DictReader(open(f,newline='',encoding='utf8'))})
+    except FileNotFoundError: pass
+if not TITLES: print('no movie table with IMDb titles found: a film linked to two articles keeps the first',file=sys.stderr)
+rows=[]
 w=csv.writer(open(DST,'w',newline=''))
 w.writerow('tconst title has_infobox budget budget_cur budget_raw budget_flag gross gross_cur gross_raw gross_flag studios distributors producers starring rt_pct metacritic critic_chars release_month'.split())
 n=0
@@ -106,6 +116,12 @@ for l in open(SRC):
     else:
         d=re.search(r'(?i)\b('+'|'.join(MON)+r')\b',rel); rm=d and MON[d[1].lower()]
     for tc in r['tconst']:
-        w.writerow([tc,r['title'],int(box is not None),bv,bc,br,scope(br),gv,gc,gr,gross_flags(graw,gr,t,r['title']),'|'.join(names(g('studio','studios','production_companies','production companies'))),'|'.join(names(g('distributor','distributors'))),'|'.join(names(g('producer','producers'))),'|'.join(names(g('starring'))),rt,mc,cc,rm])
+        rows.append([tc,r['title'],int(box is not None),bv,bc,br,scope(br),gv,gc,gr,gross_flags(graw,gr,t,r['title']),'|'.join(names(g('studio','studios','production_companies','production companies'))),'|'.join(names(g('distributor','distributors'))),'|'.join(names(g('producer','producers'))),'|'.join(names(g('starring'))),rt,mc,cc,rm])
     n+=1
-print('parsed',n)
+by={}
+for row in rows: by.setdefault(row[0],[]).append(row)
+dup=0
+for tc,rs in by.items():
+    if len(rs)>1: dup+=1
+    w.writerow(rs[best_article([x[1] for x in rs],TITLES.get(tc))])
+print('parsed',n,'| films',len(by),'| films linked to more than one article',dup)

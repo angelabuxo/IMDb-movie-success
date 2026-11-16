@@ -63,10 +63,10 @@
  },
  "scripts_and_reviews": {
   "reproduce": {
-   "films": 6413,
+   "films": 6414,
    "hits_with_script": 537,
    "flops_with_script": 214,
-   "hit_cut_multiple": 4.055,
+   "hit_cut_multiple": 4.054,
    "features_q_partial_below_005": 3,
    "features": {
     "speaking characters": {
@@ -137,10 +137,10 @@
    }
   },
   "wikipedia": {
-   "films": 5890,
+   "films": 5891,
    "hits_with_script": 513,
    "flops_with_script": 222,
-   "hit_cut_multiple": 4.234,
+   "hit_cut_multiple": 4.232,
    "features_q_partial_below_005": 2,
    "features": {
     "speaking characters": {
@@ -211,7 +211,7 @@
    }
   },
   "tmdb": {
-   "films": 5890,
+   "films": 5891,
    "hits_with_script": 514,
    "flops_with_script": 241,
    "hit_cut_multiple": 4.138,

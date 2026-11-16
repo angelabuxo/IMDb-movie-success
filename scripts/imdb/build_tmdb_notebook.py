@@ -196,8 +196,9 @@ display(Markdown(
     f"parser, finds a non-empty line for the missing figure in {chk['nonempty_line_for_missing_figure']} of "
     f"{chk['films']}. Filling these from TMDB would add films, mostly to the 10k to 100k tier, which has the most "
     f"flops. That's a decision about TMDB's quality and terms for the group, not something this check settles.\\n\\n"
-    f"**A linking bug.** *Horizon: An American Saga – Chapter 1* is linked to two Wikipedia articles, and the pipeline "
-    f"keeps the franchise article (a budget for two films, no gross), so the film drops out. It's one film today."))"""),
+    f"**A linking bug, now fixed.** Two Wikidata items can carry the same IMDb ID, so *Horizon: An American Saga – "
+    f"Chapter 1* was also linked to the franchise article and dropped out of the sample. The parser now keeps the "
+    f"article whose title matches the IMDb title (`analysis/wiki_links.py`), and the film is back in."))"""),
     ("md", """## 8. Do the results change with TMDB's money?
 
 `scripts/imdb/tmdb_robustness.py` reruns three headlines with each analysis's own code. It first reproduces the
