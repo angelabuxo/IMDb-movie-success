@@ -194,7 +194,7 @@ def widget(at: AppTest, kind: str, label: str):
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
          ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
-         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps")]
+         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps"), ("map_pages", "checks")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -208,7 +208,7 @@ def test_app_registers_every_page(explorer):
     ok(at)
     from explorer import nav
     assert {"home", "pipeline", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
-            "calendar", "tags", "followups", "data", "checks", "maps", "tmdb"} <= set(nav.PAGES)
+            "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -612,6 +612,7 @@ def test_embedding_maps_without_the_file(explorer, monkeypatch, tmp_path):
 
 def test_embedding_maps_without_scores(explorer, monkeypatch, tmp_path):
     monkeypatch.setattr("explorer.map_pages.SCORES", tmp_path / "none.csv")
+    monkeypatch.setattr("explorer.map_pages.SCORES_COMMITTED", tmp_path / "none2.csv")
     at = page("map_pages", "maps")
     ok(at)
     assert at.get("plotly_chart") and any("No scores yet" in i.value for i in at.info)
@@ -844,3 +845,40 @@ def test_tags_page_without_plot_scores(explorer, monkeypatch):
     at = page("pages", "tags", {"tag_source": "Plot summaries (all years)"})
     ok(at)
     assert widget(at, "radio", "Scores from").options == [pages.GENOME]
+
+
+def test_embedding_maps_fall_back_to_committed_scores(explorer, monkeypatch, tmp_path):
+    """Without the data folder's maps, the page still shows the committed scores and the notebook's takeaway."""
+    monkeypatch.setattr("explorer.map_pages.MAPS", tmp_path / "none.csv")
+    monkeypatch.setattr("explorer.map_pages.SCORES", tmp_path / "none2.csv")
+    at = page("map_pages", "maps")
+    ok(at)
+    assert not at.get("plotly_chart")
+    assert any("neighbours kept" in df.value.columns for df in at.dataframe)
+    assert any("**Takeaway.**" in m.value or "Takeaway." in m.value for m in at.markdown)
+
+
+def test_embedding_map_checks_page(explorer):
+    """Every tab of the checks page renders from the committed numbers in analysis/embedding_maps/."""
+    at = page("map_pages", "checks")
+    ok(at)
+    assert len(at.tabs) == 6 and len(at.get("plotly_chart")) == 4
+    assert any("Takeaway." in m.value for m in at.markdown)
+    assert any("What the checks show" not in m.value and "Stability." in m.value for m in at.markdown)
+    widget(at, "selectbox", "Clusters of one space").set_value("Cast and crew").run()
+    ok(at)
+
+
+def test_embedding_map_checks_without_results(explorer, monkeypatch, tmp_path):
+    monkeypatch.setattr("explorer.map_pages.COMMITTED", tmp_path)
+    at = page("map_pages", "checks")
+    ok(at)
+    assert any("embedding_map_checks.ipynb" in i.value for i in at.info)
+
+
+def test_notebook_markdown_reads_the_notebooks():
+    from explorer.map_pages import NB_CHECKS, NB_MAPS, notebook_markdown
+    assert notebook_markdown(NB_MAPS).startswith("**Takeaway.**")
+    assert notebook_markdown(NB_CHECKS, "## 6. What the checks show").startswith("## 6.")
+    assert notebook_markdown(NB_MAPS, "## 10. What the maps show").startswith("## 10.")
+    assert notebook_markdown(NB_MAPS.parent / "missing.ipynb") == ""

@@ -31,6 +31,8 @@ P = {
     "node": st.Page(graph_pages.node, title="Node explorer", icon=":material/account_tree:", url_path="node"),
     "scripts": st.Page(graph_pages.screenplays, title="Screenplays", icon=":material/description:", url_path="scripts"),
     "maps": st.Page(map_pages.maps, title="Embedding maps", icon=":material/bubble_chart:", url_path="maps"),
+    "mapchecks": st.Page(map_pages.checks, title="Embedding map checks", icon=":material/rule:",
+                         url_path="map-checks"),
     "profit": st.Page(pages.profit, title="Profit playground", icon=":material/insights:", url_path="profit"),
     "attribution": st.Page(attribution_page.attribution, title="Profit attribution", icon=":material/pie_chart:",
                            url_path="attribution"),
@@ -46,8 +48,8 @@ nav.PAGES.update(P)
 
 st.navigation({
     "Overview": [P["home"], P["pipeline"]],
-    "Notebooks": [P["arcs"], P["text"], P["embeddings"], P["network"]],
+    "Notebooks": [P["arcs"], P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
-    "Explore and check": [P["maps"], P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
+    "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
                           P["checks"], P["tmdb"]],
 }).run()

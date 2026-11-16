@@ -2,20 +2,31 @@
 
 Reads the coordinates and scores notebooks/embedding_maps.ipynb saves; nothing is recomputed except a film's
 nearest films on the map shown. Only titles and numbers are shown, never script, review or plot text.
+
+checks() is the page for notebooks/embedding_map_checks.ipynb. It reads only the committed numbers in
+analysis/embedding_maps/, so it works without the data folder. Both pages show the notebooks' own written reading,
+read from the .ipynb files, so the text lives in one place.
 """
 from __future__ import annotations
 
+import json
+
 import numpy as np
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
 from . import nav
-from .common import FEATURES, md, table
+from .common import FEATURES, REPO, md, show_df, table
 
 MAPS = FEATURES / "embedding_maps.csv"
 SCORES = FEATURES / "embedding_map_scores.csv"
+COMMITTED = REPO / "analysis" / "embedding_maps"   # numbers only, in git
+SCORES_COMMITTED = COMMITTED / "scores.csv"
+NB_MAPS = REPO / "notebooks" / "embedding_maps.ipynb"
+NB_CHECKS = REPO / "notebooks" / "embedding_map_checks.ipynb"
 METHODS = ["PCA", "Isomap", "t-SNE", "UMAP"]
 ALL = "All four"
 K = 10
@@ -121,12 +132,38 @@ def _film_label(films: pd.DataFrame) -> dict[str, str]:
     return dict(zip(films.tconst, films.title.fillna(films.tconst) + " (" + y + ")"))
 
 
+def notebook_markdown(path, heading: str | None = None) -> str:
+    """The markdown cell of a notebook that starts with `heading`, or with heading=None the **Takeaway.**
+    paragraph of its first cell. Empty if the notebook or the cell is missing."""
+    try:
+        cells = json.loads(path.read_text())["cells"]
+    except (OSError, ValueError, KeyError):
+        return ""
+    texts = ["".join(c["source"]) for c in cells if c.get("cell_type") == "markdown"]
+    if heading is None:
+        for t in texts:
+            for para in t.split("\n\n"):
+                if para.startswith("**Takeaway.**"):
+                    return para
+        return ""
+    return next((t for t in texts if t.startswith(heading)), "")
+
+
+def _scores_file():
+    return SCORES if SCORES.exists() else SCORES_COMMITTED if SCORES_COMMITTED.exists() else None
+
+
 def maps():
     st.title("Embedding maps")
     st.caption("notebooks/embedding_maps.ipynb: each vector space the project builds (screenplays, summaries, plots, "
-               "reviews, tags, genres, cast and crew, sentiment arcs) drawn in 2D four ways. Hover a dot for the film.")
+               "reviews, tags, genres, cast and crew, sentiment arcs) drawn in 2D four ways. Hover a dot for the film. "
+               "The checks of these maps are on the Embedding map checks page.")
+    st.markdown(md(notebook_markdown(NB_MAPS)))
     if not MAPS.exists():
-        st.info(f"No embedding maps yet. Run `notebooks/embedding_maps.ipynb`; it writes `{MAPS.name}` to `{MAPS.parent}`.")
+        st.info(f"No embedding maps yet. Run `notebooks/embedding_maps.ipynb`; it writes `{MAPS.name}` to `{MAPS.parent}`. "
+                "The scores below are the committed ones.")
+        _scores(None)
+        _reading()
         return
     allm = table(MAPS)
     allm = allm.assign(tconst=allm.tconst.astype(str))
@@ -182,12 +219,20 @@ def maps():
         if st.button("Open this film in the node explorer", key="maps_open"):
             nav.open_node(focus)
 
+    _scores(space)
+    _reading()
+
+
+def _scores(space: str | None):
+    """The scores of one space, or of every space when space is None."""
     st.subheader("How well the maps keep the space")
-    if not SCORES.exists():
+    f = _scores_file()
+    if f is None:
         st.info(f"No scores yet. Run `notebooks/embedding_maps.ipynb`; it writes `{SCORES.name}`.")
         return
-    sc = table(SCORES)
-    sc = sc[sc.space == space].drop(columns=["space"])
+    sc = table(f)
+    if space is not None:
+        sc = sc[sc.space == space].drop(columns=["space"])
     if sc.empty:
         st.caption("No scores saved for this space.")
         return
@@ -195,3 +240,110 @@ def maps():
     for name, note in SCORE_NOTES.items():
         if name in sc.columns:
             st.caption(md(f"**{name}**: {note}"))
+
+
+def _reading():
+    text = notebook_markdown(NB_MAPS, "## 10. What the maps show")
+    if text:
+        with st.expander("What the maps show and what they hide (the notebook's reading)", expanded=False):
+            st.markdown(md(text.split("\n", 1)[1]))
+
+
+# ---------------------------------------------------------------- checks page
+
+def _committed(name: str) -> pd.DataFrame | None:
+    p = COMMITTED / name
+    return table(p) if p.exists() else None
+
+
+def _section(heading: str):
+    """A notebook section's intro, without its heading line."""
+    text = notebook_markdown(NB_CHECKS, heading)
+    if text:
+        st.markdown(md(text.split("\n", 1)[1].strip()))
+
+
+def checks():
+    st.title("Embedding map checks")
+    st.caption("notebooks/embedding_map_checks.ipynb: how far the embedding maps and spaces can be trusted. Every "
+               "number is read from analysis/embedding_maps/, which the notebook writes.")
+    st.markdown(md(notebook_markdown(NB_CHECKS)))
+    if _committed("stability.csv") is None:
+        st.info("No check results yet. Run `notebooks/embedding_maps.ipynb`, then `notebooks/embedding_map_checks.ipynb`.")
+        return
+    t = st.tabs(["Stability", "Spaces agree?", "Clusters", "Release year", "Neighbours by hand", "Reading"])
+
+    with t[0]:
+        _section("## 1. Stability")
+        s = _committed("stability.csv")
+        s = s.assign(redraw_kind=np.where(s.redraw.str.startswith("seed"), "other seed", "other setting"))
+        g = (s.groupby(["space", "method", "redraw_kind"], sort=False)[["same neighbours", "same islands"]].mean()
+             .reset_index())
+        g["run"] = g.method + ", " + g.redraw_kind
+        long = g.melt(id_vars=["space", "run"], value_vars=["same neighbours", "same islands"], var_name="score")
+        fig = px.bar(long, x="space", y="value", color="run", barmode="group", facet_row="score", height=640,
+                     template="simple_white", labels={"value": "", "space": ""},
+                     color_discrete_sequence=["#c44e52", "#e8a0a2", "#8172b2", "#c3b9dd"])
+        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+        st.plotly_chart(fig, width="stretch", key="mc_stab_fig")
+        show_df(s.drop(columns="redraw_kind").round(3), key="mc_stab")
+
+    with t[1]:
+        _section("## 2. Do the spaces agree")
+        a = _committed("space_agreement.csv").set_index(_committed("space_agreement.csv").columns[0])
+        fig = px.imshow(a.round(3), text_auto=".3f", color_continuous_scale="Viridis", zmin=0, zmax=0.3,
+                        aspect="auto", height=620, labels={"color": "neighbours shared"})
+        fig.update_layout(template="simple_white", xaxis_title=None, yaxis_title=None)
+        st.plotly_chart(fig, width="stretch", key="mc_agree_fig")
+        st.caption("Colour capped at 0.3. Tag relevance and tags without reception share 978 of 1,084 columns, so "
+                   "their pair is near 1 by construction.")
+
+    with t[2]:
+        _section("## 3. Clusters")
+        c = _committed("clusters.csv")
+        fig = go.Figure()
+        for col, name, colour in (("log_mult", "raw multiple", "#4c72b0"),
+                                  ("log_mult_net", "net of budget, year and genre", "#dd8452")):
+            fig.add_bar(x=c.space, y=c[f"{col} eta2"], name=name, marker_color=colour)
+            fig.add_scatter(x=c.space, y=c[f"{col} null 97.5%"], mode="markers", name=f"shuffle 97.5%, {name}",
+                            marker=dict(symbol="line-ew-open", size=26, color="black", line=dict(width=2)))
+        fig.update_layout(barmode="group", template="simple_white", height=440,
+                          yaxis_title="share of variation in ln(multiple)", legend=dict(orientation="h", y=-0.3))
+        st.plotly_chart(fig, width="stretch", key="mc_clusters_fig")
+        show_df(c.round(4), key="mc_clusters")
+        desc = _committed("cluster_descriptions.csv")
+        if desc is not None:
+            sp = st.selectbox("Clusters of one space", list(dict.fromkeys(desc.space)), key="mc_desc_space")
+            show_df(desc[desc.space == sp].drop(columns="space").sort_values("median multiple", ascending=False)
+                    .round(3), key="mc_desc")
+
+    with t[3]:
+        _section("## 4. Release year")
+        y = _committed("year_smoothness.csv")
+        long = y.melt(id_vars="space", var_name="where", value_name="year smoothness")
+        fig = px.bar(long, x="space", y="year smoothness", color="where", barmode="group", height=420,
+                     template="simple_white", labels={"space": ""})
+        st.plotly_chart(fig, width="stretch", key="mc_year_fig")
+        show_df(y.round(3), key="mc_year")
+
+    with t[4]:
+        _section("## 5. Neighbours by hand")
+        sheet = _committed("hand_check_sheet.csv")
+        if sheet is None:
+            st.info("No sheet yet. Run `notebooks/embedding_map_checks.ipynb`.")
+        else:
+            judged = sheet.similar.notna().sum() if "similar" in sheet else 0
+            st.metric("Rows judged", f"{judged} of {len(sheet)}")
+            key = _committed("hand_check_key.csv")
+            if judged and key is not None:
+                j = sheet.merge(key, on="row").dropna(subset=["similar"])
+                score = j.groupby(["space", "neighbour"]).similar.mean().unstack("neighbour")
+                score.columns = ["random film" if not c else "nearest film" for c in score.columns]
+                st.caption("Share judged similar: nearest films against the random film mixed in.")
+                st.dataframe(score.round(2), width="stretch")
+            st.caption("The sheet, without the key. Judge it in the CSV, not here, and don't open the key first.")
+            show_df(sheet, key="mc_sheet")
+
+    with t[5]:
+        text = notebook_markdown(NB_CHECKS, "## 6. What the checks show")
+        st.markdown(md(text.split("\n", 1)[1]) if text else "No reading in the notebook yet.")

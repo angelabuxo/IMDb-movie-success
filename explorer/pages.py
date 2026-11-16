@@ -70,6 +70,8 @@ def home():
 - **Embedding maps**: every vector space (screenplays, plots, reviews, tags, cast and crew, arcs) in 2D by
   PCA, Isomap, t-SNE and UMAP, coloured by return, genre or year, with a film's nearest films and how well each map
   keeps the space.
+- **Embedding map checks**: whether those maps hold up: stability across seeds and settings, whether the spaces
+  agree on which films are alike, clusters against profit, sorting by release year, and the hand-check sheet.
 - **Profit playground**: choose the sample, axes and colours, and explore budget, gross and return.
 - **Data inspector**: open any data or output file and check its columns, missing values, duplicates and rows.
 - **Checks**: automatic sanity checks on the data and outputs, and the test suite.
