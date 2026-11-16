@@ -23,7 +23,7 @@ Audited branch `g/pairwise-returns` at `39e704a`, the same code as `public/main`
 | Contract tests | Missing | steps hand CSVs to each other with no schema check. Only 9 `assert`s across all code (`analysis/arcs/s03_instruments.py` has 3) | Medium |
 | Lint tests | Missing | no ruff, flake8 or pre-commit config | Low |
 | Acceptance tests | Present | statistical acceptance: shuffle nulls (`analysis/arcs/s06_shuffle.py`, `analysis/scripts_text/s06_null.py`), robustness (`analysis/arcs/s09_robustness.py`), franchise and leakage checks (`analysis/arcs/s10_checks.py`, `notebooks/scripts_text/10_franchise_leakage.ipynb`) | - |
-| Regression tests | Missing | no check that the paper's numbers still match the outputs after a rerun | **High** |
+| Regression tests | Present (2026-11-16) | `tests/test_paper_numbers.py` recomputes every number in `paper/main.tex` and the hard-coded inputs of `paper/make_figures.py` from committed outputs, and fails on any number in the paper with no declared source. Reception numbers are read from the unmerged `reviews-exploration` branch and skipped without it | - |
 | Smoke tests | Present (partial) | `analysis/*/build_notebooks.py` runs every notebook end to end with nbconvert's `ExecutePreprocessor`. It's manual and slow (2 h timeout), and there's no quick small-sample run | Medium |
 | Usability tests | N/A | the paper gets read, not used. Peer reading counts as review, not testing | - |
 | UI/UX tests | N/A | static results site only | - |
