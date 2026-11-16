@@ -86,6 +86,36 @@ def data_dir(tmp_path_factory):
     words = {f: {"counts": {f"w{j}": int(j % 7) for j in range(600)}} for f in films[:5]}
     (feat / "wide_words.json").write_text(json.dumps(words))
 
+    # release months for all but the last two films (scripts/imdb/parse_infobox.py), split over the two files
+    months = pd.DataFrame({"tconst": films[:38], "title": [f"Film {i}" for i in range(38)], "studios": "Studio 0|Studio 1",
+                           "distributors": "Dist A", "producers": "Person P", "starring": "Person A|Person B",
+                           "release_month": rng.integers(1, 13, 38)})
+    months.iloc[:20].to_csv(feat / "wiki_infobox.csv", index=False)
+    months.iloc[15:].to_csv(feat / "wiki_infobox_10k.csv", index=False)
+
+    # tag relevance for the first 30 films over 12 tags, 4 of them genre tags (scripts/reviews/tag_shares.py)
+    tag_names = ["drama", "comedy", "horror", "action", "time travel", "heist", "original", "boring",
+                 "space", "true", "none", "nan"]
+    rel = rng.uniform(0, 1, (30, len(tag_names))).astype(np.float32)
+    rel[:, 6] = 1.0                                     # a tag that is strong on every film
+    np.save(feat / "tag_relevance.npy", rel)
+    pd.DataFrame({"tconst": films[:30]}).to_csv(feat / "tag_relevance_ids.csv", index=False)
+    pd.DataFrame({"tag": tag_names}).to_csv(feat / "tag_relevance_tags.csv", index=False)
+    gs = pd.DataFrame({"tconst": films[:30], "primaryTitle": movies.label[:30], "y": movies.year[:30],
+                       "genres": movies.genres[:30], "tier": movies.tier[:30]})
+    for j, g in enumerate(["Drama", "Comedy", "Horror", "Action"]):
+        gs["rel_" + g] = rel[:, j]
+    gs.iloc[::-1].to_csv(feat / "genre_shares.csv", index=False)   # another row order than the matrix
+    # plot-predicted tags for every film, including the ten the Tag Genome doesn't cover (scripts/reviews/plot_tags.py)
+    prel = rng.uniform(0, 0.7, (40, len(tag_names))).astype(np.float32)
+    np.save(feat / "plot_tag_relevance.npy", prel)
+    pd.DataFrame({"tconst": films, "out_of_fold": [1] * 30 + [0] * 10}).to_csv(feat / "plot_tag_relevance_ids.csv", index=False)
+    ps = pd.DataFrame({"tconst": films, "primaryTitle": movies.label, "y": movies.year, "genres": movies.genres,
+                       "has_tag_genome": [1] * 30 + [0] * 10})
+    for j, g in enumerate(["Drama", "Comedy", "Horror", "Action"]):
+        ps["rel_" + g] = prel[:, j]
+    ps.to_csv(feat / "plot_genre_shares.csv", index=False)
+
     ms = root / "scripts" / "moviesum"
     ms.mkdir(parents=True)
 
@@ -146,8 +176,9 @@ def widget(at: AppTest, kind: str, label: str):
 
 
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
-         ("pages", "inspector"), ("pages", "checks"), ("pages", "tmdb"), ("graph_pages", "whole_graph"),
-         ("graph_pages", "node"), ("graph_pages", "screenplays")]
+         ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
+         ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
+         ("embedding_page", "embeddings")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -160,7 +191,8 @@ def test_app_registers_every_page(explorer):
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "attribution", "data", "checks", "tmdb"} <= set(nav.PAGES)
+    assert {"home", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution", "calendar",
+            "tags", "followups", "data", "checks", "tmdb"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -505,3 +537,234 @@ def test_pages_without_the_screenplays(explorer, monkeypatch, tmp_path):
     ok(at)
     assert any("No MovieSum files" in w.value for w in at.warning)
     ok(page("graph_pages", "node", {"node_id": "tt0119094"}))
+
+
+@pytest.mark.parametrize("corpus", ["reviews", "screenplays", "summaries"])
+def test_embedding_page_widgets(explorer, corpus):
+    """The text embeddings page with each corpus in the word list, the film map and the neighbour lookup.
+    (Streamlit runs every tab's code on each run, so this covers all tabs.)"""
+    at = page("embedding_page", "embeddings", {"emb_words_corpus": corpus, "emb_map_corpus": corpus,
+                                                "emb_map_color": "year", "emb_nb_corpus": corpus,
+                                                "emb_nb_variant": "raw"})
+    ok(at)
+
+
+def test_tag_shares_sum_to_one_and_keep_the_order(explorer):
+    from explorer import pages
+    rel = np.array([[0.9, 0.3, 0.1], [0.0, 0.0, 0.0], [0.2, 0.2, 0.6]])
+    for power in (1, 2, 4):
+        sh = pages.tag_shares(rel, power)
+        assert np.allclose(sh.sum(axis=1), [1, 0, 1])          # a film with no relevance gets no shares
+        assert (sh[0].argsort() == rel[0].argsort()).all()
+    assert pages.tag_shares(rel, 2)[0, 0] > pages.tag_shares(rel, 1)[0, 0]
+
+
+def test_tags_page_reads_names_literally_and_aligns_rows(explorer):
+    """Tags called "nan" or "none" stay tags, and the genre table follows the matrix's row order."""
+    from explorer import pages
+    rel, names, films = pages.tag_data(str(pages.FEATURES), 0.0)
+    assert names[-2:] == ["none", "nan"] and len(names) == rel.shape[1]
+    ids = pd.read_csv(pages.FEATURES / "tag_relevance_ids.csv")["tconst"].tolist()
+    assert films["tconst"].tolist() == ids
+    assert np.allclose(films["rel_Drama"], rel[:, 0], atol=1e-6)
+
+
+@pytest.mark.parametrize("power", [1.0, 4.0])
+def test_tags_page_controls(explorer, power):
+    at = page("pages", "tags")
+    widget(at, "slider", "Power").set_value(power)
+    widget(at, "radio", "Rank tags by").set_value("highest relevance")
+    ok(at.run())
+    at = page("pages", "tags", {"tag_view": "One tag"})
+    widget(at, "multiselect", "Tags").set_value(["heist", "time travel"])
+    ok(at.run())
+    widget(at, "multiselect", "Tags").set_value([])
+    ok(at.run())
+
+
+@pytest.mark.parametrize("view", ["One film", "One tag", "Genre mix", "Profit", "Checks"])
+def test_tags_page_views(explorer, view):
+    ok(page("pages", "tags", {"tag_view": view}))
+
+
+def test_tags_page_opens_on_a_requested_film(explorer):
+    """What nav.open_tags sets: the page lands on that film's view, with its overview and links out."""
+    at = page("pages", "tags", {"tag_film_pending": "tt1000007", "tag_view_pending": "One film", "tag_view": "Checks"})
+    ok(at)
+    assert widget(at, "selectbox", "Film").value == 7
+    assert any("Film 7" in m.value for m in at.markdown)
+    assert "tag_film_pending" not in at.session_state and "tag_view_pending" not in at.session_state
+    ok(page("pages", "tags", {"tag_film_pending": "tt9999999"}))     # a film without scores is ignored
+
+
+@pytest.mark.parametrize("view,key", [("One tag", "sel_tag_top_films"), ("Genre mix", "sel_tag_mix_films")])
+def test_tags_page_row_click_shows_the_film(explorer, view, key):
+    plain = page("pages", "tags", {"tag_view": view})
+    at = page("pages", "tags", {"tag_view": view, key: {"selection": {"rows": [0], "columns": [], "cells": []}}})
+    ok(at)
+    assert len([b for b in at.button if b.label == "Its tags"]) == 1
+    assert not [b for b in plain.button if b.label == "Its tags"]
+
+
+def test_external_links(explorer):
+    from explorer import graph_pages as gp
+    film = gp.external_links("tt0004972")                       # first row of data/movie_links.csv
+    assert film["IMDb"] == "https://www.imdb.com/title/tt0004972/"
+    assert film["Wikipedia"].startswith("https://en.wikipedia.org/wiki/") and "wikidata.org" in film["Wikidata"]
+    assert gp.external_links("tt9999999") == {"IMDb": "https://www.imdb.com/title/tt9999999/"}
+    assert gp.external_links("nm0000123") == {"IMDb": "https://www.imdb.com/name/nm0000123/"}
+    assert gp.external_links("company:Q900") == {"Wikidata": "https://www.wikidata.org/wiki/Q900"}
+    assert gp.external_links("company:name:Dist A") == {}
+
+
+def test_show_df_returns_the_clicked_row(explorer):
+    at = AppTest.from_string(
+        "import pandas as pd, streamlit as st\nfrom explorer.common import show_df\n"
+        "r = show_df(pd.DataFrame({'a': range(12)}), key='t', select=True)\n"
+        "st.write('picked', None if r is None else int(r['a']))\n", default_timeout=TIMEOUT)
+    at.session_state["sel_t"] = {"selection": {"rows": [3], "columns": [], "cells": []}}
+    ok(at.run())
+    assert any("3" in str(m.value) for m in at.markdown)
+
+
+def test_tags_page_without_the_files(explorer, monkeypatch):
+    from explorer import pages
+    monkeypatch.setattr(pages, "TAG_FILES", ("not_built.npy",))
+    at = page("pages", "tags")
+    ok(at)
+    assert any("scripts/reviews/tag_shares.py" in w.value for w in at.warning)
+
+
+def test_tags_profit_view_controls(explorer):
+    """The Profit view on the synthetic films: every outcome and tag class, another tag, another pair of genres."""
+    at = page("pages", "tags", {"tag_view": "Profit"})
+    ok(at)
+    assert not at.info, [i.value for i in at.info]            # the saved results and the graph were found
+    for outcome in ("gross", "adjusted_votes"):
+        widget(at, "selectbox", "Outcome").set_value(outcome)
+        widget(at, "selectbox", "Tags").set_value("all")
+        ok(at.run())
+    at.selectbox(key="tp_tag").set_value(4)
+    widget(at, "selectbox", "Genre A").set_value("Horror")
+    widget(at, "slider", "Counts as the genre").set_value(0.9)   # empty cells must not break the table
+    ok(at.run())
+
+
+def test_tags_profit_view_without_saved_results(explorer, monkeypatch, tmp_path):
+    from explorer import pages
+    monkeypatch.setattr(pages, "TAG_PROFIT", tmp_path)
+    at = page("pages", "tags", {"tag_view": "Profit"})
+    ok(at)
+    assert any("tag_profit.py" in i.value for i in at.info)
+
+
+@pytest.mark.parametrize("view", ["Tags from plots", "Usual genre mix", "Seen and liked", "Critics and audience", "Franchise and month"])
+def test_tag_followups_views(explorer, view):
+    """The follow-ups page draws every view from the committed results and needs no data folder."""
+    at = page("pages", "tag_followups", {"fu_view": view})
+    ok(at)
+    assert not at.info, [i.value for i in at.info]
+
+
+def test_tag_followups_controls_and_missing_results(explorer, monkeypatch, tmp_path):
+    at = page("pages", "tag_followups", {"fu_view": "Seen and liked"})
+    widget(at, "selectbox", "Quadrant").set_value("not liked, earned")
+    ok(at.run())
+    at = page("pages", "tag_followups", {"fu_view": "Critics and audience"})
+    widget(at, "radio", "Critic score").set_value("rotten_tomatoes")
+    ok(at.run())
+    from explorer import pages
+    monkeypatch.setattr(pages, "TAG_PROFIT", tmp_path)
+    at = page("pages", "tag_followups")
+    ok(at)
+    assert any("plot_tags.py" in i.value for i in at.info)
+
+
+def test_calendar_films_have_a_month_and_an_adjusted_return(explorer):
+    from explorer import pages
+    m = pages.calendar_films()
+    assert len(m) == 38 and m["tconst"].is_unique and m["month"].between(1, 12).all()
+    fit = m[m["clean"] & (m["year"] >= 1975) & m["multiple"].notna()]
+    assert fit["adjusted"].notna().all() and abs(fit["adjusted"].mean()) < 1e-9      # residuals of the fit
+    assert m.loc[~m["clean"], "adjusted"].isna().all()
+
+
+@pytest.mark.parametrize("metric", ["Median gross ÷ budget", "Share grossing under budget", "Total gross ($M)", "Number of films"])
+def test_calendar_measures_and_layouts(explorer, metric):
+    at = page("pages", "calendar")
+    ok(at)
+    widget(at, "selectbox", "Measure").set_value(metric)
+    widget(at, "toggle", "Years across").set_value(False)
+    widget(at, "number_input", "Min films").set_value(1)
+    ok(at.run())
+
+
+def test_calendar_filters_down_to_nothing_and_back(explorer):
+    at = page("pages", "calendar")
+    widget(at, "toggle", "Clean films only").set_value(False)
+    widget(at, "multiselect", "Must include genre").set_value(["Drama", "Comedy", "Horror"])   # films have two genres
+    ok(at.run())
+    assert any("No films match" in i.value for i in at.info)
+    widget(at, "multiselect", "Must include genre").set_value(["Drama"])
+    ok(at.run())
+
+
+def test_calendar_square_hand_over_lists_its_films(explorer):
+    """A click on a square can't be sent headlessly; it sets these two keys, which pick the films listed below."""
+    from explorer import pages
+    m = pages.calendar_films()
+    r = m[m["clean"] & m["adjusted"].notna()].iloc[0]
+    at = page("pages", "calendar", {"cal_years": (int(m["year"].min()), int(m["year"].max())),
+                                    "cal_pick_year": int(r["year"]), "cal_pick_month": int(r["month"])})
+    ok(at)
+    assert widget(at, "selectbox", "Year").value == int(r["year"]) and widget(at, "selectbox", "Month").value == int(r["month"])
+    assert any(r["title"] in str(df.value.to_dict()) for df in at.dataframe)
+    # a month or year that the filters removed falls back to one that is shown
+    ok(page("pages", "calendar", {"cal_pick_year": 1066, "cal_pick_month": 13}))
+
+
+def test_calendar_without_release_months(explorer, monkeypatch, tmp_path):
+    from explorer import pages
+    monkeypatch.setattr(pages, "INFOBOX", [tmp_path / "none.csv"])
+    at = page("pages", "calendar")
+    ok(at)
+    assert any("parsed infoboxes" in w.value for w in at.warning)
+
+
+@pytest.mark.parametrize("view", ["One film", "One tag", "Genre mix", "Profit", "Checks"])
+def test_tags_page_on_plot_scores(explorer, view):
+    """Every view with the plot-based scores; Profit and Checks fall back to the Tag Genome."""
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)", "tag_view": view})
+    ok(at)
+    assert widget(at, "radio", "Scores from").value == "Plot summaries (all years)"
+    on_plot = any("plot summary" in c.value for c in at.caption)
+    assert on_plot == (view not in ("Profit", "Checks"))
+
+
+def test_tags_page_plot_scores_cover_films_the_tag_genome_does_not(explorer):
+    """A film after the Tag Genome (row 35 has plot scores only) opens on the plot-based scores, and its tags show."""
+    from explorer import pages
+    at = page("pages", "tags", {"tag_film_pending": "tt1000035", "tag_view_pending": "One film"})
+    ok(at)
+    assert widget(at, "radio", "Scores from").value == pages.PLOT
+    assert widget(at, "selectbox", "Film").value == 35
+    rel, names, films = pages.tag_data(str(pages.FEATURES), 0.0, pages.PLOT)
+    assert rel.shape == (40, len(names)) and films["tconst"].tolist()[35] == "tt1000035"
+
+
+def test_tags_page_hides_tags_a_plot_does_not_recover(explorer):
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)", "tag_view": "One tag"})
+    ok(at)
+    options = widget(at, "multiselect", "Tags").options
+    assert options and not any(o.startswith("nan") or o.startswith("none") for o in options)   # not in plot_tags_tags.csv
+    widget(at, "slider", "Only tags a plot recovers").set_value(0.0)
+    ok(at.run())
+    assert len(widget(at, "multiselect", "Tags").options) == 12
+
+
+def test_tags_page_without_plot_scores(explorer, monkeypatch):
+    from explorer import pages
+    monkeypatch.setitem(pages.SOURCE_FILES, pages.PLOT, ("missing.npy", "missing.csv", "missing.csv"))
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)"})
+    ok(at)
+    assert widget(at, "radio", "Scores from").options == [pages.GENOME]

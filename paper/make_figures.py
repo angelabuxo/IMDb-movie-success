@@ -19,6 +19,16 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
 
+# Hard-coded inputs. tests/test_paper_numbers.py checks both against their sources, so a rerun that moves them fails.
+# Fig. 1A: out-of-time R2 (train <= 2010, test 2011-2017), ridge; notebooks/what_predicts_profit.ipynb summary.
+LADDER = [("Budget,\nyear,\ngenre", -0.013), ("+ net-\nwork", 0.196), ("+ month,\nfran-\nchise", 0.237),
+          ("+ critics,\naudi-\nence*", 0.309)]
+# Fig. 3: analysis/reviews/outputs/spearman_correlations.csv (branch reviews-exploration): Spearman rho with
+# ln(gross/budget) on films to 2017, and the mean and SD of a null that shuffles within genre x decade.
+RECEPTION = [("IMDb rating", 0.266, 0.099, 0.018), ("Metacritic", 0.261, 0.089, 0.020),
+             ("Rotten Tomatoes", 0.326, 0.122, 0.018),
+             ("Review tone (VADER)", 0.127, 0.025, 0.017)]  # review tone from that branch's README; SD from z = 6.10
+
 INK, ACCENT, GREY, LIGHT = "#1F2933", "#1F6F8B", "#8A969C", "#D5E3E8"
 plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"],
                      "font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5,
@@ -32,9 +42,7 @@ def panel(ax, letter):
 
 
 def fig_network():
-    # A: out-of-time R2 (train <= 2010, test 2011-2017), ridge; notebooks/what_predicts_profit.ipynb summary.
-    ladder = [("Budget,\nyear,\ngenre", -0.013), ("+ net-\nwork", 0.196), ("+ month,\nfran-\nchise", 0.237),
-              ("+ critics,\naudi-\nence*", 0.309)]
+    ladder = LADDER
     # B: return similarity by role, adjusted for ln budget, decade and genre (analysis/network/roi_similarity.json).
     r = json.loads((ROOT / "analysis/network/roi_similarity.json").read_text())["results"]
     adj, ws = r["adjusted"]["roles"], r["adjusted_within_studio"]["roles"]
@@ -95,10 +103,7 @@ def fig_script():
 
 
 def fig_reception():
-    # analysis/reviews/README.md (branch reviews-exploration): Spearman rho with ln(gross/budget), 2,095 films to
-    # 2017, and the mean and SD of a null that shuffles within genre x decade.
-    rows = [("IMDb rating", 0.266, 0.099, 0.018), ("Metacritic", 0.261, 0.089, 0.020),
-            ("Rotten Tomatoes", 0.326, 0.122, 0.018), ("Review tone (VADER)", 0.127, 0.025, 0.017)]  # SD for review tone derived from z = 6.10
+    rows = RECEPTION
     fig, ax = plt.subplots(figsize=(3.45, 1.7))
     y = np.arange(len(rows))[::-1]
     for yi, (k, rho, m, sd) in zip(y, rows):

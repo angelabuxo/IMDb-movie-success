@@ -1,0 +1,36 @@
+{
+ "model": "all-MiniLM-L6-v2",
+ "device": "mps",
+ "passage_words": 180,
+ "max_seq_length": 256,
+ "reviews_raw": {
+  "films": 5405,
+  "texts": 160532,
+  "passages": 278627
+ },
+ "reviews_clean": {
+  "films": 5405,
+  "texts": 160532,
+  "passages": 273834
+ },
+ "screenplays_raw": {
+  "films": 1630,
+  "texts": 1630,
+  "passages": 225001
+ },
+ "screenplays_clean": {
+  "films": 1630,
+  "texts": 1630,
+  "passages": 192499
+ },
+ "summaries_raw": {
+  "films": 1625,
+  "texts": 1625,
+  "passages": 6341
+ },
+ "summaries_clean": {
+  "films": 1625,
+  "texts": 1625,
+  "passages": 6306
+ }
+}

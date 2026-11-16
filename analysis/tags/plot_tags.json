@@ -1,0 +1,748 @@
+{
+ "films_with_plot": 12326,
+ "films_with_plot_and_tag_scores": 6451,
+ "films_in_graph": 12673,
+ "plot_words": {
+  "median": 611.0,
+  "p10": 360.0,
+  "p90": 760.0
+ },
+ "headings": {
+  "plot": 11982,
+  "synopsis": 218,
+  "premise": 55,
+  "plot summary": 36,
+  "summary": 25,
+  "storyline": 5,
+  "plot synopsis": 3,
+  "story": 2
+ },
+ "recovery": {
+  "alpha": 1000.0,
+  "held_out_r2_all_tags": 0.23468878272896276,
+  "by_class": {
+   "content": {
+    "tags": 922,
+    "median_r": 0.4315217132950271,
+    "p10_r": 0.2707773624181987,
+    "tags_r_over_0.5": 238
+   },
+   "reception": {
+    "tags": 148,
+    "median_r": 0.41512419552900237,
+    "p10_r": 0.3103272515287327,
+    "tags_r_over_0.5": 25
+   },
+   "commercial": {
+    "tags": 14,
+    "median_r": 0.4165248449001675,
+    "p10_r": 0.283155149639749,
+    "tags_r_over_0.5": 5
+   }
+  },
+  "best_tags": [
+   [
+    "sports",
+    0.7527197466730721
+   ],
+   [
+    "action",
+    0.7260096125521689
+   ],
+   [
+    "fighting",
+    0.6989113012707571
+   ],
+   [
+    "war",
+    0.694929685046401
+   ],
+   [
+    "gunfight",
+    0.6869545332030192
+   ],
+   [
+    "horror",
+    0.6858975027032502
+   ],
+   [
+    "science",
+    0.6833863017803435
+   ],
+   [
+    "space",
+    0.6807379132277463
+   ],
+   [
+    "relationships",
+    0.6798698336916735
+   ],
+   [
+    "murder",
+    0.6745320640950497
+   ],
+   [
+    "sci-fi",
+    0.67312222790904
+   ],
+   [
+    "monster",
+    0.6716357283120453
+   ],
+   [
+    "school",
+    0.6617581571841873
+   ],
+   [
+    "effects",
+    0.6613202895795578
+   ],
+   [
+    "scifi",
+    0.6599644183802653
+   ]
+  ],
+  "worst_tags": [
+   [
+    "firefly",
+    0.032060682140084784
+   ],
+   [
+    "neo-nazis",
+    0.11080378227033005
+   ],
+   [
+    "claymation",
+    0.12006439985963976
+   ],
+   [
+    "aardman",
+    0.12504300386462278
+   ],
+   [
+    "chicago",
+    0.13714966130518808
+   ],
+   [
+    "spelling bee",
+    0.14311519229307154
+   ],
+   [
+    "miyazaki",
+    0.15248510654211908
+   ],
+   [
+    "monty python",
+    0.15630815630813205
+   ],
+   [
+    "tarantino",
+    0.1596132835518574
+   ],
+   [
+    "jay and silent bob",
+    0.1596288725733975
+   ],
+   [
+    "depp & burton",
+    0.15969162252668706
+   ],
+   [
+    "arnold",
+    0.16240446924373025
+   ],
+   [
+    "australian",
+    0.16828249472836282
+   ],
+   [
+    "nudity (rear)",
+    0.1703432853026286
+   ],
+   [
+    "bowling",
+    0.17137356537793874
+   ]
+  ],
+  "genre_tags_r": {
+   "Action": 0.7260096125521689,
+   "Adventure": 0.6583700069883341,
+   "Animation": 0.5073765506401418,
+   "Biography": 0.5093451188443513,
+   "Comedy": 0.5716689473510798,
+   "Crime": 0.6553241026813306,
+   "Documentary": 0.4477860277133753,
+   "Drama": 0.5194017938616167,
+   "Family": 0.5607911367650924,
+   "Fantasy": 0.5564874354667482,
+   "Film-Noir": 0.41017687206157755,
+   "History": 0.5867540809943869,
+   "Horror": 0.6858975027032502,
+   "Music": 0.5250186939362026,
+   "Musical": 0.48449589359426376,
+   "Mystery": 0.5173661876212641,
+   "Romance": 0.5421058685650604,
+   "Sci-Fi": 0.67312222790904,
+   "Sport": 0.7527197466730721,
+   "Thriller": 0.6194451261254593,
+   "War": 0.694929685046401,
+   "Western": 0.48625223843697
+  },
+  "genre_auc": {
+   "Action": {
+    "plot_scored_films": 0.9160959312349575,
+    "tag_genome_scored_films": 0.9421686260075095,
+    "plot_films_after_2014": 0.9133265877448392,
+    "imdb_films_after": 1208
+   },
+   "Adventure": {
+    "plot_scored_films": 0.9001787294863876,
+    "tag_genome_scored_films": 0.905804095502448,
+    "plot_films_after_2014": 0.8958759101044439,
+    "imdb_films_after": 726
+   },
+   "Animation": {
+    "plot_scored_films": 0.9350747262750089,
+    "tag_genome_scored_films": 0.9970946976845154,
+    "plot_films_after_2014": 0.9194709977551437,
+    "imdb_films_after": 226
+   },
+   "Biography": {
+    "plot_scored_films": 0.9062529974067206,
+    "tag_genome_scored_films": 0.9447887581738457,
+    "plot_films_after_2014": 0.8967654459043892,
+    "imdb_films_after": 392
+   },
+   "Comedy": {
+    "plot_scored_films": 0.8277976976212493,
+    "tag_genome_scored_films": 0.92662367396469,
+    "plot_films_after_2014": 0.8131109086574485,
+    "imdb_films_after": 1272
+   },
+   "Crime": {
+    "plot_scored_films": 0.9032199297943979,
+    "tag_genome_scored_films": 0.8912866967547819,
+    "plot_films_after_2014": 0.9119217933147772,
+    "imdb_films_after": 795
+   },
+   "Documentary": {
+    "plot_scored_films": 0.9798002436847746,
+    "tag_genome_scored_films": 0.9898369594008125,
+    "plot_films_after_2014": 0.9643533296642818,
+    "imdb_films_after": 92
+   },
+   "Drama": {
+    "plot_scored_films": 0.806762567648522,
+    "tag_genome_scored_films": 0.8382023379110558,
+    "plot_films_after_2014": 0.7891072125910155,
+    "imdb_films_after": 2333
+   },
+   "Family": {
+    "plot_scored_films": 0.8711996503012226,
+    "tag_genome_scored_films": 0.8811381442498634,
+    "plot_films_after_2014": 0.8372545894951555,
+    "imdb_films_after": 120
+   },
+   "Fantasy": {
+    "plot_scored_films": 0.8177193753684147,
+    "tag_genome_scored_films": 0.8504540867810292,
+    "plot_films_after_2014": 0.7962105936465372,
+    "imdb_films_after": 281
+   },
+   "Film-Noir": {
+    "plot_scored_films": 0.8806103319807314,
+    "tag_genome_scored_films": 0.9919271018722859,
+    "plot_films_after_2014": null,
+    "imdb_films_after": 0
+   },
+   "History": {
+    "plot_scored_films": 0.9394145689591518,
+    "tag_genome_scored_films": 0.930339361259543,
+    "plot_films_after_2014": 0.9001482896457124,
+    "imdb_films_after": 194
+   },
+   "Horror": {
+    "plot_scored_films": 0.958958781924591,
+    "tag_genome_scored_films": 0.9897024817505339,
+    "plot_films_after_2014": 0.9346089776903375,
+    "imdb_films_after": 632
+   },
+   "Music": {
+    "plot_scored_films": 0.9533021406155859,
+    "tag_genome_scored_films": 0.920572782922907,
+    "plot_films_after_2014": 0.9673957400218972,
+    "imdb_films_after": 102
+   },
+   "Musical": {
+    "plot_scored_films": 0.8765879902811524,
+    "tag_genome_scored_films": 0.9912731325015072,
+    "plot_films_after_2014": 0.7402133079359321,
+    "imdb_films_after": 33
+   },
+   "Mystery": {
+    "plot_scored_films": 0.8581157454947365,
+    "tag_genome_scored_films": 0.881283134623575,
+    "plot_films_after_2014": 0.8141222505297145,
+    "imdb_films_after": 544
+   },
+   "Romance": {
+    "plot_scored_films": 0.8399981631549848,
+    "tag_genome_scored_films": 0.8300801246589047,
+    "plot_films_after_2014": 0.8722279945005929,
+    "imdb_films_after": 513
+   },
+   "Sci-Fi": {
+    "plot_scored_films": 0.9220157824279573,
+    "tag_genome_scored_films": 0.9180102867610794,
+    "plot_films_after_2014": 0.9014594339856635,
+    "imdb_films_after": 267
+   },
+   "Sport": {
+    "plot_scored_films": 0.9852874686869921,
+    "tag_genome_scored_films": 0.9793028655220871,
+    "plot_films_after_2014": 0.9838805174812754,
+    "imdb_films_after": 68
+   },
+   "Thriller": {
+    "plot_scored_films": 0.7991544941161625,
+    "tag_genome_scored_films": 0.813412106174457,
+    "plot_films_after_2014": 0.7549532470353585,
+    "imdb_films_after": 775
+   },
+   "War": {
+    "plot_scored_films": 0.9479711332575536,
+    "tag_genome_scored_films": 0.9583168116171895,
+    "plot_films_after_2014": 0.9598395201815529,
+    "imdb_films_after": 62
+   },
+   "Western": {
+    "plot_scored_films": 0.9821543935842406,
+    "tag_genome_scored_films": 0.9892134877066231,
+    "plot_films_after_2014": 0.9449138332053182,
+    "imdb_films_after": 23
+   }
+  },
+  "genre_auc_mean": {
+   "plot_scored_films": 0.9003487656047953,
+   "tag_genome_scored_films": 0.9254923524455112,
+   "plot_films_after_2014": 0.8814838324329234
+  },
+  "films_after_2014": 4042,
+  "top_share_genre_in_imdb": {
+   "scored_films": 0.7806541621454038,
+   "films_after": 0.7810489856506679
+  },
+  "top_genre_agrees_with_tag_genome": 0.43264610137963105
+ },
+ "leak": {
+  "films": 6399,
+  "films_scored": 4242,
+  "r2_votes_from_plot_embedding": 0.12477300892772336,
+  "r2_votes_from_plot_content_tags": 0.10442754547898914,
+  "r2_votes_from_plot_embedding_scored_films": 0.0977458735082456,
+  "r2_votes_from_tag_genome_content_tags": 0.7721198321870761,
+  "r2_votes_from_imdb_genre_labels": 0.03876784956650814,
+  "rho_plot_words_with_votes": 0.207238541126621,
+  "rho_plot_words_with_adjusted": 0.07855937027432142
+ },
+ "return": {
+  "films": 6399,
+  "films_from_2005": 3668,
+  "films_after_2014": 1535,
+  "sets": {
+   "plot embedding": {
+    "features": 384,
+    "random_folds": 0.059614683319673456,
+    "null_max": -0.004885249409116499,
+    "trained_before_2005": 0.03581826119682063,
+    "r_trained_before_2005": 0.19461605051606534,
+    "trained_to_2014_tested_after": 0.05420745303532393,
+    "r_trained_to_2014_tested_after": 0.23549486132071473,
+    "votes_fixed_random_folds": 0.05898093327484555,
+    "votes_fixed_trained_before_2005": 0.02355740158007147
+   },
+   "plot-predicted content tags": {
+    "features": 922,
+    "random_folds": 0.05868187574591893,
+    "null_max": -0.002738138662763623,
+    "trained_before_2005": 0.039902453046910646,
+    "r_trained_before_2005": 0.20481398642342802,
+    "trained_to_2014_tested_after": 0.06314829435216318,
+    "r_trained_to_2014_tested_after": 0.25376185446575855,
+    "votes_fixed_random_folds": 0.06896295523293916,
+    "votes_fixed_trained_before_2005": 0.030994631537549888
+   },
+   "IMDb genre labels": {
+    "features": 22,
+    "random_folds": 0.03186491122567686,
+    "null_max": 0.0005221052671126047,
+    "trained_before_2005": 0.025207981986690275,
+    "r_trained_before_2005": 0.16340891511888953,
+    "trained_to_2014_tested_after": 0.04274920360902201,
+    "r_trained_to_2014_tested_after": 0.22037811866146065,
+    "votes_fixed_random_folds": 0.06574696054662199,
+    "votes_fixed_trained_before_2005": 0.046242399754494956
+   },
+   "plot embedding + IMDb genre labels": {
+    "features": 406,
+    "random_folds": 0.07548819028229659,
+    "null_max": -0.007372148560817804,
+    "trained_before_2005": 0.050415829594235184,
+    "r_trained_before_2005": 0.23040211042196476,
+    "trained_to_2014_tested_after": 0.0715839409926633,
+    "r_trained_to_2014_tested_after": 0.27395385802899813,
+    "votes_fixed_random_folds": 0.08719320444042145,
+    "votes_fixed_trained_before_2005": 0.04594704358905766
+   }
+  },
+  "scored_films": {
+   "films": 4242,
+   "Tag Genome content tags": {
+    "random_folds": 0.35027058912052966,
+    "trained_before_2005": 0.24960010074594707,
+    "r_trained_before_2005": 0.5206861849322636,
+    "votes_fixed_trained_before_2005": 0.21451119143096575
+   },
+   "plot embedding": {
+    "random_folds": 0.060668746152655495,
+    "trained_before_2005": 0.041127799923343256,
+    "r_trained_before_2005": 0.2138827777310766,
+    "votes_fixed_trained_before_2005": 0.0443828167238246
+   },
+   "plot-predicted content tags": {
+    "random_folds": 0.05426650826582102,
+    "trained_before_2005": 0.039966085403889795,
+    "r_trained_before_2005": 0.20970330569071433,
+    "votes_fixed_trained_before_2005": 0.058363903449472176
+   },
+   "IMDb genre labels": {
+    "random_folds": 0.02431461492495146,
+    "trained_before_2005": 0.009757318500726142,
+    "r_trained_before_2005": 0.13695679811866895,
+    "votes_fixed_trained_before_2005": 0.04495578623057239
+   }
+  },
+  "per_tag": {
+   "familywise_95": 0.04791225647422972,
+   "content_tags_beyond_familywise": 484,
+   "median_abs_rho_content": 0.05035348921993673,
+   "largest_abs_rho_content": 0.14653507292266438,
+   "content_tags_recovered_r_over_0.5": 238,
+   "agreement_with_tag_genome": {
+    "r_between_rhos_all_content": 0.6342683557172295,
+    "r_between_rhos_recovered_content": 0.6590011520533061,
+    "same_sign_recovered_content": 0.6596638655462185,
+    "median_abs_rho_tag_genome": 0.06264096644411793,
+    "median_abs_rho_plot": 0.033348110689706695
+   },
+   "top_positive": [
+    [
+     "cute",
+     0.14641247492710008,
+     0.5804859171081201
+    ],
+    [
+     "cute!",
+     0.1387917108521501,
+     0.5275723153089641
+    ],
+    [
+     "family",
+     0.13453485222877143,
+     0.5763248117981579
+    ],
+    [
+     "witches",
+     0.13063953030298164,
+     0.58062145751166
+    ],
+    [
+     "fairy tale",
+     0.12762530105387163,
+     0.5256578134953842
+    ],
+    [
+     "kids and family",
+     0.12168832526709392,
+     0.5607911367650924
+    ],
+    [
+     "magic",
+     0.12072092043793807,
+     0.5801462716613235
+    ],
+    [
+     "kids",
+     0.1155099197953248,
+     0.5979198919641515
+    ],
+    [
+     "sweet",
+     0.11364779994729016,
+     0.5290228202714684
+    ],
+    [
+     "geek",
+     0.10999605970583298,
+     0.5256421236806365
+    ],
+    [
+     "fantasy",
+     0.10781455703364243,
+     0.5564874354667482
+    ],
+    [
+     "children",
+     0.10672782006416072,
+     0.5979800389211773
+    ]
+   ],
+   "top_negative": [
+    [
+     "gangsters",
+     -0.13418570916115038,
+     0.5322422014053081
+    ],
+    [
+     "corruption",
+     -0.12195915808506502,
+     0.613347184254214
+    ],
+    [
+     "police corruption",
+     -0.11909037045945288,
+     0.5224890053932879
+    ],
+    [
+     "guilt",
+     -0.1151887013892811,
+     0.5151992043584183
+    ],
+    [
+     "character study",
+     -0.11193191501026263,
+     0.5229512217326047
+    ],
+    [
+     "hitman",
+     -0.11010209596115367,
+     0.5174818985291241
+    ],
+    [
+     "money",
+     -0.10941330181520934,
+     0.5627182277181563
+    ],
+    [
+     "justice",
+     -0.10939294597742229,
+     0.5260778090031614
+    ],
+    [
+     "existentialism",
+     -0.1079585189530049,
+     0.5237953296277992
+    ],
+    [
+     "cinematography",
+     -0.1076729945232415,
+     0.5462562419314593
+    ],
+    [
+     "greed",
+     -0.10423445976984981,
+     0.5029225635771424
+    ],
+    [
+     "reflective",
+     -0.10396681967451735,
+     0.5094943088584232
+    ]
+   ]
+  },
+  "genre_shares": {
+   "familywise_95": 0.03648503223399257,
+   "per_genre": {
+    "Action": {
+     "rho_plot_share": -0.008918992747497816,
+     "rho_imdb_label": -0.018401981938587095,
+     "films_high": 1533
+    },
+    "Adventure": {
+     "rho_plot_share": 0.0583514586116088,
+     "rho_imdb_label": 0.07166060590632252,
+     "films_high": 545
+    },
+    "Animation": {
+     "rho_plot_share": 0.09109143397689126,
+     "rho_imdb_label": 0.09682205029800614,
+     "films_high": 6
+    },
+    "Biography": {
+     "rho_plot_share": -0.06369684168721873,
+     "rho_imdb_label": -0.05036086377497637,
+     "films_high": 22
+    },
+    "Comedy": {
+     "rho_plot_share": 0.04799965623540092,
+     "rho_imdb_label": 0.02711413116411258,
+     "films_high": 695
+    },
+    "Crime": {
+     "rho_plot_share": -0.11331794218767975,
+     "rho_imdb_label": -0.10472650678354402,
+     "films_high": 206
+    },
+    "Documentary": {
+     "rho_plot_share": -0.06936776523588868,
+     "rho_imdb_label": 0.0689459404269789,
+     "films_high": 0
+    },
+    "Drama": {
+     "rho_plot_share": -0.08922820855667443,
+     "rho_imdb_label": -0.12452190688646646,
+     "films_high": 1327
+    },
+    "Family": {
+     "rho_plot_share": 0.11759647105955635,
+     "rho_imdb_label": 0.043810523366985425,
+     "films_high": 39
+    },
+    "Fantasy": {
+     "rho_plot_share": 0.09908902619861898,
+     "rho_imdb_label": -0.006811638607847133,
+     "films_high": 138
+    },
+    "Film-Noir": {
+     "rho_plot_share": -0.11038581411028774,
+     "rho_imdb_label": 0.0,
+     "films_high": 0
+    },
+    "History": {
+     "rho_plot_share": -0.04519816418237597,
+     "rho_imdb_label": -0.061732086998823085,
+     "films_high": 28
+    },
+    "Horror": {
+     "rho_plot_share": 0.011375678364329752,
+     "rho_imdb_label": 0.06668115609857689,
+     "films_high": 313
+    },
+    "Music": {
+     "rho_plot_share": 0.02675069711325364,
+     "rho_imdb_label": 0.006380577427464668,
+     "films_high": 59
+    },
+    "Musical": {
+     "rho_plot_share": 0.05137288448398125,
+     "rho_imdb_label": -0.012995828354207437,
+     "films_high": 6
+    },
+    "Mystery": {
+     "rho_plot_share": -0.04932574544422362,
+     "rho_imdb_label": 0.007589342858649377,
+     "films_high": 2
+    },
+    "Romance": {
+     "rho_plot_share": 0.0335048364545107,
+     "rho_imdb_label": 0.010152411612607078,
+     "films_high": 209
+    },
+    "Sci-Fi": {
+     "rho_plot_share": 0.024412957528153246,
+     "rho_imdb_label": -0.004841182655685585,
+     "films_high": 232
+    },
+    "Sport": {
+     "rho_plot_share": 0.02119199307379935,
+     "rho_imdb_label": -0.03354382126650504,
+     "films_high": 86
+    },
+    "Thriller": {
+     "rho_plot_share": -0.07205337980724422,
+     "rho_imdb_label": 0.019771023520198865,
+     "films_high": 178
+    },
+    "War": {
+     "rho_plot_share": -0.038037676838873484,
+     "rho_imdb_label": -0.04693210010288518,
+     "films_high": 81
+    },
+    "Western": {
+     "rho_plot_share": -0.06107695705273127,
+     "rho_imdb_label": -0.03160311650185932,
+     "films_high": 0
+    }
+   }
+  }
+ },
+ "screenplays": {
+  "films_with_script_and_tag_scores": 1371,
+  "recovery_by_class": {
+   "content": {
+    "tags": 922,
+    "median_r": 0.4341009171860599,
+    "p10_r": 0.24578535821715924,
+    "tags_r_over_0.5": 277
+   },
+   "reception": {
+    "tags": 148,
+    "median_r": 0.43182988275951545,
+    "p10_r": 0.3196480611221516,
+    "tags_r_over_0.5": 29
+   },
+   "commercial": {
+    "tags": 14,
+    "median_r": 0.4679931001566372,
+    "p10_r": 0.33319022012867244,
+    "tags_r_over_0.5": 5
+   }
+  },
+  "plot_on_the_same_films": {
+   "films": 1370,
+   "by_class": {
+    "content": {
+     "tags": 922,
+     "median_r": 0.3918504205700597,
+     "p10_r": 0.2045520032432338,
+     "tags_r_over_0.5": 213
+    },
+    "reception": {
+     "tags": 148,
+     "median_r": 0.37985717394626417,
+     "p10_r": 0.2715495966673869,
+     "tags_r_over_0.5": 16
+    },
+    "commercial": {
+     "tags": 14,
+     "median_r": 0.42593591088738525,
+     "p10_r": 0.2435971301485114,
+     "tags_r_over_0.5": 4
+    }
+   }
+  },
+  "r_between_per_tag_recovery_of_script_and_plot": 0.9400293307454378,
+  "return": {
+   "films": 1628,
+   "films_from_2005": 886,
+   "screenplay embedding": {
+    "random_folds": 0.02100083405533637,
+    "null_max": 7.251280025144524e-05,
+    "trained_before_2005": 0.01548615701081002,
+    "r_trained_before_2005": 0.13066936904222795
+   },
+   "plot embedding": {
+    "random_folds": 0.025102947093156247,
+    "null_max": -0.003299819730581799,
+    "trained_before_2005": 0.01765213114098929,
+    "r_trained_before_2005": 0.1415222516530977
+   },
+   "IMDb genre labels": {
+    "random_folds": 0.007062312835655504,
+    "null_max": 0.005010344224173013,
+    "trained_before_2005": 0.009889929035263423,
+    "r_trained_before_2005": 0.10193431074085098
+   }
+  }
+ }
+}

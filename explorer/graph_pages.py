@@ -21,7 +21,7 @@ import scipy.sparse as sp
 import streamlit as st
 
 from . import nav
-from .common import DATA, FEATURES, OUTPUT_DIRS, md, mtime, show_df, table
+from .common import DATA, FEATURES, OUTPUT_DIRS, REPO, md, mtime, show_df, table
 
 GRAPH = FEATURES / "graph"
 NODES, EDGES = GRAPH / "nodes.csv", GRAPH / "edges.csv"
@@ -175,6 +175,108 @@ def _node_summary(nid: str) -> pd.DataFrame:
     keep = [c for c in ["id", "type", "label", "year", "genres", "budget_usd", "gross_usd", "multiple", "clean", "tier",
                         "votes", "rating", "roles", "birth_year", "death_year", "degree"] if pd.notna(r.get(c))]
     return r[keep].to_frame("value").T
+
+
+# ---------------------------------------------------------------- links out and the film overview
+
+LINKS = REPO / "data" / "movie_links.csv"
+
+
+@st.cache_data(show_spinner=False)
+def _wiki_links(stamp: float) -> dict:
+    if not LINKS.exists():
+        return {}
+    d = pd.read_csv(LINKS, usecols=["imdb_id", "wikipedia_url", "wikidata_url"], dtype=str).fillna("")
+    return d.drop_duplicates("imdb_id").set_index("imdb_id").to_dict("index")
+
+
+@st.cache_data(show_spinner=False)
+def _tagged_films(stamp: float) -> frozenset:
+    """Films with tag scores: Tag Genome, or predicted from the plot summary when that file is here."""
+    out = set()
+    for name in ("tag_relevance_ids.csv", "plot_tag_relevance_ids.csv"):
+        p = FEATURES / name
+        if p.exists():
+            out |= set(pd.read_csv(p)["tconst"])
+    return frozenset(out)
+
+
+def external_links(nid: str) -> dict[str, str]:
+    """Where a node lives outside the app: IMDb from its ID, Wikipedia and Wikidata from data/movie_links.csv."""
+    nid, out = str(nid), {}
+    if re.fullmatch(r"tt\d+", nid):
+        out["IMDb"] = f"https://www.imdb.com/title/{nid}/"
+        row = _wiki_links(mtime(LINKS)).get(nid, {})
+        for name, col in (("Wikipedia", "wikipedia_url"), ("Wikidata", "wikidata_url")):
+            if str(row.get(col, "")).startswith("http"):
+                out[name] = row[col]
+    elif re.fullmatch(r"nm\d+", nid):
+        out["IMDb"] = f"https://www.imdb.com/name/{nid}/"
+    elif re.fullmatch(r"company:Q\d+", nid):
+        out["Wikidata"] = "https://www.wikidata.org/wiki/" + nid.split(":")[1]
+    return out
+
+
+def link_buttons(nid: str, columns=None):
+    """One button per outside link, each opening in a new browser tab."""
+    links = external_links(nid)
+    cols = columns if columns is not None else st.columns(max(len(links), 1) + 3)[:len(links)]
+    for c, (name, url) in zip(cols, links.items()):
+        c.link_button(f"{name} ↗", url, width="stretch")
+
+
+def _names(e: pd.DataFrame, labels: dict, role: str, k: int) -> str:
+    d = e[e.role == role].sort_values("ordering")
+    return ", ".join(labels.get(x, x) for x in d.source.head(k))
+
+
+def film_overview(tconst: str, key: str, note: str | None = None, fallback: dict | None = None, tags_button: bool = False):
+    """A film at a glance: money, ratings, who made it, and buttons to its full page here, IMDb and Wikipedia.
+    `fallback` gives title, year and genres when the movie graph isn't on this machine; `tags_button` adds a
+    button that opens the film on the Tags and genres page."""
+    r, e, labels = None, None, {}
+    if NODES.exists() and EDGES.exists():
+        g = gd()
+        if tconst in g["by_id"].index:
+            r, labels = g["by_id"].loc[tconst], g["label"]
+            e = g["edges"][g["edges"].target == tconst]
+    f = fallback or {}
+    title = r.label if r is not None else f.get("title", tconst)
+    year = r.year if r is not None else f.get("year")
+    genres = r.genres if r is not None else f.get("genres")
+    with st.container(border=True):
+        st.markdown(md(f"#### {title}" + (f" ({int(year)})" if pd.notna(year) else "")))
+        st.caption(" · ".join(x for x in [str(genres).replace(",", ", ") if pd.notna(genres) else "", f"`{tconst}`"] if x))
+        if r is not None:
+            c = st.columns(5)
+            c[0].metric("Budget", f"${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "—")
+            c[1].metric("Gross", f"${r.gross_usd / 1e6:,.1f}M" if pd.notna(r.gross_usd) else "—")
+            c[2].metric("Gross ÷ budget", f"{r.multiple:,.2f}" if pd.notna(r.multiple) else "—")
+            c[3].metric("IMDb rating", f"{r.rating:.1f}" if pd.notna(r.rating) else "—",
+                        help=f"{int(r.votes):,} votes" if pd.notna(r.votes) else None)
+            c[4].metric("Critics", " · ".join(x for x in [f"RT {int(r.rt)}%" if pd.notna(r.rt) else "",
+                                                          f"MC {int(r.mc)}" if pd.notna(r.mc) else ""] if x) or "—")
+            who = [("Directed by", _names(e, labels, "director", 3)), ("Starring", _names(e, labels, "actor", 4)),
+                   ("Studio", _names(e, labels, "studio", 3))]
+            line = " · ".join(f"**{k}** {v}" for k, v in who if v)
+            if line:
+                st.markdown(md(line))
+        if note:
+            st.markdown(md(note))
+        links = external_links(tconst)
+        cols = st.columns(len(links) + 2 + (2 if len(links) < 3 else 1))
+        k = 0
+        if r is not None:
+            if cols[k].button("Full film page", key=f"open_{key}", type="primary", width="stretch",
+                              help="Everything on this film in the node explorer: credits, linked films, all fields."):
+                nav.open_node(tconst)
+            k += 1
+        if tags_button:
+            if cols[k].button("Its tags", key=f"tags_{key}", width="stretch",
+                              help="This film's genre shares and tags on the One film view."):
+                nav.open_tags(tconst)
+            k += 1
+        link_buttons(tconst, cols[k:k + len(links)])
 
 
 # ---------------------------------------------------------------- whole graph
@@ -380,6 +482,12 @@ def node():
         c[2].metric("Critics", " · ".join(x for x in [f"RT {int(r.rt)}%" if pd.notna(r.rt) else "", f"MC {int(r.mc)}" if pd.notna(r.mc) else ""] if x) or "—")
         if cur in script_index().index and st.button("Read the screenplay", type="primary"):
             nav.open_script(cur)
+    links = external_links(cur)
+    cols = st.columns(len(links) + 4)
+    link_buttons(cur, cols[:len(links)])
+    if r.type == "movie" and cur in _tagged_films(mtime(FEATURES / "tag_relevance_ids.csv") + mtime(FEATURES / "plot_tag_relevance_ids.csv")):
+        if cols[len(links)].button("Tags and genres", width="stretch", help="This film's genre shares and tags."):
+            nav.open_tags(cur)
 
     sidx = script_index() if r.type == "movie" else pd.DataFrame()
     arcs = film_arcs(sidx.movie_name.get(cur)) if not sidx.empty else {}

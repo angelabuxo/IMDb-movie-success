@@ -24,3 +24,8 @@ def open_node(node_id: str):
 
 def open_script(tconst: str):
     go("scripts", script_tconst=tconst)
+
+
+def open_tags(tconst: str):
+    """The Tags and genres page on one film. The page applies the pending keys before it draws its widgets."""
+    go("tags", tag_film_pending=tconst, tag_view_pending="One film")
