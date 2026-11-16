@@ -50,6 +50,7 @@ cd data/raw && mkdir -p features && ../../.venv/bin/python ../../scripts/imdb/pa
 - Never put an email address, password or token in code.
 - Don't invent a result, source or number. Every number in a doc should come from a script's output.
 - Say what each measurement captures and what it misses, and check it with a null, a second method or a hand-labelled sample. The course grades this.
+- The clean theatrical rule lives in `analysis/clean_rule.py`. Call it and don't write the rule out again. A test fails if you do.
 - Work on a branch and open a pull request. Don't push straight to `main`.
 
 ## Known data traps

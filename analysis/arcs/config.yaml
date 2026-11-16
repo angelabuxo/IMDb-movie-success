@@ -21,7 +21,7 @@ stability_seeds: [20261114, 1, 2, 3, 4]   # Step 9: the primary null rerun with 
 # ------------------------------------------------------------------ sample
 sample:
   tier: "100k+"                   # features/movies_features.csv; the 10k tier is NOT used (money unvalidated)
-  # Clean theatrical USD rule, as in scripts/imdb/coverage_clean_sample.sql and analysis/scripts_text
+  # Clean theatrical rule: analysis/clean_rule.py applies it and checks these four values against its own
   min_budget_usd: 1000
   min_year_inclusive: 1975        # pre-1975 grosses are mostly distributor rentals
   max_year_exclusive: 2026

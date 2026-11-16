@@ -43,9 +43,14 @@ that movie's year.
 import csv
 import math
 import re
+import sys
 from collections import defaultdict
+from pathlib import Path
 
 import networkx as nx
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))   # repo root, for the shared clean rule
+from analysis.clean_rule import is_clean  # noqa: E402
 
 MOVIES = "features/movies_features_10k.csv"
 CREDITS = "features/graph/credits.csv"
@@ -64,13 +69,7 @@ def num(x, cast=float):
         return None
 
 
-def clean(r):
-    """The clean theatrical rule from scripts/imdb/genome_stats.py."""
-    return (r["budget_cur"] == "USD" and r["gross_cur"] == "USD" and float(r["b"] or 0) >= 1000
-            and float(r["g"] or 0) >= 1000 and "rentals" not in r["gross_flag"]
-            and "regional" not in r["gross_flag"] and "direct_to_video" not in r["gross_flag"]
-            and not re.search("netflix|amazon|apple|hulu", r["distributors"] or "", re.I)
-            and 1975 <= int(r["y"] or 0) < 2026)
+clean = is_clean   # the clean theatrical rule, shared: analysis/clean_rule.py
 
 
 def main():
