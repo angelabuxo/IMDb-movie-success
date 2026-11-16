@@ -123,3 +123,22 @@ effects. Explorers contain 0 of 117 probe runs of dialogue.
   those particular films, not with losing sample size.
 - **Residue in the term lists.** `ll`, `ie`, `eo` and `wi` among the top terms look like tokenisation or
   encoding residue (split "'ll", initials, broken accents). Noted; the primary analysis is unchanged.
+
+## 2026-11-16 · The clean rule moved under the pre-registered sample (no amendment made)
+
+- **What happened.** On 15 November (`d71aadc`) the clean rule gained a 1975 floor, a direct-to-video flag and
+  cited-rentals flags, and `config.yaml` was edited to `min_year_inclusive: 1975`. Every committed result here was
+  computed under the older rule. Step 1 now stops at its own check (clean movies 2,352 against 2,446 expected).
+- **Shared rule.** The rule now lives in `analysis/clean_rule.py`; Step 1 calls it, and `check_config` fails if
+  `config.yaml` and the module disagree. The `expected:` counts were NOT changed.
+- **Where the gap comes from.** Same as the arcs analysis (`analysis/arcs/outputs/x02_clean_rule_gap.json`): 95 of
+  the 2,446 films left and none joined, 92 of them released before 1975. Of the 1,095 clean films with a script,
+  34 are now not clean, all pre-1975. In the primary comparison (definition C, bottom against top quarter within
+  genre and decade) they are 5 unsuccessful and 4 successful films out of 237 and 292; the other 25 sit in the
+  middle and aren't compared.
+- **Not done.** The shuffle-null test (Step 6) was not rerun without them. Dropping them also moves the quartile
+  cut-offs, which are computed on all clean films, so a fair rerun redoes Steps 1 to 6, including the spaCy pass.
+  `gross_below_budget`, `global_quartile_bottom` and `global_quartile_top` were not recomputed.
+- **Open, for the group:** keep the committed sample as pre-registered (freeze its film list as a committed ID list
+  that Step 1 reads, so there is still one clean rule), or amend to the current rule and rerun Steps 1 to 6 with
+  this entry as the dated record.
