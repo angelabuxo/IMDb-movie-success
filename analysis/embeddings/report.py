@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from .paths import OUTPUTS, PRIVATE, VECTORS
+from .paths import OUTPUTS, PRIVATE, VECTORS, film_table
 
 LOW, HIGH, NEUTRAL, ACCENT = "#D55E00", "#0072B2", "#999999", "#009E73"
 FONT = dict(family="Inter, Helvetica, Arial, sans-serif", size=13)
@@ -239,8 +239,8 @@ def fig_network(r: pd.DataFrame) -> go.Figure:
 
 def film_map(corpus: str, variant: str = "clean") -> pd.DataFrame | None:
     """Two principal components of the film vectors with titles and outcomes. Local only: it needs the
-    vectors and the private film table, and holds IMDb fields, so it is never saved."""
-    f, ids = PRIVATE / "films.parquet", VECTORS / f"{corpus}_ids.csv"
+    vectors and the film table, and holds IMDb fields, so it is never saved."""
+    f, ids = film_table(), VECTORS / f"{corpus}_ids.csv"
     if not (f.exists() and ids.exists()):
         return None
     from sklearn.decomposition import PCA

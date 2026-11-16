@@ -4,13 +4,17 @@ The scripts/ folders are plain script directories (scripts import each other by 
 pair_returns does `from roi_similarity import ...`), so they go on sys.path the same way.
 """
 
+import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+# explorer/log.py writes to logs/explorer.log; tests plant crashes, so they log to a throwaway folder instead
+os.environ.setdefault("EXPLORER_LOG_DIR", tempfile.mkdtemp(prefix="explorer-test-logs-"))
 for p in (ROOT, ROOT / "scripts" / "network", ROOT / "scripts" / "screenplays"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))

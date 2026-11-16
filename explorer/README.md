@@ -18,6 +18,19 @@ Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs 
 
 The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `analysis/*/outputs` and `analysis/network`. It writes nothing.
 
+To check every page before you open the app, run `./run_all.sh --check` from the repo root, or just the page check:
+
+```bash
+.venv/bin/python -m explorer.check_pages            # every page, every notebook step and view
+.venv/bin/python -m explorer.check_pages --quick    # each page once
+```
+
+It runs each page headless on your data folder and lists crashes, errors, warnings and every input file a page couldn't find, with how to make it. It also reads every file the Data inspector lists. The report goes to `logs/check_pages.log`. On a fresh clone after `./setup.sh` you should see one missing file, `tmdb_compare.csv`, which needs the TMDB file from Kaggle, and four figures on arcs Step 3 that need `analysis/arcs/private/`, which only exists on the machine that ran that step.
+
+## Logging
+
+`explorer/log.py` writes to `logs/explorer.log`, which rotates at 2 MB. Each line is tagged with the page it came from. It records every page crash with its traceback (the app still shows it), every `st.error` and `st.warning` a page shows, every missing input file, and Python warnings from pandas, numpy and plotly. Set `EXPLORER_LOG_LEVEL=DEBUG` to also log how long each page took. When a page can't find a file, show the note with `missing(text)` from `explorer/common.py` instead of `st.info`, and say in the text how to make the file. That way it's logged and the check counts it.
+
 ## Pages
 
 | Page | What it shows | Where it comes from |
@@ -26,12 +39,12 @@ The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `ana
 | Data pipeline | Each cleaning and processing step at a glance: a flow diagram from sources to analyses, what each step does, drops and can miss, the clean-rule funnel (checked against the clean flag in `nodes.csv`), the clean sample each analysis started from, and each analysis's own text-cleaning counts | `movies_features_10k.csv` and `nodes.csv` for the funnel; `analysis/*/outputs` summaries for the rest |
 | Screenplay arcs | Every step of `notebooks/arcs/` | The step modules' `load()`, `tables()`, `figures()` and `reading()`, the same calls the notebooks and `site/arcs` make |
 | Screenplay text | Every step of `notebooks/scripts_text/` | Same as above, from `analysis/scripts_text` |
-| Text embeddings | Reviews, screenplays and summaries against profit and revenue: what the text adds beyond budget, year, genre and franchise against its shuffle null, the checks (TF-IDF, later films, rating, OCR damage, other samples), the similarity network, the words along the direction, a film map and a nearest-films lookup | `analysis/embeddings/outputs`, and the vectors in `data/raw/features/text_vectors` for the map and lookup |
+| Text embeddings | Reviews, screenplays and summaries against profit and revenue: what the text adds beyond budget, year, genre and franchise against its shuffle null, the checks (TF-IDF, later films, rating, OCR damage, other samples), the similarity network, the words along the direction, a film map and a nearest-films lookup | `analysis/embeddings/outputs`, and the vectors and film table in `data/raw/features/text_vectors` (from the `embedding-vectors` bundle) for the map and lookup |
 | Network results | The four network analyses as charts against their shuffle nulls; per-film network features against return; a film's credits and linked films; graph composition | `analysis/network/*.json`, `film_network_features.csv`, `nodes.csv`, `edges.csv` |
 | Whole graph | The movie graph projected to films (linked by shared people or companies) or to people (linked by shared films), with filters, a layout, Louvain communities and colouring by return, year or genre. Click a node or drag a box around several to list them and open one | `nodes.csv`, `edges.csv` |
 | Node explorer | Any movie, person or company: buttons to its IMDb, Wikipedia or Wikidata page, every field, every credit (click a row to move there), their films over time, frequent collaborators, the infobox names merged into a company, and a 1- or 2-hop network to click through | `nodes.csv`, `edges.csv`, `companies.csv`, `film_network_features.csv`, the feature tables |
 | Screenplays | Any of the 2,188 MovieSum scripts, scene by scene: search, only the scenes with one character, the character network, the per-scene sentiment from arcs Step 3 (click to jump to a scene), the MovieSum summary and the raw markup with the parser's counts | `data/raw/scripts/moviesum/*.jsonl`, `analysis/arcs/outputs/s03_scene_vader.csv.gz` |
-| Embedding maps | Each vector space (screenplays, summaries, plots, reviews, tags, genres, cast and crew, sentiment arcs) in 2D by PCA, Isomap, t-SNE or UMAP, or all four side by side, coloured by return, net return, genre or year. Pick a film to mark it and its 10 nearest films on the map and open it in the node explorer. Under the map, the scores for how well each method keeps the space | `data/raw/features/embedding_maps.csv` and `embedding_map_scores.csv`, written by `notebooks/embedding_maps.ipynb` |
+| Embedding maps | Each vector space (screenplays, summaries, plots, reviews, tags, genres, cast and crew, sentiment arcs) in 2D by PCA, Isomap, t-SNE or UMAP, or all four side by side, coloured by return, net return, genre or year. Pick a film to mark it and its 10 nearest films on the map and open it in the node explorer. Under the map, the scores for how well each method keeps the space | `data/raw/features/embedding_maps.csv` and `embedding_map_scores.csv`, written by `notebooks/embedding_maps.ipynb` and shipped in the `embedding-vectors` bundle |
 | Embedding map checks | Whether the embedding maps hold up: stability of t-SNE and UMAP across seeds and settings, how far the spaces agree on each film's nearest films, 10 k-means clusters of each space against profit (raw and net, with a shuffle null), sorting by release year, and the blind hand-check sheet with its score once judged. Shows the notebook's own reading | `analysis/embedding_maps/*.csv` (committed) and the markdown of `notebooks/embedding_map_checks.ipynb` |
 | Profit playground | Filter by tier, year, genre and budget, pick any axes, see hits and flops | `nodes.csv` (movie rows) |
 | Profit attribution | Optional. How a film's return splits between budget, year, genre, franchise, each person and company on it, and what's left: shares by role against a shuffle null, a table of people and companies with bootstrap intervals, one film as a dollar waterfall, three profit measures compared, and the checks. A sidebar slider sets the share of gross the studio keeps | `analysis/attribution/outputs/` (no raw data needed) |

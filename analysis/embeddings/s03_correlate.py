@@ -26,7 +26,7 @@ from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer, TfidfVectorizer
 
 from . import stats as S
-from .paths import OUTPUTS, PRIVATE, VECTORS, cfg
+from .paths import OUTPUTS, PRIVATE, VECTORS, cfg, film_table
 
 CORPORA = ("reviews", "screenplays", "summaries")
 TARGETS = {"log_mult": "profitability: ln(gross / budget)", "log_gross": "revenue: ln(gross)",
@@ -227,7 +227,7 @@ def words(corpus: str, ids: pd.Series, score: np.ndarray) -> pd.DataFrame:
 
 
 def run() -> pd.DataFrame:
-    films = pd.read_parquet(PRIVATE / "films.parquet")
+    films = pd.read_parquet(film_table())
     rows, nulls, wordlists, scores = [], {}, [], {}
     have = {c: set(pd.read_csv(VECTORS / f"{c}_ids.csv", dtype=str).tconst) for c in CORPORA}
     common = set.intersection(*have.values())

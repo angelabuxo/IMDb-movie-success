@@ -1,5 +1,7 @@
 [client]
 toolbarMode = "minimal"
+# Show the full traceback in the app when a page crashes (local only; the app is never deployed)
+showErrorDetails = "full"
 
 [browser]
 gatherUsageStats = false
@@ -7,6 +9,11 @@ gatherUsageStats = false
 [server]
 headless = true
 runOnSave = true
+
+[logger]
+# Streamlit's own messages in the terminal. The explorer's crashes, errors and warnings also go to
+# logs/explorer.log (explorer/log.py); set EXPLORER_LOG_LEVEL=DEBUG there for page timings.
+level = "info"
 
 [theme]
 base = "light"

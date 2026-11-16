@@ -13,3 +13,6 @@ site/arcs/private/
 
 # Embedding analysis: cleaned review, screenplay and summary text stays local.
 analysis/embeddings/private/
+
+# explorer logs (explorer/log.py, explorer/check_pages.py)
+logs/

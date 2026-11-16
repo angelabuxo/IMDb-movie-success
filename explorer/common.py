@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import logging
 import os
 import re
 from pathlib import Path
@@ -21,7 +22,15 @@ OUTPUT_DIRS = {"arcs": REPO / "analysis" / "arcs" / "outputs",
                "scripts_text": REPO / "analysis" / "scripts_text" / "outputs",
                "network": REPO / "analysis" / "network"}
 TABULAR = (".csv", ".csv.gz", ".tsv", ".parquet", ".json")
+log = logging.getLogger("explorer")
 
+
+
+def missing(text: str) -> None:
+    """A note that an input file isn't on this machine, with how to make it. Shown as an info box and logged as
+    'missing input', so logs/explorer.log and explorer/check_pages.py list every table a page couldn't find."""
+    log.warning("missing input: %s", " ".join(text.split()))
+    st.info(md(text))
 
 
 def md(text: str) -> str:
@@ -129,6 +138,7 @@ def unavailable(kind: str, name: str, err) -> None:
     but the one that ran the step, so it gets a quiet note naming the file instead of a warning."""
     if isinstance(err, FileNotFoundError) and "/private/" in str(err.filename or ""):
         f = Path(err.filename)
+        log.info("private input not on this machine: %s %s needs %s", kind, name, f)
         shown = f.relative_to(REPO) if f.is_relative_to(REPO) else f.name
         st.caption(f"🔒 {kind} `{name}` needs `{shown}`, which holds script text or sentence-level scores and "
                    "stays on the machine that ran the step.")
@@ -144,6 +154,7 @@ def render_step(pkg: str, module_name: str, show_private: bool):
     try:
         res = mod.load()
     except Exception as e:  # noqa: BLE001 - shown to the user, not swallowed
+        log.exception("load() failed for %s.%s", pkg, module_name)
         st.error(f"This step's saved outputs can't be loaded here: `{type(e).__name__}: {e}`.\n\n"
                  "It usually needs files in `private/` (script text, gitignored) that only exist on the machine "
                  f"that ran the step. Run it with `python -m analysis.{pkg}.{module_name}` where the data is.")
@@ -155,6 +166,8 @@ def render_step(pkg: str, module_name: str, show_private: bool):
             try:
                 cache[kind] = getattr(mod, kind)(res)
             except Exception as e:  # noqa: BLE001
+                if not (isinstance(e, FileNotFoundError) and "/private/" in str(e.filename or "")):
+                    log.exception("%s() failed for %s.%s", kind, pkg, module_name)
                 cache[kind] = e
         return cache[kind]
 

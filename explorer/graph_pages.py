@@ -21,7 +21,7 @@ import scipy.sparse as sp
 import streamlit as st
 
 from . import nav
-from .common import DATA, FEATURES, OUTPUT_DIRS, REPO, md, mtime, show_df, table
+from .common import DATA, FEATURES, OUTPUT_DIRS, REPO, md, missing, mtime, show_df, table
 
 GRAPH = FEATURES / "graph"
 NODES, EDGES = GRAPH / "nodes.csv", GRAPH / "edges.csv"
@@ -1009,7 +1009,7 @@ def screenplays():
     with t3:
         sc = OUTPUT_DIRS["arcs"] / "s03_scene_vader.csv.gz"
         if not sc.exists():
-            st.info("No per-scene scores saved.")
+            missing("No per-scene scores saved.")
         else:
             d = table(sc)
             d = d[d.movie_name == meta.movie_name]

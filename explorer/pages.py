@@ -14,7 +14,7 @@ import streamlit as st
 from scipy.stats import spearmanr
 
 from . import graph_pages as gp
-from .common import (arrow_safe, DATA, FEATURES, OUTPUT_DIRS, REPO, TABULAR, flatten_json, md, mtime, render_step,
+from .common import (arrow_safe, DATA, FEATURES, OUTPUT_DIRS, REPO, TABULAR, flatten_json, log, md, missing, mtime, render_step,
                      show_df, steps, table)
 
 GRAPH = FEATURES / "graph"
@@ -562,7 +562,7 @@ def tags():
 
     else:
         if not TAG_CHECKS.exists():
-            st.info("No saved checks (analysis/tags/tag_shares.json). Run scripts/reviews/tag_shares.py.")
+            missing("No saved checks (analysis/tags/tag_shares.json). Run scripts/reviews/tag_shares.py.")
             return
         res = json.loads(TAG_CHECKS.read_text())
         il, sv, tm = res["imdb_labels"], res["survey"], res["two_methods"]
@@ -787,7 +787,7 @@ def tag_followups():
                   "`notebooks/tag_followups.ipynb` has the full account. Gross over budget isn't profit."))
     pj, fj = TAG_PROFIT / "plot_tags.json", TAG_PROFIT / "tag_followups.json"
     if not pj.exists() or not fj.exists():
-        st.info("Needs analysis/tags/plot_tags.json and tag_followups.json (scripts/reviews/plot_tags.py and tag_followups.py).")
+        missing("Needs analysis/tags/plot_tags.json and tag_followups.json (scripts/reviews/plot_tags.py and tag_followups.py).")
         return
     plot, fol = json.loads(pj.read_text()), json.loads(fj.read_text())
     if st.session_state.get("fu_view") not in FOLLOW_VIEWS:
@@ -943,7 +943,7 @@ def _tag_profit(rel, tag_names, films, genres, g_rel, card, row_of):
     """Tags and genre mixes against revenue and return: the saved results of scripts/reviews/tag_profit.py,
     and the same sample drawn live for one tag or one pair of genres."""
     if not (TAG_PROFIT / "tag_profit.json").exists() or not (GRAPH / "nodes.csv").exists():
-        st.info("Needs analysis/tags/tag_profit.json (run scripts/reviews/tag_profit.py) and the movie graph.")
+        missing("Needs analysis/tags/tag_profit.json (run scripts/reviews/tag_profit.py) and the movie graph.")
         return
     res = json.loads((TAG_PROFIT / "tag_profit.json").read_text())
     per_tag = table(TAG_PROFIT / "tag_profit_tags.csv")
@@ -1137,6 +1137,7 @@ def inspector():
     try:
         df = table(f, 200_000 if limit else None)
     except Exception as e:  # noqa: BLE001
+        log.exception("can't read %s", f)
         st.error(f"Can't read `{f.name}`: {e}")
         return
     st.subheader(f.name)
@@ -1396,7 +1397,7 @@ def tmdb():
     st.caption("Dashed lines mark a factor of two. The y-axis is logarithmic; ratios beyond 100x sit in the end bars.")
 
     if not TMDB_CSV.exists():
-        st.info("The film-by-film view needs `data/raw/features/tmdb_compare.csv`, which holds TMDB's figures and "
+        missing("The film-by-film view needs `data/raw/features/tmdb_compare.csv`, which holds TMDB's figures and "
                 "stays out of the repo. Get the TMDB file and run `scripts/imdb/tmdb_compare.py` to make it.")
         return
     d = table(TMDB_CSV)

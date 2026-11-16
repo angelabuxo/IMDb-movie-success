@@ -19,7 +19,7 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 from . import nav
-from .common import FEATURES, REPO, md, show_df, table
+from .common import FEATURES, REPO, md, missing, show_df, table
 
 MAPS = FEATURES / "embedding_maps.csv"
 SCORES = FEATURES / "embedding_map_scores.csv"
@@ -160,7 +160,7 @@ def maps():
                "The checks of these maps are on the Embedding map checks page.")
     st.markdown(md(notebook_markdown(NB_MAPS)))
     if not MAPS.exists():
-        st.info(f"No embedding maps yet. Run `notebooks/embedding_maps.ipynb`; it writes `{MAPS.name}` to `{MAPS.parent}`. "
+        missing(f"No embedding maps yet. Run `notebooks/embedding_maps.ipynb`; it writes `{MAPS.name}` to `{MAPS.parent}`. "
                 "The scores below are the committed ones.")
         _scores(None)
         _reading()
@@ -169,7 +169,7 @@ def maps():
     allm = allm.assign(tconst=allm.tconst.astype(str))
     spaces = list(dict.fromkeys(allm.space.dropna()))
     if not spaces:
-        st.info("The embedding maps file has no rows. Run `notebooks/embedding_maps.ipynb` again.")
+        missing("The embedding maps file has no rows. Run `notebooks/embedding_maps.ipynb` again.")
         return
 
     a, b, c = st.columns([2, 3, 2])
@@ -228,7 +228,7 @@ def _scores(space: str | None):
     st.subheader("How well the maps keep the space")
     f = _scores_file()
     if f is None:
-        st.info(f"No scores yet. Run `notebooks/embedding_maps.ipynb`; it writes `{SCORES.name}`.")
+        missing(f"No scores yet. Run `notebooks/embedding_maps.ipynb`; it writes `{SCORES.name}`.")
         return
     sc = table(f)
     if space is not None:
@@ -269,7 +269,7 @@ def checks():
                "number is read from analysis/embedding_maps/, which the notebook writes.")
     st.markdown(md(notebook_markdown(NB_CHECKS)))
     if _committed("stability.csv") is None:
-        st.info("No check results yet. Run `notebooks/embedding_maps.ipynb`, then `notebooks/embedding_map_checks.ipynb`.")
+        missing("No check results yet. Run `notebooks/embedding_maps.ipynb`, then `notebooks/embedding_map_checks.ipynb`.")
         return
     t = st.tabs(["Stability", "Spaces agree?", "Clusters", "Release year", "Neighbours by hand", "Reading"])
 
@@ -330,7 +330,7 @@ def checks():
         _section("## 5. Neighbours by hand")
         sheet = _committed("hand_check_sheet.csv")
         if sheet is None:
-            st.info("No sheet yet. Run `notebooks/embedding_map_checks.ipynb`.")
+            missing("No sheet yet. Run `notebooks/embedding_map_checks.ipynb`.")
         else:
             judged = sheet.similar.notna().sum() if "similar" in sheet else 0
             st.metric("Rows judged", f"{judged} of {len(sheet)}")

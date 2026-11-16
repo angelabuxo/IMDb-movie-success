@@ -111,6 +111,10 @@ git pull && ./explorer/run.sh
 
 The script runs `./setup.sh` first, so it reinstalls the packages when `requirements.txt` changes and unpacks the bundles again when a pull adds one. The app only listens on your own machine: `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. [explorer/README.md](explorer/README.md) describes every page.
 
+To set up, check and start everything in one go, run `./run_all.sh` instead. It runs `./setup.sh`, opens every explorer page headless and lists any crash, error or input file a page couldn't find, runs the quick tests, and then starts the explorer. A failed check doesn't stop the app from starting, so read the summary above the Streamlit banner. `./run_all.sh --check` does the checks without starting the app and exits with 1 if something broke. `--full` also opens every notebook step and runs the slow tests.
+
+While the app runs, crashes (with their traceback), errors, warnings and missing input files go to `logs/explorer.log`, tagged with the page they came from. Streamlit's own output goes to `logs/streamlit.log`. If a page looks wrong, send that file along with the page name. `logs/` is gitignored.
+
 `python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
 
 ## Scripts and reviews

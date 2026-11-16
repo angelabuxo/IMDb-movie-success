@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 
 from . import clean as C
-from .paths import FEATURES, GENOME, MOVIESUM, OUTPUTS, PRIVATE, cfg
+from .paths import FEATURES, FILMS_SHARED, GENOME, MOVIESUM, OUTPUTS, PRIVATE, cfg
 
 FILMS = PRIVATE / "films.parquet"
 REPORT = OUTPUTS / "s01_cleaning.json"
@@ -238,6 +238,8 @@ def build_reviews(d: pd.DataFrame) -> dict:
 def run() -> dict:
     d = films()
     d.to_parquet(FILMS, index=False)
+    FILMS_SHARED.parent.mkdir(parents=True, exist_ok=True)
+    d.to_parquet(FILMS_SHARED, index=False)    # no text, so it can go in the bundle with the vectors
     ms = moviesum()
     report = {"sample": {"clean_films": len(d), "in_100k_tier": int((d.tier == "100k+").sum()),
                          "gross_below_budget": int((d.log_mult < 0).sum()), "franchise": int(d.franchise.sum())}}
