@@ -6,12 +6,14 @@ the committed step summaries (analysis/*/outputs), so the page never states a nu
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+
+from analysis.clean_rule import REASONS
+from analysis.clean_rule import steps as rule_steps
 
 from .common import FEATURES, REPO, mtime, table
 
@@ -110,24 +112,14 @@ digraph {
 
 # ---------------------------------------------------------------- the sample funnel
 
-STREAMING = re.compile("netflix|amazon|apple|hulu", re.I)
+STEP_LABELS = {REASONS[0]: "Budget and gross both parsed", REASONS[1]: "Both in USD", REASONS[2]: "Both at least $1,000",
+               REASONS[3]: "Gross isn't rentals, regional or direct-to-video", REASONS[4]: "Not a streaming release",
+               REASONS[5]: "Released 1975–2025"}
 
 
 def clean_steps(m: pd.DataFrame) -> list[tuple[str, pd.Series]]:
-    """The clean rule of scripts/network/build_graph.py, split into cumulative steps."""
-    b = pd.to_numeric(m["b"], errors="coerce").fillna(0)
-    g = pd.to_numeric(m["g"], errors="coerce").fillna(0)
-    y = pd.to_numeric(m["y"], errors="coerce").fillna(0)
-    flag = m["gross_flag"].fillna("").astype(str)
-    dist = m["distributors"].fillna("").astype(str)
-    return [
-        ("Budget and gross both in USD", (m["budget_cur"] == "USD") & (m["gross_cur"] == "USD")),
-        ("Both at least $1,000", (b >= 1000) & (g >= 1000)),
-        ("Gross isn't rentals, regional or direct-to-video",
-         ~flag.str.contains("rentals") & ~flag.str.contains("regional") & ~flag.str.contains("direct_to_video")),
-        ("Not a streaming release", ~dist.str.contains(STREAMING)),
-        ("Released 1975–2025", (y >= 1975) & (y < 2026)),
-    ]
+    """The shared clean rule (analysis/clean_rule.py), split into cumulative steps."""
+    return [(STEP_LABELS[r], mask) for r, mask in rule_steps(m)]
 
 
 def sample_funnel():

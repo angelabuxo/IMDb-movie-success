@@ -83,3 +83,11 @@ def test_no_other_copy_of_the_rule():
             if rel not in allowed and re.search(r"rentals\|regional|netflix\|amazon|\"regional\\?\" not in", p.read_text()):
                 hits.append(rel)
     assert not hits, f"the clean rule is written out again in {hits}; call analysis.clean_rule instead"
+
+
+def test_steps_add_up_to_the_rule():
+    m = pd.DataFrame([{**GOOD, **c} for c, _ in CASES])
+    keep = pd.Series(True, index=m.index)
+    for _, mask in cr.steps(m):
+        keep &= mask
+    assert keep.equals(cr.clean_mask(m))

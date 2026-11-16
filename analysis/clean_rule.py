@@ -58,6 +58,13 @@ def clean_mask(m):
     return ~_checks(m).any(axis=1)
 
 
+def steps(m):
+    """The rule as cumulative steps, in REASONS order: (reason, films that pass that step). Applying them one
+    after another gives clean_mask(); the explorer's sample funnel draws them."""
+    c = _checks(m)
+    return [(r, ~c[r]) for r in REASONS]
+
+
 def why_not_clean(m):
     """Series: the first reason each film is not clean, or "clean"."""
     c = _checks(m)
