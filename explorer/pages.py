@@ -347,7 +347,8 @@ def tags():
                   "`notebooks/tag_shares.ipynb` has the checks in full."))
     missing = [n for n in TAG_FILES if not (FEATURES / n).exists()]
     if missing:
-        st.warning("Needs the tag files in data/raw/features (" + ", ".join(missing) + "). Build them with "
+        st.warning("Needs the tag files in data/raw/features (" + ", ".join(missing) + "). They come in "
+                   "`data/bundles/tag-features-2026-11-16.tar.zst`: run `./setup.sh --data`. Or build them with "
                    "`python3 scripts/get_data.py genome`, then from `data/raw`: "
                    "`../../.venv/bin/python ../../scripts/reviews/tag_shares.py`.")
         return
