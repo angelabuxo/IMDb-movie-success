@@ -62,7 +62,9 @@ def cleaning_table(c: dict) -> pd.DataFrame:
          f"{v['dropped_duplicate']:,} duplicates, {v['dropped_empty_or_short']:,} too short and {v['dropped_not_english']:,} "
          f"non-English reviews dropped before sampling; {v['share_of_sentences_dropped_for_money']:.1%} of sentences "
          f"dropped for money talk (in {v['sampled_reviews_with_a_money_sentence']:,} reviews); "
-         f"{v['title_mentions_masked']:,} title and {v['cast_and_director_mentions_masked']:,} cast or director mentions masked"),
+         f"{v['title_mentions_masked']:,} title and {v['cast_and_director_mentions_masked']:,} cast or director mentions masked; "
+         f"{v.get('other_film_title_mentions_masked', 0):,} mentions of other films' titles and "
+         f"{v.get('other_people_mentions_masked', 0):,} of other people masked"),
         ("Screenplays", s["films"], f"{s['median_words_clean']:,.0f} words per script (median)",
          f"{s['share_of_raw_words_removed']:.1%} of words removed (headings, speaker labels, parentheticals, "
          f"transitions); {s['median_distinct_names_masked']:.0f} character names masked per script (median), "
@@ -321,3 +323,36 @@ def reading(res: dict) -> dict[str, str]:
 def cfg_ocr() -> float:
     from .paths import cfg
     return cfg()["post_hoc"]["max_ocr_damaged_word_share"]
+
+
+# ---------------------------------------------------------------- leak checks
+
+def leak_table(corpus: str) -> pd.DataFrame:
+    """s04: the top 50 words at each end with the three flags; * capitalised, † fewer than 30 films."""
+    a = pd.read_csv(OUTPUTS / "s04_leaks.csv")
+    d = a[a.corpus == corpus]
+    out = {}
+    for end in ("more profit than expected", "less profit than expected"):
+        e = d[d.end == end].sort_values("log10_ratio", ascending=end.startswith("less"))
+        out[end] = [w + ("*" if p else "") + ("†" if f else "") for w, p, f in zip(e.word, e.proper, e.few_films)]
+    n = max(map(len, out.values()))
+    return pd.DataFrame({k: v + [""] * (n - len(v)) for k, v in out.items()})
+
+
+def tag_entities() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """tag_entity_check: how the three flags do against the hand labels, and the entity tags at the extremes
+    of the existing tag-profit result."""
+    c = pd.read_csv(OUTPUTS / "tag_entity_check.csv", keep_default_na=False,
+                    na_values={k: [""] for k in ("capitalised_share", "rho_adjusted", "rank_rho_adjusted_of_content",
+                                                  "rank_rho_adjusted_votes_of_content")})
+    c = c[c["class"] == "content"]
+    lab = c.hand_label != ""
+    flags = []
+    for f in ("capitalised", "genome_name", "few_films"):
+        x = c[f].astype(str).str.lower() == "true"
+        flags.append({"flag": f, "tags flagged": int(x.sum()), "entities caught": f"{int((x & lab).sum())} of {int(lab.sum())}",
+                      "flagged but not entities": int((x & ~lab).sum())})
+    n = len(c)
+    rk = c["rank_rho_adjusted_of_content"].astype(float)
+    ext = c[lab & ((rk <= 25) | (rk > n - 25))][["tag", "hand_label", "rho_adjusted", "rank_rho_adjusted_of_content"]]
+    return pd.DataFrame(flags), ext.sort_values("rho_adjusted", ascending=False).reset_index(drop=True)

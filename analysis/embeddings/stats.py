@@ -5,6 +5,8 @@ space have similar money outcomes?
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 from scipy import stats
 from sklearn.linear_model import RidgeCV
@@ -53,11 +55,27 @@ def permute_within(strata: np.ndarray, rng) -> np.ndarray:
     return idx
 
 
+def n_jobs() -> int:
+    """Worker processes for the shuffles: EMBED_JOBS, else LSF's core count, else 1."""
+    return int(os.environ.get("EMBED_JOBS") or os.environ.get("LSB_DJOB_NUMPROC") or 1)
+
+
+def _gain(Z, idx, y, ctrl, alphas, folds, seed):
+    return cv_scores(Z[idx], y, ctrl, alphas, folds, seed)["r2_gain"]
+
+
 def shuffle_gains(Z, y, ctrl, strata, alphas, folds: int, perms: int, seed: int) -> list[float]:
     """The null: each film gets the vector of another film from its own stratum, which breaks the link
-    between text and money and keeps everything else (the vectors, the outcomes, the controls)."""
+    between text and money and keeps everything else (the vectors, the outcomes, the controls). The
+    permutations are drawn first, in order, so the result doesn't depend on how many workers run them."""
     rng = np.random.default_rng(seed)
-    return [cv_scores(Z[permute_within(strata, rng)], y, ctrl, alphas, folds, seed)["r2_gain"] for _ in range(perms)]
+    idx = [permute_within(strata, rng) for _ in range(perms)]
+    jobs = n_jobs()
+    if jobs <= 1:
+        return [_gain(Z, i, y, ctrl, alphas, folds, seed) for i in idx]
+    from joblib import Parallel, delayed, parallel_config
+    with parallel_config(backend="loky", inner_max_num_threads=1):
+        return Parallel(n_jobs=jobs)(delayed(_gain)(Z, i, y, ctrl, alphas, folds, seed) for i in idx)
 
 
 def bootstrap_gain(y, base, emb, n: int, seed: int) -> tuple[float, float]:

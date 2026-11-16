@@ -1,0 +1,68 @@
+{
+ "reviews": {
+  "words_checked": 100,
+  "proper": [
+   "cinderella",
+   "russians"
+  ],
+  "few_films": [],
+  "genome_name_and_proper": [
+   "cinderella",
+   "russians"
+  ]
+ },
+ "screenplays": {
+  "words_checked": 100,
+  "proper": [
+   "aaah",
+   "auntie",
+   "chiefs",
+   "cuban",
+   "highland",
+   "mayday",
+   "negroes",
+   "whoo"
+  ],
+  "few_films": [
+   "defendants",
+   "highland",
+   "inclination",
+   "technological"
+  ],
+  "genome_name_and_proper": [
+   "auntie",
+   "chiefs",
+   "cuban",
+   "highland",
+   "mayday"
+  ]
+ },
+ "summaries": {
+  "words_checked": 100,
+  "proper": [
+   "cia",
+   "colonel",
+   "fbi",
+   "francisco",
+   "god",
+   "manhattan",
+   "paris",
+   "washington"
+  ],
+  "few_films": [
+   "millions",
+   "stadium",
+   "temple"
+  ],
+  "genome_name_and_proper": [
+   "cia",
+   "colonel",
+   "fbi",
+   "francisco",
+   "god",
+   "manhattan",
+   "paris",
+   "washington"
+  ]
+ }
+}

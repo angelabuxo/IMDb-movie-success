@@ -5,13 +5,13 @@
  "max_seq_length": 256,
  "reviews_raw": {
   "films": 5405,
-  "texts": 160532,
-  "passages": 278627
+  "texts": 160527,
+  "passages": 278622
  },
  "reviews_clean": {
   "films": 5405,
-  "texts": 160532,
-  "passages": 273834
+  "texts": 160527,
+  "passages": 273041
  },
  "screenplays_raw": {
   "films": 1630,
@@ -21,7 +21,7 @@
  "screenplays_clean": {
   "films": 1630,
   "texts": 1630,
-  "passages": 192499
+  "passages": 192444
  },
  "summaries_raw": {
   "films": 1625,

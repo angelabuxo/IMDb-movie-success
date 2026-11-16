@@ -61,6 +61,14 @@ and why:
   (summaries, with spaCy NER)**: the model has read about famous films and stars, so with names left in, a vector
   can encode *which* film or *who* made it rather than what the text says. Who made it is the network half of the
   project; here we want the words.
+- **Other films and other people named in a review** ("better than The Shawshank Redemption", "the Coens' best"):
+  the titles and directing and starring credits of all 84,661 Tag Genome films. Full titles and names are masked
+  in title case. A single word ("Shawshank", "Kubrick") is masked on its own only when the reviews show it is
+  distinctive: almost always capitalised, and either used inside the full title or name a fifth of the time or more,
+  or the surname of a prolific director whose own films' reviews use it at least five times as often. Words that
+  spaCy, reading them in 20 review sentences each, mostly tags as a place, nationality, date or event ("Paris",
+  "Christmas", "English") stay, as do title phrases that are places ("New York"). Plural and possessive forms
+  ("Coens", "Kubrick's") count as the name.
 - **Screenplay scene headings, speaker labels, parentheticals and transitions**: formatting.
 - **Duplicate, very short and non-English reviews.** Each film gets 30 reviews sampled at random (seeded), so long
   runs of one reviewer or the file's order don't decide which ones we read.
@@ -156,7 +164,33 @@ describe the direction the regression found; they are not causes."""),
     ("code", """for c in R.CORPORA:
     print(R.LABEL[c])
     display(R.words_table(res["words"], c))"""),
-    ("md", """## 8. What to take from this
+    ("md", """## 8. Do names slip through? Entities used in different ways
+
+The same string can be a name or not: "Paris" is a city and a Hilton, "Christmas" a date and part of a title,
+"Bond" a word and a franchise. Each word in the lists above is flagged three ways (`s04_leak_audit.py`):
+capitalised in 80% or more of its uses (*), part of a Tag Genome person name or film title, and used by fewer than
+30 films (†). A flag is a prompt to read the word, not a verdict: places, agencies and nationalities are
+capitalised too and are story content.
+
+Which reading a word gets is decided in context: spaCy's transformer NER reads each candidate in 20 review
+sentences and votes on its type (person, organisation, work, place, group, time). It was checked against hand
+labels of the 922 content tags of the Tag Genome (person, studio, franchise or none; one person's labels, to be
+checked by a second), for spaCy's small and transformer models; the transformer is the one used."""),
+    ("code", """import json
+typing = json.loads((R.OUTPUTS / "tag_entity_typing.json").read_text())
+display(pd.DataFrame({m: {k: v[k] for k in ("precision", "recall", "kappa", "tp", "fp", "fn")} for m, v in typing.items()}).T)
+for m, v in typing.items():
+    print(m, "misses:", ", ".join(v["missed"]))"""),
+    ("code", """for c in R.CORPORA:
+    print(R.LABEL[c], "(* capitalised 80%+ of uses, † fewer than 30 films)")
+    display(R.leak_table(c))"""),
+    ("md", """The same three flags on the Tag Genome tags show why a flag alone is not enough, and that entity tags sit
+at the extremes of the tag-profit result in `notebooks/tag_profit.ipynb`: studios and directors there measure who
+made the film, which is the network half of the project, not content."""),
+    ("code", """flags, extremes = R.tag_entities()
+display(flags)
+display(extremes)"""),
+    ("md", """## 9. What to take from this
 
 The numbers are in the readings above, generated from the saved outputs.
 
@@ -174,9 +208,9 @@ The numbers are in the readings above, generated from the saved outputs.
   text with revenue mostly says big films read like big films.
 
 Limits: MovieSum covers mostly well-known films, which skews towards hits, and its scripts mix drafts; name masking
-is incomplete (plural surnames such as "the Coens", other films' titles such as "Shawshank" inside reviews); the
-franchise flag is noisy; the OCR cutoff and the franchise control were added after the first results; gross over
-budget isn't profit."""),
+is a set of rules, not a model (common first names are masked as people even when they are characters, and a few
+names spaCy reads as places stay); the franchise flag is noisy; the OCR cutoff, the franchise control and the
+masking of other films' names were added after the first results; gross over budget isn't profit."""),
 ]
 
 

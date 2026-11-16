@@ -6,9 +6,9 @@
   "summaries": 1625
  },
  "score_agreement_spearman_on_shared_films": {
-  "reviews ~ screenplays": 0.24363066503801914,
-  "reviews ~ summaries": 0.21705058225600732,
-  "screenplays ~ summaries": 0.34698190604614937
+  "reviews ~ screenplays": 0.2214129234431235,
+  "reviews ~ summaries": 0.1782810593983141,
+  "screenplays ~ summaries": 0.3470242479743855
  },
  "shared_films_for_agreement": 1301
 }
