@@ -1,7 +1,8 @@
 # Data bundles
 
-Compressed data so the group doesn't have to re-pull or re-download it. Extract into `data/raw/` from the repo
-root, oldest first, so a newer bundle replaces the files it updates:
+Compressed data so the group doesn't have to re-pull or re-download it. `./setup.sh --data` from the repo root
+extracts them into `data/raw/` (`./setup.sh` also sets up Python). By hand, extract oldest first, so a newer
+bundle replaces the files it updates:
 
 ```bash
 mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$/\1 &/' | sort | cut -d" " -f2); do tar --zstd -xf "$f" -C data/raw; done

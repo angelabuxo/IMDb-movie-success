@@ -4,7 +4,7 @@ This repo is a DTU 02805 final project: what predicts a movie's profit, and does
 
 ## Get the data
 
-The data isn't in git. If someone asks you to download or set up the data, run these from the repo root:
+Most of the data comes compressed in `data/bundles/`. `./setup.sh` from the repo root makes `.venv`, installs `requirements.txt` and unpacks every bundle into `data/raw/`, and it's safe to rerun. The rest isn't in git. If someone asks you to download it, run these from the repo root:
 
 ```bash
 python3 scripts/get_data.py --list

@@ -14,7 +14,7 @@ From a clone you already have:
 git pull && ./explorer/run.sh
 ```
 
-Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs `requirements.txt` (again only when it changes), unpacks `data/bundles/` into `data/raw/` when there's no movie graph there yet, and starts Streamlit on localhost only. Arguments go to Streamlit, so `./explorer/run.sh --server.port 8502` picks another port. The first run takes a few minutes and needs `zstd` (`brew install zstd` on a Mac).
+Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs `requirements.txt` (again only when it changes), unpacks `data/bundles/` into `data/raw/` (again when a pull adds a bundle) through [`../setup.sh`](../setup.sh), and starts Streamlit on localhost only. Arguments go to Streamlit, so `./explorer/run.sh --server.port 8502` picks another port. The first run takes a few minutes and needs `zstd` (`brew install zstd` on a Mac).
 
 The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `analysis/*/outputs` and `analysis/network`. It writes nothing.
 

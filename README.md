@@ -67,11 +67,13 @@ Everything the code reads lives in `data/raw/`, which git ignores. There are two
 | `extra-tables-2026-11-15.tar.zst` | 0.5 MB | Franchise flags, MovieSum IDs and screenplay statistics, and Tag Genome review counts per film, which no other archive holds |
 | `movie-graph-2026-11-16.tar.zst` | 7 MB | The graph nodes and the infobox and movie tables with the tightened clean rule (pre-1975, direct-to-video and cited rentals dropped: 6,413 clean movies). It replaces those six files from the 15 November archive. The network features in that archive aren't rebuilt yet |
 
-Unpack them from the repo root, oldest first, so a newer archive replaces the files it updates:
+To set everything up, run this from the repo root. It makes `.venv`, installs `requirements.txt` and unpacks every archive into `data/raw/`, oldest first, so a newer archive replaces the files it updates:
 
 ```bash
-mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$/\1 &/' | sort | cut -d" " -f2); do tar --zstd -xf "$f" -C data/raw; done
+./setup.sh
 ```
+
+Run it again after a pull: it reinstalls packages only when `requirements.txt` changes, and unpacks again only when an archive was added. `./setup.sh --data` only unpacks. It needs Python 3 and `zstd` (`brew install zstd` on a Mac).
 
 [`data/bundles/README.md`](data/bundles/README.md) lists each archive's licence: Wikipedia text is CC BY-SA, and MovieSum and the Tag Genome are non-commercial. The same archives are also on the [data-2026-11-11 release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11).
 
@@ -105,7 +107,7 @@ If you already have a clone, pull and run:
 git pull && ./explorer/run.sh
 ```
 
-The script reinstalls the packages when `requirements.txt` changes. It unpacks the bundles only when `data/raw/` has no movie graph, so after a pull that adds a bundle, run the unpack command from [Get the data](#get-the-data) once. The app only listens on your own machine: `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. [explorer/README.md](explorer/README.md) describes every page.
+The script runs `./setup.sh` first, so it reinstalls the packages when `requirements.txt` changes and unpacks the bundles again when a pull adds one. The app only listens on your own machine: `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. [explorer/README.md](explorer/README.md) describes every page.
 
 `python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
 
