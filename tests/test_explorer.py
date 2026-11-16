@@ -134,6 +134,22 @@ def data_dir(tmp_path_factory):
              {"movie_name": "Film_Two_2005", "imdb_id": "tt1000001", "script": script(["ANNA", "BEN"]), "summary": ""}]
     (ms / "train.jsonl").write_text("\n".join(json.dumps(x) for x in lines) + "\n")
 
+    # embedding maps: two spaces, four methods, one far outlier per map, a film with no multiple
+    maps = []
+    for space in ["Screenplays", "Genre shares"]:
+        for method in ["PCA", "Isomap", "t-SNE", "UMAP"]:
+            xy = rng.normal(0, 1, (len(films), 2))
+            xy[5] = [80, -80]
+            maps.append(pd.DataFrame({"space": space, "method": method, "tconst": films, "x": xy[:, 0], "y": xy[:, 1],
+                                      "title": movies.label, "year": movies.year,
+                                      "primary_genre": movies.genres.str.split(",").str[0],
+                                      "log_mult": np.log(movies.multiple), "log_mult_net": rng.normal(0, 1, len(films))}))
+    pd.concat(maps).to_csv(feat / "embedding_maps.csv", index=False)
+    pd.DataFrame([{"space": s, "method": m, "films": len(films), "neighbours kept": .3, "distance rank": .5,
+                   "profit smoothness": .1, "full-space smoothness": .08, "net smoothness": .05,
+                   "full-space net smoothness": .04} for s in ["Screenplays", "Genre shares"]
+                  for m in ["PCA", "Isomap", "t-SNE", "UMAP"]]).to_csv(feat / "embedding_map_scores.csv", index=False)
+
     return root
 
 
@@ -178,7 +194,7 @@ def widget(at: AppTest, kind: str, label: str):
 PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
          ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
-         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline")]
+         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -192,7 +208,7 @@ def test_app_registers_every_page(explorer):
     ok(at)
     from explorer import nav
     assert {"home", "pipeline", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
-            "calendar", "tags", "followups", "data", "checks", "tmdb"} <= set(nav.PAGES)
+            "calendar", "tags", "followups", "data", "checks", "maps", "tmdb"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -539,6 +555,66 @@ def test_pages_without_the_screenplays(explorer, monkeypatch, tmp_path):
     ok(page("graph_pages", "node", {"node_id": "tt0119094"}))
 
 
+@pytest.mark.parametrize("method", ["PCA", "t-SNE", "All four"])
+@pytest.mark.parametrize("colour", ["ln(multiple)", "net multiple", "primary genre", "release year"])
+def test_embedding_maps_methods_and_colours(explorer, method, colour):
+    at = page("map_pages", "maps")
+    widget(at, "radio", "Method").set_value(method).run()
+    widget(at, "selectbox", "Colour by").set_value(colour).run()
+    ok(at)
+    assert at.get("plotly_chart")
+    widget(at, "selectbox", "Space").set_value("Genre shares").run()
+    ok(at)
+
+
+def test_embedding_maps_show_scores(explorer):
+    at = page("map_pages", "maps")
+    ok(at)
+    sc = next(df.value for df in at.dataframe if "neighbours kept" in df.value.columns)
+    assert len(sc) == 4 and "space" not in sc.columns
+    assert any("neighbours kept" in str(c.value) for c in at.caption)
+
+
+@pytest.mark.parametrize("method", ["UMAP", "All four"])
+def test_embedding_maps_film_search(explorer, method):
+    """Picking a film marks its nearest films and lists them; in "All four" there is one list per method."""
+    at = page("map_pages", "maps")
+    widget(at, "radio", "Method").set_value(method).run()
+    widget(at, "selectbox", "Find a film").set_value("tt0119094").run()
+    ok(at)
+    nb = [df.value for df in at.dataframe if "ln(multiple)" in df.value.columns]
+    assert len(nb) == (4 if method == "All four" else 1) and all(len(x) == 10 for x in nb)
+    assert "Face/Off" not in set(nb[0].title)
+    assert any(b.label.startswith("Open this film") for b in at.button)
+
+
+def test_embedding_maps_nearest():
+    from explorer.map_pages import nearest
+    rng = np.random.default_rng(1)
+    d = pd.DataFrame({"tconst": [f"tt{i}" for i in range(50)], "x": rng.normal(size=50), "y": rng.normal(size=50)})
+    d = pd.concat([d, d.iloc[[3]]])                       # a duplicated row must not count twice
+    nb = nearest(d, "tt0")
+    assert len(nb) == 10 and nb.tconst.nunique() == 10 and "tt0" not in set(nb.tconst)
+    xy = d.drop_duplicates("tconst").set_index("tconst")[["x", "y"]]
+    dist = np.hypot(*(xy - xy.loc["tt0"]).to_numpy().T)
+    assert set(nb.tconst) == set(xy.index[np.argsort(dist)[1:11]])
+    assert nearest(d, "tt_missing").empty
+    assert len(nearest(d.head(4), "tt0")) == 3            # fewer films than k
+
+
+def test_embedding_maps_without_the_file(explorer, monkeypatch, tmp_path):
+    monkeypatch.setattr("explorer.map_pages.MAPS", tmp_path / "none.csv")
+    at = page("map_pages", "maps")
+    ok(at)
+    assert any("notebooks/embedding_maps.ipynb" in i.value for i in at.info)
+    assert not at.get("plotly_chart")
+
+
+def test_embedding_maps_without_scores(explorer, monkeypatch, tmp_path):
+    monkeypatch.setattr("explorer.map_pages.SCORES", tmp_path / "none.csv")
+    at = page("map_pages", "maps")
+    ok(at)
+    assert at.get("plotly_chart") and any("No scores yet" in i.value for i in at.info)
 @pytest.mark.parametrize("corpus", ["reviews", "screenplays", "summaries"])
 def test_embedding_page_widgets(explorer, corpus):
     """The text embeddings page with each corpus in the word list, the film map and the neighbour lookup.
