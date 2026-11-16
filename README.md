@@ -125,6 +125,20 @@ cd data/raw && ../../.venv/bin/python ../../scripts/reviews/review_features.py
 
 The first reads MovieSum and the second the Tag Genome reviews. Both write only numbers to `data/raw/features/`. The notebook also reads the screenplay embeddings in `features/embeddings_hpc/`.
 
+## Profit attribution (optional)
+
+[`notebooks/profit_attribution.ipynb`](notebooks/profit_attribution.ipynb) splits each film's return between its budget, year, genre and franchise, every person and company on it, and what's left, and compares three ways of measuring profit. It's an extra that nothing else depends on, so we can decide later whether the paper uses it. Cross-validated R² goes from 0.115 with budget, year and genre to 0.299 with franchise, people and companies. Franchise, distributor and studio carry most of that gain, individual directors and actors very little, and 71.0% of the variance stays unexplained. [`docs/profit-attribution.md`](docs/profit-attribution.md) has the method, the checks and the limits. To rerun it from the repo root (about 17 minutes, then a few seconds for the notebook):
+
+```bash
+python -m analysis.attribution.run
+```
+
+```bash
+python -m analysis.attribution.build_notebook
+```
+
+The explorer's Profit attribution page shows the same outputs, with any film as a dollar waterfall.
+
 ## In this repo
 
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
@@ -137,6 +151,7 @@ The first reads MovieSum and the second the Tag Genome reviews. Both write only 
 - [`scripts/imdb/`](scripts/imdb/): the code behind the numbers.
 - [`scripts/screenplays/`](scripts/screenplays/) and [`scripts/reviews/`](scripts/reviews/): screenplay and review features for the notebook.
 - [`notebooks/`](notebooks/): analysis notebooks.
+- [`analysis/attribution/`](analysis/attribution/) and [`docs/profit-attribution.md`](docs/profit-attribution.md): the optional profit attribution.
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
 

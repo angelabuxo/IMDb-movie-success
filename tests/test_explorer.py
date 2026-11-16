@@ -160,7 +160,7 @@ def test_app_registers_every_page(explorer):
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "data", "checks"} <= set(nav.PAGES)
+    assert {"home", "arcs", "text", "network", "graph", "node", "scripts", "profit", "attribution", "data", "checks"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))

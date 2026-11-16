@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st  # noqa: E402
 
-from explorer import graph_pages, nav, pages  # noqa: E402
+from explorer import attribution_page, graph_pages, nav, pages  # noqa: E402
 
 st.set_page_config(page_title="Movie profit explorer", page_icon="🎬", layout="wide")
 
@@ -27,6 +27,8 @@ P = {
     "node": st.Page(graph_pages.node, title="Node explorer", icon=":material/account_tree:", url_path="node"),
     "scripts": st.Page(graph_pages.screenplays, title="Screenplays", icon=":material/description:", url_path="scripts"),
     "profit": st.Page(pages.profit, title="Profit playground", icon=":material/insights:", url_path="profit"),
+    "attribution": st.Page(attribution_page.attribution, title="Profit attribution", icon=":material/pie_chart:",
+                           url_path="attribution"),
     "data": st.Page(pages.inspector, title="Data inspector", icon=":material/table_view:", url_path="data"),
     "checks": st.Page(pages.checks, title="Checks", icon=":material/fact_check:", url_path="checks"),
 }
@@ -37,5 +39,5 @@ st.navigation({
     "Overview": [P["home"]],
     "Notebooks": [P["arcs"], P["text"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
-    "Explore and check": [P["profit"], P["data"], P["checks"]],
+    "Explore and check": [P["profit"], P["attribution"], P["data"], P["checks"]],
 }).run()

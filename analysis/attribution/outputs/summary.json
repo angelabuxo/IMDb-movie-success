@@ -1,0 +1,1206 @@
+{
+ "sample": {
+  "films": 6413,
+  "years": [
+   1975,
+   2025
+  ],
+  "franchise_films": 1736,
+  "franchise_groups": 5435,
+  "cast_top": 3,
+  "min_films_for_an_effect": 2,
+  "entities_with_an_effect": {
+   "director": 1261,
+   "cast": 2414,
+   "writer": 2808,
+   "producer": 2633,
+   "composer": 713,
+   "cinematographer": 803,
+   "editor": 1145,
+   "studio": 1852,
+   "distributor": 475
+  },
+  "films_with_at_least_one": {
+   "director": 5162,
+   "cast": 6020,
+   "writer": 5446,
+   "producer": 5893,
+   "composer": 5442,
+   "cinematographer": 5567,
+   "editor": 5827,
+   "studio": 5588,
+   "distributor": 6224
+  }
+ },
+ "outcome": {
+  "mean": 0.5692338636290257,
+  "sd": 1.4137240567586897
+ },
+ "penalties": {
+  "director": 20.0,
+  "cast": 30.0,
+  "writer": 30.0,
+  "producer": 50.0,
+  "composer": 100.0,
+  "cinematographer": 100.0,
+  "editor": 100.0,
+  "studio": 20.0,
+  "distributor": 10.0
+ },
+ "effect_sd": {
+  "director": 0.07527974223915751,
+  "cast": 0.06541525535074225,
+  "writer": 0.047107112406593626,
+  "producer": 0.03600657810257309,
+  "composer": 0.02275091857904096,
+  "cinematographer": 0.022582804188324066,
+  "editor": 0.02042203219043118,
+  "studio": 0.08857939299354532,
+  "distributor": 0.22946604797501458
+ },
+ "cv": {
+  "folds": 10,
+  "r2_base": 0.11481500841613668,
+  "r2_full": 0.2985112096211596,
+  "covariance_share": {
+   "budget": 0.05578423227752409,
+   "year": 0.032526080996559084,
+   "genre": 0.014907873103835147,
+   "franchise": 0.08211072591086675,
+   "director": 0.0045455446225182395,
+   "cast": 0.007214497601595242,
+   "writer": 0.005004484965840694,
+   "producer": 0.008718825763091196,
+   "composer": 0.0012358303272557928,
+   "cinematographer": 0.0009608576269311372,
+   "editor": 0.0007190773308294172,
+   "studio": 0.026372103985480972,
+   "distributor": 0.05022487390859943
+  },
+  "covariance_share_unexplained": 0.709695548243136
+ },
+ "shapley": {
+  "folds": 5,
+  "base_blocks": [
+   "budget",
+   "year",
+   "genre"
+  ],
+  "r2_base": 0.11301644560917123,
+  "r2_all": 0.29426322463307597,
+  "share": {
+   "franchise": 0.06778975884884468,
+   "director": 0.003583317907539001,
+   "cast": 0.008200258745797183,
+   "writer": 0.0036204849111159225,
+   "producer": 0.011944330948465405,
+   "composer": 0.002093700027516472,
+   "cinematographer": 0.0013985390979344085,
+   "editor": 0.0014221055276464759,
+   "studio": 0.02749569458753914,
+   "distributor": 0.05369858842150608
+  },
+  "alone_on_base": {
+   "franchise": 0.07072548605032747,
+   "director": 0.009490718935038167,
+   "cast": 0.01043896482214568,
+   "writer": 0.009065368410045238,
+   "producer": 0.02918823565844808,
+   "composer": 0.0043967646838918295,
+   "cinematographer": 0.0032430329335265684,
+   "editor": 0.003572059640620573,
+   "studio": 0.05052988169106687,
+   "distributor": 0.07133824798214428
+  },
+  "lost_when_dropped": {
+   "franchise": 0.06568987582411623,
+   "director": 0.0006546816118452314,
+   "cast": 0.00778326267514462,
+   "writer": 0.0008973701177199533,
+   "producer": 0.0013550856047357396,
+   "composer": 0.000851188369085043,
+   "cinematographer": 0.0004342659222453804,
+   "editor": 0.0004518173797385394,
+   "studio": 0.012184032048446314,
+   "distributor": 0.04206875908784202
+  }
+ },
+ "null": {
+  "shuffles": 200,
+  "what": "returns shuffled among films of the same release year",
+  "gain_over_base_observed": 0.18124677902390474,
+  "gain_over_base_null_mean": -0.043686614795058,
+  "gain_over_base_null_max": -0.025862489659943644,
+  "gain_over_base_null_p95": -0.03407179652616946,
+  "alone_on_base_null_mean": {
+   "franchise": -0.00022511373813909275,
+   "director": -0.0049554636331354115,
+   "cast": -0.009860713295880643,
+   "writer": -0.004769183128376266,
+   "producer": -0.004079238545938965,
+   "composer": -0.0009158497161073375,
+   "cinematographer": -0.000750660946774307,
+   "editor": -0.0006510668814217896,
+   "studio": -0.013868738710334281,
+   "distributor": -0.011521965918987494
+  },
+  "alone_on_base_null_max": {
+   "franchise": 0.000770971385751329,
+   "director": 0.0012705042423583057,
+   "cast": -0.0024039365469621377,
+   "writer": 0.0009475195990316099,
+   "producer": 0.002235048707403875,
+   "composer": 0.0017317157496279378,
+   "cinematographer": 0.0015127334843634266,
+   "editor": 0.001949853667723822,
+   "studio": -0.0009573283989264825,
+   "distributor": -0.0041942187630011896
+  },
+  "alone_on_base_shuffles_at_or_above_observed": {
+   "franchise": 0,
+   "director": 0,
+   "cast": 0,
+   "writer": 0,
+   "producer": 0,
+   "composer": 0,
+   "cinematographer": 0,
+   "editor": 0,
+   "studio": 0,
+   "distributor": 0
+  }
+ },
+ "split_half": {
+  "splits": 50,
+  "min_films_each_half": 3,
+  "by_role": {
+   "director": {
+    "mean_r": 0.21468436466518398,
+    "sd_r": 0.050915132096512154,
+    "entities": 171,
+    "splits": 50
+   },
+   "cast": {
+    "mean_r": 0.16417288219088355,
+    "sd_r": 0.033418015613709655,
+    "entities": 557,
+    "splits": 50
+   },
+   "writer": {
+    "mean_r": 0.17633945526803976,
+    "sd_r": 0.04664880889640552,
+    "entities": 268,
+    "splits": 50
+   },
+   "producer": {
+    "mean_r": 0.2720671768889416,
+    "sd_r": 0.03372730084332205,
+    "entities": 481,
+    "splits": 50
+   },
+   "composer": {
+    "mean_r": 0.11440392535970563,
+    "sd_r": 0.04623985546878243,
+    "entities": 187,
+    "splits": 50
+   },
+   "cinematographer": {
+    "mean_r": 0.11398048010812362,
+    "sd_r": 0.04323140525822424,
+    "entities": 250,
+    "splits": 50
+   },
+   "editor": {
+    "mean_r": 0.03535397993485415,
+    "sd_r": 0.03581165522600898,
+    "entities": 331,
+    "splits": 50
+   },
+   "studio": {
+    "mean_r": 0.39964646896261036,
+    "sd_r": 0.029746057645310197,
+    "entities": 361,
+    "splits": 50
+   },
+   "distributor": {
+    "mean_r": 0.6186237635161078,
+    "sd_r": 0.0387642151357002,
+    "entities": 137,
+    "splits": 50
+   }
+  }
+ },
+ "second_method": {
+  "what": "shrunk mean of each entity's residuals from the controls, one entity at a time",
+  "by_role": {
+   "director": {
+    "spearman": 0.9133800054600645,
+    "sd_joint": 0.07527974223915751,
+    "sd_one_at_a_time": 0.11170375632997218
+   },
+   "cast": {
+    "spearman": 0.9151590233275099,
+    "sd_joint": 0.06541525535074225,
+    "sd_one_at_a_time": 0.08638896928042089
+   },
+   "writer": {
+    "spearman": 0.8970255495302049,
+    "sd_joint": 0.047107112406593626,
+    "sd_one_at_a_time": 0.0712029013025688
+   },
+   "producer": {
+    "spearman": 0.8940419288078941,
+    "sd_joint": 0.03600657810257309,
+    "sd_one_at_a_time": 0.062854575804104
+   },
+   "composer": {
+    "spearman": 0.8898656345021946,
+    "sd_joint": 0.02275091857904096,
+    "sd_one_at_a_time": 0.03503996240361351
+   },
+   "cinematographer": {
+    "spearman": 0.903163271334203,
+    "sd_joint": 0.022582804188324066,
+    "sd_one_at_a_time": 0.03423731672379538
+   },
+   "editor": {
+    "spearman": 0.9032801343148539,
+    "sd_joint": 0.02042203219043118,
+    "sd_one_at_a_time": 0.03205308012315689
+   },
+   "studio": {
+    "spearman": 0.9038141957381425,
+    "sd_joint": 0.08857939299354532,
+    "sd_one_at_a_time": 0.1321843802368144
+   },
+   "distributor": {
+    "spearman": 0.8933608347018421,
+    "sd_joint": 0.22946604797501458,
+    "sd_one_at_a_time": 0.2833137759787727
+   }
+  }
+ },
+ "bootstrap": {
+  "resamples": 200,
+  "unit": "franchise group",
+  "share_of_effects_with_interval_off_zero": {
+   "director": 0.13005551149881048,
+   "cast": 0.11143330571665286,
+   "writer": 0.08226495726495726,
+   "producer": 0.1135586783137106,
+   "composer": 0.10378681626928471,
+   "cinematographer": 0.12079701120797011,
+   "editor": 0.11528384279475982,
+   "studio": 0.11825053995680346,
+   "distributor": 0.1726315789473684
+  }
+ },
+ "forward": {
+  "from_year": 1990,
+  "films": 5677,
+  "r2_full": 0.2186841784527731,
+  "r2_base": 0.058613928321761044,
+  "spearman_within_year_full": 0.4709151166727057,
+  "spearman_within_year_base": 0.23950145548818946
+ },
+ "dollars": {
+  "what": "Shapley split of gross minus baseline gross (budget times the average multiple), nominal USD",
+  "net_by_block": {
+   "budget": -51795037961.71907,
+   "year": -29335107351.859283,
+   "genre": -33423920436.2757,
+   "franchise": 87397063187.42662,
+   "director": 13759459729.143867,
+   "cast": 22742696177.882256,
+   "writer": 9873554953.484299,
+   "producer": 14071496023.265,
+   "composer": 8674406135.663588,
+   "cinematographer": 3363765850.001899,
+   "editor": 4590550819.431246,
+   "studio": 65757742788.713684,
+   "distributor": 192956483087.91962,
+   "unexplained": 138203284216.09943
+  },
+  "absolute_by_block": {
+   "budget": 64049101348.40917,
+   "year": 63223389516.18906,
+   "genre": 87187123753.46902,
+   "franchise": 186834954305.98187,
+   "director": 25629164671.974,
+   "cast": 43809120924.14873,
+   "writer": 26122079509.07184,
+   "producer": 23872094027.627064,
+   "composer": 13227149970.021828,
+   "cinematographer": 7979292994.070392,
+   "editor": 9402667745.082104,
+   "studio": 79010139095.49869,
+   "distributor": 197536475406.60745,
+   "unexplained": 288534379383.2738
+  },
+  "total_gross": 684276256379.66,
+  "total_baseline_gross": 237439819160.48254
+ },
+ "measures": {
+  "films": 6413,
+  "median_multiple": 2.0717,
+  "share_gross_under_budget": 0.2802120692343677,
+  "scenarios": {
+   "0.4": {
+    "share_of_gross_kept": 0.4,
+    "break_even_multiple": 2.5,
+    "share_of_films_above_break_even": 0.4272571339466708,
+    "median_usd": -1900000.0,
+    "total_usd": 37678391729.864,
+    "share_of_all_gains_from_top_decile_of_films": 0.7423835365844308,
+    "spearman_with_multiple": 0.8377821633698564,
+    "top_decile_overlap_with_multiple": 0.41029641185647425
+   },
+   "0.5": {
+    "share_of_gross_kept": 0.5,
+    "break_even_multiple": 2.0,
+    "share_of_films_above_break_even": 0.5130204272571339,
+    "median_usd": 350000.0,
+    "total_usd": 106106017367.83,
+    "share_of_all_gains_from_top_decile_of_films": 0.6924923112036107,
+    "spearman_with_multiple": 0.8610136945926955,
+    "top_decile_overlap_with_multiple": 0.36817472698907955
+   },
+   "0.6": {
+    "share_of_gross_kept": 0.6,
+    "break_even_multiple": 1.6666666666666667,
+    "share_of_films_above_break_even": 0.5755496647434898,
+    "median_usd": 3100000.0,
+    "total_usd": 174533643005.79602,
+    "share_of_all_gains_from_top_decile_of_films": 0.6589308500445122,
+    "spearman_with_multiple": 0.8620994251086445,
+    "top_decile_overlap_with_multiple": 0.3369734789391576
+   }
+  }
+ },
+ "tuning_path": [
+  {
+   "role": "director",
+   "penalty": 1.0,
+   "cv_r2": 0.23596124701820953
+  },
+  {
+   "role": "director",
+   "penalty": 3.0,
+   "cv_r2": 0.26768192771849364
+  },
+  {
+   "role": "director",
+   "penalty": 10.0,
+   "cv_r2": 0.2786124906234244
+  },
+  {
+   "role": "director",
+   "penalty": 20.0,
+   "cv_r2": 0.2795146450380698
+  },
+  {
+   "role": "director",
+   "penalty": 30.0,
+   "cv_r2": 0.27947451180304306
+  },
+  {
+   "role": "director",
+   "penalty": 50.0,
+   "cv_r2": 0.27925681901880406
+  },
+  {
+   "role": "director",
+   "penalty": 100.0,
+   "cv_r2": 0.2789561039144739
+  },
+  {
+   "role": "director",
+   "penalty": 300.0,
+   "cv_r2": 0.2786761742453818
+  },
+  {
+   "role": "director",
+   "penalty": 1000.0,
+   "cv_r2": 0.2785611100379747
+  },
+  {
+   "role": "director",
+   "penalty": null,
+   "cv_r2": 0.2785088851345745
+  },
+  {
+   "role": "cast",
+   "penalty": 1.0,
+   "cv_r2": 0.1461984627995302
+  },
+  {
+   "role": "cast",
+   "penalty": 3.0,
+   "cv_r2": 0.23524611639473947
+  },
+  {
+   "role": "cast",
+   "penalty": 10.0,
+   "cv_r2": 0.2737149713855519
+  },
+  {
+   "role": "cast",
+   "penalty": 20.0,
+   "cv_r2": 0.27910516000273367
+  },
+  {
+   "role": "cast",
+   "penalty": 50.0,
+   "cv_r2": 0.2787144261552861
+  },
+  {
+   "role": "cast",
+   "penalty": 100.0,
+   "cv_r2": 0.2769669301121259
+  },
+  {
+   "role": "cast",
+   "penalty": 300.0,
+   "cv_r2": 0.2748959572996863
+  },
+  {
+   "role": "cast",
+   "penalty": 1000.0,
+   "cv_r2": 0.2739219938133983
+  },
+  {
+   "role": "cast",
+   "penalty": null,
+   "cv_r2": 0.2734550412309099
+  },
+  {
+   "role": "writer",
+   "penalty": 1.0,
+   "cv_r2": 0.18159575111199922
+  },
+  {
+   "role": "writer",
+   "penalty": 3.0,
+   "cv_r2": 0.2515361027535066
+  },
+  {
+   "role": "writer",
+   "penalty": 10.0,
+   "cv_r2": 0.27635137135412824
+  },
+  {
+   "role": "writer",
+   "penalty": 20.0,
+   "cv_r2": 0.279222378662335
+  },
+  {
+   "role": "writer",
+   "penalty": 50.0,
+   "cv_r2": 0.27933750558253223
+  },
+  {
+   "role": "writer",
+   "penalty": 100.0,
+   "cv_r2": 0.278859883987144
+  },
+  {
+   "role": "writer",
+   "penalty": 300.0,
+   "cv_r2": 0.2783117785878978
+  },
+  {
+   "role": "writer",
+   "penalty": 1000.0,
+   "cv_r2": 0.27806389987231694
+  },
+  {
+   "role": "writer",
+   "penalty": null,
+   "cv_r2": 0.2779472431080223
+  },
+  {
+   "role": "producer",
+   "penalty": 1.0,
+   "cv_r2": 0.15886041037827425
+  },
+  {
+   "role": "producer",
+   "penalty": 3.0,
+   "cv_r2": 0.24008761764203412
+  },
+  {
+   "role": "producer",
+   "penalty": 10.0,
+   "cv_r2": 0.27343099922437253
+  },
+  {
+   "role": "producer",
+   "penalty": 20.0,
+   "cv_r2": 0.278639351775555
+  },
+  {
+   "role": "producer",
+   "penalty": 50.0,
+   "cv_r2": 0.2795534778446216
+  },
+  {
+   "role": "producer",
+   "penalty": 100.0,
+   "cv_r2": 0.2789430282161537
+  },
+  {
+   "role": "producer",
+   "penalty": 300.0,
+   "cv_r2": 0.27805706956496323
+  },
+  {
+   "role": "producer",
+   "penalty": 1000.0,
+   "cv_r2": 0.277620590886966
+  },
+  {
+   "role": "producer",
+   "penalty": null,
+   "cv_r2": 0.27740905109953573
+  },
+  {
+   "role": "composer",
+   "penalty": 1.0,
+   "cv_r2": 0.24501663995881184
+  },
+  {
+   "role": "composer",
+   "penalty": 3.0,
+   "cv_r2": 0.26703219766396613
+  },
+  {
+   "role": "composer",
+   "penalty": 10.0,
+   "cv_r2": 0.27707923229227394
+  },
+  {
+   "role": "composer",
+   "penalty": 20.0,
+   "cv_r2": 0.279058720047753
+  },
+  {
+   "role": "composer",
+   "penalty": 50.0,
+   "cv_r2": 0.2797799968522058
+  },
+  {
+   "role": "composer",
+   "penalty": 100.0,
+   "cv_r2": 0.2797403930852408
+  },
+  {
+   "role": "composer",
+   "penalty": 300.0,
+   "cv_r2": 0.27950946473484917
+  },
+  {
+   "role": "composer",
+   "penalty": 1000.0,
+   "cv_r2": 0.27936097341574784
+  },
+  {
+   "role": "composer",
+   "penalty": null,
+   "cv_r2": 0.27928196584149945
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 1.0,
+   "cv_r2": 0.22752728655170984
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 3.0,
+   "cv_r2": 0.2582614169864763
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 10.0,
+   "cv_r2": 0.27500338618253095
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 20.0,
+   "cv_r2": 0.27875163282371485
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 50.0,
+   "cv_r2": 0.28038807269419574
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 100.0,
+   "cv_r2": 0.2806222457241191
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 300.0,
+   "cv_r2": 0.280609750663559
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 1000.0,
+   "cv_r2": 0.28056148448239027
+  },
+  {
+   "role": "cinematographer",
+   "penalty": null,
+   "cv_r2": 0.28053246397184695
+  },
+  {
+   "role": "editor",
+   "penalty": 1.0,
+   "cv_r2": 0.20878800883371385
+  },
+  {
+   "role": "editor",
+   "penalty": 3.0,
+   "cv_r2": 0.252804903117991
+  },
+  {
+   "role": "editor",
+   "penalty": 10.0,
+   "cv_r2": 0.2749099438493867
+  },
+  {
+   "role": "editor",
+   "penalty": 20.0,
+   "cv_r2": 0.27943360446987664
+  },
+  {
+   "role": "editor",
+   "penalty": 50.0,
+   "cv_r2": 0.2813021933311709
+  },
+  {
+   "role": "editor",
+   "penalty": 100.0,
+   "cv_r2": 0.2815444244347467
+  },
+  {
+   "role": "editor",
+   "penalty": 300.0,
+   "cv_r2": 0.2815066683619468
+  },
+  {
+   "role": "editor",
+   "penalty": 1000.0,
+   "cv_r2": 0.281441814043526
+  },
+  {
+   "role": "editor",
+   "penalty": null,
+   "cv_r2": 0.28140427857793304
+  },
+  {
+   "role": "studio",
+   "penalty": 1.0,
+   "cv_r2": 0.18518161595183302
+  },
+  {
+   "role": "studio",
+   "penalty": 3.0,
+   "cv_r2": 0.2528358480006766
+  },
+  {
+   "role": "studio",
+   "penalty": 10.0,
+   "cv_r2": 0.2794088627120609
+  },
+  {
+   "role": "studio",
+   "penalty": 20.0,
+   "cv_r2": 0.2821471272692623
+  },
+  {
+   "role": "studio",
+   "penalty": 30.0,
+   "cv_r2": 0.2815444244347467
+  },
+  {
+   "role": "studio",
+   "penalty": 50.0,
+   "cv_r2": 0.279583856052275
+  },
+  {
+   "role": "studio",
+   "penalty": 100.0,
+   "cv_r2": 0.27622819138040955
+  },
+  {
+   "role": "studio",
+   "penalty": 300.0,
+   "cv_r2": 0.2719554050158042
+  },
+  {
+   "role": "studio",
+   "penalty": 1000.0,
+   "cv_r2": 0.2696812050920412
+  },
+  {
+   "role": "studio",
+   "penalty": null,
+   "cv_r2": 0.26850344053871744
+  },
+  {
+   "role": "distributor",
+   "penalty": 1.0,
+   "cv_r2": 0.27233909206591367
+  },
+  {
+   "role": "distributor",
+   "penalty": 3.0,
+   "cv_r2": 0.28945844161544454
+  },
+  {
+   "role": "distributor",
+   "penalty": 10.0,
+   "cv_r2": 0.290925050362946
+  },
+  {
+   "role": "distributor",
+   "penalty": 20.0,
+   "cv_r2": 0.2861141220188751
+  },
+  {
+   "role": "distributor",
+   "penalty": 30.0,
+   "cv_r2": 0.2821471272692623
+  },
+  {
+   "role": "distributor",
+   "penalty": 50.0,
+   "cv_r2": 0.2765687499440471
+  },
+  {
+   "role": "distributor",
+   "penalty": 100.0,
+   "cv_r2": 0.2690229925543438
+  },
+  {
+   "role": "distributor",
+   "penalty": 300.0,
+   "cv_r2": 0.25940125272993697
+  },
+  {
+   "role": "distributor",
+   "penalty": 1000.0,
+   "cv_r2": 0.2532780662280808
+  },
+  {
+   "role": "distributor",
+   "penalty": null,
+   "cv_r2": 0.2493433228441393
+  },
+  {
+   "role": "director",
+   "penalty": 1.0,
+   "cv_r2": 0.24669448596713017
+  },
+  {
+   "role": "director",
+   "penalty": 3.0,
+   "cv_r2": 0.2786319181917324
+  },
+  {
+   "role": "director",
+   "penalty": 10.0,
+   "cv_r2": 0.2899177502125476
+  },
+  {
+   "role": "director",
+   "penalty": 30.0,
+   "cv_r2": 0.2909123169487686
+  },
+  {
+   "role": "director",
+   "penalty": 50.0,
+   "cv_r2": 0.29070757156304794
+  },
+  {
+   "role": "director",
+   "penalty": 100.0,
+   "cv_r2": 0.2904069252003627
+  },
+  {
+   "role": "director",
+   "penalty": 300.0,
+   "cv_r2": 0.29011984240775057
+  },
+  {
+   "role": "director",
+   "penalty": 1000.0,
+   "cv_r2": 0.2900003980274808
+  },
+  {
+   "role": "director",
+   "penalty": null,
+   "cv_r2": 0.2899459586226435
+  },
+  {
+   "role": "cast",
+   "penalty": 1.0,
+   "cv_r2": 0.16168361048217128
+  },
+  {
+   "role": "cast",
+   "penalty": 3.0,
+   "cv_r2": 0.247885888465755
+  },
+  {
+   "role": "cast",
+   "penalty": 10.0,
+   "cv_r2": 0.28542705386291356
+  },
+  {
+   "role": "cast",
+   "penalty": 20.0,
+   "cv_r2": 0.2906132381458434
+  },
+  {
+   "role": "cast",
+   "penalty": 50.0,
+   "cv_r2": 0.29001558361800905
+  },
+  {
+   "role": "cast",
+   "penalty": 100.0,
+   "cv_r2": 0.2881509633550603
+  },
+  {
+   "role": "cast",
+   "penalty": 300.0,
+   "cv_r2": 0.285972178560744
+  },
+  {
+   "role": "cast",
+   "penalty": 1000.0,
+   "cv_r2": 0.2849519163621733
+  },
+  {
+   "role": "cast",
+   "penalty": null,
+   "cv_r2": 0.28446335714396886
+  },
+  {
+   "role": "writer",
+   "penalty": 1.0,
+   "cv_r2": 0.19344752353652062
+  },
+  {
+   "role": "writer",
+   "penalty": 3.0,
+   "cv_r2": 0.26339319070486245
+  },
+  {
+   "role": "writer",
+   "penalty": 10.0,
+   "cv_r2": 0.2879759796033152
+  },
+  {
+   "role": "writer",
+   "penalty": 20.0,
+   "cv_r2": 0.29070172581113585
+  },
+  {
+   "role": "writer",
+   "penalty": 50.0,
+   "cv_r2": 0.2906797729625069
+  },
+  {
+   "role": "writer",
+   "penalty": 100.0,
+   "cv_r2": 0.2901385748859576
+  },
+  {
+   "role": "writer",
+   "penalty": 300.0,
+   "cv_r2": 0.2895382585330608
+  },
+  {
+   "role": "writer",
+   "penalty": 1000.0,
+   "cv_r2": 0.28926933896912066
+  },
+  {
+   "role": "writer",
+   "penalty": null,
+   "cv_r2": 0.28914308938463096
+  },
+  {
+   "role": "producer",
+   "penalty": 1.0,
+   "cv_r2": 0.1690493594972401
+  },
+  {
+   "role": "producer",
+   "penalty": 3.0,
+   "cv_r2": 0.25013070433837137
+  },
+  {
+   "role": "producer",
+   "penalty": 10.0,
+   "cv_r2": 0.28373366001342926
+  },
+  {
+   "role": "producer",
+   "penalty": 20.0,
+   "cv_r2": 0.2893561993666235
+  },
+  {
+   "role": "producer",
+   "penalty": 30.0,
+   "cv_r2": 0.29052164080155196
+  },
+  {
+   "role": "producer",
+   "penalty": 100.0,
+   "cv_r2": 0.290732164635203
+  },
+  {
+   "role": "producer",
+   "penalty": 300.0,
+   "cv_r2": 0.2902452539322612
+  },
+  {
+   "role": "producer",
+   "penalty": 1000.0,
+   "cv_r2": 0.28998301061421383
+  },
+  {
+   "role": "producer",
+   "penalty": null,
+   "cv_r2": 0.28985315255786015
+  },
+  {
+   "role": "composer",
+   "penalty": 1.0,
+   "cv_r2": 0.2547949751221935
+  },
+  {
+   "role": "composer",
+   "penalty": 3.0,
+   "cv_r2": 0.2772199268352653
+  },
+  {
+   "role": "composer",
+   "penalty": 10.0,
+   "cv_r2": 0.28777723582096637
+  },
+  {
+   "role": "composer",
+   "penalty": 20.0,
+   "cv_r2": 0.28999539184312806
+  },
+  {
+   "role": "composer",
+   "penalty": 30.0,
+   "cv_r2": 0.29059787151775807
+  },
+  {
+   "role": "composer",
+   "penalty": 100.0,
+   "cv_r2": 0.29096838378500434
+  },
+  {
+   "role": "composer",
+   "penalty": 300.0,
+   "cv_r2": 0.2907914717555323
+  },
+  {
+   "role": "composer",
+   "penalty": 1000.0,
+   "cv_r2": 0.29065944910643404
+  },
+  {
+   "role": "composer",
+   "penalty": null,
+   "cv_r2": 0.29058660059183306
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 1.0,
+   "cv_r2": 0.2392290425078467
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 3.0,
+   "cv_r2": 0.2691872824709799
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 10.0,
+   "cv_r2": 0.2854435562675228
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 20.0,
+   "cv_r2": 0.289108833343258
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 30.0,
+   "cv_r2": 0.29012323901215054
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 50.0,
+   "cv_r2": 0.29072900653021694
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 300.0,
+   "cv_r2": 0.290963172260427
+  },
+  {
+   "role": "cinematographer",
+   "penalty": 1000.0,
+   "cv_r2": 0.2909181687659078
+  },
+  {
+   "role": "cinematographer",
+   "penalty": null,
+   "cv_r2": 0.29089067038750394
+  },
+  {
+   "role": "editor",
+   "penalty": 1.0,
+   "cv_r2": 0.21949684413589754
+  },
+  {
+   "role": "editor",
+   "penalty": 3.0,
+   "cv_r2": 0.2629334686897663
+  },
+  {
+   "role": "editor",
+   "penalty": 10.0,
+   "cv_r2": 0.28449959813933445
+  },
+  {
+   "role": "editor",
+   "penalty": 20.0,
+   "cv_r2": 0.28889706459904707
+  },
+  {
+   "role": "editor",
+   "penalty": 30.0,
+   "cv_r2": 0.290055654467134
+  },
+  {
+   "role": "editor",
+   "penalty": 50.0,
+   "cv_r2": 0.2907232144485705
+  },
+  {
+   "role": "editor",
+   "penalty": 300.0,
+   "cv_r2": 0.29094223698599286
+  },
+  {
+   "role": "editor",
+   "penalty": 1000.0,
+   "cv_r2": 0.29088409052671993
+  },
+  {
+   "role": "editor",
+   "penalty": null,
+   "cv_r2": 0.2908499208960017
+  },
+  {
+   "role": "studio",
+   "penalty": 1.0,
+   "cv_r2": 0.1924744686948059
+  },
+  {
+   "role": "studio",
+   "penalty": 3.0,
+   "cv_r2": 0.26079704416633054
+  },
+  {
+   "role": "studio",
+   "penalty": 10.0,
+   "cv_r2": 0.2878500134671327
+  },
+  {
+   "role": "studio",
+   "penalty": 30.0,
+   "cv_r2": 0.2906425042190486
+  },
+  {
+   "role": "studio",
+   "penalty": 50.0,
+   "cv_r2": 0.2890617808050988
+  },
+  {
+   "role": "studio",
+   "penalty": 100.0,
+   "cv_r2": 0.2862011433367928
+  },
+  {
+   "role": "studio",
+   "penalty": 300.0,
+   "cv_r2": 0.282488821626102
+  },
+  {
+   "role": "studio",
+   "penalty": 1000.0,
+   "cv_r2": 0.2805016427257985
+  },
+  {
+   "role": "studio",
+   "penalty": null,
+   "cv_r2": 0.27947227040777656
+  },
+  {
+   "role": "distributor",
+   "penalty": 1.0,
+   "cv_r2": 0.2725652467819143
+  },
+  {
+   "role": "distributor",
+   "penalty": 3.0,
+   "cv_r2": 0.28961965764116593
+  },
+  {
+   "role": "distributor",
+   "penalty": 20.0,
+   "cv_r2": 0.2860771002394239
+  },
+  {
+   "role": "distributor",
+   "penalty": 30.0,
+   "cv_r2": 0.28206281076382944
+  },
+  {
+   "role": "distributor",
+   "penalty": 50.0,
+   "cv_r2": 0.2764265405488766
+  },
+  {
+   "role": "distributor",
+   "penalty": 100.0,
+   "cv_r2": 0.26880960924132524
+  },
+  {
+   "role": "distributor",
+   "penalty": 300.0,
+   "cv_r2": 0.25910536654936034
+  },
+  {
+   "role": "distributor",
+   "penalty": 1000.0,
+   "cv_r2": 0.25293502479764596
+  },
+  {
+   "role": "distributor",
+   "penalty": null,
+   "cv_r2": 0.248970412141566
+  }
+ ]
+}
