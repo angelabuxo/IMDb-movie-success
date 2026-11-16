@@ -10,9 +10,9 @@ import pandas as pd
 import streamlit as st
 
 from analysis.embeddings import report as R
-from analysis.embeddings.paths import OUTPUTS, PRIVATE, VECTORS
+from analysis.embeddings.paths import OUTPUTS, PRIVATE, VECTORS, film_table
 
-from .common import md, mtime, show_df
+from .common import md, missing, mtime, show_df
 
 
 @st.cache_data(show_spinner="Reading results…")
@@ -37,7 +37,7 @@ def embeddings():
     st.caption("analysis/embeddings (s01_corpora, s02_embed, s03_correlate) and notebooks/embeddings.ipynb. "
                "Profitability is ln(gross / budget), revenue ln(gross); neither is real profit.")
     if not (OUTPUTS / "s03_results.csv").exists():
-        st.info("No results yet. Run `python -m analysis.embeddings.s03_correlate` (after s01 and s02).")
+        missing("No results yet. Run `python -m analysis.embeddings.s03_correlate` (after s01 and s02).")
         return
     res = _load(mtime(OUTPUTS / "s03_results.csv"))
     r, say = res["results"], R.reading(res)
@@ -92,7 +92,8 @@ def embeddings():
         stamp = mtime(VECTORS / f"{corpus}_{variant}.npy")
         d = _map(corpus, variant, stamp) if stamp else None
         if d is None:
-            st.info("The map needs the local vectors: run s01_corpora and s02_embed on the data.")
+            missing("The map needs `data/raw/features/text_vectors/`: run `./setup.sh` to unpack the embedding-vectors "
+                    "bundle, or run s01_corpora and s02_embed on the data.")
         else:
             st.plotly_chart(R.fig_map(d, corpus, color), width="stretch")
 
@@ -105,15 +106,16 @@ def embeddings():
 
 def neighbours():
     """A film's nearest films in one corpus's vector space, with their outcomes."""
-    films_path = PRIVATE / "films.parquet"
+    films_path = film_table()
     if not films_path.exists():
-        st.info("Needs the local film table and vectors: run s01_corpora and s02_embed.")
+        missing("Needs `data/raw/features/text_vectors/films.parquet` and the vectors: run `./setup.sh` to unpack "
+                "the embedding-vectors bundle, or run s01_corpora and s02_embed on the data.")
         return
     c1, c2, c3 = st.columns([2, 1, 1])
     corpus = c2.selectbox("Corpus", R.CORPORA, format_func=R.LABEL.get, key="emb_nb_corpus")
     variant = c3.radio("Text", ["clean", "raw"], horizontal=True, key="emb_nb_variant")
     if not (VECTORS / f"{corpus}_{variant}.npy").exists():
-        st.info("No vectors for this corpus yet.")
+        missing("No vectors for this corpus yet.")
         return
     V, ids = _vectors(corpus, variant, mtime(VECTORS / f"{corpus}_{variant}.npy"))
     f = pd.read_parquet(films_path).set_index("tconst").loc[ids].reset_index()

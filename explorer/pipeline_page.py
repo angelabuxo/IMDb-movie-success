@@ -15,7 +15,7 @@ import streamlit as st
 from analysis.clean_rule import REASONS
 from analysis.clean_rule import steps as rule_steps
 
-from .common import FEATURES, REPO, mtime, table
+from .common import FEATURES, REPO, missing, mtime, table
 
 GRAPH = FEATURES / "graph"
 MOVIE_TABLE = FEATURES / "movies_features_10k.csv"
@@ -59,7 +59,7 @@ def funnel(rows: list[tuple[str, int | None]], key: str, height: int | None = No
     """A left-to-right drop funnel: one bar per step, with how many the step removed."""
     rows = [(label, n) for label, n in rows if n is not None]
     if not rows:
-        st.info("The summary file for this step isn't in the repo.")
+        missing("The summary file for this step isn't in the repo.")
         return
     labels = [r[0] for r in rows][::-1]
     values = [r[1] for r in rows][::-1]
@@ -131,7 +131,7 @@ def sample_funnel():
          "Gross minus budget still isn't profit: marketing isn't in the budget and cinemas keep part of the gross. "
          "The 100k+ tier favours hits. Wikipedia and Wikidata disagree by more than 50% on some budgets.")
     if not MOVIE_TABLE.exists():
-        st.info(f"Needs `{MOVIE_TABLE.relative_to(FEATURES.parent)}` in the data folder (run `./setup.sh`). "
+        missing(f"Needs `{MOVIE_TABLE.relative_to(FEATURES.parent)}` in the data folder (run `./setup.sh`). "
                 "The analysis sections below still work from the committed outputs.")
         return
     m = table(MOVIE_TABLE)
@@ -343,7 +343,7 @@ def pipeline():
         if edges.exists():
             c[3].metric("Edges (credits)", f"{len(table(edges)):,}")
     else:
-        st.info("Needs `features/graph/nodes.csv` in the data folder.")
+        missing("Needs `features/graph/nodes.csv` in the data folder.")
 
     st.subheader("5 · Each analysis cleans its own text")
     samples_compared()
