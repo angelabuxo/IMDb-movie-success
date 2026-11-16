@@ -173,6 +173,72 @@ display(r.style.format("{:.3f}"))"""),
     ("md", """A screenplay recovers tags slightly better than a plot summary, and the two agree closely on which tags
 are recoverable, so the plot results aren't an oddity of Wikipedia's summaries. On the return a screenplay does no
 better than a plot. The screenplay sample is small and tilted to well-known films, so its numbers are rough."""),
+    ("md", """### Any tag, for every year
+
+The table behind all of this, `features/plot_tag_relevance.npy`, has all 1,084 tags for every film with a plot,
+including the films after 2014 that the Tag Genome never scored. It comes in the `plot-tags-2026-11-16` bundle, so
+this part reads `data/raw` and needs `./setup.sh --data` first.
+
+Only tags a plot recovers well are worth reading this way. The cell below keeps tags with r of at least 0.5 against
+the Tag Genome and, for a few of them, lists the films the plot scores highest."""),
+    ("code", """FEAT = Path.cwd().resolve().parent / "data" / "raw" / "features"
+if not (FEAT / "plot_tag_relevance.npy").exists():
+    print("data/raw/features/plot_tag_relevance.npy is missing: run ./setup.sh --data from the repo root")
+else:
+    prel = np.load(FEAT / "plot_tag_relevance.npy")
+    pids = pd.read_csv(FEAT / "plot_tag_relevance_ids.csv")
+    tag_list = pd.read_csv(FEAT / "tag_relevance_tags.csv", keep_default_na=False)["tag"].tolist()
+    pfilms = pd.read_csv(FEAT / "plot_genre_shares.csv").set_index("tconst").reindex(pids["tconst"]).reset_index()
+    grel = np.load(FEAT / "tag_relevance.npy")
+    gids = {t: i for i, t in enumerate(pd.read_csv(FEAT / "tag_relevance_ids.csv")["tconst"])}
+    rec = dict(zip(plot_tags["tag"], plot_tags["recovery_r"]))
+    good = [t for t in tag_list if rec.get(t, 0) >= 0.5]
+    late = (pfilms["y"] > 2014).to_numpy()
+    print(f"{prel.shape[0]:,} films x {prel.shape[1]:,} tags; {late.sum():,} films after 2014; {len(good)} tags recovered at r 0.5 or more")
+
+    def top_films(tag, n=10):
+        j = tag_list.index(tag)
+        order = np.argsort(-prel[:, j])[:n]
+        out = pfilms.loc[order, ["primaryTitle", "y", "genres"]].assign(plot_score=prel[order, j].round(3))
+        out["Tag Genome score"] = [round(float(grel[gids[t], j]), 3) if t in gids else None for t in pfilms["tconst"][order]]
+        return out.reset_index(drop=True)
+
+    for tag in [t for t in ("space", "heist", "vampires", "martial arts", "high school", "zombies") if t in good][:4]:
+        d = top_films(tag)
+        print(f"\\n{tag} (recovered at r {rec[tag]:.2f}); {int((d['y'] > 2014).sum())} of the top 10 are after 2014")
+        display(d)"""),
+    ("code", """if (FEAT / "plot_tag_relevance.npy").exists():
+    # does the plot rank films like the Tag Genome does, tag by tag, on the films that have both?
+    both = np.array([t in gids for t in pfilms["tconst"]])
+    pr, gr = prel[both], grel[[gids[t] for t in pfilms["tconst"][both]]]
+    k = 20
+    overlap = []
+    for t in good:
+        j = tag_list.index(t)
+        a, b = set(np.argsort(-pr[:, j])[:k]), set(np.argsort(-gr[:, j])[:k])
+        overlap.append(len(a & b) / k)
+    print(f"on the {both.sum():,} films with both scores, the plot's top {k} films for a tag share a median of "
+          f"{np.median(overlap):.0%} with the Tag Genome's top {k} (10th to 90th percentile {np.percentile(overlap, 10):.0%} to "
+          f"{np.percentile(overlap, 90):.0%}), over the {len(good)} well-recovered tags")
+    # how common each tag is among later films, against earlier ones. Predicted scores are pulled towards the middle,
+    # so a film counts as strong on a tag when it is in that tag's top 5% over all films, not above a fixed 0.5
+    cut = np.percentile(prel, 95, axis=0)
+    strong = prel >= cut
+    early = ~late & (pfilms["y"] >= 1990).to_numpy()
+    ch = pd.DataFrame({"tag": tag_list, "1990-2014": strong[early].mean(axis=0), "after 2014": strong[late].mean(axis=0)})
+    ch = ch[ch["tag"].isin(good)].assign(change=lambda d: d["after 2014"] - d["1990-2014"]).sort_values("change")
+    print(f"highest plot score of any film, median over tags: {np.median(prel.max(axis=0)):.2f}")
+    print("\\nshare of films in a tag's top 5%, 1990 to 2014 against after 2014 (5% would mean no change; well-recovered tags):")
+    display(pd.concat([ch.head(8), ch.tail(8)]).style.format({"1990-2014": "{:.1%}", "after 2014": "{:.1%}", "change": "{:+.1%}"}).hide(axis="index"))"""),
+    ("md", """The top lists hold films that fit the tag, from before and after 2014 alike. But they are not the Tag
+Genome's lists: on films that have both, the two top-20 lists share only a few films. A plot score is a regression
+prediction, pulled towards the middle (a plot score rarely passes 0.7, where the Tag Genome gives 0.99), and with a
+per-tag r of 0.5 to 0.75 the ordering at the very top is loose. So use plot scores to compare groups of films or to
+find candidates for a tag, and the Tag Genome where it exists for one film's exact profile.
+
+The last table compares what plots were about before and after 2014, using each tag's top 5% so the pulled-in scale
+doesn't matter. It describes the films in our sample, which over-represents well-known films, and Wikipedia's way
+of summarising plots may have changed over time as well as the films."""),
     ("md", """## 2. The usual genre mix
 
 A film's mix is its genre vector. A director's or studio's usual mix at a film is the mean vector of their

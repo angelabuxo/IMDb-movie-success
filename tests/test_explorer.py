@@ -106,6 +106,15 @@ def data_dir(tmp_path_factory):
     for j, g in enumerate(["Drama", "Comedy", "Horror", "Action"]):
         gs["rel_" + g] = rel[:, j]
     gs.iloc[::-1].to_csv(feat / "genre_shares.csv", index=False)   # another row order than the matrix
+    # plot-predicted tags for every film, including the ten the Tag Genome doesn't cover (scripts/reviews/plot_tags.py)
+    prel = rng.uniform(0, 0.7, (40, len(tag_names))).astype(np.float32)
+    np.save(feat / "plot_tag_relevance.npy", prel)
+    pd.DataFrame({"tconst": films, "out_of_fold": [1] * 30 + [0] * 10}).to_csv(feat / "plot_tag_relevance_ids.csv", index=False)
+    ps = pd.DataFrame({"tconst": films, "primaryTitle": movies.label, "y": movies.year, "genres": movies.genres,
+                       "has_tag_genome": [1] * 30 + [0] * 10})
+    for j, g in enumerate(["Drama", "Comedy", "Horror", "Action"]):
+        ps["rel_" + g] = prel[:, j]
+    ps.to_csv(feat / "plot_genre_shares.csv", index=False)
 
     ms = root / "scripts" / "moviesum"
     ms.mkdir(parents=True)
@@ -719,3 +728,42 @@ def test_calendar_without_release_months(explorer, monkeypatch, tmp_path):
     at = page("pages", "calendar")
     ok(at)
     assert any("parsed infoboxes" in w.value for w in at.warning)
+
+
+@pytest.mark.parametrize("view", ["One film", "One tag", "Genre mix", "Profit", "Checks"])
+def test_tags_page_on_plot_scores(explorer, view):
+    """Every view with the plot-based scores; Profit and Checks fall back to the Tag Genome."""
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)", "tag_view": view})
+    ok(at)
+    assert widget(at, "radio", "Scores from").value == "Plot summaries (all years)"
+    on_plot = any("plot summary" in c.value for c in at.caption)
+    assert on_plot == (view not in ("Profit", "Checks"))
+
+
+def test_tags_page_plot_scores_cover_films_the_tag_genome_does_not(explorer):
+    """A film after the Tag Genome (row 35 has plot scores only) opens on the plot-based scores, and its tags show."""
+    from explorer import pages
+    at = page("pages", "tags", {"tag_film_pending": "tt1000035", "tag_view_pending": "One film"})
+    ok(at)
+    assert widget(at, "radio", "Scores from").value == pages.PLOT
+    assert widget(at, "selectbox", "Film").value == 35
+    rel, names, films = pages.tag_data(str(pages.FEATURES), 0.0, pages.PLOT)
+    assert rel.shape == (40, len(names)) and films["tconst"].tolist()[35] == "tt1000035"
+
+
+def test_tags_page_hides_tags_a_plot_does_not_recover(explorer):
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)", "tag_view": "One tag"})
+    ok(at)
+    options = widget(at, "multiselect", "Tags").options
+    assert options and not any(o.startswith("nan") or o.startswith("none") for o in options)   # not in plot_tags_tags.csv
+    widget(at, "slider", "Only tags a plot recovers").set_value(0.0)
+    ok(at.run())
+    assert len(widget(at, "multiselect", "Tags").options) == 12
+
+
+def test_tags_page_without_plot_scores(explorer, monkeypatch):
+    from explorer import pages
+    monkeypatch.setitem(pages.SOURCE_FILES, pages.PLOT, ("missing.npy", "missing.csv", "missing.csv"))
+    at = page("pages", "tags", {"tag_source": "Plot summaries (all years)"})
+    ok(at)
+    assert widget(at, "radio", "Scores from").options == [pages.GENOME]

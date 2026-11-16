@@ -318,18 +318,45 @@ def profit():
 
 TAG_FILES = ("tag_relevance.npy", "tag_relevance_ids.csv", "tag_relevance_tags.csv", "genre_shares.csv")
 TAG_CHECKS = REPO / "analysis" / "tags" / "tag_shares.json"
+GENOME, PLOT = "Tag Genome (films to 2014)", "Plot summaries (all years)"
+# source -> (matrix, its row ids, the per-film genre table); the tag names are shared
+SOURCE_FILES = {GENOME: ("tag_relevance.npy", "tag_relevance_ids.csv", "genre_shares.csv"),
+                PLOT: ("plot_tag_relevance.npy", "plot_tag_relevance_ids.csv", "plot_genre_shares.csv")}
+PLOT_RECOVERY = REPO / "analysis" / "tags" / "plot_tags_tags.csv"
 
 
-@st.cache_data(show_spinner="Reading tag scores…", max_entries=2)
-def tag_data(folder: str, stamp: float):
+def source_ready(source: str) -> bool:
+    return all((FEATURES / n).exists() for n in SOURCE_FILES[source] + ("tag_relevance_tags.csv",))
+
+
+@st.cache_data(show_spinner="Reading tag scores…", max_entries=4)
+def tag_data(folder: str, stamp: float, source: str = GENOME):
     """Films x tags relevance, the tag names and the per-film genre table (same row order as the matrix)."""
     f = type(FEATURES)(folder)
-    rel = np.load(f / "tag_relevance.npy")
+    matrix, id_file, table_file = SOURCE_FILES[source]
+    rel = np.load(f / matrix)
     tags = pd.read_csv(f / "tag_relevance_tags.csv", keep_default_na=False)["tag"].astype(str).tolist()
-    films = pd.read_csv(f / "genre_shares.csv")
-    ids = pd.read_csv(f / "tag_relevance_ids.csv")["tconst"]
-    films = films.set_index("tconst").reindex(ids).reset_index()
+    films = pd.read_csv(f / table_file)
+    ids = pd.read_csv(f / id_file)["tconst"]
+    films = films.drop_duplicates("tconst").set_index("tconst").reindex(ids).reset_index()
+    if "tier" not in films:
+        films["tier"] = ""
     return rel, tags, films
+
+
+@st.cache_data(show_spinner=False)
+def scored_ids(source: str, stamp: float) -> frozenset:
+    p = FEATURES / SOURCE_FILES[source][1]
+    return frozenset(pd.read_csv(p)["tconst"]) if p.exists() else frozenset()
+
+
+@st.cache_data(show_spinner=False)
+def plot_recovery(stamp: float) -> dict:
+    """How well a plot recovers each tag: Pearson r with the Tag Genome score, out of fold (plot_tags.py)."""
+    if not PLOT_RECOVERY.exists():
+        return {}
+    d = pd.read_csv(PLOT_RECOVERY, keep_default_na=False)
+    return dict(zip(d["tag"].astype(str), d["recovery_r"].astype(float)))
 
 
 def tag_shares(rel: np.ndarray, power: float) -> np.ndarray:
@@ -352,10 +379,42 @@ def tags():
                    "`python3 scripts/get_data.py genome`, then from `data/raw`: "
                    "`../../.venv/bin/python ../../scripts/reviews/tag_shares.py`.")
         return
-    rel, tag_names, films = tag_data(str(FEATURES), max(mtime(FEATURES / n) for n in TAG_FILES))
+    sources = [GENOME] + ([PLOT] if source_ready(PLOT) else [])
+    views = ["One film", "One tag", "Genre mix", "Profit", "Checks"]
+    # a click elsewhere (a table row's "Its tags" button, the node explorer) asks for a film and a view; a film the
+    # Tag Genome doesn't cover opens on the plot-based scores
+    want = st.session_state.pop("tag_film_pending", None)
+    if "tag_view_pending" in st.session_state:
+        st.session_state["tag_view"] = st.session_state.pop("tag_view_pending")
+    if st.session_state.get("tag_view") not in views:
+        st.session_state["tag_view"] = views[0]
+    if st.session_state.get("tag_source") not in sources:
+        st.session_state["tag_source"] = GENOME
+    if want and PLOT in sources:
+        on = {s: want in scored_ids(s, mtime(FEATURES / SOURCE_FILES[s][1])) for s in sources}
+        if not on[st.session_state["tag_source"]] and on[PLOT]:
+            st.session_state["tag_source"] = PLOT
+    with st.sidebar:
+        st.subheader("Tag scores")
+        source = st.radio("Scores from", sources, key="tag_source",
+                          help="Tag Genome: predicted by MovieLens from user tags, ratings and IMDb reviews, so they carry the "
+                               "size of a film's audience; films to 2014. Plot summaries: the same 1,084 tags predicted from "
+                               "the film's Wikipedia plot alone (scripts/reviews/plot_tags.py); every year, rougher per film.")
+        if PLOT not in sources:
+            st.caption("Plot-based scores need `plot_tag_relevance.npy`: run `./setup.sh --data` (plot-tags bundle).")
+    fixed = st.session_state["tag_view"] in ("Profit", "Checks")     # these views report the Tag Genome analysis
+    use = GENOME if fixed else source
+    rel, tag_names, films = tag_data(str(FEATURES), max(mtime(FEATURES / n) for n in SOURCE_FILES[use]), use)
     genres = [c[4:] for c in films.columns if c.startswith("rel_")]
     g_rel = films[["rel_" + g for g in genres]].to_numpy(dtype=float)
+    recovery = plot_recovery(mtime(PLOT_RECOVERY)) if use == PLOT else {}
     with st.sidebar:
+        if use == PLOT and recovery:
+            min_r = st.slider("Only tags a plot recovers, r at least", 0.0, 0.7, 0.4, 0.05, key="tag_min_r",
+                              help="Pearson r between the plot-predicted and the Tag Genome score of a tag, out of fold. "
+                                   "Below about 0.4 a predicted tag is mostly noise. Genre shares use every genre tag.")
+        else:
+            min_r = None
         st.subheader("Genre shares")
         power = st.slider("Power", 1.0, 4.0, 2.0, 0.5, key="tag_power",
                           help="Share = relevance ** power ÷ the film's total. 1 spreads a film thinly, because genres "
@@ -365,32 +424,34 @@ def tags():
     imdb = np.array([[g in str(x).split(",") for g in genres] for x in films["genres"]])
     label = (films["primaryTitle"].astype(str) + " (" + films["y"].astype("Int64").astype(str) + ")").tolist()
     med = np.median(rel, axis=0)
-    st.caption(f"{len(films):,} films with scores, {len(tag_names):,} tags. Nothing released after 2014 is covered.")
+    usable = np.array([recovery.get(t, 0.0) >= min_r for t in tag_names]) if min_r is not None else np.ones(len(tag_names), bool)
+    if use == GENOME:
+        st.caption(f"{len(films):,} films with Tag Genome scores, {len(tag_names):,} tags. Nothing released after 2014 is covered."
+                   + (" The Profit and Checks views always use these scores." if fixed and source == PLOT else ""))
+    else:
+        st.caption(md(f"{len(films):,} films with a plot summary, every year. Each film's tags are predicted from its plot "
+                      f"alone, so they are free of audience size and rougher per film. Predicted scores are pulled towards the middle "
+                      "(they rarely pass 0.7), so compare films within a tag rather than against a fixed cut-off. {int(usable.sum()):,} of "
+                      f"{len(tag_names):,} tags are recovered at r ≥ {min_r:.2f}; the rest are hidden from the tag lists."))
 
-    # a click elsewhere (a table row's "Its tags" button, the node explorer) asks for a film and a view
     row_of = {t: k for k, t in enumerate(films["tconst"])}
-    want = st.session_state.pop("tag_film_pending", None)
     if want in row_of:
-        st.session_state["tag_film"] = row_of[want]
-    if "tag_view_pending" in st.session_state:
-        st.session_state["tag_view"] = st.session_state.pop("tag_view_pending")
-    views = ["One film", "One tag", "Genre mix", "Profit", "Checks"]
-    if st.session_state.get("tag_view") not in views:
-        st.session_state["tag_view"] = views[0]
+        st.session_state["tag_film"], st.session_state["tag_film_id"] = row_of[want], want
     view = st.segmented_control("View", views, key="tag_view", label_visibility="collapsed") or views[0]
 
     def card(k: int, key: str, tags_button: bool):
         """The film's overview, with its three largest shares and five most distinctive tags."""
         g3 = ", ".join(f"{genres[j]} {100 * share[k, j]:.0f}%" for j in np.argsort(-share[k])[:3])
-        t5 = ", ".join(tag_names[j] for j in np.argsort(-(rel[k] - med))[:5])
+        t5 = ", ".join(tag_names[j] for j in np.argsort(-np.where(usable, rel[k] - med, -9))[:5])
         gp.film_overview(films["tconst"][k], key, note=f"**Genre shares** {g3} · **Tags** {t5}", tags_button=tags_button,
                          fallback={"title": films["primaryTitle"][k], "year": films["y"][k], "genres": films["genres"][k]})
 
     if view == "One film":
         default = label.index("Alien (1979)") if "Alien (1979)" in label else 0
-        if st.session_state.get("tag_film") not in range(len(label)):
-            st.session_state["tag_film"] = default
+        if st.session_state.get("tag_film") not in range(len(label)) or st.session_state.get("tag_film_source") != use:
+            st.session_state["tag_film"] = row_of.get(st.session_state.get("tag_film_id"), default)
         i = st.selectbox("Film (type to search)", range(len(label)), format_func=lambda k: label[k], key="tag_film")
+        st.session_state["tag_film_id"], st.session_state["tag_film_source"] = films["tconst"][i], use   # kept across a source switch
         card(i, "tag_one", tags_button=False)
         l, r = st.columns(2)
         d = pd.DataFrame({"genre": genres, "share": 100 * share[i], "relevance": g_rel[i],
@@ -404,7 +465,7 @@ def tags():
         rank = r.radio("Rank tags by", ["most distinctive", "highest relevance"], horizontal=True, key="tag_film_rank",
                        help="Most distinctive ranks by relevance minus the tag's median over all films, so tags that score "
                             "high on nearly every film (such as \"original\") drop out.")
-        top = np.argsort(-(rel[i] - med if rank == "most distinctive" else rel[i]))[:n]
+        top = np.argsort(-np.where(usable, rel[i] - med if rank == "most distinctive" else rel[i], -9))[:n]
         t = pd.DataFrame({"tag": [tag_names[j] for j in top], "relevance": rel[i, top], "typical film": med[top]})
         fig = go.Figure()
         fig.add_bar(y=t["tag"], x=t["relevance"], orientation="h", name="this film", marker_color=HIGH)
@@ -414,14 +475,20 @@ def tags():
                           yaxis=dict(autorange="reversed"), legend=dict(orientation="h", y=1.08), margin=dict(t=40))
         r.plotly_chart(fig, width="stretch", key="tag_film_tags")
         with st.expander("Every tag for this film"):
-            show_df(pd.DataFrame({"tag": tag_names, "relevance": rel[i].round(3), "typical film": med.round(3),
-                                  "lift": (rel[i] - med).round(3)}).sort_values("lift", ascending=False),
-                    key="tag_film_all", height=360)
+            every = pd.DataFrame({"tag": tag_names, "relevance": rel[i].round(3), "typical film": med.round(3),
+                                  "lift": (rel[i] - med).round(3)})
+            if recovery:
+                every["recovered from plots, r"] = [round(recovery.get(t, np.nan), 3) for t in tag_names]
+            show_df(every.sort_values("lift", ascending=False), key="tag_film_all", height=360)
 
     elif view == "One tag":
-        default = tag_names.index("time travel") if "time travel" in tag_names else 0
-        picked = st.multiselect("Tags (several: films are ranked by their lowest score among them)", tag_names,
-                                default=[tag_names[default]], key="tag_pick")
+        choices = [t for t, u in zip(tag_names, usable) if u]
+        default = "time travel" if "time travel" in choices else choices[0]
+        if any(t not in choices for t in st.session_state.get("tag_pick", [])):
+            st.session_state["tag_pick"] = [t for t in st.session_state["tag_pick"] if t in choices] or [default]
+        picked = st.multiselect("Tags (several: films are ranked by their lowest score among them)", choices,
+                                default=[default], key="tag_pick",
+                                format_func=lambda t: f"{t}  (plot r {recovery[t]:.2f})" if t in recovery else t)
         if picked:
             cols = [tag_names.index(t) for t in picked]
             score = rel[:, cols].min(axis=1)
@@ -691,7 +758,7 @@ def calendar():
                   caption=f"{len(f)} films first shown in {MONTHS[pm - 1]} {py}. Click a row to see the film.", height=320)
     if hit is not None:
         with slot:
-            gp.film_overview(hit["tconst"], "cal_film", tags_button=hit["tconst"] in gp._tagged_films(mtime(FEATURES / "tag_relevance_ids.csv")))
+            gp.film_overview(hit["tconst"], "cal_film", tags_button=hit["tconst"] in gp._tagged_films(mtime(FEATURES / "tag_relevance_ids.csv") + mtime(FEATURES / "plot_tag_relevance_ids.csv")))
 
 
 FOLLOW_VIEWS = ["Tags from plots", "Usual genre mix", "Seen and liked", "Critics and audience", "Franchise and month"]

@@ -192,8 +192,13 @@ def _wiki_links(stamp: float) -> dict:
 
 @st.cache_data(show_spinner=False)
 def _tagged_films(stamp: float) -> frozenset:
-    p = FEATURES / "tag_relevance_ids.csv"
-    return frozenset(pd.read_csv(p)["tconst"]) if p.exists() else frozenset()
+    """Films with tag scores: Tag Genome, or predicted from the plot summary when that file is here."""
+    out = set()
+    for name in ("tag_relevance_ids.csv", "plot_tag_relevance_ids.csv"):
+        p = FEATURES / name
+        if p.exists():
+            out |= set(pd.read_csv(p)["tconst"])
+    return frozenset(out)
 
 
 def external_links(nid: str) -> dict[str, str]:
@@ -480,7 +485,7 @@ def node():
     links = external_links(cur)
     cols = st.columns(len(links) + 4)
     link_buttons(cur, cols[:len(links)])
-    if r.type == "movie" and cur in _tagged_films(mtime(FEATURES / "tag_relevance_ids.csv")):
+    if r.type == "movie" and cur in _tagged_films(mtime(FEATURES / "tag_relevance_ids.csv") + mtime(FEATURES / "plot_tag_relevance_ids.csv")):
         if cols[len(links)].button("Tags and genres", width="stretch", help="This film's genre shares and tags."):
             nav.open_tags(cur)
 
