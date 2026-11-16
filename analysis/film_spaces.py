@@ -26,6 +26,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfTransformer
 from scipy import sparse
 
+from analysis.clean_rule import clean_mask
+
 REPO = Path(__file__).resolve().parents[1]
 FEATURES = REPO / "data" / "raw" / "features"
 SEED = 1
@@ -61,11 +63,7 @@ def sample(features: Path = FEATURES) -> pd.DataFrame:
     ln(budget), year, year squared and a dummy for every IMDb genre with 50+ films, over the whole sample.
     """
     m = pd.read_csv(features / "movies_features_10k.csv", dtype={"tconst": str})
-    ok = ((m.budget_cur == "USD") & (m.gross_cur == "USD") & (m.b >= 1000) & (m.g >= 1000)
-          & ~m.gross_flag.fillna("").str.contains("rentals|regional|direct_to_video")
-          & ~m.distributors.fillna("").str.contains("netflix|amazon|apple|hulu", case=False)
-          & (m.y >= 1975) & (m.y < 2026))
-    d = m[ok].copy().set_index("tconst")
+    d = m[clean_mask(m)].copy().set_index("tconst")   # the shared clean rule
     d["year"] = d.y.astype(int)
     d["title"] = d.primaryTitle
     d["log_mult"] = np.log(d.g / d.b)
