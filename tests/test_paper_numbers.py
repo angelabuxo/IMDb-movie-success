@@ -232,9 +232,9 @@ CLAIMS = [
     ("fig3 caption", "on films up to 2017 (@ to @ per measure;",
      lambda s: [f(s.money(k).n for k in ("imdb_rating", "metacritic", "rotten_tomatoes")) for f in (min, max)]),
     # Methods
-    ("clean sample", "release before 2026 (@ films; @ with 100,000+ votes)",
-     lambda s: [s.roi["films"], s.s01["checks"]["clean_movies"]["got"]]),
-    ("methods scripts", "(@ clean films with 100,000+ votes)", lambda s: [s.s01["checks"]["clean_with_usable_script"]["got"]]),
+    ("clean sample", "release from 1975 to 2025 (@ films; @ with 100,000+ votes)",
+     lambda s: [s.roi["films"], s.roi["results"]["adjusted_100k_tier"]["films"]]),   # the current rule, both tiers
+    ("methods scripts", "(@ films with 100,000+ votes, clean under the rule before the 1975 floor", lambda s: [s.s01["checks"]["clean_with_usable_script"]["got"]]),
     ("methods reviews", "(@ films, none after 2017)", lambda s: [s.rev_cov["n_100k_with_genome"]]),
     ("louvain", "(1980--2017), ten seeds", lambda s: []),
     ("arc smoothing", "resampled to @ points and smoothed over @",
