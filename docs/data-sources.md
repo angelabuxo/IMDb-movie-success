@@ -12,7 +12,7 @@ Everything the project uses, with links, as of 4 November 2026. Per-movie links 
 | Large Movie Review Dataset, URL lists | Links each review to a movie | [Stanford](https://ai.stanford.edu/~amaas/data/sentiment/), [unofficial mirror](https://huggingface.co/datasets/hohai/aclImdb/tree/main/train) | Mirror has no licence or card | URL lists downloaded from the mirror, review text not yet matched to them |
 | MovieLens Tag Genome 2021 | 2,624,608 IMDb reviews with IMDb IDs. Fields are review text and movie ID only, with no date or rating | [Page](https://grouplens.org/datasets/movielens/tag-genome-2021/) | CC BY-NC 3.0, cite the two papers in its readme. Reviews were collected from IMDb, method not stated | Downloaded, covers 5,842 of the 6,851 clean movies, nothing after 2017 |
 | DLu/oscar_data | Oscar nominations and wins with IMDb film and person IDs | [GitHub](https://github.com/DLu/oscar_data) | Repo is BSD-2, but it was partly built from Oscars.org and scraped IMDb pages | Downloaded, pinned to commit `c5e9716`, 1,479 clean movies appear |
-| TMDB movies on Kaggle | Third money source | [Kaggle](https://www.kaggle.com/datasets/alanvourch/tmdb-movies-daily-updates) | Uploader lists Apache 2.0, but TMDB's API terms bar use "in connection with" a machine learning application | Not downloaded, and we shouldn't use it until the terms question is settled |
+| TMDB movies on Kaggle | Third money source | [Kaggle](https://www.kaggle.com/datasets/alanvourch/tmdb-movies-daily-updates) | Uploader lists Apache 2.0, but TMDB's API terms bar use "in connection with" a machine learning application | Downloaded 16 November 2026 (snapshot of 15 November) and compared with the infobox figures in [the data structure doc](imdb-data-structure.md). TMDB allowed the download by email (reported by Gyula on 16 November 2026; the email isn't in the repo). The file isn't in this repo, which is public: ask Gyula for the private copy |
 
 To cite MovieSum, use Saxena and Keller, "MovieSum: An Abstractive Summarization Dataset for Movie Screenplays", Findings of ACL 2024.
 
@@ -42,7 +42,7 @@ Use `scripts/get_data.py`, which reads its list of files from [`data/datasets.js
 python3 scripts/get_data.py --list
 ```
 
-OpusData and TMDB aren't included, for the reasons in the tables above.
+OpusData isn't included because it's a paid extract. TMDB isn't included because the Kaggle file needs a Kaggle account. A 6 MB extract with only our movies is in a private release; extract it into `data/raw/` like the bundles.
 
 ## `data/movie_links.csv`
 

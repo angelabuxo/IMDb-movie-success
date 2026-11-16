@@ -623,3 +623,29 @@ VADER stands in for their syuzhet lexicon; SST-2 is our primary instrument. 1,04
 Job 30053931 (gpua10) never left the queue. The local MPS run was the run of record under the race rule, so the
 HPC copy would only have been a reproducibility check. It was cancelled with `bkill` (status EXIT, never started)
 and its watcher stopped. No HPC jobs remain for this project.
+
+## 2026-11-16 · The clean rule moved under the pre-registered sample (no amendment made)
+
+- **What happened.** On 15 November (`d71aadc`) the clean rule gained a 1975 floor, a direct-to-video flag and
+  cited-rentals flags, and `config.yaml` was edited to `min_year_inclusive: 1975`. Every committed arcs result
+  (Steps 1 to 13, N = 834) was computed on 14 November under the older rule. Step 1 now stops at its own check:
+  2,352 clean films against the 2,446 expected.
+- **Shared rule.** The rule now lives in `analysis/clean_rule.py`; Step 1 calls it, and `check_config` fails if
+  `config.yaml` and the module disagree. The `expected:` counts were NOT changed, because they are pre-registered.
+- **Where the gap comes from** (`outputs/x02_clean_rule_gap.json`). The 2,446 was rebuilt from the 11 November
+  infobox table (2,447, one off). 95 films left and none joined: 92 released before 1975, one cited rental, one
+  direct-to-video, and *Videodrome*, whose budget is now read as Canadian dollars. In the scripted samples every
+  lost film is pre-1975: 1,095 → 1,061, 1,087 → 1,055, 868 → 842, 834 → 813, 946 → 914, 759 → 733.
+- **The 21 primary films the new rule drops** were released 1940 to 1974, and none grossed under its budget
+  (7.5% of the other 813 did). That fits the reason for the floor: their grosses are mostly distributor rentals.
+- **Sensitivity (exploratory, not the primary analysis).** Step 7's `association()` on the saved descriptors
+  first reproduces the committed result exactly (D1 ρ +0.035, p 0.319; D2 ρ +0.078, p 0.028). Without the 21
+  films, cells re-pooled, same seed: D1 ρ +0.025 (p 0.476, CI −0.048 to 0.094); D2 ρ +0.082 (z 2.23,
+  p 0.024, CI 0.011 to 0.157).
+- **Reading.** D2 now falls under the Bonferroni line (0.025) where the primary run sat just above it. z is the
+  same (2.23 in both), and the permutation p moves by four permutations in 1,000, so this is the same near miss
+  on a slightly different sample, not new evidence. Choosing the 813 sample after seeing this number would be a
+  forking path, so the choice has to be made, and recorded, without regard to it.
+- **Open, for the group:** keep N = 834 as pre-registered (freeze its film list as a committed ID list that
+  Step 1 reads, so there is still one clean rule), or amend to the current rule (N = 813) with this entry as the dated record and both numbers
+  reported. Until then Step 1 doesn't run.

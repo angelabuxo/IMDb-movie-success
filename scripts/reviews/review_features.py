@@ -24,10 +24,15 @@ import csv
 import io
 import json
 import re
+import sys
 import zipfile
+from pathlib import Path
 
 import numpy as np
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))   # repo root, for the shared clean rule
+from analysis.clean_rule import is_clean  # noqa: E402
 
 ZIP = "reviews/genome/genome_2021.zip"
 FEATURES = "features/movies_features_10k.csv"
@@ -40,15 +45,9 @@ MODEL = "all-MiniLM-L6-v2"
 
 
 def clean_ids():
-    """IMDb IDs of the clean theatrical sample, as genome_stats.py defines it."""
-    def ok(r):
-        return (r["budget_cur"] == "USD" and r["gross_cur"] == "USD" and float(r["b"] or 0) >= 1000
-                and float(r["g"] or 0) >= 1000 and "rentals" not in r["gross_flag"]
-                and "regional" not in r["gross_flag"] and "direct_to_video" not in r["gross_flag"]
-                and not re.search("netflix|amazon|apple|hulu", r["distributors"] or "", re.I)
-                and 1975 <= int(r["y"] or 0) < 2026)
+    """IMDb IDs of the clean theatrical sample (the shared rule in analysis/clean_rule.py)."""
     with open(FEATURES, newline="") as f:
-        return {r["tconst"] for r in csv.DictReader(f) if ok(r)}
+        return {r["tconst"] for r in csv.DictReader(f) if is_clean(r)}
 
 
 def main():

@@ -39,6 +39,7 @@ The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `ana
 | Tags: follow-ups | Five follow-ups to the tag and profit analysis: tags predicted from plot summaries, the usual genre mix of directors and studios, seen and liked against earned, critics against audience, and franchise and release month as controls | `analysis/tags/plot_tags.*`, `analysis/tags/tag_followups.json` (built by `scripts/reviews/plot_tags.py` and `tag_followups.py`); needs no data folder |
 | Data inspector | Any CSV, TSV, Parquet or JSON file: rows with a text filter, column types and missing values, one column's distribution, duplicate keys | `data/raw/features`, `features/graph`, every outputs folder |
 | Checks | Automatic sanity checks (stale outputs, unique IDs, budget and gross, README counts, run-together names) and a button that runs `pytest` | Everything above |
+| Second money source | Wikipedia's budget and gross against TMDB's: agreement by tier, how far apart the figures are, and (with the TMDB file on your machine) a film-by-film scatter and the largest disagreements | `analysis/checks/tmdb_compare.json`, `data/raw/features/tmdb_compare.csv` |
 
 ## Notes
 

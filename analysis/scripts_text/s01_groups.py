@@ -11,6 +11,8 @@ from plotly.subplots import make_subplots
 from scipy import stats
 
 from .config import cfg, log_run
+from analysis.clean_rule import check_config, clean_mask
+
 from .paths import FEATURES, MOVIESUM, OUTPUTS, PRIVATE
 from .report import HIGH, HIGH_SYMBOL, LOW, LOW_SYMBOL, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
@@ -72,10 +74,8 @@ def run() -> dict:
     c = cfg()
     s = c["sample"]
     m = pd.read_csv(FEATURES / "movies_features.csv", dtype={"tconst": str})
-    clean = ((m.budget_cur == "USD") & (m.gross_cur == "USD") & (m.b >= s["min_budget_usd"])
-             & ~m.gross_flag.fillna("").str.contains("rentals|regional|direct_to_video")
-             & ~m.distributors.fillna("").str.contains(s["streaming_distributors"], case=False)
-             & (m.y >= s["min_year_inclusive"]) & (m.y < s["max_year_exclusive"]))
+    check_config(s)          # config.yaml records the rule's parameters; the rule itself is shared
+    clean = clean_mask(m)
     d = m[clean].copy().rename(columns={"primaryTitle": "title_imdb", "y": "year", "b": "budget_usd",
                                         "g": "gross_usd", "votes": "imdb_votes"})
     d["year"] = d.year.astype(int)

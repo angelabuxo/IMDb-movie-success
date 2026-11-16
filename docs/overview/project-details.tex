@@ -11,7 +11,7 @@
 What & Count & Source \\
 \midrule
 Movies with 10,000+ votes (the graph) & 12,673 & IMDb \\
-Clean films with budget and gross in USD & 2,446 (100k+), 6,851 (10k+) & Wikipedia infoboxes \\
+Clean films with budget and gross in USD & 2,352 (100k+), 6,414 (10k+) & Wikipedia infoboxes \\
 Screenplays & 1,095 clean 100k+ films & MovieSum \\
 Audience reviews & 2,070 clean 100k+ films, to 2017 & MovieLens Tag Genome \\
 Critic scores & Metacritic 2,431, RT 2,740 & Wikipedia, Wikidata \\
@@ -50,7 +50,7 @@ communities, centrality and per-actor ROI.
 
 \subsection{Scripts and reviews notebook \where{(\gh{notebooks/scripts_and_reviews.ipynb}{notebook})}}
 \begin{itemize}
-  \item Only 2 of 15 script features pass $q < 0.05$ net of budget and year. The strongest is a character network centred on one character ($\rho = -0.097$).
+  \item Only 3 of 15 script features pass $q < 0.05$ net of budget and year. The strongest is a character network centred on one character ($\rho = -0.100$).
   \item Six VADER arc shapes don't differ in profit ($p = 0.99$).
 \end{itemize}
 
@@ -91,15 +91,15 @@ Trained on films to 2010, tested on 2011 to 2017.
 \toprule
 Model & Out-of-sample $R^2$ \\
 \midrule
-Budget, year, genre & $-0.013$ \\
-+ network & 0.196 \\
-All pre-release blocks (adds month, franchise) & 0.237 \\
-+ critic and audience scores & 0.309 \\
+Budget, year, genre & $-0.009$ \\
++ network & 0.192 \\
+All pre-release blocks (adds month, franchise) & 0.234 \\
++ critic and audience scores & 0.305 \\
 \bottomrule
 \end{tabularx}
 \begin{itemize}
-  \item On films with a screenplay, script features add nothing beyond the network ($R^2$ 0.047 against 0.043).
-  \item Director hit streaks beat a shuffle of each director's own films (+0.175 against +0.090). PageRank adds nothing beyond plain experience.
+  \item On films with a screenplay, script features add nothing beyond the network ($R^2$ 0.049 against 0.045).
+  \item Director hit streaks beat a shuffle of each director's own films (+0.156 against +0.077). PageRank adds nothing beyond plain experience.
   \item Rotten Tomatoes goes with the multiple at $\rho = +0.25$. There are 158 loved flops and 205 panned hits.
 \end{itemize}
 

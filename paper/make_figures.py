@@ -21,8 +21,8 @@ OUT.mkdir(exist_ok=True)
 
 # Hard-coded inputs. tests/test_paper_numbers.py checks both against their sources, so a rerun that moves them fails.
 # Fig. 1A: out-of-time R2 (train <= 2010, test 2011-2017), ridge; notebooks/what_predicts_profit.ipynb summary.
-LADDER = [("Budget,\nyear,\ngenre", -0.013), ("+ net-\nwork", 0.196), ("+ month,\nfran-\nchise", 0.237),
-          ("+ critics,\naudi-\nence*", 0.309)]
+LADDER = [("Budget,\nyear,\ngenre", -0.009), ("+ net-\nwork", 0.192), ("+ month,\nfran-\nchise", 0.234),
+          ("+ critics,\naudi-\nence*", 0.305)]
 # Fig. 3: analysis/reviews/outputs/spearman_correlations.csv (branch reviews-exploration): Spearman rho with
 # ln(gross/budget) on films to 2017, and the mean and SD of a null that shuffles within genre x decade.
 RECEPTION = [("IMDb rating", 0.266, 0.099, 0.018), ("Metacritic", 0.261, 0.089, 0.020),

@@ -1304,3 +1304,117 @@ def checks():
     if (REPO / "TESTING.md").exists():
         with st.expander("TESTING.md (the testing audit)"):
             st.markdown(md((REPO / "TESTING.md").read_text()))
+
+
+# ---------------------------------------------------------------- TMDB as a second money source
+
+TMDB_JSON = REPO / "analysis" / "checks" / "tmdb_compare.json"
+TMDB_CSV = FEATURES / "tmdb_compare.csv"
+TMDB_FIELDS = {"budget": ("wiki_budget", "tmdb_budget", "budget_ratio"), "gross": ("wiki_gross", "tmdb_revenue", "gross_ratio")}
+
+
+def tmdb():
+    st.title("Second money source: TMDB")
+    st.caption("Budget and gross are parsed from Wikipedia infoboxes. This page checks them against TMDB's budget "
+               "and revenue for the same films, matched on IMDb ID. Agreement isn't proof: TMDB is edited by users "
+               "without citations, and both sources can copy the same wrong number.")
+    if not TMDB_JSON.exists():
+        st.warning("No saved comparison yet. With the TMDB file in `data/raw/tmdb/`, run "
+                   "`../../.venv/bin/python ../../scripts/imdb/tmdb_compare.py` from `data/raw`.")
+        return
+    res = json.loads(TMDB_JSON.read_text())
+    tier = st.sidebar.radio("Vote tier", list(res["tiers"]), key="tmdb_tier")
+    field = st.sidebar.radio("Money field", list(TMDB_FIELDS), key="tmdb_field")
+    s = res["tiers"][tier]
+    f = s[field]
+    st.caption(f"TMDB snapshot of {res['tmdb_snapshot']}. {res['clean_movies']:,} clean movies, "
+               f"{res['matched_to_tmdb_row']:,} with a TMDB row.")
+    c = st.columns(4)
+    c[0].metric(f"TMDB has a {field} figure", f"{f['n']:,}", f"{f['tmdb_missing']:,} without", delta_color="off")
+    c[1].metric("Within 10% of Wikipedia", f"{f['within_10pct']:.1%}")
+    c[2].metric("Off by 2x or more", f"{f['off_by_2x_or_more']:.1%}")
+    c[3].metric("Same under-budget call", f"{s['same_under_budget_call']:.1%}",
+                f"on {s['both_tmdb_fields']:,} films with both TMDB figures", delta_color="off")
+
+    rows = [{"tier": t, "field": k, "clean movies": v["n"], "TMDB has a figure": v[k]["n"],
+             "within 1%": v[k]["within_1pct"], "within 10%": v[k]["within_10pct"], "within 25%": v[k]["within_25pct"],
+             "exactly equal": v[k].get("exactly_equal"), "within 0.5%": v[k].get("identical_within_half_pct"),
+             "off by 2x or more": v[k]["off_by_2x_or_more"], "TMDB 2x higher": v[k]["tmdb_higher_2x"],
+             "TMDB at most half": v[k]["tmdb_lower_2x"], "Spearman (logs)": v[k]["spearman_log"]}
+            for t, v in res["tiers"].items() for k in TMDB_FIELDS]
+    show_df(pd.DataFrame(rows), key="tmdb_agreement", caption="Agreement by tier and field (shares are of the movies "
+            "where TMDB has a figure).")
+
+    if "exactly_equal" in f:
+        st.caption(f"The sources aren't independent: {f['exactly_equal']:.1%} of TMDB's {field} figures in this tier "
+                   f"are exactly Wikipedia's number and {f['identical_within_half_pct']:.1%} are within 0.5%. Read the "
+                   "agreement as a check on the parser, not on Wikipedia.")
+    if "flips" in s:
+        st.subheader("Films that change their flop label")
+        show_df(pd.DataFrame([{"tier": t, "films with both TMDB figures": v["both_tmdb_fields"], **v["flips"]}
+                              for t, v in res["tiers"].items()]), key="tmdb_flips",
+                caption=f"A flip near break-even (Wikipedia gross ÷ budget within a factor of "
+                        f"{res.get('near_break_even_factor', 1.25)} of 1) is expected. One elsewhere is a large disagreement.")
+    if res.get("outside_clean"):
+        st.subheader("Films the clean rule drops")
+        show_df(pd.DataFrame(res["outside_clean"]), key="tmdb_outside",
+                caption=f"{res['all_movies'] - res['clean_movies']:,} of {res['all_movies']:,} films aren't clean. Everything "
+                        "above only tests clean films, and a parser miss usually drops a film from the sample. Films "
+                        "with no parsed figure but both figures on TMDB are the ones to read next.")
+
+    if res.get("unparsed_with_tmdb"):
+        show_df(pd.DataFrame(res["unparsed_with_tmdb"]), key="tmdb_unparsed",
+                caption="Of the films with no parsed Wikipedia figure but both on TMDB: where the figure went missing. "
+                        "Only the last row can hold parser misses.")
+    rob = REPO / "analysis" / "checks" / "tmdb_robustness.json"
+    if rob.exists():
+        rb = json.loads(rob.read_text())
+        a, sr = rb["arcs_step7"], rb["scripts_and_reviews"]
+        runs = {"reproduce": "committed (Wikipedia)", "wikipedia": "TMDB films, Wikipedia money", "tmdb": "TMDB films, TMDB money"}
+        rows = [{"result": f"arcs {k}", **{lab: f"{a[k][v]['rho']:+.3f} (p {a[k][v]['p']:.3f})" for v, lab in runs.items()}}
+                for k in ("D1", "D2")]
+        rows += [{"result": f"script: {f}", **{lab: f"{sr[v]['features'][f]['rho']:+.3f} (q {sr[v]['features'][f]['q_partial']:.3f})"
+                                               for v, lab in runs.items()}}
+                 for f in ("degree centralisation", "network density", "clustering")]
+        rows.append({"result": "review sentiment", **{lab: f"{sr[v]['review_sentiment']['rho']:+.3f}" for v, lab in runs.items()}})
+        st.subheader("Do the results change with TMDB's money?")
+        show_df(pd.DataFrame(rows), key="tmdb_robustness",
+                caption="Each analysis's own code: the committed number first, then the films where TMDB has both "
+                        "figures, with Wikipedia's money and with TMDB's (outcome, budget control and hit/flop cut-offs "
+                        "all swapped). The network results aren't covered.")
+
+    edges = np.array(res["ratio_hist_edges_log10"])
+    h = pd.DataFrame({"log10(TMDB / Wikipedia)": (edges[:-1] + edges[1:]) / 2, "movies": f["ratio_hist"]})
+    fig = px.bar(h[h.movies > 0], x="log10(TMDB / Wikipedia)", y="movies", log_y=True, template="simple_white", height=340,
+                 title=f"{field.capitalize()}, {tier}: how far apart the two sources are (0 = same figure)",
+                 color_discrete_sequence=[HIGH])
+    for x in (-np.log10(2), np.log10(2)):
+        fig.add_vline(x=x, line_dash="dash", line_color=NEUTRAL)
+    st.plotly_chart(fig, width="stretch")
+    st.caption("Dashed lines mark a factor of two. The y-axis is logarithmic; ratios beyond 100x sit in the end bars.")
+
+    if not TMDB_CSV.exists():
+        st.info("The film-by-film view needs `data/raw/features/tmdb_compare.csv`, which holds TMDB's figures and "
+                "stays out of the repo. Get the TMDB file and run `scripts/imdb/tmdb_compare.py` to make it.")
+        return
+    d = table(TMDB_CSV)
+    if tier != "all clean":
+        d = d[d.tier == tier] if tier == "100k+" else d[d.tier != "100k+"]
+    w, t, ratio = TMDB_FIELDS[field]
+    p = d[d[t] > 0]
+    st.subheader("Film by film")
+    if p.empty:
+        st.caption("No films with a TMDB figure in this selection.")
+        return
+    lim = [float(min(p[w].min(), p[t].min())), float(max(p[w].max(), p[t].max()))]
+    sc = px.scatter(p, x=w, y=t, log_x=True, log_y=True, hover_name="title", hover_data=["tconst", "year", "tier"],
+                    opacity=.45, template="simple_white", height=520, color_discrete_sequence=[HIGH],
+                    labels={w: f"Wikipedia {field} (USD)", t: f"TMDB {field} (USD)"})
+    sc.add_trace(go.Scatter(x=lim, y=lim, mode="lines", line=dict(color=LOW, dash="dash"), name="same figure",
+                            hoverinfo="skip"))
+    st.plotly_chart(sc, width="stretch")
+    k = st.slider("Largest disagreements to list", 10, 200, 30, key="tmdb_k")
+    worst = p.assign(times_apart=np.exp(np.log(p[ratio]).abs())).nlargest(k, "times_apart")
+    show_df(worst[["tconst", "title", "year", "tier", w, t, "times_apart"]], key="tmdb_worst",
+            caption="Read these against the infobox before trusting either side. A TMDB figure a thousand or a "
+                    "million times too small is usually one typed in thousands or millions.")

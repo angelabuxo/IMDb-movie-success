@@ -115,6 +115,33 @@ MovieSum has 2,200 rows covering 2,188 distinct IMDb IDs, with scenes, character
 
 Screenplays were written before release, so a film's success can't have shaped them, unlike reviews and ratings.
 
+## TMDB as a second money source
+
+`scripts/imdb/tmdb_compare.py` compares the infobox budget and gross with TMDB's `budget` and `revenue` (Kaggle snapshot of 2026-11-15) for the 6,414 clean movies in `movies_features_10k.csv`. Every one has a TMDB row. The saved numbers are in `analysis/checks/tmdb_compare.json`. [`notebooks/tmdb_second_source.ipynb`](../notebooks/tmdb_second_source.ipynb) and the explorer's "Second money source" page both read that file.
+
+| | Movies with a TMDB figure | Exactly equal | Within 10% | Within 25% | Off by 2x or more | Spearman (logs) |
+|---|---:|---:|---:|---:|---:|---:|
+| Budget, all clean | 6,015 | 71.9% | 83.2% | 92.3% | 2.5% | 0.985 |
+| Gross, all clean | 6,132 | 13.1% | 85.4% | 90.3% | 4.6% | 0.987 |
+| Budget, 100k+ | 2,348 | 70.1% | 85.5% | 95.4% | 1.1% | 0.992 |
+| Gross, 100k+ | 2,346 | 9.6% | 92.7% | 95.5% | 1.7% | 0.995 |
+| Budget, 10k to 100k | 3,667 | 73.0% | 81.8% | 90.3% | 3.5% | 0.975 |
+| Gross, 10k to 100k | 3,786 | 15.3% | 80.9% | 87.1% | 6.4% | 0.970 |
+
+On the 5,891 movies where TMDB has both figures, log(gross ÷ budget) correlates at 0.959 between the sources, and they make the same under-budget call for 96.1% (Wikipedia 1,533 flops, TMDB 1,632). In the 100k+ tier it's 98.5% of 2,343; in the 10k to 100k tier it's 94.5% of 3,548.
+
+Three things limit what this shows:
+
+- **The sources aren't independent.** 71.9% of TMDB's budgets are exactly Wikipedia's number, and 63.7% of its grosses are within 0.5%. The agreement mostly shows the parser read Wikipedia correctly, not that Wikipedia is right.
+- **231 films change their under-budget label.** 97 are near break-even (Wikipedia gross ÷ budget between 0.8 and 1.25) and 134 aren't. 165 are flops only on TMDB and 66 only on Wikipedia. `scripts/imdb/tmdb_robustness.py` reruns three headlines with TMDB money in place of Wikipedia's (outcome, budget control and hit/flop cut-offs), on the 831 arc films and 5,891 clean films where TMDB has both figures, after first reproducing each committed number exactly. Nothing changes direction: arcs D1 ρ +0.040 with Wikipedia money and +0.030 with TMDB's, D2 +0.080 and +0.072 (p 0.016 and 0.030), degree centralisation -0.098 and -0.100, review sentiment +0.187 and +0.185. The swap moves 7.6% of films between hit, middle and flop. The network results aren't covered, because their predictors are built from earlier films' Wikipedia returns.
+- **Only clean films are tested.** A parser miss usually drops a film from the sample. Of the 6,259 films outside it, 4,230 have no parsed budget or gross, and TMDB has both figures for 739 of those. For 656 of them (45 in the 100k+ tier) the infobox has no field for the missing figure; a plain search of the article wikitext, independent of the parser, finds a non-empty line in 1 of 656. 73 have a raw value the parser didn't turn into a number, and 8 have no article linked. A seeded random 30 of the 73, labelled by the coding agent from their raw values (`analysis/checks/tmdb_unparsed_labels.csv`), held 24 non-dollar amounts the parser can't read (currency templates, currency names, a leaked `link=yes`), 4 with no money figure (French admissions, "Debated", a number with no currency) and 2 missed dollar figures (*Mr. Nice Guy*'s "$>25 million", a lower bound, and a gross computed by a conversion template). So parser misses barely touch the clean sample. Filling the 656 from TMDB would add films, mostly to the flop-heavy tier, which is a decision for the group.
+
+Two assumptions: TMDB has no currency field, so its figures are read as US dollars, and a TMDB 0 counts as "no figure". TMDB is edited by users without citations, so a disagreement doesn't say which side is wrong.
+
+I read the raw infobox value for nine of the largest disagreements and the parser had read all nine correctly. They were picked because they disagreed most, so that's not an error rate. TMDB had 4 revenues under $1,000 (a figure typed in millions), and where gross is off by 2x or more TMDB is the lower one 252 times against 29. My reading of the cases I looked at is that TMDB often holds the US-only gross for foreign films (*Samba*, *Microcosmos*), but I haven't checked that across the 252.
+
+**One article per film.** Two Wikidata items can carry the same IMDb ID, so two films were linked to two articles: *Horizon: An American Saga – Chapter 1* (also the franchise article) and *Apocalypse Now* (also *Redux*). Readers that kept the first row got the franchise article for *Horizon*, which has a budget for two films and no gross, so it dropped out. `parse_infobox.py` now writes one row per film, keeping the article whose title matches the IMDb title (`analysis/wiki_links.py`). *Horizon* is back with its own figures and *Apocalypse Now* is unchanged; the `one-article-per-film-2026-11-16` bundle holds the fixed tables.
+
 ## What's still open
 
 - **Reviews stop at 2017.** MovieLens Tag Genome covers 5,842 of the 6,851 clean movies with 1,621,933 reviews (median 163 per film), and 1,524 of those movies grossed under budget. Coverage is close to complete through the 2000s, 1,618 of 2,032 for the 2010s, and zero for 2018 onwards. Its reviews have no date or rating, and I haven't read a sample. The Large Movie Review Dataset is much smaller (1,376 clean movies, 20,514 reviews) and has almost nothing from 2010 onwards, but it does have sentiment labels.

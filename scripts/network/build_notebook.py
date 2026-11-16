@@ -30,7 +30,7 @@ This notebook reads the saved outputs of three scripts and needs no raw data:
 | `scripts/network/team_history.py` | Do teams that worked together before return more? | `analysis/network/team_history.json` |
 | `scripts/network/movers.py` | Does a person's record follow them to a new studio? | `analysis/network/movers.json` |
 
-All three use the 6,851 clean movies in the graph. The return is ln(gross / budget) net of ln(budget), release
+All three use the 6,414 clean movies in the graph. The return is ln(gross / budget) net of ln(budget), release
 decade and genre, so "similar returns" means similar after those are accounted for. Gross over budget isn't
 profit: marketing is missing and cinemas keep part of the gross."""),
     ("code", """import json
@@ -144,7 +144,9 @@ sim = pd.DataFrame({VARIANTS[v]: pairs["scripts"][v]["script_similarity"] for v 
 display(sim)
 pd.set_option("display.float_format", lambda v: f"{v:+.3f}")"""),
     ("md", """**Reading it.** Pairs that share a person are alike in return. Unlinked pairs are not, however similar
-their scripts: the line stays inside the null band in every decile. People do make somewhat similar films (within
+their scripts: the line stays close to zero in every decile and doesn't rise with script similarity. One or
+two deciles sit just above the 95% band, about what chance gives across ten deciles and two samples, and the
+decile with the most similar scripts is never one of them. People do make somewhat similar films (within
 the same first genre, linked films' scripts are closer than unlinked ones, and `same_genre_gap` is above its null),
 but that gap is small next to the spread across all pairs (`cosine_sd_all_pairs`).
 
