@@ -1,7 +1,8 @@
 # Data bundles
 
-Compressed data so the group doesn't have to re-pull or re-download it. Extract into `data/raw/` from the repo
-root, oldest first, so a newer bundle replaces the files it updates:
+Compressed data so the group doesn't have to re-pull or re-download it. `./setup.sh --data` from the repo root
+extracts them into `data/raw/` (`./setup.sh` also sets up Python). By hand, extract oldest first, so a newer
+bundle replaces the files it updates:
 
 ```bash
 mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$/\1 &/' | sort | cut -d" " -f2); do tar --zstd -xf "$f" -C data/raw; done
@@ -15,6 +16,7 @@ mkdir -p data/raw && for f in $(ls data/bundles/*.tar.zst | sed -E 's/.*-([0-9]{
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) | Derived from MovieSum and MovieLens Tag Genome 2021 (CC BY-NC 3.0): non-commercial, cite both |
 | `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph (`features/graph/`): nodes, edges, GraphML, credits, people, company IDs, Wikipedia producer matches, as built by PR #9 | Built from IMDb's non-commercial datasets (personal, non-commercial use under IMDb's terms), Wikipedia (CC BY-SA 4.0) and Wikidata (CC0) |
 | `movie-graph-2026-11-15.tar.zst` | 12 MB | The movie graph, the parsed infobox tables (`features/wiki_infobox*.csv`), the movie tables (`features/movies_features*.csv`) and the network features (`film_network_features.csv`, `roi_by_entity.csv`) after the 15 November parser fixes: names split or recovered from lists, and currencies before `$` read correctly. It replaces the same files from `wikipedia-wikidata-2026-11-11` and `movie-graph-2026-11-11` | Same as `movie-graph-2026-11-11` |
+| `movie-graph-2026-11-16.tar.zst` | 7 MB | `features/graph/nodes.csv`, `features/graph/movie_graph.graphml`, the parsed infobox tables (`features/wiki_infobox*.csv`) and the movie tables (`features/movies_features*.csv`) after the tightened clean rule of 15 November: films before 1975, direct-to-video films and grosses whose citation says rentals are dropped, leaving 6,413 clean movies. Only the `clean` and `gross_flag` columns differ from `movie-graph-2026-11-15`, whose six files of the same name it replaces. `film_network_features.csv` and `roi_by_entity.csv` aren't rebuilt and still come from the 6,843-movie sample | Same as `movie-graph-2026-11-11` |
 | `extra-tables-2026-11-15.tar.zst` | 0.5 MB | Small tables no other bundle holds: franchise and sequel flags (`features/franchise.csv`), MovieSum IDs and screenplay statistics (`moviesum_ids.csv`, `moviesum_stats.csv`) and Tag Genome review counts (`genome_review_counts.csv`). Numbers and IDs only | Wikidata: CC0. MovieSum and Tag Genome counts: non-commercial, with the credits above |
 
 Not here: IMDb's raw files (1.9 GB; `python3 scripts/get_data.py imdb`) and the Tag Genome reviews (1.9 GB;
