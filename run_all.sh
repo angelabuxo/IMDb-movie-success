@@ -8,10 +8,12 @@
 #
 # Steps:
 #   1. ./setup.sh: make .venv, install requirements.txt, unpack data/bundles into data/raw (skipped when done)
-#   2. python -m explorer.check_pages: open every explorer page headless and list crashes, errors and every
+#   2. python -m explorer.warm_up: load the compiled libraries once. The first run of a new .venv can spend
+#      minutes here on a Mac; later runs take seconds
+#   3. python -m explorer.check_pages: open every explorer page headless and list crashes, errors and every
 #      input file a page couldn't find; report in logs/check_pages.log
-#   3. python -m pytest: the test suite on synthetic data (about 35 s here; --full adds the slow tests)
-#   4. ./explorer/run.sh: Streamlit on http://localhost:8501, logging to logs/explorer.log and logs/streamlit.log
+#   4. python -m pytest: the test suite on synthetic data (about 35 s here; --full adds the slow tests)
+#   5. ./explorer/run.sh: Streamlit on http://localhost:8501, logging to logs/explorer.log and logs/streamlit.log
 #
 # A failing check doesn't stop the explorer from starting; read the summary above the Streamlit banner.
 # Extra arguments after the flags go to Streamlit, e.g. ./run_all.sh --server.port 8502
@@ -24,24 +26,27 @@ while [ $# -gt 0 ]; do
     --check) LAUNCH=0 ;;
     --full) FULL=1 ;;
     --no-check) CHECK=0 ;;
-    -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,21p' "$0"; exit 0 ;;
     *) break ;;
   esac
   shift
 done
 
-echo "== 1/4 setup"
+echo "== 1/5 setup"
 ./setup.sh
 mkdir -p logs
 
+echo "== 2/5 loading libraries (slow only on the first run of a new .venv)"
+.venv/bin/python -m explorer.warm_up 2>>logs/check_pages.stderr.log || true
+
 STATUS=0
 if [ "$CHECK" = 1 ]; then
-  echo "== 2/4 explorer pages (report: logs/check_pages.log)"
+  echo "== 3/5 explorer pages (report: logs/check_pages.log)"
   if [ "$FULL" = 1 ]; then PAGES_ARGS=""; else PAGES_ARGS="--quick"; fi
   # Streamlit's bare-mode chatter goes to stderr; keep it out of the terminal but in a log
   .venv/bin/python -m explorer.check_pages $PAGES_ARGS 2>>logs/check_pages.stderr.log || STATUS=1
 
-  echo "== 3/4 tests"
+  echo "== 4/5 tests"
   if [ "$FULL" = 1 ]; then
     .venv/bin/python -m pytest -q || STATUS=1
   else
@@ -53,5 +58,5 @@ fi
 if [ "$LAUNCH" = 0 ]; then
   exit "$STATUS"
 fi
-echo "== 4/4 explorer on http://localhost:8501 (Ctrl+C to stop)"
+echo "== 5/5 explorer on http://localhost:8501 (Ctrl+C to stop)"
 exec ./explorer/run.sh "$@"
