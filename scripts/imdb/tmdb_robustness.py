@@ -12,7 +12,6 @@ For each headline it does three runs, using each analysis's own code, not a copy
 Comparing the last two isolates the money source; comparing the first two shows the sample change alone.
 
 Headlines covered:
-  arcs Step 7 primary test (D1, D2), analysis/arcs/s07_primary.association
   scripts_and_reviews section 2: script features vs multiple, net of budget and year
   scripts_and_reviews section 8: review sentiment vs multiple, net of budget and year
 Not covered: the network results. Their track-record predictors are built from earlier films' Wikipedia
@@ -35,9 +34,6 @@ import pandas as pd  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from analysis.arcs import s07_primary as s7  # noqa: E402
-from analysis.arcs.common import pooled_cells  # noqa: E402
-from analysis.arcs.config import cfg  # noqa: E402
 
 DATA = Path(os.environ.get("IMDB_DATA_DIR", REPO / "data" / "raw"))
 OUT = REPO / "analysis" / "checks" / "tmdb_robustness.json"
@@ -48,41 +44,6 @@ CLEAN_LINE = "m = m[clean_mask(m)].copy()\n"
 def tmdb_money() -> pd.DataFrame:
     t = pd.read_csv(DATA / "tmdb" / "tmdb_project_movies.csv", usecols=["imdb_id", "budget", "revenue"])
     return t[(t.budget > 0) & (t.revenue > 0)].drop_duplicates("imdb_id").set_index("imdb_id")
-
-
-def _short(r: dict) -> dict:
-    return {k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()
-            if k in ("rho", "n", "z", "p", "ci_low", "ci_high")}
-
-
-# ---------------------------------------------------------------- arcs Step 7
-
-def arcs(t: pd.DataFrame) -> dict:
-    c = cfg()
-    pc, ctl = c["primary"], c["controls"]
-    inst = json.loads((REPO / "analysis/arcs/outputs/s03_instrument_decision.json").read_text())["primary_instrument"]
-    saved = json.loads((REPO / "analysis/arcs/outputs/s07_primary.json").read_text())["results"]
-
-    def run(df):
-        rng = np.random.default_rng(c["seed"])
-        return {k: s7.association(df, k, pc["outcome"], ctl["covariates"], pc["permutations"], pc["bootstrap"], rng)
-                for k in s7.DESCRIPTORS}
-
-    df = s7.sample(inst)
-    rep = run(df)
-    for k in s7.DESCRIPTORS:
-        assert abs(rep[k]["rho"] - saved[k]["rho"]) < 1e-12 and rep[k]["p"] == saved[k]["p"], f"arcs {k} doesn't reproduce"
-    ids = pd.read_csv(DATA / "features" / "moviesum_ids.csv", dtype=str).set_index("movie_name").imdb_id
-    sub = df.assign(tconst=df.movie_name.map(ids))
-    sub = sub[sub.tconst.isin(t.index)].reset_index(drop=True)
-    sub["cell"] = pooled_cells(sub.primary_genre, sub.decade_bin)
-    tm = sub.assign(log_mult=np.log(sub.tconst.map(t.revenue) / sub.tconst.map(t.budget)),
-                    log_budget=np.log(sub.tconst.map(t.budget)))
-    wk, tk = run(sub), run(tm)
-    return {"instrument": inst, "covariates": ctl["covariates"],
-            "flops_wikipedia": int((sub.log_mult < 0).sum()), "flops_tmdb": int((tm.log_mult < 0).sum()),
-            **{k: {"reproduce": _short(rep[k]), "wikipedia": _short(wk[k]), "tmdb": _short(tk[k])}
-               for k in s7.DESCRIPTORS}}
 
 
 # ---------------------------------------------------------------- scripts_and_reviews, sections 2 and 8
@@ -153,14 +114,10 @@ def scripts_and_reviews(t: pd.DataFrame) -> dict:
 
 def main() -> None:
     t = tmdb_money()
-    res = {"tmdb_films_with_both": int(len(t)), "arcs_step7": arcs(t), "scripts_and_reviews": scripts_and_reviews(t),
+    res = {"tmdb_films_with_both": int(len(t)), "scripts_and_reviews": scripts_and_reviews(t),
            "not_covered": "network results: their predictors use earlier films' Wikipedia returns"}
     OUT.write_text(json.dumps(res, indent=1) + "\n")
-    a, s = res["arcs_step7"], res["scripts_and_reviews"]
-    for k in ("D1", "D2"):
-        print(f"arcs {k}: " + " | ".join(f"{v}: rho {a[k][v]['rho']:+.3f} p {a[k][v]['p']:.3f} n {a[k][v]['n']}"
-                                         for v in ("reproduce", "wikipedia", "tmdb")))
-    print(f"arcs flops on the TMDB films: Wikipedia {a['flops_wikipedia']}, TMDB {a['flops_tmdb']}")
+    s = res["scripts_and_reviews"]
     for v in ("reproduce", "wikipedia", "tmdb"):
         x = s[v]
         print(f"scripts_and_reviews {v}: {x['films']} films, {x['hits_with_script']} hits / {x['flops_with_script']} "

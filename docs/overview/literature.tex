@@ -13,7 +13,7 @@
 \begin{itemize}
   \item \textbf{Almost all prior work predicts revenue, not return on budget.} Revenue is driven by budget, so many positive findings shrink or disappear when budget is controlled. Our outcome, $\ln(\text{gross}/\text{budget})$, follows the profitability line of Ravid (1999), Eliashberg et al.\ (2007) and Lash \& Zhao (2016).
   \item \textbf{Our network results agree with the literature.} Track records predict returns (Lash \& Zhao) and stars raise revenue but not returns (Ravid, Elberse). Directors have hot streaks (Liu et al.\ 2018).
-  \item \textbf{Our script results agree with the careful studies and contradict one loose one.} Del Vecchio et al.\ (2021) report that ``Man in a hole'' arcs earn more. They use revenue, a single dummy per regression and no genre or franchise control, and their effect weakens to $p = 0.055$ once budget is available. Berger et al.\ (2021), with controls, find that the arc's swing and ending don't matter even for ratings.
+  \item \textbf{Our script-text result agrees with the careful studies.} Del Vecchio et al.\ (2021) report that ``Man in a hole'' arcs earn more. They use revenue, a single dummy per regression and no genre or franchise control, and their effect weakens to $p = 0.055$ once budget is available. Berger et al.\ (2021), with controls, find that the arc's swing and ending don't matter even for ratings.
   \item \textbf{Our reception results match the critic-vs-audience literature,} with one instructive sign flip. Holbrook \& Addis (2007) find critic scores go \emph{down} with revenue ($r = -0.29$). Ours go \emph{up} with return on budget ($\rho = +0.33$). Critics favour cheaper films that earn their budget back.
   \item \textbf{What looks new in our design:} an out-of-time test (train to 2010, test 2011--2017) with network features from earlier films only, pre-registered text tests, franchise checks, and shuffle nulls within genre $\times$ decade. We found no published study that combines these.
 \end{itemize}
@@ -106,8 +106,7 @@ Several sentiment models, split-half reliability & No human validation yet (shee
 
 \section{Worth adding before the paper}
 \begin{enumerate}
-  \item \textbf{Done (14 Nov):} Del Vecchio's single-dummy revenue test on our 1,043 scripts. ``Man in a hole'' does not earn more even in their specification (VADER $+\$9$M, $p=0.67$; SST-2 $+\$24$M, $p=0.32$). Their specification instead flags a different shape (VADER ``Oedipus'', $-\$43$M, $p=0.015$) that disappears under return on budget and our controls. Details: \gh{analysis/arcs/x01_del_vecchio.py}{code} and \gh{analysis/arcs/LOG.md}{log}.
-  \item Berger's volatility as an exploratory arc descriptor, labelled as added after pre-registration.
+  \item \textbf{Dropped (17 Nov):} our replication of Del Vecchio's single-dummy test, with the rest of the arcs analysis. Code and log are on the \gh[archive/scripts-arcs]{analysis/arcs}{archive branch}.
   \item IMDb vote count as a review-volume measure (Liu, Duan).
   \item One sentence on the Holbrook \& Addis sign flip, revenue against return.
   \item Check the \src{abstract} entries above against the papers before citing any number from them.

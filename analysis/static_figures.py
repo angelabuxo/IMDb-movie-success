@@ -1,6 +1,6 @@
 """Static PNG figures in the committed notebooks, so they show on GitHub (which does not run Plotly's JavaScript).
 
-The interactive versions stay on the static pages (site/arcs, site/scripts). Two halves, used by the builders:
+The interactive versions stay on the static pages (site/scripts). Two halves, used by the builders:
 
     use_static_figures()          # in the notebook's setup cell: figures are emitted as Plotly JSON
     pngify(nb)                    # in the builder, after execution: every Plotly JSON output becomes a PNG

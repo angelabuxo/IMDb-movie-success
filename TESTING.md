@@ -10,7 +10,7 @@ Audited branch `g/pairwise-returns` at `39e704a`, the same code as `public/main`
 
 | Practice | Verdict | Evidence / reason | Priority |
 |---|---|---|---|
-| Unit tests | Present (2026-11-16) | 244 tests in `tests/`, running in about 35 s (`python -m pytest`; `-m "not slow"` takes about 12 s). They cover the functions behind every notebook and every page of the explorer, on synthetic data only: `test_stats_helpers.py` (bins, pooled cells, residualisation, r_min, BH, permutations, Scattertext scores, shuffle null), `test_arcs.py` (sentence parser, arc maths, scene-shuffle null, Step 7 association, Step 8 splits and OOF R²), `test_scripts_text.py` (name removal, cleaning, matching, TF-IDF), `test_network_and_parsing.py` (Wikipedia budget/gross parser, film projection, distance rings, pair correlation, within-stratum shuffles, screenplay features), `test_explorer.py` (82 tests: every explorer page under Streamlit's AppTest on a synthetic data folder, the full app navigation, all 12 steps of both notebook series, the four network result files, all four Whole graph modes with each colour, the node explorer on films, people and companies at one and two hops and a film's sentiment arc, the Profit playground's arc section, the screenplay reader with its per-scene sentiment, and regressions for the explorer bugs below). `test_attribution.py` (20 tests for the optional profit attribution: the yearly CPI table and deflator, planted effects recovered, a film's own return kept out of its own split, the earlier-years version ignoring later films, the dollar split against brute force, the saved dollars adding up for every film, and the explorer page in each view). `pytest` is now in `requirements.txt` | - |
+| Unit tests | Present (2026-11-17) | 359 tests in `tests/`, running in about 30 s (`python -m pytest`; `-m "not slow"` takes about 12 s). They cover the functions behind every notebook and every page of the explorer, on synthetic data only: `test_stats_helpers.py` (bins, BH, permutations, Scattertext scores, shuffle null), `test_scripts_text.py` (name removal, cleaning, matching, TF-IDF), `test_network_and_parsing.py` (Wikipedia budget/gross parser, film projection, distance rings, pair correlation, within-stratum shuffles, screenplay features), `test_explorer.py` (130 tests: every explorer page under Streamlit's AppTest on a synthetic data folder, the full app navigation, all 12 steps of the screenplay-text notebook series, the four network result files, all four Whole graph modes with each colour, the node explorer on films, people and companies at one and two hops, the screenplay reader, and regressions for the explorer bugs below). `test_attribution.py` (20 tests for the optional profit attribution: the yearly CPI table and deflator, planted effects recovered, a film's own return kept out of its own split, the earlier-years version ignoring later films, the dollar split against brute force, the saved dollars adding up for every film, and the explorer page in each view). `pytest` is now in `requirements.txt` | - |
 | Functional tests | Missing | no test runs a whole pipeline step (`run()`) on a small fixture. The step `run()` functions read `data/raw` and `private/` directly | Medium |
 | Component tests | N/A | steps share files on disk, not service boundaries; functional tests cover this | - |
 | Fuzz tests | N/A | parsers read fixed public dumps, not untrusted input | - |
@@ -19,19 +19,19 @@ Audited branch `g/pairwise-returns` at `39e704a`, the same code as `public/main`
 | Static analysis | Missing | no type checker or ruff config | Low |
 | Mutation tests | Present (manual, 2026-11-15) | 16 hand-planted bugs across the leakage rule, pooling, BH, permutations, Step 7 null, TF-IDF, matching, arc maths, projection, screenplay network, money parser and sentence parser. The suite catches all 15 real ones; the 16th was equivalent to the original. Two more for the explorer (the cache key and the profit x = y fix) are both caught. Not automated | - |
 | Coverage tests | Missing | add `pytest-cov` if useful. The report steps (`tables`, `figures`, `reading`) are deliberately untested | Low |
-| Benchmark tests | Present | `analysis/arcs/compute_check.py` benchmarks instruments and projects runtime before full scoring runs | - |
-| Contract tests | Missing | steps hand CSVs to each other with no schema check. Only 9 `assert`s across all code (`analysis/arcs/s03_instruments.py` has 3) | Medium |
+| Benchmark tests | N/A | the only benchmark timed the arcs sentiment models, which left main on 2026-11-17 (kept on `archive/scripts-arcs`) | - |
+| Contract tests | Missing | steps hand CSVs to each other with no schema check. | Medium |
 | Lint tests | Missing | no ruff, flake8 or pre-commit config | Low |
-| Acceptance tests | Present | statistical acceptance: shuffle nulls (`analysis/arcs/s06_shuffle.py`, `analysis/scripts_text/s06_null.py`), robustness (`analysis/arcs/s09_robustness.py`), franchise and leakage checks (`analysis/arcs/s10_checks.py`, `notebooks/scripts_text/10_franchise_leakage.ipynb`) | - |
+| Acceptance tests | Present | statistical acceptance: shuffle nulls (`analysis/scripts_text/s06_null.py`), franchise and leakage checks (`notebooks/scripts_text/10_franchise_leakage.ipynb`, `tests/test_no_leakage.py`) | - |
 | Regression tests | Present (2026-11-16) | `tests/test_paper_numbers.py` recomputes every number in `paper/main.tex` and the hard-coded inputs of `paper/make_figures.py` from committed outputs, and fails on any number in the paper with no declared source. Reception numbers are read from the unmerged `reviews-exploration` branch and skipped without it | - |
 | Smoke tests | Present (partial) | `analysis/*/build_notebooks.py` runs every notebook end to end with nbconvert's `ExecutePreprocessor`. It's manual and slow (2 h timeout), and there's no quick small-sample run | Medium |
 | Usability tests | N/A | the paper gets read, not used. Peer reading counts as review, not testing | - |
 | UI/UX tests | N/A | static results site only | - |
 | Penetration tests | N/A | nothing exposed | - |
 | Threat modeling | Present (data/licence) | `data/datasets.json` records each licence and forbids committing screenplays and reviews. `s11_validation.py` keeps text previews in `private/`, out of git | - |
-| Performance tests | Present | covered by `compute_check.py` and the HPC scripts in `analysis/arcs/hpc/` | - |
+| Performance tests | N/A | no heavy scoring runs left on main; the arcs HPC scripts are on `archive/scripts-arcs` | - |
 
-Reproducibility (closest to static checks): **Present.** Fixed seeds are set in `analysis/arcs/config.yaml` (`seed: 20261114`, plus 5 `stability_seeds`) and `analysis/scripts_text/config.yaml`, and 28 files use them. `log_run()` and `config_hash()` in each `config.py` record the date, parameters and outputs of every step. `requirements.txt` pins every version.
+Reproducibility (closest to static checks): **Present.** Fixed seeds are set in `analysis/scripts_text/config.yaml` and in each network and embedding script. `log_run()` and `config_hash()` in each `config.py` record the date, parameters and outputs of every step. `requirements.txt` pins every version.
 
 Gap: `scripts/get_data.py` downloads from `data/datasets.json` without checksums, so an upstream IMDb refresh silently changes the sample.
 
@@ -56,6 +56,8 @@ Teeing, profiling, logs/events, chaos, monitoring, A/B, tracing, dynamic explora
 Auditing: **Present in research form.** `log_run()` writes a run log per step with config hashes, which shows which config produced which output.
 
 ## Bugs and quirks the tests found (2026-11-15)
+
+- **Screenplay arcs removed on 2026-11-17.** `analysis/arcs`, `notebooks/arcs`, `site/arcs`, `tests/test_arcs.py` and the arc views in the explorer left main. The entries below that mention arcs describe that code, which is kept on the `archive/scripts-arcs` branch and the `archive/scripts-arcs-final` tag.
 
 - **Fixed and regenerated: `names()` in `scripts/imdb/parse_infobox.py` merged unlinked names separated by `<br>`** (`"Jane Doe<br>John Roe"` became `"Jane DoeJohn Roe"`), because `strip_code()` deleted the `<br>` tags before the split. The fix splits first, decodes HTML entities before splitting (so the `;` in `&nbsp;` isn't treated as a separator), and drops items that are only a parenthetical note. Checked on the real articles:
   - 100k+ tier: 48 of 2,763 infoboxes change, gaining 130 names in place of 41 merged ones.

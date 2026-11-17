@@ -18,8 +18,7 @@ import streamlit as st
 REPO = Path(__file__).resolve().parents[1]
 DATA = Path(os.environ.get("IMDB_DATA_DIR", REPO / "data" / "raw"))
 FEATURES = DATA / "features"
-OUTPUT_DIRS = {"arcs": REPO / "analysis" / "arcs" / "outputs",
-               "scripts_text": REPO / "analysis" / "scripts_text" / "outputs",
+OUTPUT_DIRS = {"scripts_text": REPO / "analysis" / "scripts_text" / "outputs",
                "network": REPO / "analysis" / "network"}
 TABULAR = (".csv", ".csv.gz", ".tsv", ".parquet", ".json")
 log = logging.getLogger("explorer")

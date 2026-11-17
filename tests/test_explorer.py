@@ -2,7 +2,7 @@
 
 Pages are driven with Streamlit's AppTest, headless. The data folder is built here (a few dozen films, people
 and studios, two screenplays, a very wide JSON) and handed to the explorer through IMDB_DATA_DIR, so nothing
-reads data/raw. Pages that show the committed notebook outputs (arcs, text, network results, checks) read
+reads data/raw. Pages that show the committed notebook outputs (text, network results, checks) read
 those as they are in the repo. Clicks on charts can't be sent headlessly; their state hand-overs are tested
 by setting the session state the click would set.
 """
@@ -191,7 +191,7 @@ def widget(at: AppTest, kind: str, label: str):
     return hits[0]
 
 
-PAGES = [("pages", "home"), ("pages", "arcs"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
+PAGES = [("pages", "home"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
          ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
          ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps"), ("map_pages", "checks")]
@@ -207,12 +207,12 @@ def test_app_registers_every_page(explorer):
     at = AppTest.from_file(str(ROOT / "explorer" / "app.py"), default_timeout=TIMEOUT).run()
     ok(at)
     from explorer import nav
-    assert {"home", "pipeline", "arcs", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
+    assert {"home", "pipeline", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
             "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
-@pytest.mark.parametrize("fn", ["arcs", "text"])
+@pytest.mark.parametrize("fn", ["text"])
 def test_every_notebook_step_renders(explorer, fn, step):
     at = page("pages", fn)
     radio = widget(at, "radio", "Step")
@@ -386,163 +386,15 @@ def test_cached_loaders_see_a_rebuilt_file(explorer, tmp_path):
     assert table(p).a.tolist() == [2]
 
 
-@pytest.fixture
-def arcs_scores(explorer, tmp_path, monkeypatch):
-    """Synthetic arcs Step 3 scene scores for the Face/Off screenplay; scene 7 has none (no scored sentence)."""
-    from explorer import common
-    d = tmp_path / "arcs"
-    d.mkdir()
-    scenes = [i for i in range(30) if i != 7]
-    base = pd.DataFrame({"movie_name": "Face_Off_1997", "scene": scenes})
-    base.assign(sst2_both=np.linspace(-0.9, 0.9, len(scenes)), sst2_dialogue=0.25, sst2_action=-0.5, n_both=3).to_csv(
-        d / "s03_scene_sst2.csv.gz", index=False)
-    base.assign(vader_both=0.1, vader_dialogue=0.2, vader_action=np.nan, n_both=3).to_csv(
-        d / "s03_scene_vader.csv.gz", index=False)
-    base.assign(sst2_scene=0.75, sst2_scene_neutral=np.nan, sst2_pieces=1).to_csv(
-        d / "s03_scene_context_sst2.csv.gz", index=False)
-    tt = np.arange(100)
-    arc = np.sin(tt / 100 * 2 * np.pi) * 0.4
-    pd.DataFrame({"movie_name": "Face_Off_1997", "t": tt, "raw": arc, "smooth": arc}).to_csv(
-        d / "s05_arcs_sst2.csv.gz", index=False)
-    pd.DataFrame([{"movie_name": "Face_Off_1997", "in_primary": True, "primary_genre": "Action", "sentences_both": 90,
-                   "mean_sentences_per_scene": 3.0, "n_scene_tags": 30, "possible_transcript": False,
-                   "scenes": len(scenes), "D1": 0.28, "D2": -0.05, "mean_level": 0.0, "min_position": 0.755,
-                   "sign_changes": 1}]).to_csv(d / "s05_descriptors_sst2.csv", index=False)
-    monkeypatch.setitem(common.OUTPUT_DIRS, "arcs", d)
-    return d
-
-
-def _script_html(at: AppTest) -> str:
-    return next(m.value for m in at.markdown if 'class="sp"' in m.value)
-
-
-def test_read_tab_shows_scene_sentiment(arcs_scores):
-    at = page("graph_pages", "screenplays")
-    ok(at)
-    assert widget(at, "multiselect", "Sentiment beside each scene").value == ["sst2"]   # the primary instrument
-    html = _script_html(at)
-    assert "SST-2" in html and "VADER" not in html
-    assert "both -0.90" in html and "dialogue +0.25" in html and "action -0.50" in html and "whole scene +0.75" in html
-    assert html.count("no scored sentences") == 1                                       # scene 7
-    assert at.get("plotly_chart"), "the reading arc is drawn"
-
-
-def test_read_tab_adds_and_removes_instruments(arcs_scores):
-    at = page("graph_pages", "screenplays")
-    widget(at, "multiselect", "Sentiment beside each scene").set_value(["sst2", "vader"]).run()
-    ok(at)
-    html = _script_html(at)
-    assert "VADER" in html and "both +0.10" in html and "action +nan" not in html   # a missing layer is skipped
-    widget(at, "multiselect", "Sentiment beside each scene").set_value([]).run()
-    ok(at)
-    assert 'class="b"' not in _script_html(at)
-
-
-def test_read_tab_without_saved_sentiment(arcs_scores):
-    """A script outside the arcs sample says so, and coming back keeps the instrument choice."""
-    at = page("graph_pages", "screenplays")
-    widget(at, "multiselect", "Sentiment beside each scene").set_value(["vader"]).run()
-    widget(at, "selectbox", "Screenplay").set_value("tt1000001").run()
-    ok(at)
-    assert any("isn't in the arcs sample" in str(c.value) for c in at.caption)
-    assert 'class="b"' not in _script_html(at)
-    widget(at, "selectbox", "Screenplay").set_value("tt0119094").run()
-    ok(at)
-    assert widget(at, "multiselect", "Sentiment beside each scene").value == ["vader"]
-
-
-def test_sentiment_badge_colours():
-    from explorer.graph_pages import _badge
-    assert "0,114,178" in _badge(0.4, "both") and "+0.40" in _badge(0.4, "both")
-    assert "213,94,0" in _badge(-0.4, "both") and "-0.40" in _badge(-0.4, "both")
-    assert "0.75)" in _badge(3.0, "both")          # opacity capped
-
-
-def test_node_explorer_shows_a_films_arc(arcs_scores):
-    at = page("graph_pages", "node", {"node_id": "tt0119094"})
-    ok(at)
-    assert [t.label for t in at.tabs][-1] == "Sentiment arc"
-    m = {x.label: x.value for x in at.metric}
-    assert m["Swing (D1)"] == "0.280" and m["Ending lift (D2)"] == "-0.050" and m["Low point"] == "76% into the story"
-    assert any("In the primary sample" in str(c.value) for c in at.caption)
-
-
-@pytest.mark.parametrize("nid", ["tt1000001", "nm100", "company:Q900"])
-def test_no_arc_tab_without_an_arc(arcs_scores, nid):
-    """A film with a screenplay but no saved arc, a person and a company get no arc tab."""
-    at = page("graph_pages", "node", {"node_id": nid})
-    ok(at)
-    assert "Sentiment arc" not in [t.label for t in at.tabs]
-
-
-def test_arc_point_maps_to_a_scored_scene():
-    from explorer.graph_pages import scene_at
-    scored = [0, 1, 2, 4, 5, 9]                    # scenes 3, 6, 7 and 8 have no scored sentence
-    assert scene_at(0, scored) == 0 and scene_at(99, scored) == 9
-    assert scene_at(50, scored) == 4               # point 50 (centre 0.505) is the 4th of 6 scored scenes
-    assert {scene_at(t, scored) for t in range(100)} == set(scored)
-
-
 def test_private_file_gap_is_a_quiet_note(explorer):
     """A figure that needs a file in a private/ folder says which file, without a warning box."""
     at = AppTest.from_string(
         "from explorer.common import unavailable, REPO\n"
-        "unavailable('Figure', 'layers', FileNotFoundError(2, 'No such file', str(REPO / 'analysis/arcs/private/x.parquet')))\n"
+        "unavailable('Figure', 'layers', FileNotFoundError(2, 'No such file', str(REPO / 'analysis/scripts_text/private/x.parquet')))\n"
         "unavailable('Table', 'sizes', KeyError('year'))\n", default_timeout=TIMEOUT).run()
     ok(at)
-    assert any("analysis/arcs/private/x.parquet" in c.value for c in at.caption)
+    assert any("analysis/scripts_text/private/x.parquet" in c.value for c in at.caption)
     assert len(at.warning) == 1 and "year" in at.warning[0].value
-
-
-@pytest.fixture
-def profit_arcs(explorer, tmp_path, monkeypatch):
-    """Saved arcs for every synthetic film, keyed by script name through a script table, as on a machine
-    without the screenplays. Films with a higher return get a rising arc."""
-    from explorer import common
-    nodes = pd.read_csv(explorer / "features" / "graph" / "nodes.csv")
-    films = nodes[nodes.type == "movie"].reset_index(drop=True)
-    names = [f"Film_{i}_2000" for i in range(len(films))]
-    arcs_dir, text_dir = tmp_path / "arcs", tmp_path / "text"
-    arcs_dir.mkdir()
-    text_dir.mkdir()
-    pd.DataFrame({"tconst": films.id, "movie_name": names}).to_csv(text_dir / "script_table.csv", index=False)
-    lift = np.log(films.multiple.fillna(1).clip(lower=.01)).to_numpy()
-    tt = np.arange(100)
-    pd.concat([pd.DataFrame({"movie_name": n, "t": tt, "raw": l * (tt / 99 - .5), "smooth": l * (tt / 99 - .5)})
-               for n, l in zip(names, lift)]).to_csv(arcs_dir / "s05_arcs_sst2.csv.gz", index=False)
-    pd.DataFrame({"movie_name": names, "in_primary": np.arange(len(names)) % 5 != 0, "scenes": 30, "D1": np.abs(lift) / 3,
-                  "D2": lift, "mean_level": 0.0, "min_position": np.where(lift > 0, .005, .995),
-                  "sign_changes": 1}).to_csv(arcs_dir / "s05_descriptors_sst2.csv", index=False)
-    monkeypatch.setitem(common.OUTPUT_DIRS, "arcs", arcs_dir)
-    monkeypatch.setitem(common.OUTPUT_DIRS, "scripts_text", text_dir)
-    monkeypatch.setattr("explorer.graph_pages.MOVIESUM", [tmp_path / "none.jsonl"])   # names from the table only
-    return arcs_dir
-
-
-def test_profit_playground_arcs(profit_arcs):
-    at = page("pages", "profit")
-    ok(at)
-    assert {"arc_swing", "arc_ending_lift", "arc_low_point"} <= set(widget(at, "selectbox", "x").options)
-    assert at.get("plotly_chart")
-    rho = next(df.value for df in at.dataframe if "descriptor" in df.value.columns).set_index("descriptor")
-    assert rho.loc["ending lift (D2)", "Spearman rho with log(gross / budget)"] > 0.99   # built that way
-    n_primary = rho.films.iloc[0]
-    widget(at, "toggle", "Primary arcs sample only").set_value(False).run()
-    ok(at)
-    rho = next(df.value for df in at.dataframe if "descriptor" in df.value.columns)
-    assert rho.films.iloc[0] > n_primary
-    for split in widget(at, "radio", "Compare").options:
-        widget(at, "radio", "Compare").set_value(split).run()
-        ok(at)
-    widget(at, "selectbox", "x").set_value("arc_ending_lift").run()
-    ok(at)
-
-
-def test_profit_playground_without_enough_arcs(arcs_scores):
-    """With one film's arc only, the section says so instead of drawing."""
-    at = page("pages", "profit")
-    ok(at)
-    assert any("Fewer than 20 films" in i.value for i in at.info)
 
 
 def test_pages_without_the_screenplays(explorer, monkeypatch, tmp_path):

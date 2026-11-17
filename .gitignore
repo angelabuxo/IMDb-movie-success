@@ -7,7 +7,7 @@ build/
 # Scattertext explorers, validation previews) stays local. See docs/scripts-text.md.
 analysis/scripts_text/private/
 
-# Screenplay arcs: anything holding script text (scene text, KWIC windows, previews) stays local.
+# Screenplay arcs (removed from main, kept on the archive/scripts-arcs branch): local script text stays ignored.
 analysis/arcs/private/
 site/arcs/private/
 

@@ -63,7 +63,7 @@ def home():
                    "(see the README). The notebook pages still work from the committed outputs.")
     st.subheader("Pages")
     st.markdown("""
-- **Screenplay arcs** and **Screenplay text**: every step of the two notebook series, rendered from their saved
+- **Screenplay text**: every step of the word-comparison notebook series, rendered from its saved
   outputs. Tables are sortable and filterable, figures are interactive.
 - **Network**: the four network analyses (return similarity, pair returns, team history, movers), the per-film
   network features, and a lookup for any film's crew and the films it is linked to.
@@ -92,11 +92,6 @@ def _series(pkg: str, title: str, intro: str):
                                  help="Script and review excerpts. Only from files already on this machine; never published.")
     num, module_name, slug = opts[labels.index(pick)]
     render_step(pkg, module_name, show_private)
-
-
-def arcs():
-    _series("arcs", "Screenplay arcs", "notebooks/arcs/*: sentiment arcs of screenplays against log(gross/budget). "
-            "Same saved outputs as the notebooks; nothing is recomputed.")
 
 
 def text():
@@ -269,20 +264,8 @@ def profit():
     c[2].metric("Median budget", f"${d.budget_usd.median() / 1e6:,.1f}M")
     c[3].metric("Median IMDb rating", f"{d.rating.median():.1f}")
 
-    arcs = gp.arc_tables()
-    k_arc, names = None, pd.Series(dtype=str)
-    if arcs:
-        with st.sidebar:
-            st.subheader("Sentiment arcs")
-            k_arc = st.radio("Arc instrument", list(arcs), horizontal=True, key="profit_arc_inst",
-                             format_func=lambda x: gp.INSTRUMENTS[x] + (" (primary)" if x == gp.PRIMARY else ""))
-        names = gp.script_names()
-        desc = arcs[k_arc]["desc"]
-        mn = d.tconst.map(names)
-        d = d.assign(**{col: mn.map(desc[src]) for col, (src, _) in ARC_COLS.items()},
-                     arc_in_primary=mn.map(desc.in_primary.astype(bool)).fillna(False).astype(bool))
     num = [c for c in ["log_budget", "log_multiple", "budget_usd", "gross_usd", "multiple", "year", "votes", "rating", "rt", "mc"]
-           + list(ARC_COLS) if c in d and d[c].notna().any()]
+           if c in d and d[c].notna().any()]
     a, b, col, sz = st.columns(4)
     x = a.selectbox("x", num, index=num.index("log_budget"))
     ys = [c for c in num if c != x]  # same column on both axes breaks the trendline
@@ -298,9 +281,6 @@ def profit():
     if len(xy) > 5:
         st.caption(f"Spearman rho = {spearmanr(xy[x], xy[y]).statistic:+.3f} over {len(xy):,} films. "
                    "Gross over budget is not profit: budgets leave out marketing, and cinemas keep part of the gross.")
-
-    if k_arc:
-        _profit_arcs(d, arcs[k_arc], k_arc, names)
 
     l, r = st.columns(2)
     l.plotly_chart(px.histogram(d, x="log_multiple", nbins=60, template="simple_white", height=360,
@@ -1063,62 +1043,6 @@ def _tag_profit(rel, tag_names, films, genres, g_rel, card, row_of):
                       "'explain' is how many people saw the film."))
 
 
-ARC_COLS = {"arc_swing": ("D1", "swing (D1)"), "arc_ending_lift": ("D2", "ending lift (D2)"),
-            "arc_mean_level": ("mean_level", "mean level"), "arc_low_point": ("min_position", "low point (share of story)"),
-            "arc_swings": ("sign_changes", "swings")}
-SPLITS = {"bottom vs top third of log(gross / budget)": 1 / 3, "bottom vs top quarter": 1 / 4,
-          "grossed less vs more than its budget": None}
-
-
-def _profit_arcs(d: pd.DataFrame, arcs: dict, k: str, names: pd.Series):
-    """Mean sentiment arc of the least and most profitable films in the selection, and how each arc
-    descriptor correlates with return there."""
-    st.subheader("Sentiment arcs and return")
-    a = d[d.arc_swing.notna() & d.log_multiple.notna()]
-    if st.toggle("Primary arcs sample only", True, key="profit_arc_primary",
-                 help="The films the arcs analysis and the paper use. Off adds scripts it set aside, such as possible "
-                      "transcripts or scripts with too few scene tags."):
-        a = a[a.arc_in_primary]
-    st.caption(f"{len(a):,} of the {len(d):,} films in the selection have a saved arc ({gp.INSTRUMENTS[k]}). "
-               "Exploratory: the arcs notebook's Step 7 is the test fixed in advance.")
-    if len(a) < 20:
-        st.info("Fewer than 20 films with an arc in this selection. Widen the filters.")
-        return
-    split = st.radio("Compare", list(SPLITS), horizontal=True, key="profit_arc_split")
-    q = SPLITS[split]
-    if q is None:
-        lo, hi = a[a.multiple < 1], a[a.multiple >= 1]
-        names_ = ("grossed less than budget", "grossed more")
-    else:
-        lo, hi = a[a.log_multiple <= a.log_multiple.quantile(q)], a[a.log_multiple >= a.log_multiple.quantile(1 - q)]
-        names_ = ("least profitable", "most profitable")
-    curves = arcs["arcs"]
-    fig = go.Figure()
-    for grp, colour, label, fill in ((lo, LOW, names_[0], "rgba(213,94,0,.15)"), (hi, HIGH, names_[1], "rgba(0,114,178,.15)")):
-        if grp.empty:
-            continue
-        films = curves.index.intersection(grp.tconst.map(names).dropna().unique())
-        w = curves.loc[films].reset_index().pivot_table(index="t", columns="movie_name", values="smooth")
-        m, se = w.mean(axis=1), w.std(axis=1) / np.sqrt(w.shape[1])
-        fig.add_scatter(x=np.r_[m.index, m.index[::-1]], y=np.r_[m + 1.96 * se, (m - 1.96 * se)[::-1]], fill="toself",
-                        fillcolor=fill, line=dict(width=0), hoverinfo="skip", showlegend=False)
-        fig.add_scatter(x=m.index, y=m.values, mode="lines", line=dict(color=colour, width=3),
-                        name=f"{label} (n={w.shape[1]:,})", hovertemplate="story %{x}%: %{y:+.3f}<extra></extra>")
-    fig.add_hline(y=0, line_dash="dot", line_color="#aaa")
-    fig.update_layout(template="simple_white", height=420, xaxis_title="story time (%)",
-                      yaxis_title=f"mean smoothed arc ({gp.INSTRUMENTS[k]})", legend=dict(orientation="h", y=1.1))
-    st.plotly_chart(fig, width="stretch", key="profit_arcs")
-    st.caption("Lines: the mean of the films' smoothed arcs. Bands: ±1.96 standard errors across films.")
-    rows = []
-    for col, (_, label) in ARC_COLS.items():
-        x = a[[col, "log_multiple"]].dropna()
-        if len(x) > 5 and x[col].nunique() > 1:   # a constant descriptor has no correlation
-            r = spearmanr(x[col], x.log_multiple)
-            rows.append({"descriptor": label, "Spearman rho with log(gross / budget)": round(r.statistic, 3),
-                         "p": float(f"{r.pvalue:.2g}"), "films": len(x)})
-    st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
-
-
 # ---------------------------------------------------------------- data inspector
 
 MAX_COLS = 500
@@ -1190,9 +1114,7 @@ def inspector():
 CAMEL = re.compile(r"(?<=[a-z])(?=[A-Z][a-z])")   # a point where two names could have been glued together
 
 # Findings a person has checked. A check lists them but doesn't count them against the data.
-VERIFIED_STALE = {"s03_compute_check": "a timing benchmark that reads only seed, instruments.compute_check_sentences, "
-                  "instruments.contextual and instruments.max_runtime_hours, none of which changed after it ran "
-                  "(checked 2026-11-15); rerunning needs the private sentence table"}
+VERIFIED_STALE: dict[str, str] = {}   # step -> why an older config.yaml can't affect it
 VERIFIED_ODD = {"tt13570066": "Desert Warrior (2025): $150M budget and $759,228 gross are both what the cited sources "
                 "report (checked 2026-11-15); a real flop"}
 
@@ -1224,7 +1146,7 @@ def checks():
     st.caption("Automatic sanity checks on the data and saved outputs. **pass**: the property holds. **FAIL**: it "
                "doesn't. **review**: a list worth a human look, shown below the table.")
     rows, lists = [], {}
-    for pkg in ("arcs", "scripts_text"):
+    for pkg in ("scripts_text",):
         cfgmod = __import__(f"analysis.{pkg}.config", fromlist=["config_hash", "RUN_LOG"])
         log = json.loads(cfgmod.RUN_LOG.read_text()) if cfgmod.RUN_LOG.exists() else {}
         now = cfgmod.config_hash()
@@ -1372,11 +1294,9 @@ def tmdb():
     rob = REPO / "analysis" / "checks" / "tmdb_robustness.json"
     if rob.exists():
         rb = json.loads(rob.read_text())
-        a, sr = rb["arcs_step7"], rb["scripts_and_reviews"]
+        sr = rb["scripts_and_reviews"]
         runs = {"reproduce": "committed (Wikipedia)", "wikipedia": "TMDB films, Wikipedia money", "tmdb": "TMDB films, TMDB money"}
-        rows = [{"result": f"arcs {k}", **{lab: f"{a[k][v]['rho']:+.3f} (p {a[k][v]['p']:.3f})" for v, lab in runs.items()}}
-                for k in ("D1", "D2")]
-        rows += [{"result": f"script: {f}", **{lab: f"{sr[v]['features'][f]['rho']:+.3f} (q {sr[v]['features'][f]['q_partial']:.3f})"
+        rows = [{"result": f"script: {f}", **{lab: f"{sr[v]['features'][f]['rho']:+.3f} (q {sr[v]['features'][f]['q_partial']:.3f})"
                                                for v, lab in runs.items()}}
                  for f in ("degree centralisation", "network density", "clustering")]
         rows.append({"result": "review sentiment", **{lab: f"{sr[v]['review_sentiment']['rho']:+.3f}" for v, lab in runs.items()}})

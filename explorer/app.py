@@ -25,7 +25,6 @@ P = {
     "home": st.Page(logged(pages.home), title="Home", icon=":material/home:", url_path="home", default=True),
     "pipeline": st.Page(logged(pipeline_page.pipeline), title="Data pipeline", icon=":material/account_tree:",
                         url_path="pipeline"),
-    "arcs": st.Page(logged(pages.arcs), title="Screenplay arcs", icon=":material/show_chart:", url_path="arcs"),
     "text": st.Page(logged(pages.text), title="Screenplay text", icon=":material/text_fields:", url_path="text"),
     "embeddings": st.Page(logged(embedding_page.embeddings), title="Text embeddings", icon=":material/scatter_plot:",
                           url_path="embeddings"),
@@ -51,7 +50,7 @@ nav.PAGES.update(P)
 
 st.navigation({
     "Overview": [P["home"], P["pipeline"]],
-    "Notebooks": [P["arcs"], P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"]],
+    "Notebooks": [P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
     "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
                           P["checks"], P["tmdb"]],

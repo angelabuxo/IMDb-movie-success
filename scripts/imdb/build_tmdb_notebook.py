@@ -201,16 +201,13 @@ display(Markdown(
     f"article whose title matches the IMDb title (`analysis/wiki_links.py`), and the film is back in."))"""),
     ("md", """## 8. Do the results change with TMDB's money?
 
-`scripts/imdb/tmdb_robustness.py` reruns three headlines with each analysis's own code. It first reproduces the
+`scripts/imdb/tmdb_robustness.py` reruns two headlines (script features and review sentiment) with each analysis's own code. It first reproduces the
 committed number exactly, then runs twice on the films where TMDB has both figures: once with Wikipedia's money
 and once with TMDB's. TMDB's figures replace Wikipedia's everywhere money enters: the outcome, the budget control,
 and the hit and flop cut-offs. Comparing those two runs isolates the money source."""),
     ("code", """rb = json.loads((REPO / "analysis" / "checks" / "tmdb_robustness.json").read_text())
-A, S = rb["arcs_step7"], rb["scripts_and_reviews"]
+S = rb["scripts_and_reviews"]
 rows = []
-for k, label in (("D1", "arcs D1 (swing)"), ("D2", "arcs D2 (ending lift)")):
-    rows.append({"result": label, **{f"{v}": f"{A[k][v]['rho']:+.3f} (p {A[k][v]['p']:.3f}, n {A[k][v]['n']})"
-                                     for v in ("reproduce", "wikipedia", "tmdb")}})
 for f in ("degree centralisation", "network density", "clustering", "lead's share of lines"):
     rows.append({"result": f"script: {f}", **{v: f"{S[v]['features'][f]['rho']:+.3f} (q {S[v]['features'][f]['q_partial']:.3f})"
                                               for v in ("reproduce", "wikipedia", "tmdb")}})
@@ -222,13 +219,13 @@ rob = pd.DataFrame(rows).rename(columns={"reproduce": "committed (Wikipedia)", "
                                          "tmdb": "TMDB films, TMDB money"})
 display(rob)
 display(Markdown(
-    f"No result changes direction. The arc test stays a null for D1 and a near miss for D2, the same script features "
+    f"No result changes direction. The same script features "
     f"lead, and review sentiment stays at about +0.18. Swapping the money source moves {100 * (1 - S['films_same_group']):.1f}% "
     f"of films to another group (hit, middle, flop), almost all to or from the middle; "
     f"{S['group_changes'].get('hit -> flop', 0) + S['group_changes'].get('flop -> hit', 0)} go straight from hit to flop "
     f"or back. Density and centralisation pass q = 0.05 in every run. The third feature "
     f"under the line changes (clustering with Wikipedia money, the lead's share of lines with TMDB money): several "
-    f"features sit near q = 0.05 and trade places. D2's p moves around 0.025 with small sample changes, as it did in the arcs LOG. Neither is evidence "
+    f"features sit near q = 0.05 and trade places, which is no evidence "
     f"either way. Not covered: the network results, whose predictors are built from earlier films' Wikipedia "
     f"returns, so a fair test reruns that pipeline with TMDB money."))"""),
     ("md", """## What we read by hand
@@ -242,7 +239,7 @@ every low TMDB gross, so it stays a reading of a few cases and not a count.
 
 - The hand check is nine films chosen because they disagreed most. It isn't a random sample, so it gives no
   error rate for the parser.
-- Section 8 covers three headlines. The network results aren't rerun with TMDB money.
+- Section 8 covers two headlines. The network results aren't rerun with TMDB money.
 - The 10k to 100k tier agrees less than the 100k+ tier on every measure, and it's also the tier whose parsing
   hasn't been hand-checked.
 - The check says nothing about whether gross ÷ budget is profit. It isn't: budgets leave out marketing and
