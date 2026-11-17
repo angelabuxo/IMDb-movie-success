@@ -51,7 +51,7 @@ def controls(d: pd.DataFrame, with_rating: bool = False, franchise: bool = False
 
 
 def cells(d: pd.DataFrame) -> np.ndarray:
-    """Genre x decade cells for the stratified shuffle; small cells pooled (as analysis/arcs does)."""
+    """Genre x decade cells for the stratified shuffle; small cells pooled."""
     m = cfg()["controls"]["min_films_per_cell"]
     c = d.primary_genre + " | " + d.decade_bin
     c = c.where(c.map(c.value_counts()) >= m, d.primary_genre + " | pooled")

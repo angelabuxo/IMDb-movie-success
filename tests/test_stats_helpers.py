@@ -1,8 +1,7 @@
-"""The shared statistics behind both screenplay pipelines: genre and decade bins, pooled cells,
-residualisation, power, empirical p-values, Benjamini-Hochberg, permutations and Scattertext scores.
+"""The shared statistics behind the screenplay-text pipeline: genre and decade bins, empirical p-values,
+Benjamini-Hochberg, permutations and Scattertext scores.
 
-Notebooks: notebooks/arcs/* (via analysis/arcs/common.py) and notebooks/scripts_text/* (via
-analysis/scripts_text/textstats.py and s01_groups.py).
+Notebooks: notebooks/scripts_text/* (via analysis/scripts_text/textstats.py and s01_groups.py).
 """
 
 import numpy as np
@@ -11,10 +10,7 @@ import pytest
 import scipy.sparse as sp
 from scipy.stats import false_discovery_control
 
-from analysis.arcs import common
-from analysis.arcs.config import cfg as arcs_cfg
 from analysis.scripts_text import s01_groups, textstats
-from analysis.scripts_text.config import cfg as text_cfg
 
 
 # ---------------------------------------------------------------- genre and decade bins
@@ -28,12 +24,11 @@ from analysis.scripts_text.config import cfg as text_cfg
     (None, "Other"),
 ])
 def test_primary_genre_uses_priority_order(genres, expected):
-    assert common.primary_genre(genres) == expected
     assert s01_groups.primary_genre(genres) == expected
 
 
 def test_primary_genre_does_not_match_substrings():
-    assert common.primary_genre("Sci-Fi Horror Comedy") == "Other"  # one unsplit token, not three genres
+    assert s01_groups.primary_genre("Sci-Fi Horror Comedy") == "Other"  # one unsplit token, not three genres
 
 
 @pytest.mark.parametrize("year, expected", [
@@ -41,60 +36,12 @@ def test_primary_genre_does_not_match_substrings():
     (2000, "2000s"), (2019, "2010s"), (2025, "2020s"), (2026, "other"),
 ])
 def test_decade_bin_edges(year, expected):
-    assert common.decade_bin(year) == expected
     assert s01_groups.decade_bin(year) == expected
-
-
-def test_both_pipelines_use_the_same_frozen_genre_and_decade_rules():
-    """analysis/arcs/config.yaml says its genre priority is FROZEN from analysis/scripts_text. If one
-    config is edited and not the other, the two pipelines' cells silently stop matching."""
-    a, t = arcs_cfg()["controls"], text_cfg()["groups"]
-    assert a["primary_genre_priority"] == t["primary_genre_priority"]
-    assert a["decade_bins"] == t["decade_bins"]
-    assert a["other_genre"] == t["other_genre"]
-
-
-# ---------------------------------------------------------------- pooled cells and residualisation
-
-def test_pooled_cells_keeps_big_cells_and_pools_small_ones():
-    genre = pd.Series(["Horror"] * 5 + ["Horror"] * 2 + ["Horror"] * 3 + ["Drama"] * 2)
-    decade = pd.Series(["1990s"] * 5 + ["2000s"] * 2 + ["2010s"] * 3 + ["1990s"] * 2)
-    cell = common.pooled_cells(genre, decade, min_n=5)
-    assert (cell[:5] == "Horror | 1990s").all()                 # exactly min_n: untouched
-    assert (cell[5:10] == "Horror | pooled decades").all()      # 2 + 3 pooled within the genre reach 5
-    assert (cell[10:] == "pooled").all()                         # Drama has only 2: pooled across genres
-    sizes = cell.value_counts()
-    assert (sizes.drop("pooled", errors="ignore") >= 5).all()
-
-
-def test_design_has_one_column_per_cell_and_centred_covariates():
-    cells = pd.Series(["a", "b", "a", "c"])
-    cov = pd.DataFrame({"x": [1.0, 2.0, 3.0, 6.0]})
-    X = common.design(cells, cov)
-    assert X.shape == (4, 4)
-    assert np.allclose(X[:, :3].sum(1), 1)                       # every film in exactly one cell
-    assert np.isclose(X[:, 3].mean(), 0)
-
-
-def test_residualise_is_orthogonal_to_the_controls():
-    rng = np.random.default_rng(0)
-    X = np.column_stack([np.ones(50), rng.normal(size=(50, 3))])
-    y = X @ np.array([1.0, 2.0, -1.0, 0.5]) + rng.normal(size=50)
-    r = common.residualise(y, X)
-    assert np.allclose(X.T @ r, 0, atol=1e-9)
-    assert np.allclose(common.residualise(X @ np.array([3.0, 1, 1, 1]), X), 0, atol=1e-9)
 
 
 # ---------------------------------------------------------------- power and p-values
 
-def test_r_min_matches_the_textbook_sample_size():
-    """About 85 films detect r = 0.30 with 80% power at two-sided alpha 0.05 (Cohen's tables)."""
-    assert common.r_min(85, 0.05, 0.80) == pytest.approx(0.30, abs=0.005)
-    assert common.r_min(834, 0.025) > common.r_min(834, 0.05)    # stricter alpha needs a bigger effect
-    assert common.r_min(2000, 0.05) < common.r_min(200, 0.05)
-
-
-@pytest.mark.parametrize("fn", [common.empirical_p, textstats.empirical_p])
+@pytest.mark.parametrize("fn", [textstats.empirical_p])
 def test_empirical_p_is_never_zero_and_at_most_one(fn):
     assert float(fn(0, 999)) == pytest.approx(0.001)
     assert float(fn(999, 999)) == 1.0

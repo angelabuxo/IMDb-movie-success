@@ -60,27 +60,7 @@ class Sources:
 
     @cached_property
     def s01(self):
-        return self._json("arcs/outputs/s01_summary.json")
-
-    @cached_property
-    def s05(self):
-        return self._json("arcs/outputs/s05_summary_sst2.json")
-
-    @cached_property
-    def s07(self):
-        return self._json("arcs/outputs/s07_primary.json")
-
-    @cached_property
-    def s08(self):
-        return self._json("arcs/outputs/s08_prediction.json")
-
-    @cached_property
-    def x01(self):
-        return pd.read_csv(A / "arcs/outputs/x01_del_vecchio.csv")
-
-    def dv(self, instrument, shape="Man in a hole", spec="S1 their test: gross ~ dummy"):
-        x = self.x01
-        return x[(x.instrument == instrument) & (x.spec == spec) & (x["shape"] == shape)].iloc[0]
+        return self._json("scripts_text/outputs/s01_summary.json")
 
     @cached_property
     def t06(self):
@@ -161,9 +141,6 @@ CLAIMS = [
      lambda s: s.nb_find(r"ridge R2: base (-?[\d.]+); base \+ network ([\d.]+)")),
     ("abs similarity", "shuffles allow (@--@ against at most @)",
      lambda s: [min(s.sim("adjusted")), max(s.sim("adjusted")), max(s.null95("adjusted"))]),
-    ("abs arcs", r"null ($\rho=@$, $p=@$) or a near miss ($\rho=@$, $p=@$, threshold @)",
-     lambda s: [s.s07["results"]["D1"]["rho"], s.s07["results"]["D1"]["p"], s.s07["results"]["D2"]["rho"],
-                s.s07["results"]["D2"]["p"], s.s07["alpha"]]),
     ("abs reception", r"only moderately ($\rho\approx@$)",
      lambda s: [{round(s.money(k).rho, 1) for k in ("imdb_rating", "metacritic", "rotten_tomatoes")}.pop()]),
     # Results: network
@@ -200,24 +177,9 @@ CLAIMS = [
      lambda s: [round(s.t10["random_drop"]["share_z_at_or_below_franchise_drop"] * s.t10["random_drop"]["replicates"]),
                 s.t10["random_drop"]["replicates"], s.t10["random_drop"]["z_median"]]),
     ("auc", "(AUC @ against @)", lambda s: [s.t09["auc_text_mean"], s.t09["auc_baseline_mean"]]),
-    # Results: arcs
-    ("arc sample", "every sentence of @ non-franchise scripts", lambda s: [s.s07["n"]]),
-    ("arc points", "built a @-point arc per film", lambda s: [s.s05["params"]["time_points"]]),
-    ("D1", r"($\rho=@$, 95\% CI $[@, @]$, $p=@$)",
-     lambda s: [s.s07["results"]["D1"][k] for k in ("rho", "ci_low", "ci_high", "p")]),
-    ("D2", r"near miss ($\rho=@$, $[@, @]$, $p=@$ against a Bonferroni threshold of @;",
-     lambda s: [*(s.s07["results"]["D2"][k] for k in ("rho", "ci_low", "ci_high", "p")), s.s07["alpha"]]),
-    ("arc prediction", r"($\Delta R^2=@$)", lambda s: [s.s08["gain"]]),
-    ("reliability", "descriptors is @ for swing and @ for ending lift",
-     lambda s: [r["Spearman-Brown"] for r in s.s05["reliability"] if r["descriptor"] in ("D1", "D2")]),
-    ("del vecchio", r"$+\$@$M, $p=@$; SST-2: $+\$@$M, $p=@$",
-     lambda s: [s.dv("vader").coef, s.dv("vader").p, s.dv("sst2").coef, s.dv("sst2").p]),
-    ("del vecchio other", r"lower revenue for one shape ($p=@$)",
-     lambda s: [s.x01[(s.x01.instrument == "vader") & s.x01.spec.str.startswith("S1")].p.min()]),
     ("fig2 caption", "all @ labelled films, @ drops of @ random films, and the drop of the @ likely franchise films",
      lambda s: [s.t10["labelled_films"], s.t10["random_drop"]["replicates"], s.t10["likely_franchise"], s.t10["likely_franchise"]]),
     ("fig2 shuffles", "(@ shuffles per run)", lambda s: [s.t10["null_shuffles"]]),
-    ("fig2 arcs", r"with $\ln(\text{gross}/\text{budget})$, @ films", lambda s: [s.s07["n"]]),
     # Results: reception
     ("reception", r"the multiple correlates with the IMDb rating at $\rho=@$ (@ films), Metacritic at @ (@) and Rotten Tomatoes at @ (@)",
      lambda s: [s.money("imdb_rating").rho, s.money("imdb_rating").n, s.money("metacritic").rho, s.money("metacritic").n,
@@ -237,14 +199,8 @@ CLAIMS = [
     ("methods scripts", "(@ films with 100,000+ votes, clean under the rule before the 1975 floor", lambda s: [s.s01["checks"]["clean_with_usable_script"]["got"]]),
     ("methods reviews", "(@ films, none after 2017)", lambda s: [s.rev_cov["n_100k_with_genome"]]),
     ("louvain", "(1980--2017), ten seeds", lambda s: []),
-    ("arc smoothing", "resampled to @ points and smoothed over @",
-     lambda s: [s.s05["params"]["time_points"], s.s05["params"]["smoothing_window"]]),
-    ("arc tests", r"@ within-cell permutations, @ bootstrap resamples, Bonferroni $\alpha=@$",
-     lambda s: [s.s07["permutations"], s.s07["bootstrap"], s.s07["alpha"]]),
     ("vader check", r"on @\% of @ non-neutral reviews",
      lambda s: [100 * s.rev_vader["accuracy_vs_stanford"], s.rev_vader["n_non_neutral"]]),
-    # Discussion
-    ("power", "powered for correlations of about @", lambda s: [s.s07["r_min"]["alpha_0.025"]]),
 ]
 
 # Numbers that are design choices, not results. Each is allowed anywhere in the text.

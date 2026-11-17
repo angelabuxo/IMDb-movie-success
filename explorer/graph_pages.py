@@ -489,13 +489,7 @@ def node():
         if cols[len(links)].button("Tags and genres", width="stretch", help="This film's genre shares and tags."):
             nav.open_tags(cur)
 
-    sidx = script_index() if r.type == "movie" else pd.DataFrame()
-    arcs = film_arcs(sidx.movie_name.get(cur)) if not sidx.empty else {}
-    tabs = st.tabs(["Neighbours", "Network around it", "All fields", "Raw rows"] + (["Sentiment arc"] if arcs else []))
-    t1, t2, t3, t4 = tabs[:4]
-    if arcs:
-        with tabs[4]:
-            _arc_tab(cur, sidx.movie_name[cur], arcs)
+    t1, t2, t3, t4 = st.tabs(["Neighbours", "Network around it", "All fields", "Raw rows"])
     with t1:
         if r.type == "movie":
             rows = e[e.target == cur].assign(id=lambda d: d.source)
@@ -653,182 +647,19 @@ CSS = """<style>
 .sp .pa {margin:0 0 0 30%; font-style:italic; color:#555}
 .sp .dl {margin:0 18% 0 20%}
 .sp mark {background:#ffe58a; padding:0 1px}
-.sp .sent {font-family:sans-serif; font-size:11px; margin:3px 0 7px; line-height:1.9}
-.sp .sent .in {display:inline-block; min-width:84px; color:#999}
-.sp .sent .b {display:inline-block; padding:0 6px; margin-right:4px; border-radius:8px; border:1px solid rgba(128,128,128,.35)}
-.sp .sent .none {color:#999; font-style:italic}
 </style>"""
 CLS = {"stage_direction": "hd", "scene_description": "ac", "character": "ch", "parenthetical": "pa", "dialogue": "dl"}
-
-
-# The arcs pipeline's per-scene sentiment (step 3). Every score runs from -1 to +1: VADER's compound score, the
-# models' P(positive) - P(negative). Scenes are numbered with the same <scene> regex as the reader, and scenes with
-# no scored sentence have no row. 'scene' columns score the whole scene in one pass (the context files).
-INSTRUMENTS = {"sst2": "SST-2", "vader": "VADER", "roberta3": "RoBERTa", "modernbert3": "ModernBERT"}
-PRIMARY = "sst2"
-LAYERS = (("dialogue", "dialogue"), ("action", "action"), ("both", "both"), ("scene", "whole scene"))
-
-
-@st.cache_data(show_spinner="Loading the saved scene sentiment…")
-def _all_scene_scores(stamps: tuple) -> pd.DataFrame:
-    parts = []
-    for k in INSTRUMENTS:
-        for name in (f"s03_scene_{k}.csv.gz", f"s03_scene_context_{k}.csv.gz"):
-            p = OUTPUT_DIRS["arcs"] / name
-            if p.exists():
-                d = pd.read_csv(p)
-                cols = [f"{k}_{lay}" for lay, _ in LAYERS if f"{k}_{lay}" in d]
-                parts.append(d.set_index(["movie_name", "scene"])[cols])
-    if not parts:
-        return pd.DataFrame()
-    return pd.concat(parts, axis=1).sort_index()
-
-
-def scene_scores(movie_name: str) -> pd.DataFrame:
-    """Per-scene scores of one script, indexed by scene number; empty if it isn't in the arcs sample."""
-    stamps = tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s03_scene_*.csv.gz")))
-    allsc = _all_scene_scores(stamps)
-    if allsc.empty or movie_name not in allsc.index.get_level_values(0):
-        return pd.DataFrame()
-    return allsc.xs(movie_name, level=0)
-
-
-@st.cache_data(show_spinner="Loading the saved arcs…")
-def _arc_tables(stamps: tuple) -> dict:
-    """arcs Step 5 per instrument: every film's arc on 100 points of story time (raw and smoothed), its
-    descriptors, and the mean smoothed arc of the primary sample for reference."""
-    out = {}
-    for k in INSTRUMENTS:
-        a, d = OUTPUT_DIRS["arcs"] / f"s05_arcs_{k}.csv.gz", OUTPUT_DIRS["arcs"] / f"s05_descriptors_{k}.csv"
-        if a.exists() and d.exists():
-            arcs, desc = pd.read_csv(a), pd.read_csv(d)
-            prim = desc[desc.in_primary.astype(bool)]
-            out[k] = {"arcs": arcs.set_index("movie_name").sort_index(), "desc": desc.set_index("movie_name"),
-                      "primary": prim.set_index("movie_name"),
-                      "mean": arcs[arcs.movie_name.isin(prim.movie_name)].groupby("t").smooth.mean()}
-    return out
-
-
-def arc_tables() -> dict:
-    return _arc_tables(tuple(mtime(p) for p in sorted(OUTPUT_DIRS["arcs"].glob("s05_*"))))
-
-
-def film_arcs(movie_name: str | None) -> dict:
-    """The saved arcs of one film, by instrument; empty when it isn't in the arcs sample."""
-    if not movie_name:
-        return {}
-    return {k: v for k, v in arc_tables().items() if movie_name in v["desc"].index}
-
-
-def script_names() -> pd.Series:
-    """IMDb ID -> MovieSum script name ('Face_Off_1997'), the key of every arcs output. From the screenplay
-    files when they're here, and from the text pipeline's committed script table otherwise."""
-    parts = []
-    idx = script_index()
-    if not idx.empty:
-        parts.append(idx.movie_name)
-    t = OUTPUT_DIRS["scripts_text"] / "script_table.csv"
-    if t.exists():
-        st_ = table(t).dropna(subset=["movie_name"])
-        parts.append(st_.set_index(st_.tconst.astype(str)).movie_name)
-    if not parts:
-        return pd.Series(dtype=str)
-    s = pd.concat(parts)
-    return s[~s.index.duplicated()]
-
-
-def scene_at(t: int, scored: list[int], points: int = 100) -> int:
-    """The scene under story-time point t. The arc is built from the scored scenes only, in order, with the
-    i-th of n covering [i/n, (i+1)/n) of the story, so point t (centre (t + 0.5) / points) falls in one of them."""
-    return scored[min(int((t + .5) / points * len(scored)), len(scored) - 1)]
-
-
-def _arc_tab(cur: str, movie_name: str, arcs: dict):
-    """A film's emotional arc as the paper builds it, with its descriptors; a click opens the reader there."""
-    have = list(arcs)
-    k = st.radio("Instrument", have, horizontal=True, key="arc_inst",
-                 format_func=lambda x: INSTRUMENTS[x] + (" (primary)" if x == PRIMARY else ""))
-    a, d = arcs[k]["arcs"].loc[[movie_name]], arcs[k]["desc"].loc[movie_name]
-    prim = arcs[k]["primary"]
-
-    def pct(col):
-        return f"{(prim[col] < d[col]).mean():.0%} of films below" if len(prim) else None
-
-    c = st.columns(5)
-    c[0].metric("Swing (D1)", f"{d.D1:.3f}", pct("D1"), delta_color="off", delta_arrow="off",
-                help="Standard deviation of the smoothed arc: how much the tone swings.")
-    c[1].metric("Ending lift (D2)", f"{d.D2:+.3f}", pct("D2"), delta_color="off", delta_arrow="off",
-                help="Mean of the last 20% minus the first 20% of the unsmoothed arc.")
-    c[2].metric("Mean level", f"{d.mean_level:+.3f}", pct("mean_level"), delta_color="off", delta_arrow="off")
-    c[3].metric("Low point", f"{d.min_position:.0%} into the story")
-    c[4].metric("Scored scenes", f"{int(d.scenes):,}", f"{int(d.sign_changes)} swings", delta_color="off", delta_arrow="off")
-    st.caption(("In the primary sample of the arcs analysis." if bool(d.in_primary) else
-                "Outside the primary sample of the arcs analysis (for example a possible transcript or too few "
-                "scene tags), so the paper's results don't use it.")
-               + f" Story time is cut into 100 points; the thick line averages 11 of them. Grey dashes: the mean arc "
-                 f"of the {len(prim):,} films in the primary sample.")
-    fig = go.Figure()
-    for x0, x1 in ((0, 20), (80, 100)):
-        fig.add_vrect(x0=x0 - .5, x1=x1 - .5, fillcolor="#999999", opacity=.08, line_width=0)
-    fig.add_scatter(x=arcs[k]["mean"].index, y=arcs[k]["mean"].values, mode="lines", name="mean of all films",
-                    line=dict(color="#999999", width=1.5, dash="dash"), hoverinfo="skip")
-    fig.add_scatter(x=a.t, y=a.raw, mode="lines", name="resampled", line=dict(color="#999999", width=1),
-                    hovertemplate="story %{x}%: %{y:+.2f}<extra></extra>")
-    fig.add_scatter(x=a.t, y=a.smooth, mode="lines+markers", name="smoothed", line=dict(color="#0072B2", width=3),
-                    marker=dict(size=5, color="#0072B2"),   # markers make the line clickable
-                    hovertemplate="story %{x}%: %{y:+.2f}<extra>smoothed</extra>")
-    lo = int(a.smooth.to_numpy().argmin())
-    fig.add_scatter(x=[a.t.iloc[lo]], y=[a.smooth.iloc[lo]], mode="markers", name="low point",
-                    marker=dict(color="#D55E00", size=10), hoverinfo="skip")
-    fig.add_hline(y=0, line_dash="dot", line_color="#aaa")
-    fig.update_layout(template="simple_white", height=420, margin=dict(l=0, r=0, t=30, b=0),
-                      xaxis=dict(title="story time (%)", range=[-1, 100]), yaxis_title=f"{INSTRUMENTS[k]} score",
-                      legend=dict(orientation="h", y=-0.22), clickmode="event+select", dragmode="select")
-    ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"arc_{cur}_{k}")
-    pts = ev.selection["points"] if ev and ev.selection else []
-    sc = scene_scores(movie_name)
-    scored = sorted(sc.index[sc[f"{k}_both"].notna()]) if f"{k}_both" in sc else []
-    if pts and scored:
-        t = min(int(p["x"]) for p in pts)
-        nav.go("scripts", script_tconst=cur, scene_focus=scene_at(t, scored))
-    st.caption("Click the arc, or drag a box over part of it, to read those scenes with their sentiment.")
-    if cur in script_index().index and st.button("Read it with scene sentiment", key="arc_read"):
-        nav.open_script(cur)
-
-
-def _badge(v: float, label: str) -> str:
-    """A score as a chip: blue for positive, orange for negative, stronger the further from zero."""
-    a = min(abs(v), 1) * 0.75
-    rgb = "0,114,178" if v >= 0 else "213,94,0"
-    return f'<span class="b" style="background:rgba({rgb},{a:.2f})">{label} {v:+.2f}</span>'
-
-
-def _sentiment_html(sc: pd.DataFrame, i: int, insts: list[str]) -> str:
-    if not insts:
-        return ""
-    if i not in sc.index:
-        return '<div class="sent"><span class="none">no scored sentences in this scene</span></div>'
-    row = sc.loc[i]
-    lines = []
-    for k in insts:
-        chips = [_badge(row[f"{k}_{lay}"], name) for lay, name in LAYERS
-                 if f"{k}_{lay}" in row and pd.notna(row[f"{k}_{lay}"])]
-        if chips:
-            lines.append(f'<span class="in">{INSTRUMENTS[k]}</span>{"".join(chips)}')
-    return '<div class="sent">' + "<br>".join(lines) + "</div>" if lines else ""
 
 
 def _scenes(script: str) -> list[list[tuple[str, str]]]:
     return [[(t, html.unescape(b).strip()) for t, b in TAG.findall(block)] for block in SCENE.findall(script)]
 
 
-def _render(scenes, which, query: str, sc: pd.DataFrame | None = None, insts: list[str] | None = None) -> str:
+def _render(scenes, which, query: str) -> str:
     qre = re.compile(re.escape(query), re.I) if query else None
     out = [CSS, '<div class="sp">']
     for i in which:
         out.append(f'<div class="scn"><span class="no">scene {i}</span>')
-        if sc is not None:
-            out.append(_sentiment_html(sc, i, insts or []))
         for t, b in scenes[i]:
             if not b:
                 continue
@@ -845,30 +676,6 @@ def _script_label(movie_name: str) -> str:
     """'Face_Off_1997' -> 'Face Off (1997)'. MovieSum joins the title words and the year with underscores."""
     title, _, year = movie_name.rpartition("_")
     return f"{title.replace('_', ' ')} ({year})" if title else movie_name
-
-
-def _reading_arc(sc: pd.DataFrame, k: str, which: list[int], n_scenes: int, pick: str):
-    """The script's arc for one instrument, with the scenes on this page shaded. A click jumps there."""
-    col = f"{k}_both" if f"{k}_both" in sc else f"{k}_scene"
-    y = sc[col].dropna()
-    fig = go.Figure()
-    fig.add_vrect(x0=which[0] - .5, x1=which[-1] + .5, fillcolor="#0072B2", opacity=.12, line_width=0)
-    fig.add_scatter(x=y.index, y=y.values, mode="markers", marker=dict(size=4, color="#999999"), name="scene",
-                    hovertemplate="scene %{x}: %{y:+.2f}<extra></extra>")
-    smooth = y.reindex(range(n_scenes)).rolling(9, center=True, min_periods=3).mean()
-    fig.add_scatter(x=smooth.index, y=smooth.values, mode="lines", line=dict(color="#0072B2", width=2),
-                    name="9-scene mean", hoverinfo="skip")
-    fig.add_hline(y=0, line_dash="dash", line_color="#aaa")
-    fig.update_layout(template="simple_white", height=170, margin=dict(l=0, r=0, t=4, b=0), showlegend=False,
-                      clickmode="event+select", dragmode="select", yaxis=dict(range=[-1.05, 1.05], title=INSTRUMENTS[k]),
-                      xaxis=dict(range=[-1, n_scenes], title=None))
-    ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"readarc_{pick}")
-    pts = ev.selection["points"] if ev and ev.selection else []
-    if pts:
-        first = int(min(p["x"] for p in pts))
-        if first != st.session_state.get("scene_clicked"):
-            st.session_state["scene_clicked"] = st.session_state["scene_focus"] = first
-            st.rerun()
 
 
 def screenplays():
@@ -906,7 +713,7 @@ def screenplays():
 
     tags = Counter(t for s in scenes for t, _ in s)
     words = sum(len(b.split()) for s in scenes for t, b in s if t != "character")
-    t1, t2, t3, t4, t5 = st.tabs(["Read", "Characters", "Sentiment by scene", "Summary", "Markup check"])
+    t1, t2, t4, t5 = st.tabs(["Read", "Characters", "Summary", "Markup check"])
 
     with t1:
         c1, c2, c3 = st.columns([2, 2, 1])
@@ -946,27 +753,8 @@ def screenplays():
             page = st.number_input(f"Page (of {pages})", 1, pages, page0 + 1, key=f"page_{pick}_{who}_{query}_{per}_{start_scene}") - 1
             which = cand[page * per:(page + 1) * per]
             st.caption(f"Scenes {which[0]} to {which[-1]} of {len(scenes) - 1}")
-            sc = scene_scores(meta.movie_name)
-            insts = []
-            if sc.empty:
-                st.caption("No saved scene sentiment: this script isn't in the arcs sample.")
-            else:
-                have = [k for k in INSTRUMENTS if any(c.startswith(k + "_") for c in sc.columns)]
-                # kept under a second key too: a script without scores doesn't draw the box, and Streamlit then drops it
-                prev = st.session_state.get("sent_insts", st.session_state.get("sent_insts_keep"))
-                st.session_state["sent_insts"] = ([k for k in prev if k in have] if prev is not None
-                                                  else [PRIMARY] if PRIMARY in have else have[:1])
-                insts = st.multiselect("Sentiment beside each scene", have,
-                                       format_func=lambda k: INSTRUMENTS[k] + (" (primary)" if k == PRIMARY else ""),
-                                       key="sent_insts",
-                                       help="Saved by arcs Step 3, from -1 (negative) to +1 (positive): the mean over the "
-                                            "scene's sentences for dialogue, action and both, and the whole scene scored "
-                                            "in one pass where the model has that. Click the arc to jump to a scene.")
-                st.session_state["sent_insts_keep"] = insts
-                if insts:
-                    _reading_arc(sc, insts[0], which, len(scenes), pick)
             with st.container(height=760):
-                st.markdown(_render(scenes, which, query, None if sc.empty else sc, insts), unsafe_allow_html=True)
+                st.markdown(_render(scenes, which, query), unsafe_allow_html=True)
 
     with t2:
         if not chars:
@@ -1006,37 +794,6 @@ def screenplays():
                     st.success(f"Read tab now shows only scenes with {s[0]}.")
             st.dataframe(cdf, width="stretch", hide_index=True, height=360)
 
-    with t3:
-        sc = OUTPUT_DIRS["arcs"] / "s03_scene_vader.csv.gz"
-        if not sc.exists():
-            missing("No per-scene scores saved.")
-        else:
-            d = table(sc)
-            d = d[d.movie_name == meta.movie_name]
-            if d.empty:
-                st.info("This script isn't in the arcs sample, so it has no saved scene scores.")
-            else:
-                fig = go.Figure()
-                for col, colr, name in [("vader_dialogue", "#0072B2", "dialogue"), ("vader_action", "#D55E00", "action"),
-                                        ("vader_both", "#333333", "both")]:
-                    fig.add_scatter(x=d.scene, y=d[col], mode="lines+markers", name=name, line=dict(color=colr, width=1.5),
-                                    marker=dict(size=4), customdata=d.scene)
-                fig.add_hline(y=0, line_dash="dash", line_color="#aaa")
-                fig.update_layout(clickmode="event+select", dragmode="select", template="simple_white", height=420,
-                                  xaxis_title="scene", yaxis_title="mean VADER compound",
-                                  legend=dict(orientation="h", y=1.08))
-                st.caption("Mean VADER score of each scene's sentences (saved by arcs Step 3). Click a point, or drag a box "
-                           "over some scenes, to open the Read tab at the first of them.")
-                ev = st.plotly_chart(fig, width="stretch", on_select="rerun", selection_mode=("points", "box"), key=f"arc_{pick}")
-                pts = ev.selection["points"] if ev and ev.selection else []
-                if pts:
-                    first = int(min(p["x"] for p in pts))
-                    if first != st.session_state.get("scene_clicked"):   # Read tab is drawn first: rerun once
-                        st.session_state["scene_clicked"] = st.session_state["scene_focus"] = first
-                        st.rerun()
-                    st.success(f"Read tab now opens at scene {first}.")
-                show_df(d, key=f"scenescores_{pick}")
-
     with t4:
         st.markdown(md(doc.get("summary") or "_No summary in MovieSum._"))
 
@@ -1047,12 +804,12 @@ def screenplays():
         c[2].metric("Words (not cues)", f"{words:,}")
         c[3].metric("Speaker cues", f"{tags.get('character', 0):,}")
         st.dataframe(pd.DataFrame(tags.most_common(), columns=["tag", "count"]), width="stretch", hide_index=True)
-        rep = OUTPUT_DIRS["arcs"] / "s02_parser_report.csv"
+        rep = OUTPUT_DIRS["scripts_text"] / "s02_parser_report.csv"
         if rep.exists():
             pr = table(rep)
-            hit = pr[pr.iloc[:, 0].astype(str) == meta.movie_name]
+            hit = pr[pr.tconst.astype(str) == pick]
             if len(hit):
-                st.markdown("**Arcs parser report for this script** (`s02_parser_report.csv`)")
+                st.markdown("**Screenplay-text parser report for this script** (`s02_parser_report.csv`)")
                 st.dataframe(hit.T.astype(str), width="stretch")
         n_chars = st.slider("Raw markup to show (characters)", 1000, 50000, 4000, step=1000)
         st.code(doc.get("script", "")[:n_chars], language="xml")

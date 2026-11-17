@@ -63,7 +63,7 @@ def test_sql_copy_matches_the_module():
     assert set(re.findall(r"ILIKE '%(\w+)%'", where)) == set(cr.STREAMING_DISTRIBUTORS)
 
 
-@pytest.mark.parametrize("pkg", ["arcs", "scripts_text"])
+@pytest.mark.parametrize("pkg", ["scripts_text"])
 def test_configs_match_the_module(pkg):
     sample = yaml.safe_load((ROOT / "analysis" / pkg / "config.yaml").read_text())["sample"]
     cr.check_config(sample)
@@ -74,8 +74,7 @@ def test_configs_match_the_module(pkg):
 def test_no_other_copy_of_the_rule():
     """The rule's tell-tale code (the flag and streamer patterns) appears in no script, step or notebook but the shared module and the SQL."""
     allowed = {"analysis/clean_rule.py", "scripts/imdb/coverage_clean_sample.sql", "scripts/imdb/parse_infobox.py",
-               "tests/test_clean_rule.py", "tests/test_network_and_parsing.py",
-               "analysis/arcs/x02_clean_rule_gap.py"}   # rebuilds the 14 November rule on purpose
+               "tests/test_clean_rule.py", "tests/test_network_and_parsing.py"}
     hits = []
     for pat in ("analysis/**/*.py", "scripts/**/*.py", "explorer/*.py", "notebooks/**/*.ipynb"):
         for p in ROOT.glob(pat):

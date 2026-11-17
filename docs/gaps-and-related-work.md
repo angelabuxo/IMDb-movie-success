@@ -11,9 +11,9 @@ These matter most, because they're what gets graded. They're ordered by rubric c
 **Analysis and checks.** The rubric asks for "a null, a second method, or a hand-labeled sample, with the result reported". We have nulls and second methods everywhere, but no hand-labelled sample anywhere yet.
 
 - Review sentiment: [main.tex:107](../paper/main.tex) still says "TODO: hand-labelled sample of 50 reviews". The doc says the same ("hand-labelling 50 reviews ... I'd like us to split that"), with no owner.
-- Screenplay arcs: [main.tex:88](../paper/main.tex) says the descriptors aren't validated against hand labels yet. The sheet and scorer exist in [s04_validation.py](../analysis/arcs/s04_validation.py) (two raters, blind to scores), but the sheets are unfilled, which [literature.tex](overview/literature.tex) also lists as a weakness.
+- Screenplay arcs: dropped on 17 November (kept on the `archive/scripts-arcs` branch), so their hand-label sheets no longer need filling.
 
-If we only finish one thing this week, I think it should be these two label sets, because each takes a few hours and both close a rubric line.
+If we only finish one thing this week, I think it should be the review label set, because it takes a few hours and closes a rubric line.
 
 **Paper front matter.** Still TODO in [main.tex](../paper/main.tex):
 
@@ -42,7 +42,7 @@ The rubric says everyone must be able to explain everything in the paper, so the
 - **The proposals are still open in the doc.** The doc asks the group to pick A (more data, more flops), B (focus on scripts) or C (keep reviews as an outcome). The paper has in effect done all three: it uses the 10k+ tier (A), has a full screenplay section (B) and treats reception as an outcome (C). The doc should record that decision and why.
 - **"No network link yet"** is out of date. The network results (track records, return similarity across shared people, movers, team history) are the paper's main finding.
 - **"What is success for us?"** is asked and never answered in the doc. The paper's answer is ln(gross / budget), with gross minus budget rejected because it rewards blockbusters (README, "Decisions still open"). The doc should say so, with the caveat that neither is real profit.
-- **The methods table has one row** (sentiment analysis of reviews). The paper uses about six methods that each need a "we chose X over Y because" line: ridge with an out-of-time split, the shuffle-null similarity test, Fightin' Words log-odds, the DistilBERT SST-2 arcs, VADER on reviews, and Louvain. Filling this table is also good preparation for the questions on 2 December.
+- **The methods table has one row** (sentiment analysis of reviews). The paper uses about five methods that each need a "we chose X over Y because" line: ridge with an out-of-time split, the shuffle-null similarity test, Fightin' Words log-odds, VADER on reviews, and Louvain. Filling this table is also good preparation for the questions on 2 December.
 - **"Reviews: Kaggle"** no longer matches. The audience reviews are the MovieLens Tag Genome and critic text comes from Wikipedia.
 - **Network design.** The doc says nodes are films, linked if they share actors, directors or studios. The built graph is bipartite (films, people, companies) with projections, which the doc should describe.
 - **The 11 November TODOs** (Angi on reviews, Gyula on screenplays, Niklas on the network) have no status. Each has a section in the paper now, except Niklas's actor network (see above).

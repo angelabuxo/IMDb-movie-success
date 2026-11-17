@@ -75,8 +75,7 @@ def fig_network():
 def fig_script():
     s10 = pd.read_csv(ROOT / "analysis/scripts_text/outputs/s10_results.csv").set_index("run")
     drops = pd.read_csv(ROOT / "analysis/scripts_text/outputs/s10_random_drop.csv")
-    p7 = json.loads((ROOT / "analysis/arcs/outputs/s07_primary.json").read_text())
-    fig, (a, b) = plt.subplots(1, 2, figsize=(3.45, 2.2), gridspec_kw={"wspace": 0.8})
+    fig, a = plt.subplots(figsize=(3.45, 2.2))
     a.scatter(np.random.default_rng(1).uniform(-0.12, 0.12, len(drops)) + 1, drops.z, s=5, color=GREY,
               label="50 random drops")
     a.scatter([0], [s10.loc["primary", "z"]], s=22, color=ACCENT, zorder=3)
@@ -85,20 +84,6 @@ def fig_script():
     a.set_xticks([0, 1, 2], ["All", "Random\ndrop", "Franch.\ndrop"], fontsize=6)
     a.set_ylabel("Word difference vs shuffle (z)")
     a.set_xlim(-0.5, 2.5)
-    panel(a, "A")
-    for i, d in enumerate(("D1", "D2")):
-        res = p7["results"][d]
-        b.errorbar([i], [res["rho"]], yerr=[[res["rho"] - res["ci_low"]], [res["ci_high"] - res["rho"]]],
-                   fmt="o", color=ACCENT, ecolor=ACCENT, ms=4, capsize=2, lw=0.8)
-        b.text(i + 0.12, res["rho"], f"p={res['p']:.3f}", fontsize=6, va="center")
-    rmin = p7["r_min"]["alpha_0.025"]
-    b.axhspan(-rmin, rmin, color=LIGHT, lw=0)
-    b.axhline(0, color=INK, lw=0.5)
-    b.set_xticks([0, 1], ["Swing\n(D1)", "Ending lift\n(D2)"])
-    b.set_xlim(-0.5, 1.9)
-    b.text(1.85, -rmin + 0.006, "shaded: below the\n$\\alpha=0.025$ threshold", fontsize=5.5, ha="right", va="bottom", color=GREY)
-    b.set_ylabel("Partial Spearman $\\rho$ with ln(gross/budget)")
-    panel(b, "B")
     fig.savefig(OUT / "fig_script.pdf", bbox_inches="tight")
 
 

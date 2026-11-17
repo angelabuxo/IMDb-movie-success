@@ -87,7 +87,7 @@ def is_clean(r: dict) -> bool:
 
 
 def check_config(sample: dict) -> None:
-    """The arcs and scripts_text configs record the rule's parameters (they were fixed before results).
+    """The scripts_text config records the rule's parameters (they were fixed before results).
     Fail loudly if a config and this module ever disagree."""
     got = {"min_budget_usd": sample["min_budget_usd"], "min_year_inclusive": sample["min_year_inclusive"],
            "max_year_exclusive": sample["max_year_exclusive"],

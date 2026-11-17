@@ -19,8 +19,7 @@ from .common import FEATURES, REPO, missing, mtime, table
 
 GRAPH = FEATURES / "graph"
 MOVIE_TABLE = FEATURES / "movies_features_10k.csv"
-OUT = {"arcs": REPO / "analysis" / "arcs" / "outputs",
-       "text": REPO / "analysis" / "scripts_text" / "outputs",
+OUT = {"text": REPO / "analysis" / "scripts_text" / "outputs",
        "emb": REPO / "analysis" / "embeddings" / "outputs",
        "attr": REPO / "analysis" / "attribution" / "outputs"}
 BLUE, ORANGE = "#0072B2", "#D55E00"
@@ -100,12 +99,12 @@ digraph {
   parse [label="2 · Parse infoboxes\\nbudget, gross, currency,\\nstudios, scores"];
   rule  [label="3 · Clean theatrical rule\\nUSD, ≥ $1,000, no rentals,\\nno streaming, 1975–2025", fillcolor="#fdebd9", color="#D55E00"];
   mgraph [label="4 · Movie graph\\nnodes + edges"];
-  arcs  [label="Screenplay arcs\\nparse scenes → sentiment"]; text [label="Screenplay text\\ntokens, names out"];
+  text  [label="Screenplay text\\ntokens, names out"];
   emb   [label="Text embeddings\\nreviews, scripts, summaries"]; attr [label="Profit attribution\\nwho and what on a film"];
   net   [label="Network results"];
   imdb -> mgraph; wd -> parse; wp -> parse; parse -> rule; imdb -> rule; rule -> mgraph;
-  mgraph -> net; mgraph -> attr; rule -> arcs; rule -> text; rule -> emb; ms -> arcs; ms -> text; ms -> emb; tg -> emb;
-  subgraph cluster_an { label="5 · Analyses (each cleans its own text)"; fontname="Helvetica"; color="#cccccc"; arcs; text; emb; attr; net; }
+  mgraph -> net; mgraph -> attr; rule -> text; rule -> emb; ms -> text; ms -> emb; tg -> emb;
+  subgraph cluster_an { label="5 · Analyses (each cleans its own text)"; fontname="Helvetica"; color="#cccccc"; text; emb; attr; net; }
 }
 """
 
@@ -164,10 +163,9 @@ def sample_funnel():
 
 def samples_compared():
     st.markdown("**Which clean sample each analysis started from**")
-    a1, t1 = summary("arcs", "s01_summary.json"), summary("text", "s01_summary.json")
+    t1 = summary("text", "s01_summary.json")
     e1, at = summary("emb", "s01_cleaning.json"), summary("attr", "summary.json")
-    rows = [("Screenplay arcs", get(a1, "checks", "clean_movies", "got"), "100k+ votes, rule of 4 Nov"),
-            ("Screenplay text", get(t1, "checks", "clean_movies", "got"), "100k+ votes, rule of 4 Nov"),
+    rows = [("Screenplay text", get(t1, "checks", "clean_movies", "got"), "100k+ votes, rule of 4 Nov"),
             ("Text embeddings", get(e1, "sample", "clean_films"), "10k+ votes"),
             ("Profit attribution", get(at, "sample", "films"), "10k+ votes, 1975–2025")]
     df = pd.DataFrame([(a, fmt(n), note) for a, n, note in rows if n is not None],
@@ -175,27 +173,6 @@ def samples_compared():
     st.dataframe(df, hide_index=True, width="stretch")
     st.caption("The analyses were run at different times, so they don't share one sample. Numbers from "
                "`analysis/*/outputs`; the sample notes come from the README's history of the clean rule.")
-
-
-def arcs_section():
-    s1, s2 = summary("arcs", "s01_summary.json"), summary("arcs", "s02_summary.json")
-    card("Matches clean films to MovieSum screenplays, splits each script into scenes and sentences, and keeps "
-         "scripts long enough to draw a sentiment arc.",
-         "Duplicate MovieSum IDs, 8 scripts whose dialogue markup is broken, likely franchise films (for the primary "
-         "test), and scripts with too few scenes. Rejoins split contractions (\"do n't\" → \"don't\").",
-         "Franchise flag is rough (Wikidata 'follows' or a shared name). Some scripts may be transcripts or drafts, "
-         "not the shooting script.")
-    funnel([("Clean films", get(s1, "checks", "clean_movies", "got")),
-            ("With a usable screenplay", get(s1, "checks", "clean_with_usable_script", "got")),
-            ("Dialogue markup usable", get(s1, "checks", "after_dialogue_exclusion", "got")),
-            ("Not likely franchise (primary)", get(s1, "checks", "not_likely_franchise", "got")),
-            ("Enough scenes for an arc", get(s2, "arc_ready_primary"))], key="pipe_arcs")
-    kv([("Scenes parsed", get(s2, "scenes_total")), ("Sentences (dialogue + action)", get(s2, "sentences", "both")),
-        ("Parse errors", get(s2, "parse_errors")), ("Contractions rejoined", get(s2, "contraction_joins")),
-        ("Lone \"n't\" before → after", None if get(s2, "lone_nt_before") is None
-         else f"{get(s2, 'lone_nt_before'):,} → {get(s2, 'lone_nt_after'):,}"),
-        ("Possible transcripts flagged", get(s2, "possible_transcripts")),
-        ("Primary films dropped for too few scenes", get(s2, "excluded_primary", "under_min_scenes"))])
 
 
 def text_section():
@@ -347,7 +324,7 @@ def pipeline():
 
     st.subheader("5 · Each analysis cleans its own text")
     samples_compared()
-    for title, fn in [("Screenplay arcs", arcs_section), ("Screenplay text", text_section),
+    for title, fn in [("Screenplay text", text_section),
                       ("Text embeddings", embeddings_section), ("Profit attribution", attribution_section)]:
         with st.expander(title, expanded=False):
             fn()

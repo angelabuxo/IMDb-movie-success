@@ -131,6 +131,13 @@ cd data/raw && ../../.venv/bin/python ../../scripts/reviews/review_features.py
 
 The first reads MovieSum and the second the Tag Genome reviews. Both write only numbers to `data/raw/features/`. The notebook also reads the screenplay embeddings in `features/embeddings_hpc/`.
 
+### Archived: screenplay emotional arcs
+
+We also ran a pre-registered test of whether a screenplay's emotional arc (DistilBERT SST-2 sentiment per scene, turned into a 100-point curve) goes with return, and dropped it on 17 November 2026. The result was negative, the sentiment model was trained on movie reviews rather than screenplays and was never validated by hand, and the word comparison in `analysis/scripts_text/` already makes the same point. It isn't on `main` any more, but nothing was deleted:
+
+- [`archive/scripts-arcs`](https://github.com/angelabuxo/IMDb-movie-success/tree/archive/scripts-arcs) (branch) and `archive/scripts-arcs-final` (tag) both point to `main` as it was just before the removal. They hold the arcs pipeline and its saved outputs (`analysis/arcs/`, with its `LOG.md`, `config.yaml` and HPC scripts), the step notebooks (`notebooks/arcs/`), the static page (`site/arcs/`), the run guide (`docs/scripts-arcs.md`), the tests (`tests/test_arcs.py`), the explorer's arc pages and the paper text with the arc results.
+- To look at it: `git switch archive/scripts-arcs`. The tag stays even if the branch is deleted.
+
 ## Profit attribution (optional)
 
 [`notebooks/profit_attribution.ipynb`](notebooks/profit_attribution.ipynb) splits each film's return between its budget, year, genre and franchise, every person and company on it, and what's left, and compares three ways of measuring profit. It's an extra that nothing else depends on, so we can decide later whether the paper uses it. Cross-validated R² goes from 0.115 with budget, year and genre to 0.299 with franchise, people and companies. Franchise, distributor and studio carry most of that gain, individual directors and actors very little, and 71.0% of the variance stays unexplained. [`docs/profit-attribution.md`](docs/profit-attribution.md) has the method, the checks and the limits. To rerun it from the repo root (about 17 minutes, then a few seconds for the notebook):

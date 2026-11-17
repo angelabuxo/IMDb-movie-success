@@ -29,7 +29,7 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 from explorer.log import LOG_DIR, setup  # noqa: E402
 
 TIMEOUT = 600
-PAGES = [("pages", "home"), ("pipeline_page", "pipeline"), ("pages", "arcs"), ("pages", "text"),
+PAGES = [("pages", "home"), ("pipeline_page", "pipeline"), ("pages", "text"),
          ("embedding_page", "embeddings"), ("map_pages", "maps"), ("map_pages", "checks"), ("pages", "network"),
          ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
          ("pages", "profit"), ("attribution_page", "attribution"), ("pages", "calendar"), ("pages", "tags"),
@@ -82,8 +82,8 @@ def findings(at: AppTest, records: list[logging.LogRecord]) -> list[tuple[str, s
 def views(module: str, fn: str, at: AppTest) -> list[tuple[str, dict, object]]:
     """Other views worth opening on a page: (label, session state to set first, widget action after one run)."""
     out = []
-    if fn in ("arcs", "text"):
-        key = "step_arcs" if fn == "arcs" else "step_scripts_text"
+    if fn == "text":
+        key = "step_scripts_text"
         radio = [r for r in at.radio if r.key == key]
         if radio:
             out += [(f"step {o}", {key: o}, None) for o in radio[0].options[1:]]
