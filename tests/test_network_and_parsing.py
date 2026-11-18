@@ -13,6 +13,7 @@ import pair_returns as pr
 import roi_similarity as rs
 import screenplay_features as sf
 import team_history as th
+import movie_assortativity as ma
 
 
 # ---------------------------------------------------------------- budget and gross (scripts/imdb/parse_infobox.py)
@@ -180,6 +181,30 @@ def test_role_similarity_is_high_for_homogeneous_groups():
     assert sim > 0.9 and loo > 0.9
     sim, _ = role.stats(np.random.default_rng(1).normal(size=12))
     assert sim < 0.5
+
+
+def test_movie_graph_links_only_requested_roles_and_top_billed_actor():
+    members = {
+        ("director", "d1"): {"f0", "f1"},
+        ("main_actor", "a1"): {"f1", "f2"},
+        ("producer", "p1"): {"f2", "f3"},
+        ("studio", "s1"): {"f0", "f3"},
+    }
+    graph = ma.movie_graph(["f0", "f1", "f2", "f3"], members)
+    assert {frozenset(edge) for edge in graph.edges} == {
+        frozenset(("f0", "f1")), frozenset(("f0", "f3")),
+        frozenset(("f1", "f2")), frozenset(("f2", "f3")),
+    }
+    assert graph["f0"]["f1"]["roles"] == {"director"}
+    assert graph["f0"]["f3"]["roles"] == {"studio"}
+
+
+def test_assortativity_and_shuffle_result_use_the_same_edges():
+    graph = ma.movie_graph(["f0", "f1", "f2", "f3"], {("director", "d"): {"f0", "f1", "f2", "f3"}})
+    values = dict(zip(["f0", "f1", "f2", "f3"], [-2.0, -1.0, 1.0, 2.0]))
+    assert ma.assortativity(graph, values) == pytest.approx(0.4634146341)
+    result = ma.shuffle_results(graph, values, 20, np.random.default_rng(1))
+    assert result["edges"] == 6 and 0 <= result["p_one_sided"] <= 1
 
 
 # ---------------------------------------------------------------- screenplay features (scripts_and_reviews)

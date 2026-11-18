@@ -1,0 +1,97 @@
+{
+ "films": 6851,
+ "shuffles": 1000,
+ "seed": 2805,
+ "results": {
+  "combined": {
+   "ln_gross_over_budget": {
+    "edges": 311028,
+    "observed": 0.078,
+    "null_mean": -0.0001,
+    "null_95": 0.003,
+    "p_one_sided": 0.001
+   },
+   "adjusted": {
+    "edges": 311028,
+    "observed": 0.0612,
+    "null_mean": -0.0003,
+    "null_95": 0.0027,
+    "p_one_sided": 0.001
+   },
+   "nodes": 6851,
+   "isolated_nodes": 126
+  },
+  "director": {
+   "ln_gross_over_budget": {
+    "edges": 18162,
+    "observed": 0.1266,
+    "null_mean": 0.0001,
+    "null_95": 0.0122,
+    "p_one_sided": 0.001
+   },
+   "adjusted": {
+    "edges": 18162,
+    "observed": 0.1167,
+    "null_mean": -0.0003,
+    "null_95": 0.0116,
+    "p_one_sided": 0.001
+   },
+   "nodes": 6851,
+   "isolated_nodes": 1290
+  },
+  "main_actor": {
+   "ln_gross_over_budget": {
+    "edges": 29624,
+    "observed": 0.1034,
+    "null_mean": -0.0002,
+    "null_95": 0.0097,
+    "p_one_sided": 0.001
+   },
+   "adjusted": {
+    "edges": 29624,
+    "observed": 0.0707,
+    "null_mean": -0.0005,
+    "null_95": 0.0094,
+    "p_one_sided": 0.001
+   },
+   "nodes": 6851,
+   "isolated_nodes": 1533
+  },
+  "producer": {
+   "ln_gross_over_budget": {
+    "edges": 63738,
+    "observed": 0.1505,
+    "null_mean": -0.0002,
+    "null_95": 0.0065,
+    "p_one_sided": 0.001
+   },
+   "adjusted": {
+    "edges": 63738,
+    "observed": 0.1242,
+    "null_mean": -0.0002,
+    "null_95": 0.0058,
+    "p_one_sided": 0.001
+   },
+   "nodes": 6851,
+   "isolated_nodes": 667
+  },
+  "studio": {
+   "ln_gross_over_budget": {
+    "edges": 243185,
+    "observed": 0.0762,
+    "null_mean": -0.0004,
+    "null_95": 0.0029,
+    "p_one_sided": 0.001
+   },
+   "adjusted": {
+    "edges": 243185,
+    "observed": 0.0602,
+    "null_mean": -0.0004,
+    "null_95": 0.003,
+    "p_one_sided": 0.001
+   },
+   "nodes": 6851,
+   "isolated_nodes": 1355
+  }
+ }
+}

@@ -12,13 +12,35 @@ set -e
 cd "$(dirname "$0")"
 
 if [ "$1" != "--data" ]; then
-  if [ ! -x .venv/bin/python ]; then
+  if [ ! -x .venv/bin/python ] && [ ! -x .venv/Scripts/python.exe ]; then
     echo "Creating .venv"
-    python3 -m venv .venv
+    if command -v python3 >/dev/null 2>&1; then
+      python3 -m venv .venv
+    else
+      python -m venv .venv
+    fi
+  fi
+  if [ -x .venv/bin/python ]; then
+    VENV_PYTHON=.venv/bin/python
+  elif [ -x .venv/Scripts/python.exe ]; then
+    case "$(uname -s)" in
+      Linux*)
+        echo "The existing .venv was created for Windows. Remove it and rerun this script in WSL to create a Linux venv:" >&2
+        echo "  rm -rf .venv && ./explorer/run.sh" >&2
+        exit 1
+        ;;
+      *)
+        VENV_PYTHON=.venv/Scripts/python.exe
+        ;;
+    esac
+  else
+    echo "Could not find the Python executable in .venv." >&2
+    exit 1
   fi
   if [ ! .venv/.requirements-installed -nt requirements.txt ]; then
     echo "Installing requirements (the first time takes a few minutes)"
-    .venv/bin/pip install -q -r requirements.txt
+    "$VENV_PYTHON" -m pip install -q --upgrade pip setuptools wheel
+    "$VENV_PYTHON" -m pip install -q -r requirements.txt
     touch .venv/.requirements-installed
   fi
 fi
