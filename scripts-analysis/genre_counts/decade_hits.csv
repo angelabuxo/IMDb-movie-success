@@ -1,0 +1,71 @@
+scope,decade,n,hit_pct,flop_pct
+ALL genres pooled,1930,5,60.0,0.0
+ALL genres pooled,1940,4,0.0,0.0
+ALL genres pooled,1950,12,58.3,0.0
+ALL genres pooled,1960,33,69.7,0.0
+ALL genres pooled,1970,65,70.8,4.6
+ALL genres pooled,1980,177,50.3,18.1
+ALL genres pooled,1990,527,30.6,21.1
+ALL genres pooled,2000,779,13.5,29.1
+ALL genres pooled,2010,1105,24.9,23.6
+ALL genres pooled,2020,208,12.5,48.6
+Action,1930,0,,
+Action,1940,0,,
+Action,1950,0,,
+Action,1960,3,100.0,0.0
+Action,1970,2,100.0,0.0
+Action,1980,20,80.0,10.0
+Action,1990,62,25.8,11.3
+Action,2000,90,13.3,32.2
+Action,2010,127,21.3,28.3
+Action,2020,22,27.3,36.4
+Adventure,1930,1,100.0,0.0
+Adventure,1940,0,,
+Adventure,1950,0,,
+Adventure,1960,4,100.0,0.0
+Adventure,1970,5,40.0,20.0
+Adventure,1980,24,58.3,20.8
+Adventure,1990,49,34.7,10.2
+Adventure,2000,67,16.4,26.9
+Adventure,2010,114,17.5,26.3
+Adventure,2020,23,13.0,56.5
+Comedy,1930,1,0.0,0.0
+Comedy,1940,0,,
+Comedy,1950,0,,
+Comedy,1960,2,50.0,0.0
+Comedy,1970,5,100.0,0.0
+Comedy,1980,31,41.9,19.4
+Comedy,1990,65,30.8,24.6
+Comedy,2000,80,15.0,28.8
+Comedy,2010,130,24.6,20.0
+Comedy,2020,25,8.0,56.0
+Crime,1930,0,,
+Crime,1940,1,0.0,0.0
+Crime,1950,2,100.0,0.0
+Crime,1960,3,66.7,0.0
+Crime,1970,7,85.7,0.0
+Crime,1980,15,46.7,20.0
+Crime,1990,46,30.4,21.7
+Crime,2000,71,15.5,28.2
+Crime,2010,64,20.3,23.4
+Crime,2020,15,6.7,53.3
+Drama,1930,1,0.0,0.0
+Drama,1940,2,0.0,0.0
+Drama,1950,4,50.0,0.0
+Drama,1960,7,57.1,0.0
+Drama,1970,18,66.7,5.6
+Drama,1980,23,39.1,13.0
+Drama,1990,103,35.0,23.3
+Drama,2000,145,14.5,31.0
+Drama,2010,232,24.1,22.4
+Drama,2020,47,12.8,44.7
+Thriller,1930,0,,
+Thriller,1940,0,,
+Thriller,1950,3,66.7,0.0
+Thriller,1960,3,100.0,0.0
+Thriller,1970,5,60.0,0.0
+Thriller,1980,10,60.0,0.0
+Thriller,1990,39,17.9,30.8
+Thriller,2000,67,10.4,37.3
+Thriller,2010,70,34.3,15.7
+Thriller,2020,12,8.3,41.7

@@ -1,0 +1,266 @@
+metric,imdb_id,movie_name,value,fence_low,fence_high
+dialogue_tokens,tt0083987,Gandhi_1982,34363,-4995.75,23081.25
+dialogue_tokens,tt0146838,Any Given Sunday_1999,28846,-4995.75,23081.25
+dialogue_tokens,tt0113987,Nixon_1995,25411,-4995.75,23081.25
+dialogue_tokens,tt0112641,Casino_1995,29249,-4995.75,23081.25
+dialogue_tokens,tt0102138,JFK_1991,35997,-4995.75,23081.25
+dialogue_tokens,tt0107507,Manhattan Murder Mystery_1993,23738,-4995.75,23081.25
+description_tokens,tt0038650,It's a Wonderful Life_1946,42696,-10036.5,35134.5
+description_tokens,tt0248667,Ali_2001,39063,-10036.5,35134.5
+description_tokens,tt6155172,Roma_2018,40867,-10036.5,35134.5
+dialogue_upper_share,tt0454082,Black Christmas_2006,0.0609,-0.0253,0.0377
+dialogue_upper_share,tt0116705,Jingle All the Way_1996,0.0501,-0.0253,0.0377
+dialogue_upper_share,tt1877830,The Batman_2022,0.1226,-0.0253,0.0377
+dialogue_upper_share,tt0099785,Home Alone_1990,0.0453,-0.0253,0.0377
+dialogue_upper_share,tt0114746,12 Monkeys_1995,0.0433,-0.0253,0.0377
+dialogue_upper_share,tt0480687,Hall Pass_2011,0.0503,-0.0253,0.0377
+dialogue_upper_share,tt0106364,Batman: Mask of the Phantasm_1993,0.0485,-0.0253,0.0377
+dialogue_upper_share,tt0088993,Day of the Dead_1985,0.072,-0.0253,0.0377
+dialogue_upper_share,tt0097368,The Fly II_1989,0.0519,-0.0253,0.0377
+dialogue_upper_share,tt0115610,Bad Moon_1996,0.0643,-0.0253,0.0377
+dialogue_upper_share,tt0091419,Little Shop of Horrors_1986,0.0773,-0.0253,0.0377
+dialogue_upper_share,tt0038650,It's a Wonderful Life_1946,0.0513,-0.0253,0.0377
+dialogue_upper_share,tt4123430,Fantastic Beasts: The Crimes of Grindelwald_2018,0.0864,-0.0253,0.0377
+dialogue_upper_share,tt0118617,Anastasia_1997,0.0397,-0.0253,0.0377
+dialogue_upper_share,tt0084522,Porky's_1981,0.0444,-0.0253,0.0377
+dialogue_upper_share,tt0090142,Teen Wolf_1985,0.0409,-0.0253,0.0377
+dialogue_upper_share,tt0093589,My Demon Lover_1987,0.0509,-0.0253,0.0377
+dialogue_upper_share,tt0088933,Cocoon_1985,0.0428,-0.0253,0.0377
+dialogue_upper_share,tt0120685,Godzilla_1998,0.0651,-0.0253,0.0377
+dialogue_upper_share,tt0234215,The Matrix Reloaded_2003,0.0926,-0.0253,0.0377
+dialogue_upper_share,tt1001526,Megamind_2010,0.0682,-0.0253,0.0377
+dialogue_upper_share,tt0120176,The Spanish Prisoner_1997,0.3142,-0.0253,0.0377
+dialogue_upper_share,tt0357413,Anchorman: The Legend of Ron Burgundy_2004,0.0381,-0.0253,0.0377
+dialogue_upper_share,tt0106302,Arcade_1993,0.068,-0.0253,0.0377
+dialogue_upper_share,tt0356910,Mr. & Mrs. Smith_2005,0.0421,-0.0253,0.0377
+dialogue_upper_share,tt8721424,"tick, tick... BOOM!_2021",0.0404,-0.0253,0.0377
+dialogue_upper_share,tt0088128,Sixteen Candles_1984,0.042,-0.0253,0.0377
+dialogue_upper_share,tt0266697,Kill Bill: Vol. 1_2003,0.0425,-0.0253,0.0377
+dialogue_upper_share,tt1245526,RED_2010,0.0413,-0.0253,0.0377
+dialogue_upper_share,tt0077681,The Hills Have Eyes_1977,0.1395,-0.0253,0.0377
+dialogue_upper_share,tt5613484,Mid90s_2018,0.0494,-0.0253,0.0377
+dialogue_upper_share,tt0088161,Splash_1983,0.0432,-0.0253,0.0377
+dialogue_upper_share,tt0096928,Bill & Ted's Excellent Adventure_1989,0.0509,-0.0253,0.0377
+dialogue_upper_share,tt2184339,The Purge_2013,0.041,-0.0253,0.0377
+dialogue_upper_share,tt1485796,The Greatest Showman_2017,0.0743,-0.0253,0.0377
+dialogue_upper_share,tt2507238,Me Him Her_2015,0.0463,-0.0253,0.0377
+dialogue_upper_share,tt0105665,Twin Peaks: Fire Walk with Me_1992,0.0493,-0.0253,0.0377
+dialogue_upper_share,tt4052882,The Shallows_2016,0.0687,-0.0253,0.0377
+dialogue_upper_share,tt0079817,Rocky II_1979,0.3264,-0.0253,0.0377
+dialogue_upper_share,tt0220506,Halloween: Resurrection_2002,0.0539,-0.0253,0.0377
+dialogue_upper_share,tt0259324,Ghost Rider_2007,0.0379,-0.0253,0.0377
+dialogue_upper_share,tt0105417,Sister Act_1992,0.0448,-0.0253,0.0377
+dialogue_upper_share,tt0158983,"South Park: Bigger, Longer & Uncut_1999",0.0587,-0.0253,0.0377
+dialogue_upper_share,tt0787474,The Boxtrolls_2014,0.0461,-0.0253,0.0377
+dialogue_upper_share,tt0104990,Newsies_1992,0.127,-0.0253,0.0377
+dialogue_upper_share,tt1409024,Men in Black 3_2012,0.0485,-0.0253,0.0377
+dialogue_upper_share,tt0052587,The Atomic Submarine_1959,0.1197,-0.0253,0.0377
+dialogue_upper_share,tt10986222,C'mon C'mon_2021,0.0414,-0.0253,0.0377
+dialogue_upper_share,tt9873892,They Cloned Tyrone_2023,0.0387,-0.0253,0.0377
+dialogue_upper_share,tt0081455,Scanners_1981,0.0531,-0.0253,0.0377
+dialogue_upper_share,tt0380510,The Lovely Bones_2009,0.2158,-0.0253,0.0377
+dialogue_upper_share,tt3183660,Fantastic Beasts and Where to Find Them_2016,0.0931,-0.0253,0.0377
+dialogue_upper_share,tt0112864,Die Hard with a Vengeance_1995,0.0516,-0.0253,0.0377
+dialogue_upper_share,tt2709768,The Secret Life of Pets_2016,0.0391,-0.0253,0.0377
+dialogue_upper_share,tt1672723,Batman: Year One_2011,0.0417,-0.0253,0.0377
+dialogue_upper_share,tt0133152,Planet of the Apes_2001,0.0596,-0.0253,0.0377
+dialogue_upper_share,tt0110357,The Lion King_1994,0.0891,-0.0253,0.0377
+dialogue_upper_share,tt1321510,In the Heights_2021,0.0428,-0.0253,0.0377
+dialogue_upper_share,tt2953050,Encanto_2021,0.1046,-0.0253,0.0377
+dialogue_upper_share,tt3470600,Sing_2016,0.0972,-0.0253,0.0377
+dialogue_upper_share,tt6998518,Mandy_2018,0.0482,-0.0253,0.0377
+dialogue_upper_share,tt0104412,Hero_1992,0.0428,-0.0253,0.0377
+dialogue_upper_share,tt0107822,The Piano_1993,0.0405,-0.0253,0.0377
+dialogue_upper_share,tt0261392,Jay and Silent Bob Strike Back_2001,0.0381,-0.0253,0.0377
+dialogue_upper_share,tt0359013,Blade: Trinity_2004,0.0572,-0.0253,0.0377
+dialogue_upper_share,tt0084516,Poltergeist_1982,0.0439,-0.0253,0.0377
+dialogue_upper_share,tt0097757,The Little Mermaid_1989,0.1767,-0.0253,0.0377
+dialogue_upper_share,tt7979580,The Mitchells vs the Machines_2021,0.0616,-0.0253,0.0377
+dialogue_upper_share,tt0094012,Spaceballs_1987,0.0436,-0.0253,0.0377
+dialogue_upper_share,tt5028340,Mary Poppins Returns_2018,0.1242,-0.0253,0.0377
+dialogue_upper_share,tt17076046,Weird: The Al Yankovic Story_2022,0.0606,-0.0253,0.0377
+dialogue_upper_share,tt0450385,1408_2007,0.0665,-0.0253,0.0377
+dialogue_upper_share,tt0088939,The Color Purple_1985,0.0439,-0.0253,0.0377
+dialogue_upper_share,tt1136617,The Killer_2023,0.0744,-0.0253,0.0377
+dialogue_upper_share,tt1024648,Argo_2012,0.0521,-0.0253,0.0377
+dialogue_upper_share,tt1631867,Edge of Tomorrow_2014,0.0687,-0.0253,0.0377
+dialogue_upper_share,tt0113497,Jumanji_1995,0.0461,-0.0253,0.0377
+dialogue_upper_share,tt0875034,Nine_2009,0.2386,-0.0253,0.0377
+dialogue_upper_share,tt0083067,Shock Treatment_1981,0.3771,-0.0253,0.0377
+dialogue_upper_share,tt1318514,Rise of the Planet of the Apes_2011,0.0857,-0.0253,0.0377
+dialogue_upper_share,tt0121164,Corpse Bride_2005,0.0452,-0.0253,0.0377
+dialogue_upper_share,tt0034583,Casablanca_1942,1.0,-0.0253,0.0377
+dialogue_upper_share,tt0084489,Personal Best_1982,0.0431,-0.0253,0.0377
+dialogue_upper_share,tt0118880,Con Air_1997,0.0672,-0.0253,0.0377
+dialogue_upper_share,tt10665338,Halloween Kills_2021,0.0613,-0.0253,0.0377
+dialogue_upper_share,tt0418279,Transformers_2007,0.0922,-0.0253,0.0377
+dialogue_upper_share,tt1213641,First Man_2018,0.0463,-0.0253,0.0377
+dialogue_upper_share,tt8244784,The Hunt_2020,0.0378,-0.0253,0.0377
+dialogue_upper_share,tt1060277,Cloverfield_2008,0.0506,-0.0253,0.0377
+dialogue_upper_share,tt3531824,Nerve_2016,0.0435,-0.0253,0.0377
+dialogue_upper_share,tt1981677,Pitch Perfect_2012,0.0797,-0.0253,0.0377
+dialogue_upper_share,tt0082694,Mad Max 2_1981,0.0931,-0.0253,0.0377
+dialogue_upper_share,tt0077402,Dawn of the Dead_1978,0.3141,-0.0253,0.0377
+dialogue_upper_share,tt1231587,Hot Tub Time Machine_2010,0.0471,-0.0253,0.0377
+dialogue_upper_share,tt0101761,The Doors_1991,0.0575,-0.0253,0.0377
+dialogue_upper_share,tt0372183,The Bourne Supremacy_2004,0.0464,-0.0253,0.0377
+dialogue_upper_share,tt2848292,Pitch Perfect 2_2015,0.0678,-0.0253,0.0377
+dialogue_upper_share,tt12889404,Cyrano_2021,0.0569,-0.0253,0.0377
+dialogue_upper_share,tt8851668,The Lovebirds_2020,0.0709,-0.0253,0.0377
+dialogue_upper_share,tt2103281,Dawn of the Planet of the Apes_2014,0.0608,-0.0253,0.0377
+dialogue_upper_share,tt0103639,Aladdin_1992,0.0733,-0.0253,0.0377
+dialogue_upper_share,tt0463854,28 Weeks Later_2007,0.042,-0.0253,0.0377
+dialogue_upper_share,tt6644200,A Quiet Place_2018,0.1726,-0.0253,0.0377
+dialogue_upper_share,tt4062536,Green Room_2015,0.1261,-0.0253,0.0377
+dialogue_upper_share,tt2350892,Bad Country_2014,0.0439,-0.0253,0.0377
+dialogue_upper_share,tt7488208,Over the Moon_2020,0.0544,-0.0253,0.0377
+dialogue_upper_share,tt0086336,Something Wicked This Way Comes_1983,0.0459,-0.0253,0.0377
+dialogue_upper_share,tt1228987,Let Me In_2010,0.1293,-0.0253,0.0377
+dialogue_upper_share,tt0080745,Flash Gordon_1980,0.0789,-0.0253,0.0377
+dialogue_upper_share,tt0479884,Crank_2006,0.0502,-0.0253,0.0377
+dialogue_upper_share,tt0092099,Top Gun_1986,0.1191,-0.0253,0.0377
+dialogue_upper_share,tt4385888,20th Century Women_2016,0.0675,-0.0253,0.0377
+dialogue_upper_share,tt1212428,The Lost City of Z_2016,0.0408,-0.0253,0.0377
+dialogue_upper_share,tt9411972,Where the Crawdads Sing_2022,0.0683,-0.0253,0.0377
+dialogue_upper_share,tt12801262,Luca_2021,0.0564,-0.0253,0.0377
+dialogue_upper_share,tt0112688,Clockers_1995,0.0407,-0.0253,0.0377
+dialogue_upper_share,tt0317919,Mission: Impossible III_2006,0.0681,-0.0253,0.0377
+dialogue_upper_share,tt3704428,Elvis_2022,0.0394,-0.0253,0.0377
+dialogue_upper_share,tt7242142,Blindspotting_2018,0.0391,-0.0253,0.0377
+dialogue_upper_share,tt2359024,Blue Ruin_2013,0.098,-0.0253,0.0377
+dialogue_upper_share,tt2293640,Minions_2015,0.0532,-0.0253,0.0377
+dialogue_upper_share,tt0151804,Office Space_1999,0.0453,-0.0253,0.0377
+dialogue_upper_share,tt0173716,Cecil B. Demented_2000,0.096,-0.0253,0.0377
+dialogue_upper_share,tt0320691,Underworld_2003,0.0533,-0.0253,0.0377
+dialogue_upper_share,tt1745960,Top Gun: Maverick_2022,0.05,-0.0253,0.0377
+dialogue_upper_share,tt0111127,Serial Mom_1994,0.0424,-0.0253,0.0377
+dialogue_upper_share,tt9198364,Three Thousand Years of Longing_2022,0.0521,-0.0253,0.0377
+dialogue_upper_share,tt0480249,I Am Legend_2007,0.038,-0.0253,0.0377
+dialogue_upper_share,tt0098067,Parenthood_1989,0.04,-0.0253,0.0377
+dialogue_upper_share,tt0120157,Soldier_1998,0.0512,-0.0253,0.0377
+dialogue_upper_share,tt0469494,There Will Be Blood_2007,0.1044,-0.0253,0.0377
+dialogue_upper_share,tt4158096,Free Fire_2016,0.0475,-0.0253,0.0377
+dialogue_upper_share,tt0074285,Carrie_1976,0.1231,-0.0253,0.0377
+dialogue_upper_share,tt0097742,Licence to Kill_1989,0.0574,-0.0253,0.0377
+dialogue_upper_share,tt1259528,Den of Thieves_2018,0.0464,-0.0253,0.0377
+dialogue_upper_share,tt0113820,Mighty Morphin Power Rangers: The Movie_1995,0.0972,-0.0253,0.0377
+dialogue_upper_share,tt0097576,Indiana Jones and the Last Crusade_1989,0.0878,-0.0253,0.0377
+description_upper_share,tt1877830,The Batman_2022,0.349,-0.1759,0.3092
+description_upper_share,tt0252503,Heist_2001,0.8485,-0.1759,0.3092
+description_upper_share,tt0167260,The Lord of the Rings: The Return of the King_2003,0.4194,-0.1759,0.3092
+description_upper_share,tt4154796,Avengers: Endgame_2019,0.5032,-0.1759,0.3092
+description_upper_share,tt1800241,American Hustle_2013,0.3446,-0.1759,0.3092
+description_upper_share,tt1170358,The Hobbit: The Desolation of Smaug_2013,0.3396,-0.1759,0.3092
+description_upper_share,tt0120176,The Spanish Prisoner_1997,0.5455,-0.1759,0.3092
+description_upper_share,tt1790809,Pirates of the Caribbean: Dead Men Tell No Tales_2017,0.9497,-0.1759,0.3092
+description_upper_share,tt8721424,"tick, tick... BOOM!_2021",0.3309,-0.1759,0.3092
+description_upper_share,tt0120885,Wag the Dog_1997,0.9474,-0.1759,0.3092
+description_upper_share,tt0077681,The Hills Have Eyes_1977,0.9562,-0.1759,0.3092
+description_upper_share,tt1232200,That's My Boy_2012,0.3154,-0.1759,0.3092
+description_upper_share,tt0120669,Fear and Loathing in Las Vegas_1998,0.3258,-0.1759,0.3092
+description_upper_share,tt0458339,Captain America: The First Avenger_2011,0.3638,-0.1759,0.3092
+description_upper_share,tt0052587,The Atomic Submarine_1959,0.4545,-0.1759,0.3092
+description_upper_share,tt0063462,The Producers_1967,0.9659,-0.1759,0.3092
+description_upper_share,tt0112722,Copycat_1995,0.3713,-0.1759,0.3092
+description_upper_share,tt0360717,King Kong_2005,0.3869,-0.1759,0.3092
+description_upper_share,tt0380510,The Lovely Bones_2009,0.3989,-0.1759,0.3092
+description_upper_share,tt1321510,In the Heights_2021,0.4806,-0.1759,0.3092
+description_upper_share,tt1045658,Silver Linings Playbook_2012,0.8745,-0.1759,0.3092
+description_upper_share,tt10304142,Amsterdam_2022,0.4349,-0.1759,0.3092
+description_upper_share,tt0212985,Hannibal_2001,0.9523,-0.1759,0.3092
+description_upper_share,tt0082010,An American Werewolf in London_1981,1.0,-0.1759,0.3092
+description_upper_share,tt10161886,The Prom_2020,0.421,-0.1759,0.3092
+description_upper_share,tt22687790,A Haunting in Venice_2023,0.3557,-0.1759,0.3092
+description_upper_share,tt0800080,The Incredible Hulk_2008,0.3102,-0.1759,0.3092
+description_upper_share,tt3416742,What We Do in the Shadows_2014,0.635,-0.1759,0.3092
+dialogue_punct_share,tt1877830,The Batman_2022,0.0904,-0.0443,0.0677
+dialogue_punct_share,tt0022958,Grand Hotel_1932,0.0841,-0.0443,0.0677
+dialogue_punct_share,tt0097368,The Fly II_1989,0.069,-0.0443,0.0677
+dialogue_punct_share,tt0091419,Little Shop of Horrors_1986,0.0905,-0.0443,0.0677
+dialogue_punct_share,tt0272152,K-PAX_2001,0.0869,-0.0443,0.0677
+dialogue_punct_share,tt0036104,The Leopard Man_1943,0.0687,-0.0443,0.0677
+dialogue_punct_share,tt0800039,Forgetting Sarah Marshall_2008,0.0716,-0.0443,0.0677
+dialogue_punct_share,tt1570728,"Crazy, Stupid, Love._2011",0.0686,-0.0443,0.0677
+dialogue_punct_share,tt5112578,Super Dark Times_2017,0.0854,-0.0443,0.0677
+dialogue_punct_share,tt0910970,WALL·E_2008,0.0868,-0.0443,0.0677
+dialogue_punct_share,tt0099077,Awakenings_1990,0.085,-0.0443,0.0677
+dialogue_punct_share,tt0258463,The Bourne Identity_2002,0.0769,-0.0443,0.0677
+dialogue_punct_share,tt0301470,Jeepers Creepers 2_2003,0.0877,-0.0443,0.0677
+dialogue_punct_share,tt0077362,Coming Home_1978,0.076,-0.0443,0.0677
+dialogue_punct_share,tt0079817,Rocky II_1979,0.1059,-0.0443,0.0677
+dialogue_punct_share,tt2771200,Beauty and the Beast_2017,0.0921,-0.0443,0.0677
+dialogue_punct_share,tt0132512,At First Sight_1999,0.0687,-0.0443,0.0677
+dialogue_punct_share,tt2302755,Olympus Has Fallen_2013,0.0681,-0.0443,0.0677
+dialogue_punct_share,tt1682180,Stoker_2013,0.078,-0.0443,0.0677
+dialogue_punct_share,tt2802144,Kingsman: The Secret Service_2014,0.0847,-0.0443,0.0677
+dialogue_punct_share,tt1967614,The Comedian_2016,0.1077,-0.0443,0.0677
+dialogue_punct_share,tt0914837,44 Inch Chest_2009,0.0828,-0.0443,0.0677
+dialogue_punct_share,tt1320253,The Expendables_2010,0.0996,-0.0443,0.0677
+dialogue_punct_share,tt0063350,Night of the Living Dead_1968,0.0872,-0.0443,0.0677
+dialogue_punct_share,tt2294449,22 Jump Street_2014,0.0919,-0.0443,0.0677
+dialogue_punct_share,tt0386117,Where the Wild Things Are_2009,0.1506,-0.0443,0.0677
+dialogue_punct_share,tt0084602,Rocky III_1982,0.0733,-0.0443,0.0677
+dialogue_punct_share,tt0289765,Red Dragon_2002,0.0876,-0.0443,0.0677
+dialogue_punct_share,tt0037820,Isle of the Dead_1945,0.0716,-0.0443,0.0677
+dialogue_punct_share,tt0110604,Mute Witness_1995,0.0768,-0.0443,0.0677
+dialogue_punct_share,tt0121164,Corpse Bride_2005,0.0977,-0.0443,0.0677
+dialogue_punct_share,tt0118880,Con Air_1997,0.1724,-0.0443,0.0677
+dialogue_punct_share,tt0418279,Transformers_2007,0.0749,-0.0443,0.0677
+dialogue_punct_share,tt0292963,Before the Devil Knows You're Dead_2007,0.1047,-0.0443,0.0677
+dialogue_punct_share,tt1060277,Cloverfield_2008,0.0888,-0.0443,0.0677
+dialogue_punct_share,tt0462499,Rambo_2008,0.1197,-0.0443,0.0677
+dialogue_punct_share,tt0372183,The Bourne Supremacy_2004,0.0948,-0.0443,0.0677
+dialogue_punct_share,tt0103639,Aladdin_1992,0.0694,-0.0443,0.0677
+dialogue_punct_share,tt0389722,30 Days of Night_2007,0.1076,-0.0443,0.0677
+dialogue_punct_share,tt9784798,Judas and the Black Messiah_2021,0.1206,-0.0443,0.0677
+dialogue_punct_share,tt0083624,Basket Case_1982,0.1074,-0.0443,0.0677
+dialogue_punct_share,tt5711148,Film Stars Don't Die in Liverpool_2017,0.0865,-0.0443,0.0677
+dialogue_punct_share,tt3659388,The Martian_2015,0.0724,-0.0443,0.0677
+dialogue_punct_share,tt3890160,Baby Driver_2017,0.068,-0.0443,0.0677
+dialogue_punct_share,tt0072251,The Taking of Pelham One Two Three_1974,0.0707,-0.0443,0.0677
+dialogue_punct_share,tt0229260,Book of Shadows: Blair Witch 2_2000,0.0837,-0.0443,0.0677
+dialogue_punct_share,tt2084970,The Imitation Game_2014,0.076,-0.0443,0.0677
+dialogue_punct_share,tt1454468,Gravity_2013,0.0684,-0.0443,0.0677
+dialogue_punct_share,tt10272386,The Father_2020,0.0693,-0.0443,0.0677
+dialogue_punct_share,tt0053604,The Apartment_1960,0.0744,-0.0443,0.0677
+char_share_total,tt0027996,Mr. Deeds Goes to Town_1936,0.1122,-0.0248,0.1091
+char_share_total,tt0120176,The Spanish Prisoner_1997,0.2388,-0.0248,0.1091
+char_share_total,tt0079817,Rocky II_1979,0.2073,-0.0248,0.1091
+char_share_total,tt2692904,Locke_2013,0.1152,-0.0248,0.1091
+char_share_total,tt0092007,Star Trek IV: The Voyage Home_1986,0.1273,-0.0248,0.1091
+stage_share_total,tt0024216,King Kong_1933,0.1034,-0.0405,0.1009
+stage_share_total,tt0091276,Invaders from Mars_1986,0.1157,-0.0405,0.1009
+stage_share_total,tt1663655,Martyrs_2015,0.1066,-0.0405,0.1009
+stage_share_total,tt0045917,Invaders from Mars_1953,0.1157,-0.0405,0.1009
+stage_share_total,tt10265034,Land_2021,0.138,-0.0405,0.1009
+stage_share_total,tt7280898,22 July_2018,0.1215,-0.0405,0.1009
+tiny_layer,tt0071853,Monty Python and the Holy Grail_1975,87,500,
+tiny_layer,tt0120891,Wild Wild West_1999,0,500,
+tiny_layer,tt0038650,It's a Wonderful Life_1946,39,500,
+tiny_layer,tt0083987,Gandhi_1982,0,500,
+tiny_layer,tt0088847,The Breakfast Club_1985,4,500,
+tiny_layer,tt0118571,Air Force One_1997,2,500,
+tiny_layer,tt0120685,Godzilla_1998,51,500,
+tiny_layer,tt0234215,The Matrix Reloaded_2003,108,500,
+tiny_layer,tt1001526,Megamind_2010,133,500,
+tiny_layer,tt2017038,All Is Lost_2013,179,500,
+tiny_layer,tt3666024,The Red Turtle_2016,9,500,
+tiny_layer,tt0094737,Big_1988,0,500,
+tiny_layer,tt1230414,It's Complicated_2009,0,500,
+tiny_layer,tt0113243,Hackers_1995,0,500,
+tiny_layer,tt1458175,The Next Three Days_2010,0,500,
+tiny_layer,tt0052587,The Atomic Submarine_1959,28,500,
+tiny_layer,tt0359013,Blade: Trinity_2004,32,500,
+tiny_layer,tt0449059,Little Miss Sunshine_2006,57,500,
+tiny_layer,tt5028340,Mary Poppins Returns_2018,160,500,
+tiny_layer,tt0114857,Virtuosity_1995,0,500,
+tiny_layer,tt0034583,Casablanca_1942,2,500,
+tiny_layer,tt0082010,An American Werewolf in London_1981,4,500,
+tiny_layer,tt0036733,The Curse of the Cat People_1944,0,500,
+tiny_layer,tt0120735,"Lock, Stock and Two Smoking Barrels_1998",0,500,
+tiny_layer,tt0128445,Rushmore_1998,0,500,
+tiny_layer,tt0240510,The Four Feathers_2002,0,500,
+tiny_layer,tt14509110,No One Will Save You_2023,76,500,
+tiny_layer,tt0074285,Carrie_1976,65,500,
+tiny_layer,tt0248667,Ali_2001,0,500,
+tiny_layer,tt0097576,Indiana Jones and the Last Crusade_1989,170,500,

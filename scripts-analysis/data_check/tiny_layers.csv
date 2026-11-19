@@ -1,0 +1,31 @@
+imdb_id,movie_name,tiny_layer,elements,empty_elements,tokens,other_layer_tokens,char_elements,empty_scene_markers,reason
+tt0071853,Monty Python and the Holy Grail_1975,dialogue,2,0,87,24411,2,0,few elements
+tt0120891,Wild Wild West_1999,description,0,0,0,18872,707,66,no elements with this tag at all
+tt0038650,It's a Wonderful Life_1946,dialogue,2,0,39,42696,1,0,few elements
+tt0083987,Gandhi_1982,description,0,0,0,34363,969,47,no elements with this tag at all
+tt0088847,The Breakfast Club_1985,description,1,0,4,11201,814,8,few elements
+tt0118571,Air Force One_1997,dialogue,1,0,2,29563,1,8,few elements
+tt0120685,Godzilla_1998,description,1,0,51,14442,696,108,few elements
+tt0234215,The Matrix Reloaded_2003,dialogue,7,2,108,23915,7,4,few elements
+tt1001526,Megamind_2010,dialogue,3,0,133,27644,1,0,few elements
+tt2017038,All Is Lost_2013,dialogue,8,0,179,8792,7,0,few elements
+tt3666024,The Red Turtle_2016,dialogue,1,0,9,11083,2,0,few elements
+tt0094737,Big_1988,description,0,0,0,7306,788,0,no elements with this tag at all
+tt1230414,It's Complicated_2009,dialogue,2,2,0,25365,2,1,elements exist but are all empty
+tt0113243,Hackers_1995,description,0,0,0,10593,748,22,no elements with this tag at all
+tt1458175,The Next Three Days_2010,description,0,0,0,11102,806,186,no elements with this tag at all
+tt0052587,The Atomic Submarine_1959,description,1,0,28,13144,498,19,few elements
+tt0359013,Blade: Trinity_2004,description,1,0,32,14243,460,73,few elements
+tt0449059,Little Miss Sunshine_2006,dialogue,1,0,57,26720,1,0,few elements
+tt5028340,Mary Poppins Returns_2018,dialogue,45,0,160,25246,43,0,few elements
+tt0114857,Virtuosity_1995,dialogue,74,74,0,31792,74,0,elements exist but are all empty
+tt0034583,Casablanca_1942,dialogue,65,64,2,27018,65,0,few elements
+tt0082010,An American Werewolf in London_1981,description,1,0,4,11329,863,27,few elements
+tt0036733,The Curse of the Cat People_1944,description,0,0,0,15377,655,44,no elements with this tag at all
+tt0120735,"Lock, Stock and Two Smoking Barrels_1998",dialogue,0,0,0,19066,0,0,no elements with this tag at all
+tt0128445,Rushmore_1998,dialogue,1,1,0,26541,1,0,elements exist but are all empty
+tt0240510,The Four Feathers_2002,dialogue,0,0,0,31246,0,0,no elements with this tag at all
+tt14509110,No One Will Save You_2023,dialogue,11,0,76,11442,3,0,few elements
+tt0074285,Carrie_1976,dialogue,2,0,65,27354,1,0,few elements
+tt0248667,Ali_2001,dialogue,9,9,0,39063,9,3,elements exist but are all empty
+tt0097576,Indiana Jones and the Last Crusade_1989,description,5,0,170,17841,824,47,few elements

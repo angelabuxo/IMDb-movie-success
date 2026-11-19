@@ -1,0 +1,7 @@
+genre,Drama,Comedy,Action,Adventure,Crime,Thriller
+Drama,582,128,81,68,131,83
+Comedy,128,339,55,85,59,7
+Action,81,55,321,154,78,68
+Adventure,68,85,154,287,8,24
+Crime,131,59,78,8,224,59
+Thriller,83,7,68,24,59,209

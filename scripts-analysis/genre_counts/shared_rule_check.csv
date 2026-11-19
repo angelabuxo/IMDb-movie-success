@@ -1,0 +1,47 @@
+universe,era_bins,genre,films,hit,flop,middle,pairs_removed_min_cell
+(a) 100k+ tier only,current bins,Drama,536,135,135,266,0
+(a) 100k+ tier only,current bins,Comedy,326,83,83,158,2
+(a) 100k+ tier only,current bins,Action,319,81,81,155,2
+(a) 100k+ tier only,current bins,Adventure,275,69,69,132,5
+(a) 100k+ tier only,current bins,Crime,209,54,54,99,2
+(a) 100k+ tier only,current bins,Thriller,198,50,50,95,3
+(a) 100k+ tier only,current bins,Sci-Fi,132,34,34,59,5
+(a) 100k+ tier only,current bins,Mystery,136,33,33,64,6
+(a) 100k+ tier only,current bins,Horror,129,33,33,58,5
+(a) 100k+ tier only,current bins,Romance,124,30,30,57,7
+(a) 100k+ tier only,current bins,Fantasy,103,26,26,45,6
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Drama,536,135,135,266,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Comedy,326,84,84,158,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Action,319,82,82,155,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Adventure,275,71,71,133,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Crime,209,55,55,99,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Thriller,198,51,51,96,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Sci-Fi,132,34,34,62,2
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Horror,129,34,34,61,0
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Mystery,136,33,33,64,6
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Romance,124,30,30,57,7
+(a) 100k+ tier only,1975-79 merged into 1975-1989,Fantasy,103,26,26,46,5
+(b) all of movies_features_10k.csv,current bins,Drama,882,223,223,436,0
+(b) all of movies_features_10k.csv,current bins,Comedy,541,136,136,264,5
+(b) all of movies_features_10k.csv,current bins,Action,429,108,108,210,3
+(b) all of movies_features_10k.csv,current bins,Adventure,338,84,84,163,7
+(b) all of movies_features_10k.csv,current bins,Crime,338,85,85,165,3
+(b) all of movies_features_10k.csv,current bins,Thriller,297,74,74,143,6
+(b) all of movies_features_10k.csv,current bins,Romance,228,59,59,107,3
+(b) all of movies_features_10k.csv,current bins,Horror,200,52,52,96,0
+(b) all of movies_features_10k.csv,current bins,Mystery,198,50,50,95,3
+(b) all of movies_features_10k.csv,current bins,Sci-Fi,163,41,41,75,6
+(b) all of movies_features_10k.csv,current bins,Biography,155,40,40,71,4
+(b) all of movies_features_10k.csv,current bins,Fantasy,146,35,35,68,8
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Drama,882,222,222,438,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Comedy,541,137,137,267,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Action,429,109,109,211,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Adventure,338,86,86,166,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Crime,338,86,86,166,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Thriller,297,75,75,147,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Romance,228,60,60,108,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Horror,200,52,52,96,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Mystery,198,51,51,96,0
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Sci-Fi,163,41,41,78,3
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Biography,155,40,40,71,4
+(b) all of movies_features_10k.csv,1975-79 merged into 1975-1989,Fantasy,146,35,35,69,7
