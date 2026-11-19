@@ -1,0 +1,146 @@
+measure,value
+films_in_final_set,1598
+dialogue_elements_total,1440867
+dialogue_elements_with_INT_EXT,1418
+share_of_dialogue_elements_with_heading,0.00098
+films_with_at_least_one_heading_in_dialogue,177
+share_of_films_with_a_heading_in_dialogue,0.111
+films_where_headings_exceed_1pct_of_dialogue,37
+odd_share_median,0.00121
+odd_share_p95,0.02052
+odd_share_p99,0.07015
+odd_share_max,0.14318
+tukey_far_fence_q3+3iqr,0.01191
+films_above_far_fence,130
+check_tt0097368_odd_share_and_rank,0.14318 rank 1 of 1598
+check_tt0430912_odd_share_and_rank,0.01354 rank 113 of 1598
+far_tt0097368_The Fly II_1989,0.14318
+far_tt0093010_Fatal Attraction_1987,0.11634
+far_tt0118880_Con Air_1997,0.10046
+far_tt0079817_Rocky II_1979,0.09848
+far_tt0113749_Mallrats_1995,0.09619
+far_tt9784798_Judas and the Black Messiah_2021,0.0883
+far_tt0097742_Licence to Kill_1989,0.0868
+far_tt0418279_Transformers_2007,0.08303
+far_tt2294449_22 Jump Street_2014,0.08048
+far_tt2771200_Beauty and the Beast_2017,0.07655
+far_tt10633456_Minari_2020,0.07241
+far_tt0386117_Where the Wild Things Are_2009,0.07238
+far_tt0450385_1408_2007,0.07228
+far_tt8637428_The Farewell_2019,0.07202
+far_tt5711148_Film Stars Don't Die in Liverpool_2017,0.07045
+far_tt0121164_Corpse Bride_2005,0.07015
+far_tt0462499_Rambo_2008,0.06389
+"far_tt1570728_Crazy, Stupid, Love._2011",0.0619
+far_tt0112864_Die Hard with a Vengeance_1995,0.06021
+far_tt0800039_Forgetting Sarah Marshall_2008,0.05918
+far_tt0301470_Jeepers Creepers 2_2003,0.0582
+far_tt0118615_Anaconda_1997,0.05721
+far_tt0272152_K-PAX_2001,0.05458
+far_tt0077362_Coming Home_1978,0.05315
+far_tt0120176_The Spanish Prisoner_1997,0.05292
+far_tt3416742_What We Do in the Shadows_2014,0.04961
+far_tt0088763_Back to the Future_1985,0.04939
+far_tt0106220_Addams Family Values_1993,0.0483
+far_tt0088933_Cocoon_1985,0.04794
+far_tt0097757_The Little Mermaid_1989,0.04649
+far_tt0112688_Clockers_1995,0.04594
+far_tt0372183_The Bourne Supremacy_2004,0.04484
+far_tt2267998_Gone Girl_2014,0.04249
+far_tt1632708_Friends with Benefits_2011,0.04199
+far_tt0116705_Jingle All the Way_1996,0.04151
+far_tt0091419_Little Shop of Horrors_1986,0.0398
+far_tt0318155_Looney Tunes: Back in Action_2003,0.03899
+far_tt7888964_Nobody_2021,0.03794
+far_tt1226229_Get Him to the Greek_2010,0.03786
+far_tt0099785_Home Alone_1990,0.03716
+far_tt0092005_Stand by Me_1986,0.03684
+far_tt4302938_Kubo and the Two Strings_2016,0.03662
+far_tt0084522_Porky's_1981,0.03616
+far_tt0088146_A Soldier's Story_1984,0.03599
+far_tt0109635_Disclosure_1994,0.03579
+far_tt4209788_Molly's Game_2017,0.03535
+far_tt0410097_Hustle & Flow_2005,0.03508
+far_tt0322259_2 Fast 2 Furious_2003,0.03413
+far_tt0115685_The Birdcage_1996,0.03376
+far_tt0088161_Splash_1983,0.03348
+far_tt0089927_Rocky IV_1985,0.03268
+far_tt1320253_The Expendables_2010,0.03222
+far_tt0838283_Step Brothers_2008,0.03111
+far_tt1160419_Dune_2021,0.03093
+far_tt0118750_Booty Call_1997,0.03069
+far_tt2837574_The Old Man & the Gun_2018,0.02998
+far_tt0094012_Spaceballs_1987,0.02975
+far_tt11145118_Creed III_2023,0.02824
+far_tt0101507_Boyz n the Hood_1991,0.02823
+far_tt2388715_Oculus_2013,0.02752
+far_tt6205872_Assassination Nation_2018,0.02742
+far_tt0993846_The Wolf of Wall Street_2013,0.02735
+far_tt0453562_42_2013,0.02699
+far_tt5052474_Sicario: Day of the Soldado_2018,0.02675
+far_tt0088939_The Color Purple_1985,0.0267
+far_tt2042568_Inside Llewyn Davis_2013,0.02664
+far_tt0448134_Sunshine_2007,0.02647
+far_tt1485796_The Greatest Showman_2017,0.02531
+far_tt2554274_Crimson Peak_2015,0.02505
+far_tt1259521_The Cabin in the Woods_2011,0.02501
+far_tt0473705_State of Play_2009,0.02442
+far_tt10665338_Halloween Kills_2021,0.02442
+far_tt1216491_Kill the Messenger_2014,0.02331
+far_tt0095705_The Naked Gun: From the Files of Police Squad!_1988,0.02324
+far_tt0115610_Bad Moon_1996,0.02268
+far_tt0124315_The Cider House Rules_1999,0.02256
+far_tt0107211_Indecent Proposal_1993,0.02243
+far_tt0120681_From Hell_2001,0.02161
+far_tt0083190_Thief_1981,0.02142
+far_tt0109288_Blankman_1994,0.02052
+far_tt0103874_Bram Stoker's Dracula_1992,0.02041
+far_tt0805564_Lars and the Real Girl_2007,0.02041
+far_tt1706620_Snowpiercer_2013,0.02022
+far_tt0389722_30 Days of Night_2007,0.01995
+far_tt0086336_Something Wicked This Way Comes_1983,0.01994
+far_tt1790864_The Maze Runner_2014,0.0197
+far_tt0086960_Beverly Hills Cop_1984,0.01948
+far_tt0289765_Red Dragon_2002,0.01932
+far_tt0469494_There Will Be Blood_2007,0.01932
+far_tt9114286_Black Panther: Wakanda Forever_2022,0.01908
+far_tt0285742_Monster's Ball_2001,0.018
+far_tt0110006_Heavyweights_1995,0.01776
+far_tt0087985_Red Dawn_1984,0.01756
+far_tt4196450_The Birth of a Nation_2016,0.01747
+far_tt4645330_Denial_2016,0.01704
+far_tt0112572_The Brady Bunch Movie_1995,0.01697
+far_tt0082498_Happy Birthday to Me_1981,0.0167
+far_tt0113497_Jumanji_1995,0.0165
+far_tt0106611_Cool Runnings_1993,0.01645
+far_tt1821549_Nebraska_2013,0.01582
+far_tt3385524_Stan & Ollie_2018,0.01568
+far_tt1192628_Rango_2011,0.01529
+far_tt7668870_Searching_2018,0.0152
+far_tt0084602_Rocky III_1982,0.01519
+far_tt11389748_Mass_2021,0.01487
+far_tt5322012_Wish Upon_2017,0.01478
+far_tt0098067_Parenthood_1989,0.01456
+far_tt4916630_Just Mercy_2019,0.01429
+far_tt12536294_Spencer_2021,0.01391
+far_tt0401997_Breach_2007,0.01383
+far_tt12801262_Luca_2021,0.01361
+far_tt0395169_Hotel Rwanda_2004,0.01358
+far_tt0430912_Basic Instinct 2_2006,0.01354
+far_tt0255819_Baby Boy_2001,0.0134
+far_tt2334649_Fruitvale Station_2013,0.01317
+far_tt0405422_The 40-Year-Old Virgin_2005,0.01312
+far_tt0099077_Awakenings_1990,0.01289
+far_tt0106677_Dazed and Confused_1993,0.01283
+far_tt1135985_Sex Drive_2008,0.0128
+far_tt0457939_The Holiday_2006,0.01279
+far_tt3714720_The Hollars_2016,0.01278
+far_tt0096928_Bill & Ted's Excellent Adventure_1989,0.01277
+far_tt2380307_Coco_2017,0.01249
+far_tt1596345_Pawn Sacrifice_2014,0.01249
+far_tt2948372_Soul_2020,0.01247
+far_tt1234654_Greenberg_2010,0.0124
+far_tt7146812_Onward_2020,0.01232
+far_tt0409459_Watchmen_2009,0.01217
+far_tt0357413_Anchorman: The Legend of Ron Burgundy_2004,0.01217
+far_tt1745960_Top Gun: Maverick_2022,0.01198

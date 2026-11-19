@@ -48,6 +48,9 @@ Hand-in: Fri 27 Nov 2026.
 | **Separate small sample of the tiny-layer films of the final universe** (23 films with a script and usable money but a layer under 500 tokens: 13 dialogue-poor, 10 description-poor), never mixed into the error rates above: 5 dialogue-poor films and 3 description-poor films, 10 random elements each, from the description layer (dialogue-poor films) or the dialogue layer (description-poor films). Same 15-word limit, text only in `private/`. A column records "dialogue inside description: yes/no/unclear". | Tests directly the hypothesis that dialogue sits untagged inside the description layer in the dialogue-poor films. |
 | Manual-check points, stratified by layer, about 10 per film: 4 dialogue, 4 scene description, 2 from other (parenthetical, stage_direction, character). Each point is one element, at most 15 words, the layer the parser gave it, and the tags (not the text) of the previous and next element. Only this stratified sample is used to report error rates; no other sample is mixed into them. | `character` and `dialogue` elements outnumber `scene_description` about two to one, so a plain random sample gives too few description points to estimate an error rate per layer. |
 | A separate targeted red-flag sheet (exploratory, no error rate): an automatic list of suspicious elements (description with quote marks or an ALL-CAPS name followed by a colon; dialogue with INT./EXT. or long all-caps runs), about 5 per film for the same 25 films. | Hunts for rare failure modes that a random sample would miss. |
+| **Headings (INT./EXT.) inside dialogue: nothing is cleaned in the parser, and no sensitivity analysis is run** (decided by Angi, 2026-11-19). | They are 0.10 % of dialogue elements (1418 of 1,440,867), in 177 of 1598 films; in 37 films they exceed 1 %. The parser keeps its rule "every element stays in the layer its tag says". The limitation is stated: 11 % of films have at least one such element in the dialogue layer. |
+| **Symbols that are not letters are removed in the preprocessing** (decided by Angi, 2026-11-19). Corrupted words are not repaired and no film is excluded for garbled text. | Removes scan symbols (bullets, tildes, backslashes) and markup residue (`\*`, `[` `]`). The measure of symbol share has no gap (150 films above 1 %, a continuum) and does not isolate the two films called garbled in the manual check (ranks 1 and 113 of 1598), so it cannot support an exclusion rule. Rare tokens from corrupted words are dropped later by a minimum word count (value open decision 15). |
+| **Genres (open decision 1, option 1):** primary **Comedy and Action**, each analysed in the dialogue layer and in the description layer: 4 tests, **all four are reported, never only the best**. **Drama is an exploratory check.** The other genres are not analysed. The hypothesis is written before any text result (open decision 10). | Hypothesis-driven choice with enough films per group (hits = flops: Comedy 136, Action 108; Drama 223). Drama is the largest genre, so it serves as a check with maximum power. Results for different genres are not independent (a film counts in every genre it has); the overlap is reported. |
 
 ### Evidence: share of hits per decade, quartiles cut within genre only (definition (ii))
 
@@ -164,6 +167,50 @@ From `genre_counts/tier_diagnostic.py` (`tier_diagnostic.csv`). Final set (1598 
 
 Nothing is decided from this; whether it needs a control is open decision 21.
 
+### Evidence: manual check, filled 2026-11-19 (one annotator, Angi)
+
+From `data_check/summarize_sheets.py` (`manual_check_summary.csv`; numbers only, the filled sheets stay in `private/`). The 95 % intervals are Wilson intervals that treat the points as independent; they are not (10 points per film, 25 films), so the real uncertainty is larger. **Limits:** one annotator (no agreement measure, a second annotator was considered and not done), snippets of at most 15 words, 25 films.
+
+**Main sheet, 250 points, 247 judged correct (3 errors).** Per era group and layer, not pooled:
+
+| Era | Layer | Errors / points | 95 % interval |
+|---|---|---|---|
+| pre-1990 | dialogue | 2 / 40 | 1.4 % to 16.5 % |
+| pre-1990 | description | 0 / 40 | 0 to 8.8 % |
+| 1990+ | dialogue | 0 / 60 | 0 to 6.0 % |
+| 1990+ | description | 1 / 60 | 0.3 % to 8.9 % |
+| both | other and parenthetical | 0 / 50 | |
+
+Only one of the three errors is a content error (a description sentence tagged as dialogue, Teen Wolf). The other two are a lone symbol (`*`, a bullet) sitting in a layer; they vanish with punctuation stripping. With so few errors the old-film estimate is weak, so the statement is "no sign of a high error rate in the sample", not "the error is 1 %".
+
+**Red-flag sheet, 68 rows, 16 films** (a hunting list: it says whether a failure mode exists, not how frequent it is):
+
+| Rule | Real problems |
+|---|---|
+| `heading_in_dialogue` | 7 of 7 (scene headings inside dialogue), in 4 films |
+| `name_colon_in_description` | 1 of 27 (a transition such as "CUT TO:") |
+| `caps_run_in_dialogue` | 0 of 10 (shouted speech, legitimate) |
+| `quote_in_description` | 0 of 24 for the rule itself; 4 rows are a different problem, garbled text (2 films) |
+
+**Tiny-layer films** (separate sample, 10 random elements per film, never mixed into the rates above):
+
+| Film type | Films | Other layer's content found in this layer: yes / no / unclear |
+|---|---|---|
+| Dialogue-poor (dialogue inside the description?) | 5 | 10 / 38 / 2 |
+| Description-poor (description inside the dialogue?) | 3 | 7 / 19 / 4 |
+
+By film (yes of 10): dialogue-poor 5, 3, 2, 0, 0; description-poor 4, 3, 0. So the hypothesis that dialogue sits untagged inside the description holds in 3 of the 5 dialogue-poor films and not in the other 2 (there the dialogue is simply missing or genuinely absent). **This does not change the exclusion rule** (decision "Exclude the films whose dialogue layer...", point 5 and the reasoning): either a layer is missing or its content is doubtful.
+
+### Evidence: prevalence of two failure modes in the final set (1598 films)
+
+From `data_check/prevalence.py` (`prevalence_summary.csv`, `prevalence_by_film.csv`); only tags and characters, no outcome.
+
+- **Scene headings (INT./EXT.) inside dialogue elements:** 1418 of 1,440,867 dialogue elements (0.10 %), in 177 films (11.1 %). In 37 films they are more than 1 % of the dialogue elements. The failure mode is real but rare per element.
+- **Symbols that are not prose** (share of whitespace tokens with a symbol that is not a letter, a digit or ordinary punctuation; accented letters do not count): median 0.12 %, 95th percentile 2.1 %, maximum 14.3 %. 150 films are above 1 %, 83 above 2 %, 25 above 5 %, 3 above 10 %. It is a continuum, without a gap, so **it gives no clean exclusion rule**.
+- **The measure mixes two different problems.** Old scanned scripts (The Fly II, Fatal Attraction, Rocky II, Mallrats, Con Air) carry scan symbols (bullets, tildes, backslashes). Modern scripts (22 Jump Street, Minari, The Farewell) carry markup residue (`\*`, `[` `]`) and are not corrupted words. A first version counted accented letters and wrongly flagged a French-language film (Anatomy of a Fall); it was fixed to count symbols only.
+- **The measure does not isolate the garbled-text films.** The two films the manual check called "text seems encrypted" are rank 1 (The Fly II, 14.3 %) and rank 113 (Basic Instinct 2, 1.35 %) of 1598. So rank 113 is not separated from the rest by this measure. A measure for corrupted words (letters inside words, not symbols) would need a second method.
+- **What this means for decisions A and B** (below, open): stripping non-letter symbols in the preprocessing removes the symbol type of noise in both cases; it does not repair corrupted words. Headings inside dialogue are rare per element (0.1 %), and 37 films are above 1 %; decided: no cleaning and no sensitivity run, the limitation is stated.
+
 ## Superseded (kept for the trace)
 
 These numbers come from the first money rule (any infobox flag, different currencies dropped) and were the basis of the first manual-check sheets. They are replaced by the shared rule above. The first manual-check sheets in `data_check/` were drawn from this set and were redrawn on 2026-11-19 from the final set (the earlier versions are in git history; none had been filled).
@@ -178,11 +225,12 @@ These numbers come from the first money rule (any infobox flag, different curren
 ## Pending
 
 - Committed locally on 2026-11-19: the shared files on `angi/shared-analysis-set` (worktree `build/shared-analysis-set`) and this folder on `angi/scripts-analysis`. Not pushed, no PR yet.
-- The manual-check sheets (redrawn from the final set) are not yet filled by Angi.
+- The manual-check sheets were filled by Angi on 2026-11-19 (summary above). `summarize_sheets.py` and `prevalence.py` are written and run; not yet committed.
+- Decided after the check: A (nothing cleaned, no sensitivity run), B (non-letter symbols removed in preprocessing), genres (Comedy and Action primary, Drama exploratory). Hypothesis (open decision 10) to be written next.
 
 ## Open decisions (Angi decides)
 
-1. **Genre(s)** and the rule for choosing them. Not decided. Multi-genre treatment is decided (see above), so a genre means "film tagged X". The rule must be written before looking at any text result.
+1. ~~Genre(s)~~ Decided: primary Comedy and Action, Drama exploratory (see the decided table); original options kept below for the trace. Multi-genre treatment is decided (see above), so a genre means "film tagged X". The rule must be written before looking at any text result.
    - **Facts.** With the 50-film threshold, the era rule and the shared money rule, on the decided universe (b) the genres with at least 50 hits and 50 flops are Drama (223), Comedy (136), Action (108), Adventure (84), Crime (85), Thriller (74), Romance (59), Horror (52) and Mystery (50, exactly at the limit). About 93 % of films had more than one genre on the superseded 1104-film set, so results for, say, Drama and Crime are not independent (`genre_overlap.csv`, computed on that set; to be recomputed on the final set).
    - **Option 1: Comedy and Action**, tied to a hypothesis written before any text result (Comedy may depend more on dialogue, Action on scene description). Both have many films per group. Two genres x two layers means four tests: report all four, never pick the best.
    - **Option 2: the largest genre (Drama).** Maximum power and a simple rule, but a broad catch-all genre.
