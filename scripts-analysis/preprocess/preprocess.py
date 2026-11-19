@@ -12,7 +12,7 @@ One tokeniser for both layers:
     character-label token in NAME_MAX_FILMS or more films of the 2188. Those are mostly ordinary words used as labels
     (man, voice, guard, "the"), not names of one film, and removing them would delete the word wherever the label
     is used; the IDF weighting already reduces the names that are shared by many films.
-    NAME_MAX_FILMS = 10 is arbitrary (there is no natural cut) and was fixed before any AUC was computed; the only
+    NAME_MAX_FILMS = 20 is arbitrary (there is no natural cut) and was fixed before any AUC was computed; the only
     criterion is "the token is specific to a few films".
 
 Context unit: each element (one line of dialogue, one description) is its own list of tokens, so a Word2Vec
@@ -42,7 +42,7 @@ DETACHED = re.compile(r"(\w)\s+(n't|'s|'ll|'re|'ve|'d|'m)\b", re.IGNORECASE)
 TOKEN = re.compile(r"[^\W\d_]+(?:'[^\W\d_]+)*")  # letters, an apostrophe only between letters
 PAREN = re.compile(r"\([^)]*\)")
 MAX_WORDS = 15
-NAME_MAX_FILMS = 10  # a label token in this many films or more is a common word, not a name
+NAME_MAX_FILMS = 20  # a label token in this many films or more is a common word, not a name
 
 
 def normalise(text):

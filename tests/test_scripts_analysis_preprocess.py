@@ -72,5 +72,5 @@ def test_common_label_tokens_are_not_removed_as_names():
     assert layers["dialogue"] == [["the", "man", "says", "left"]]
 
 
-def test_name_max_films_is_fixed_at_ten():
-    assert pp.NAME_MAX_FILMS == 10
+def test_name_max_films_is_fixed_at_twenty():
+    assert pp.NAME_MAX_FILMS == 20
