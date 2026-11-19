@@ -1,12 +1,14 @@
 """Task 2 step 4: build the manual-check sheets.
 
 Draws (fixed seed, stored in sample_films.csv):
-  A. main sample: 25 films from the 1104 final films, 10 before 1990 and 15 from 1990 on.
+  A. main sample: 25 films from the final set (all films of the 10k+ table with a script, the shared money rule
+     and the layer rule; read from features/film_analysis_set.csv), 10 before 1990 and 15 from 1990 on.
      Per film 10 points: 4 dialogue, 4 description, 2 "other" elements
      (parenthetical, stage_direction or character, drawn uniformly from those three together).
   B. red-flag sheet (exploratory, no error rate): up to 5 automatically suspicious
      elements per film for the same 25 films.
-  C. small separate sample of the 30 excluded films: 5 dialogue-poor and 3 description-poor
+  C. small separate sample of the tiny-layer films of the new set (script and usable money, but a layer under
+     500 tokens): 5 dialogue-poor and 3 description-poor
      films, 10 random elements each from the other layer. Never mixed into A.
 
 Files written
@@ -27,7 +29,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "genre_counts"))
-from genre_counts import DATA, load_films  # noqa: E402
+from genre_counts import DATA  # noqa: E402
+from final_set import final_films, tiny_usable_ids  # noqa: E402
 from parse_layers import one_per_id, parse_script, read_records  # noqa: E402
 
 SEED = 2805
@@ -89,7 +92,7 @@ def write(path, rows, fields):
 def main():
     rng = random.Random(SEED)
     records = {r["imdb_id"]: r for r in one_per_id(read_records(DATA))}
-    films = sorted(load_films(), key=lambda f: f["id"])   # the final 1104, in a fixed order
+    films = sorted(final_films(), key=lambda f: f["id"])   # the final set, in a fixed order
     old = [f for f in films if f["decade"] < 1990]
     new = [f for f in films if f["decade"] >= 1990]
     chosen = [(f, "pre-1990") for f in rng.sample(old, N_OLD)] + [(f, "1990+") for f in rng.sample(new, N_NEW)]
@@ -145,8 +148,10 @@ def main():
 
     # C. excluded films
     tiny = list(csv.DictReader(open(HERE / "tiny_layers.csv")))
-    d_poor = sorted(r["imdb_id"] for r in tiny if r["tiny_layer"] == "dialogue")
-    s_poor = sorted(r["imdb_id"] for r in tiny if r["tiny_layer"] == "description")
+    pool = tiny_usable_ids()   # tiny-layer films of the new set, not all 30
+    d_poor = sorted(r["imdb_id"] for r in tiny if r["tiny_layer"] == "dialogue" and r["imdb_id"] in pool)
+    s_poor = sorted(r["imdb_id"] for r in tiny if r["tiny_layer"] == "description" and r["imdb_id"] in pool)
+    print(f"tiny-layer films of the new set: {len(pool)} ({len(d_poor)} dialogue-poor, {len(s_poor)} description-poor)")
     picks = [(i, "dialogue-poor", "dialogue") for i in rng.sample(d_poor, EXCL_DIALOGUE_POOR)] + \
             [(i, "description-poor", "description") for i in rng.sample(s_poor, EXCL_DESCRIPTION_POOR)]
     excl_rows = []

@@ -48,12 +48,12 @@ def pairs_for(films, treatment):
     return out
 
 
-def label(pairs):
+def label(pairs, era_fn=lambda fl: era(fl["decade"])):
     """Return (labelled, excluded). labelled: list of (film, genre, era, label);
     excluded: list of (film, genre) pairs in cells below MIN_CELL."""
     cells = defaultdict(list)
     for fl, g in pairs:
-        cells[(g, era(fl["decade"]))].append(fl)
+        cells[(g, era_fn(fl))].append(fl)
     labelled, excluded = [], []
     for (g, e), grp in cells.items():
         if len(grp) < MIN_CELL:
