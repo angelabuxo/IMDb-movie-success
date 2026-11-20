@@ -1,0 +1,7 @@
+genre,status,representation,predicted,auc_dialogue,auc_description,dialogue_minus_description,ci95_lo,ci95_hi,boot
+Comedy,primary,w2v,dialogue > description,0.6131,0.5835,0.0296,-0.0256,0.0854,2000
+Comedy,primary,tfidf,dialogue > description,0.539,0.5052,0.0338,-0.0207,0.089,2000
+Action,primary,w2v,description > dialogue,0.6398,0.6636,-0.0238,-0.0839,0.0404,2000
+Action,primary,tfidf,description > dialogue,0.6182,0.6148,0.0034,-0.057,0.0598,2000
+Drama,exploratory,w2v,none (exploratory),0.5631,0.5586,0.0046,-0.0421,0.0507,2000
+Drama,exploratory,tfidf,none (exploratory),0.5747,0.5277,0.047,0.0007,0.0949,2000

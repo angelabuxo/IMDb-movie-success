@@ -1,0 +1,31 @@
+genre,check,layer,representation,n,auc,auc_sd_over_seeds,baseline_auc
+Comedy,window 2,dialogue,w2v,272,0.6117,0.0101,0.7817
+Comedy,window 2,description,w2v,272,0.5807,0.018,0.7817
+Comedy,window 10,dialogue,w2v,272,0.6058,0.0194,0.7817
+Comedy,window 10,description,w2v,272,0.5781,0.0089,0.7817
+Comedy,plain mean,dialogue,w2v,272,0.585,0.0113,0.7817
+Comedy,plain mean,description,w2v,272,0.6306,0.0077,0.7817
+Comedy,"100k+ only (119 hits, 42 flops)",dialogue,w2v,161,0.5883,0.0205,0.5187
+Comedy,"100k+ only (119 hits, 42 flops)",dialogue,tfidf,161,0.5058,,0.5187
+Comedy,"100k+ only (119 hits, 42 flops)",description,w2v,161,0.567,0.0079,0.5187
+Comedy,"100k+ only (119 hits, 42 flops)",description,tfidf,161,0.4948,,0.5187
+Action,window 2,dialogue,w2v,216,0.6292,0.007,0.7059
+Action,window 2,description,w2v,216,0.6471,0.0145,0.7059
+Action,window 10,dialogue,w2v,216,0.6256,0.0089,0.7059
+Action,window 10,description,w2v,216,0.6561,0.021,0.7059
+Action,plain mean,dialogue,w2v,216,0.6328,0.0098,0.7059
+Action,plain mean,description,w2v,216,0.6339,0.0099,0.7059
+Action,"100k+ only (104 hits, 45 flops)",dialogue,w2v,149,0.6342,0.0086,0.5184
+Action,"100k+ only (104 hits, 45 flops)",dialogue,tfidf,149,0.5104,,0.5184
+Action,"100k+ only (104 hits, 45 flops)",description,w2v,149,0.6601,0.0125,0.5184
+Action,"100k+ only (104 hits, 45 flops)",description,tfidf,149,0.5862,,0.5184
+Drama,window 2,dialogue,w2v,446,0.5372,0.0112,0.7864
+Drama,window 2,description,w2v,446,0.5516,0.0158,0.7864
+Drama,window 10,dialogue,w2v,446,0.5802,0.0052,0.7864
+Drama,window 10,description,w2v,446,0.5484,0.0042,0.7864
+Drama,plain mean,dialogue,w2v,446,0.5933,0.0089,0.7864
+Drama,plain mean,description,w2v,446,0.5659,0.0035,0.7864
+Drama,"100k+ only (184 hits, 63 flops)",dialogue,w2v,247,0.5322,0.0097,0.6604
+Drama,"100k+ only (184 hits, 63 flops)",dialogue,tfidf,247,0.5223,,0.6604
+Drama,"100k+ only (184 hits, 63 flops)",description,w2v,247,0.5361,0.0157,0.6604
+Drama,"100k+ only (184 hits, 63 flops)",description,tfidf,247,0.5085,,0.6604
