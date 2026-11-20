@@ -60,6 +60,23 @@ Hand-in: Fri 27 Nov 2026.
 | **Franchises (open decision 4):** only a robustness check, repeating the analysis without the films flagged as franchise, using the raw flag, which is noisy; stated as a limitation. | The Wikidata series property is not a clean franchise flag. |
 | **Limitations to state in the paper (decided):** a character name that is also an ordinary word and a label in fewer than 20 films (e.g. Will, Grace) is removed from that film's text, while common first names shared by 20 or more films stay in; the cut of 20 is arbitrary; label tokens such as `int`, `ext` and `cut` show that some headings are tagged as characters; the test films take part in the unsupervised training; `min_count` 20 also drops some legitimate rare vocabulary. | They follow from decisions above and do not change them. |
 
+### Test settings fixed before any AUC (Gyula, 2026-11-20, for Angi to review)
+
+The table above leaves these unset. They were written and committed before any AUC was computed; `word2vec/` implements them and they are not to be changed after seeing results.
+
+| Setting | Value |
+|---|---|
+| Word2Vec details not fixed above | gensim 4.4.0 defaults for everything not listed: 5 epochs, `negative` 5, `sample` 1e-3, `alpha` 0.025. One corpus: every kept element of both layers of the 2188 scripts. Primary seeds 1-5 at window 5; robustness windows 2 and 10 with the same seeds. |
+| Labels | `final_set.final_films()` and `genre_cells.label(pairs_for(films, "a"))`; hit vs flop only, middle dropped. Comedy 136/136, Action 108/108, Drama 223/223 (exploratory). |
+| Script vector | Per film and layer, the mean of the word vectors weighted by tf x idf, tf = count of the word in that layer of that film, idf = ln(N/df) over the 2188 layers of that layer. Words outside the `min_count` vocabulary are dropped. A film whose weights sum to 0 stops the run. |
+| Classifier | L2 logistic regression on standardised features; C picked inside each training fold by 5-fold inner CV on AUC over `logspace(-4, 2, 7)`. |
+| Cross-validation | Repeated stratified 5-fold, 5 repeats, `random_state` 2805. The same folds for every representation and both layers within a genre, so comparisons are paired. AUC = AUC of the pooled out-of-fold scores of one repeat, averaged over repeats; for Word2Vec also averaged over the 5 seeds (one classifier per seed, vectors never mixed). |
+| Baseline "tier + genre + era" | Features: tier (100k+ = 1), era one-hot, multi-hot of the film's other genres. Same classifier and folds. Era is balanced by construction (quartiles within genre x era), so tier and co-genres carry the baseline. Also reported: vector + baseline features together. |
+| TF-IDF representation | The same tokens, restricted to the Word2Vec vocabulary, weights tf x ln(N/df) as above, rows L2-normalised; same classifier (no standardisation) and folds. Only the representation differs from the Word2Vec vector. |
+| Label shuffle | 200 permutations of the hit/flop labels within the genre; each permutation reruns the identical pipeline (all 5 seeds averaged for Word2Vec). p = (1 + #null >= observed) / 201. |
+| Hypothesis contrast | AUC(dialogue) - AUC(description) per genre, with a 95 % interval from 2000 paired bootstrap resamples of the films (the same films for both layers), on the out-of-fold scores, averaged over seeds and repeats. The interval ignores training variance (stated). Prediction: Comedy > 0, Action < 0. |
+| Robustness | Windows 2 and 10; plain mean instead of TF-IDF weighting; 100k+ tier only. Reported after the primary results, not used to choose them. |
+
 ### Evidence: share of hits per decade, quartiles cut within genre only (definition (ii))
 
 About 25 % everywhere if the decade did not matter. From `genre_counts/decade_hits.csv` (script `genre_counts.py`); n in brackets (film-genre pairs).
