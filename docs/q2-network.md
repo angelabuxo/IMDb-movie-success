@@ -33,14 +33,9 @@ The intraclass statistic is an additional within-entity test, but it is descript
 | studio | 20990 | 0.048 | -0.001 | 0.010 | 0.0010 |
 | combined | 33685 | 0.048 | -0.001 | 0.008 | 0.0010 |
 
-The secondary intraclass/leave-one-out numbers are positive for directors (+0.032 / +0.031),
-actors (+0.006 / +0.006) and producers (+0.033 / +0.019), but slightly negative for studios
-(-0.005 / -0.002). These are descriptive credits-only checks and are not used as separate
-conclusions.
+The secondary intraclass/leave-one-out numbers are positive for directors (+0.032 / +0.031), actors (+0.006 / +0.006) and producers (+0.033 / +0.019), but slightly negative for studios (-0.005 / -0.002). These are descriptive credits-only checks and are not separate conclusions.
 
-The primary edge result supports a real association: all four role relations exceed the
-within-era permutation 95th percentile. It is strongest for director and producer links,
-while the combined result is smaller because many common pairs are studio/actor pairs.
+The primary edge result supports a real association: all four role relations exceed the within-era permutation 95th percentile. It is strongest for director and producer links, while the combined result is smaller because many common pairs are studio/actor pairs.
 
 ## Sensitivity checks
 
@@ -77,6 +72,20 @@ The following samples use the same adjusted outcome and within-era shuffle:
 - No temporal-only predictive test: this network asks about contemporaneous and historical co-credit similarity.
 - No graph rewiring: rewiring would test network structure, not whether return values cluster on the observed credit graph.
 - No common-set script text: Q2 uses network credits only.
+
+## Community view
+
+The film-only explorer now compares Louvain, Leiden, Infomap and label propagation on the
+weighted film-projection graph inside the current filters. Louvain optimizes modularity,
+Leiden improves that search with a refinement step, Infomap minimizes map/flow description
+length rather than maximizing modularity, and label propagation is fast and can be unstable.
+The explorer reports each method's community count and modularity, but modularity is a
+diagnostic for Infomap rather than its objective.
+
+Each community table reports film count, sum, mean, median, minimum, maximum and range of
+`ln(gross/budget)`. It also marks missing return values rather than inventing zeros. The
+community partitions use the untruncated weighted graph among displayed films; the edge
+slider only limits which links are drawn.
 
 ## How to verify
 

@@ -9,6 +9,10 @@
 set -e
 cd "$(dirname "$0")/.."
 
+if [ -t 0 ] && [ -t 1 ]; then
+  trap 'printf "\nPress Enter to close this terminal..."; IFS= read -r _ || true' 0
+fi
+
 ./setup.sh
 mkdir -p logs
 echo "Logging to logs/explorer.log and logs/streamlit.log"
