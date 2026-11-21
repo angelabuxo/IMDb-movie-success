@@ -78,7 +78,9 @@
       "features/wd_scores.tsv": "SELECT ?imdb ?score ?by ?byName WHERE { ?i wdt:P345 ?imdb . ?i p:P444 ?s . ?s ps:P444 ?score ; pq:P447 ?by . ?by rdfs:label ?byName . FILTER(LANG(?byName)=\"en\") FILTER(STRSTARTS(?imdb,\"tt\")) }",
       "features/wd_series.tsv": "SELECT ?imdb ?s ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P179 ?s . OPTIONAL { ?s rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }",
       "features/wd_follows.tsv": "SELECT ?imdb ?s WHERE { ?i wdt:P345 ?imdb . ?i wdt:P155 ?s . FILTER(STRSTARTS(?imdb,\"tt\")) }",
-      "features/wd_franchise.tsv": "SELECT ?imdb ?s ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P8345 ?s . OPTIONAL { ?s rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }"
+      "features/wd_franchise.tsv": "SELECT ?imdb ?s ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P8345 ?s . OPTIONAL { ?s rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_genre.tsv": "SELECT ?imdb ?g ?name WHERE { ?i wdt:P345 ?imdb . ?i wdt:P136 ?g . OPTIONAL { ?g rdfs:label ?name . FILTER(LANG(?name)=\"en\") } FILTER(STRSTARTS(?imdb,\"tt\")) }",
+      "features/wd_genre_parents.tsv": "SELECT DISTINCT ?g ?parent ?pname WHERE { ?i wdt:P345 ?imdb . FILTER(STRSTARTS(?imdb,\"tt\")) ?i wdt:P136 ?g . ?g wdt:P279 ?parent . OPTIONAL { ?parent rdfs:label ?pname . FILTER(LANG(?pname)=\"en\") } }"
     }
   },
   "not_downloadable": {

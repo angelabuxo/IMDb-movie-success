@@ -1,0 +1,14 @@
+run,category,films,mean,excess,z,p_holm
+keyword category (weighted by share of a film's keywords),1: friendship,900.8,0.723,0.0553,1.97,0.39596
+keyword category (weighted by share of a film's keywords),2: action hero,756.9,0.518,-0.1333,-4.59,0.0013
+keyword category (weighted by share of a film's keywords),3: murder,553.9,0.6251,-0.0687,-1.87,0.42626
+keyword category (weighted by share of a film's keywords),4: halloween,355.5,1.0838,0.3498,6.77,0.0013
+keyword category (weighted by share of a film's keywords),5: high school,454.3,0.7659,0.0695,1.64,0.61554
+keyword category (weighted by share of a film's keywords),6: dystopia,383.6,0.5243,-0.1752,-4.02,0.0013
+keyword category (weighted by share of a film's keywords),7: sports,395.4,0.5746,-0.0716,-1.61,0.61554
+keyword category (weighted by share of a film's keywords),8: good versus evil,219.6,0.6097,-0.0774,-1.57,0.61554
+keyword category (weighted by share of a film's keywords),9: villain,379.8,0.8956,0.1876,4.95,0.0013
+keyword category (weighted by share of a film's keywords),10: drugs,145.3,0.4799,-0.2157,-2.95,0.0333
+keyword category (weighted by share of a film's keywords),11: satire,114.5,0.7022,0.0403,0.47,1.0
+keyword category (weighted by share of a film's keywords),12: christmas,87.6,0.7171,0.0732,0.8,1.0
+keyword category (weighted by share of a film's keywords),13: hospital,44.8,0.5334,-0.115,-0.94,1.0

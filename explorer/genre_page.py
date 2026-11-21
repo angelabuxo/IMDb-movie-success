@@ -18,7 +18,7 @@ from .common import REPO, md, show_df, table
 OUT = REPO / "analysis" / "genre" / "outputs"
 EXP = REPO / "analysis" / "genre" / "exploratory" / "outputs"
 ABOVE, BELOW, INSIDE = "#2f6db5", "#c0504d", "#b8b8b8"
-VIEWS = ["Main test", "Robustness", "Budget tiers", "Second source (TMDB)", "Before release", "Exploratory: genre network",
+VIEWS = ["Main test", "Robustness", "Budget tiers", "Second source (TMDB)", "Finer categories", "Before release", "Exploratory: genre network",
          "Exploratory: genre shares", "Exploratory: Horror words"]
 
 
@@ -235,6 +235,36 @@ def _tmdb():
             "Inside IMDb Horror; keyword sets fixed before looking. Return net of budget and era.")
 
 
+def _categories():
+    cat = OUT / "categories"
+    s = _json(cat / "summary.json")
+    if not s:
+        st.info("Run `python -m analysis.genre.q1_categories` for this view (needs features/wd_genre.tsv and the TMDB file).")
+        return
+    st.markdown(md("Finer categories two independent ways: Wikidata's curated genres (P136), and Louvain communities in a "
+                   "network of TMDB keywords linked when films share them more than a curveball null expects."))
+    st.subheader("Wikidata genres")
+    show_df(table(cat / "wikidata_agreement.csv").sort_values("kappa", ascending=False), "q1_wd_agree",
+            "Agreement of Wikidata's main genres with IMDb's (Cohen's kappa).")
+    wt = table(cat / "wikidata_genre_tests.csv")
+    show_df(wt.sort_values("excess", ascending=False)[["category", "films", "excess", "z", "p_holm"]], "q1_wd_tests",
+            "Every Wikidata category with enough films against the budget-decile shuffle (Holm over all of them).")
+    show_df(table(cat / "wikidata_horror_subgenres.csv").drop(columns="run"), "q1_wd_horror", "Inside IMDb Horror: Wikidata's horror subgenres.")
+    st.subheader("Keyword network")
+    k = s["keyword_network"]
+    c = st.columns(4)
+    c[0].metric("Keywords", k["kept"])
+    c[1].metric("Categories", k["categories"])
+    c[2].metric("Modularity", f"{k['modularity']:.2f}")
+    c[3].metric("Rewired", f"{k['rewired_modularity_mean']:.2f} (p {k['modularity_p']})")
+    img = cat / "figures" / "q1_keyword_network.png"
+    if img.exists():
+        st.image(str(img), width="stretch")
+    show_df(table(cat / "keyword_categories.csv"), "q1_kw_cats", "Each category's strongest keywords.")
+    show_df(table(cat / "keyword_category_tests.csv").sort_values("excess", ascending=False)[["category", "films", "excess", "z", "p_holm"]],
+            "q1_kw_tests", "Films weighted by their share of keywords in each category, against the budget-decile shuffle.")
+
+
 def _before_release():
     br = OUT / "before_release"
     s = _json(br / "summary.json")
@@ -305,5 +335,5 @@ def genre():
     sh, summ = table(sh_path), _json(OUT / "summary.json")
     view = st.segmented_control("View", VIEWS, default=VIEWS[0], key="q1_view") or VIEWS[0]
     {"Main test": lambda: _main_test(sh, summ), "Robustness": lambda: _robustness(sh, summ), "Budget tiers": _tiers,
-     "Second source (TMDB)": _tmdb, "Before release": _before_release, "Exploratory: genre network": _network, "Exploratory: genre shares": _shares,
+     "Second source (TMDB)": _tmdb, "Finer categories": _categories, "Before release": _before_release, "Exploratory: genre network": _network, "Exploratory: genre shares": _shares,
      "Exploratory: Horror words": _horror}[view]()

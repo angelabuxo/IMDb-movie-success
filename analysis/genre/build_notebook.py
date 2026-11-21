@@ -88,6 +88,8 @@ SFS = json.loads((SF / "summary.json").read_text())
 FX = EXP / "share_fixes"
 FXS = json.loads((FX / "summary.json").read_text())
 BRS = json.loads((BR / "summary.json").read_text())
+CAT = SRC / "categories"
+CATS = json.loads((CAT / "summary.json").read_text())
 TM = SRC / "tmdb"
 TMS = json.loads((TM / "summary.json").read_text())
 HSC = EXP / "horror_scripts"
@@ -587,6 +589,39 @@ before looking (see `q1_tmdb.py`). This tests the supernatural pattern from the 
 different measurement (TMDB's keywords, not Wikipedia's plots), though on the same films, so it isn't new data."""),
     ("code", """print(TMS["horror"])
 pd.read_csv(TM / "horror_subgenres.csv").drop(columns="run")"""),
+    ("md", """## 22. Finer categories: Wikidata genres and a keyword network
+
+IMDb's 18 genres are coarse. Two independent ways to get finer categories:
+
+- **Wikidata genres** (property P136), curated by Wikidata editors and far finer ("supernatural horror film",
+  "heist film", "coming-of-age film"), each also counted under its parent genre.
+- **A network of TMDB keywords** (course weeks 1, 2, 4): keywords are linked when films share them more than a
+  curveball null expects (every film keeps its number of keywords, every keyword its number of films), and Louvain
+  finds the categories, with no labels given. Production facts, places, decades and TMDB's mood words were left out
+  before any community was looked at.
+
+First, how well Wikidata's main genres agree with IMDb's:"""),
+    ("code", """print(CATS["wikidata"])
+pd.read_csv(CAT / "wikidata_agreement.csv").sort_values("kappa", ascending=False)"""),
+    ("md", """Wikidata puts "animated" and "family" mostly outside its genre property, which is why those two agree poorly. Which
+Wikidata categories beat or miss their budgets (budget-decile shuffle, Holm over every category tested)?"""),
+    ("code", """wt = pd.read_csv(CAT / "wikidata_genre_tests.csv")
+print(f"{(wt['p_holm'] < .05).sum()} of {len(wt)} Wikidata categories pass")
+wt[wt["p_holm"] < .05].sort_values("excess", ascending=False)[["category", "films", "excess", "z", "p_holm"]].reset_index(drop=True)"""),
+    ("code", """print("Inside IMDb Horror, Wikidata's horror subgenres against other Horror:")
+pd.read_csv(CAT / "wikidata_horror_subgenres.csv").drop(columns="run")"""),
+    ("md", """**The keyword network.** Is there real structure? Its modularity against the same backbone rewired:"""),
+    ("code", """kn = CATS["keyword_network"]
+print({k: kn[k] for k in ("kept", "backbone_links", "nodes_in_backbone", "modularity", "rewired_modularity_mean",
+                          "rewired_modularity_max", "modularity_p", "mean_nmi_best_vs_other_seeds", "categories",
+                          "nmi_main_category_vs_rarest_imdb_genre", "nmi_main_category_vs_main_wikidata_genre")})
+display(Image(filename=str(CAT / "figures" / "q1_keyword_network.png"), width=700))
+pd.read_csv(CAT / "keyword_categories.csv")"""),
+    ("code", """pd.read_csv(CAT / "keyword_category_tests.csv").sort_values("excess", ascending=False)[["category", "films", "excess", "z", "p_holm"]]"""),
+    ("md", """The categories are found without any genre labels, and their NMI with IMDb's and Wikidata's genres is modest,
+so they are a different cut of the films rather than the genres again. Read their returns next to the genre result:
+where the keyword horror category and Wikidata's supernatural horror agree with the TMDB-keyword subgenres, three
+differently made measures point the same way."""),
     ("md", """## 19. Inside Horror, in the screenplays
 
 The word test of the Horror-plot section on the screenplays instead of the Wikipedia plots (Q3's preprocessing,
@@ -632,6 +667,14 @@ hs2 = pd.read_csv(TM / "horror_subgenres.csv").set_index("subgenre")
 print(f"8. Rating: G {rt_.loc['G', 'excess']:+.2f}, PG {rt_.loc['PG', 'excess']:+.2f}, R {rt_.loc['R', 'excess']:+.2f}; genre order kept "
       f"(Spearman {TMS['rating']['spearman_genre_effects_with_vs_without_rating']}). Horror subgenres: supernatural "
       f"{hs2.loc['supernatural', 'excess']:+.2f}, found footage {hs2.loc['found footage', 'excess']:+.2f}, creature {hs2.loc['creature', 'excess']:+.2f}.")
+wt_ = pd.read_csv(CAT / "wikidata_genre_tests.csv")
+wh_ = pd.read_csv(CAT / "wikidata_horror_subgenres.csv").set_index("category")
+kt_ = pd.read_csv(CAT / "keyword_category_tests.csv")
+kn_ = CATS["keyword_network"]
+print(f"9. Finer categories: {(wt_['p_holm'] < .05).sum()} of {len(wt_)} Wikidata genres pass; supernatural horror film "
+      f"{wh_.loc['supernatural horror film', 'excess']:+.2f} against other Horror. Keyword network: {kn_['categories']} Louvain categories, "
+      f"modularity {kn_['modularity']} against {kn_['rewired_modularity_mean']} rewired (p {kn_['modularity_p']}); "
+      + ", ".join(f"{r['category']} {r['excess']:+.2f}" for _, r in kt_[kt_['p_holm'] < .05].sort_values('excess', ascending=False).iterrows()) + ".")
 print()
 print("Exploratory (weak evidence, not used for claims):")
 g = SN["genre_network"]
@@ -653,7 +696,7 @@ print(f"   Horror plots: above-budget words " + ", ".join(wtop[wtop.side == 'hit
 CORE = ["The films and the settings", "The main test", "Does the null matter?", "A second method: regression",
         "On the common set", "Check 1: a smooth budget curve", "Check 2: genre x budget tier",
         "Check 3: without each genre's biggest hits", "Check 5: hit share", "A second source: TMDB",
-        "Content rating and Horror subgenres", "Before release:"]
+        "Content rating and Horror subgenres", "Finer categories", "Before release:"]
 EXPLORATORY = ["Check 4: matched pairs", "The genre network", "Do films made by the same people share genre?",
                "Other ways to say what genre a film is", "Inside Horror: which plot words",
                "Inside Horror, in the screenplays", "The genre distribution through the same analyses",

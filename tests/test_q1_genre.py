@@ -111,3 +111,13 @@ def test_tmdb_genre_mapping_and_kappa():
     assert G.tolist() == [[0, 1, 1], [1, 0, 0], [0, 0, 0]]
     x = np.array([1, 1, 0, 0])
     assert tm.kappa(x, x) == 1 and tm.kappa(x, 1 - x) < 0
+
+
+def test_keyword_filter_drops_meta_places_decades_and_moods(monkeypatch):
+    from analysis.genre import q1_categories as qc
+    films = pd.DataFrame({"imdb_id": [f"tt{i}" for i in range(40)]})
+    kws = "ghost|sequel|london, england|1980s|hilarious|based on novel or book|haunted house"
+    tm = pd.DataFrame({"imdb_id": films["imdb_id"], "keywords": kws})
+    monkeypatch.setattr(qc.pd, "read_csv", lambda *a, **k: tm)
+    vocab, rows, info = qc.keywords(films)
+    assert vocab == ["ghost", "haunted house"] and info["kept"] == 2 and all(len(r) == 2 for r in rows)

@@ -1,0 +1,7 @@
+run,category,films,mean,excess,z,p_holm,median,median_other_horror
+"Wikidata horror subgenre, inside IMDb Horror",comedy horror film,42.0,-0.0826,-0.2908,-1.11,1.0,0.2134,0.4342
+"Wikidata horror subgenre, inside IMDb Horror",psychological horror film,29.0,0.597,0.3269,1.07,1.0,0.2668,0.4183
+"Wikidata horror subgenre, inside IMDb Horror",science fiction horror film,58.0,0.2065,-0.0356,-0.19,1.0,0.501,0.4113
+"Wikidata horror subgenre, inside IMDb Horror",slasher film,146.0,0.3861,0.1724,1.29,0.9754,0.5271,0.3843
+"Wikidata horror subgenre, inside IMDb Horror",splatter film,51.0,0.1744,-0.0051,-0.02,1.0,0.4656,0.4137
+"Wikidata horror subgenre, inside IMDb Horror",supernatural horror film,72.0,0.993,0.7396,3.96,0.0018,0.9851,0.3637
