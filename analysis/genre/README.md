@@ -84,6 +84,18 @@ The first version counted a person's earlier films only among our 12,673 films, 
 
 Both measures say films that stay in their genre lane beat their budgets, and neither uses anything from after release. Both are correlations: a specialised team may also pick safer projects, and a typical script may be easier to market.
 
+## A second source: TMDB genres, money, content rating and keywords
+
+`q1_tmdb.py` repeats the main test with TMDB's data (the Kaggle file in `data/raw/tmdb/`, never committed, and only aggregate numbers are saved). TMDB's genres and money come from different editors than IMDb's genres and Wikipedia's infoboxes, and its US certification and keywords add two questions. Outputs are in `outputs/tmdb/`. It runs in about 10 s.
+
+**Genre labels.** IMDb and TMDB agree well on Animation (kappa 0.98), Horror (0.91), Comedy (0.91) and Action (0.83). They agree weakly on Thriller, History, War and Family (0.52 to 0.56), because TMDB hands out those tags more often. TMDB has no Biography, Sport or Musical. The seven genres pass the budget-decile shuffle with TMDB's genres too, and with consensus genres, where a film counts in a genre only when both sources give it. Horror is +0.16 with TMDB's genres and +0.23 with consensus genres, against +0.21 with IMDb's.
+
+**Money.** On the 5,831 films both sources have figures for, the two ln(gross / budget) correlate at 0.95, and the seven pass with TMDB's money as well. The bigger finding is about the films Wikipedia gives no figures for. TMDB has clean figures for 677 of them, and they're much worse: a mean ln ratio of -0.38 against +0.57, with 51 % grossing less than their budget against 28 %. So every absolute return in the main set is too optimistic, because Wikipedia infoboxes miss flops. With those films added back (7,023 films in all), six of the seven still pass. History slips to p 0.058, and Horror shrinks from +0.21 to +0.15, so part of Horror's edge was its flops being missing.
+
+**Content rating.** G and PG films beat their budgets (+0.56 and +0.35 against the budget-decile shuffle), R films fall short (-0.10), and unrated films fall short most (-0.47). Family films are 80 % PG and Horror films 68 % R. Holding rating fixed keeps the genre order (Spearman 0.98), but it shrinks Animation (+0.32 to +0.22) and Family (+0.27 to +0.14) and grows Horror (+0.22 to +0.31, centred coefficients). So part of the Family advantage is a PG advantage, and Horror does well despite being R.
+
+**Horror subgenres.** Inside IMDb Horror, subgenres come from TMDB keywords, with the keyword sets written down before looking (listed in `q1_tmdb.py`). Found footage (+1.48, 50 films) and supernatural Horror (+0.60, 231 films) beat other Horror by a wide margin. Slasher does a little better (+0.29) and creature features do worse (-0.32). The medians agree: the median supernatural film nets +0.90 against +0.22 for other Horror, and 70 % of supernatural films beat the other-Horror median, so no single hit carries it. This is the supernatural pattern from the exploratory plot words, measured a different way (TMDB keywords, not Wikipedia plots). The films are the same, so it isn't new data, and the idea came from that exploratory list.
+
 ## Exploratory parts
 
 Some analyses were run and are kept, but they're weak evidence and aren't used for claims: the genre network and its families, genre assortativity, the Tag Genome and plot genre shares, and the Horror word lists. They're in [`exploratory/`](exploratory/README.md), which says why for each. The matched-pairs check in CHECKS.md and the 50-bin shuffle here are redundant with the smooth-curve check.

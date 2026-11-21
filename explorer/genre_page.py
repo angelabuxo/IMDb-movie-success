@@ -18,7 +18,7 @@ from .common import REPO, md, show_df, table
 OUT = REPO / "analysis" / "genre" / "outputs"
 EXP = REPO / "analysis" / "genre" / "exploratory" / "outputs"
 ABOVE, BELOW, INSIDE = "#2f6db5", "#c0504d", "#b8b8b8"
-VIEWS = ["Main test", "Robustness", "Budget tiers", "Before release", "Exploratory: genre network",
+VIEWS = ["Main test", "Robustness", "Budget tiers", "Second source (TMDB)", "Before release", "Exploratory: genre network",
          "Exploratory: genre shares", "Exploratory: Horror words"]
 
 
@@ -205,6 +205,36 @@ def _shares():
         show_df(h, "q1_hand")
 
 
+def _tmdb():
+    tm = OUT / "tmdb"
+    s = _json(tm / "summary.json")
+    if not s:
+        st.info("Run `python -m analysis.genre.q1_tmdb` for this view (needs data/raw/tmdb/tmdb_project_movies.csv).")
+        return
+    m = s["money"]
+    st.markdown(md("TMDB's genres, money, US certification and keywords, from different editors than IMDb and Wikipedia. "
+                   "Only aggregate numbers are saved; the TMDB file stays in data/raw."))
+    c = st.columns(3)
+    c[0].metric("Wikipedia vs TMDB ln ratio", f"r = {m['corr_ln_ratio_wikipedia_tmdb']:.2f}")
+    c[1].metric("Films Wikipedia lacks", f"{m['films_wikipedia_lacks_with_clean_tmdb_money']:,}")
+    c[2].metric("Below budget: usable / lacking", f"{m['share_below_budget_usable']:.0%} / {m['share_below_budget_wikipedia_lacks']:.0%}")
+    show_df(table(tm / "genre_agreement.csv").sort_values("kappa", ascending=False), "q1_tm_agree",
+            "How often IMDb and TMDB give a film the same genre; Cohen's kappa corrects for chance.")
+    gt = table(tm / "genre_tests.csv")
+    ex = gt.pivot(index="genre", columns="run", values="excess").round(3)
+    ph = gt.pivot(index="genre", columns="run", values="p_holm")
+    show_df((ex.astype(str) + np.where(ph < .05, " *", "")).reset_index(), "q1_tm_tests",
+            "Excess over the budget-decile shuffle in each run; * = Holm p < .05.")
+    st.subheader("Content rating")
+    show_df(table(tm / "rating_tests.csv")[["genre", "n_films", "excess", "z", "p_holm"]].rename(columns={"genre": "rating"}), "q1_tm_rating")
+    re_ = table(tm / "rating_genre_effects.csv")
+    show_df(re_[~re_["term"].str.startswith("rating")].pivot(index="term", columns="model", values="coef_centred").reset_index(),
+            "q1_tm_rgen", "Genre effects with and without the rating held fixed (centred OLS coefficients).")
+    st.subheader("Horror subgenres (TMDB keywords)")
+    show_df(table(tm / "horror_subgenres.csv").drop(columns="run"), "q1_tm_sub",
+            "Inside IMDb Horror; keyword sets fixed before looking. Return net of budget and era.")
+
+
 def _before_release():
     br = OUT / "before_release"
     s = _json(br / "summary.json")
@@ -275,5 +305,5 @@ def genre():
     sh, summ = table(sh_path), _json(OUT / "summary.json")
     view = st.segmented_control("View", VIEWS, default=VIEWS[0], key="q1_view") or VIEWS[0]
     {"Main test": lambda: _main_test(sh, summ), "Robustness": lambda: _robustness(sh, summ), "Budget tiers": _tiers,
-     "Before release": _before_release, "Exploratory: genre network": _network, "Exploratory: genre shares": _shares,
+     "Second source (TMDB)": _tmdb, "Before release": _before_release, "Exploratory: genre network": _network, "Exploratory: genre shares": _shares,
      "Exploratory: Horror words": _horror}[view]()

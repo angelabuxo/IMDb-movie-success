@@ -102,3 +102,12 @@ def test_outliers_remove_both_ends(monkeypatch):
     assert d.groupby("check")["films_removed"].first().to_dict() == {"10 highest and 10 lowest films": 20, "top and bottom 5%": 20}
     assert len(gone) == 20 and set(gone["side"]) == {"highest", "lowest"}
     assert d.loc[d["genre"] == "A", "n_films"].eq(180).all()
+
+
+def test_tmdb_genre_mapping_and_kappa():
+    from analysis.genre import q1_tmdb as tm
+    t = pd.DataFrame({"genres": ["Science Fiction, Drama", "Comedy", None]}, index=["a", "b", "c"])
+    G = tm.tmdb_genres(t, pd.Series(["a", "b", "c"]), ["Comedy", "Drama", "Sci-Fi"])
+    assert G.tolist() == [[0, 1, 1], [1, 0, 0], [0, 0, 0]]
+    x = np.array([1, 1, 0, 0])
+    assert tm.kappa(x, x) == 1 and tm.kappa(x, 1 - x) < 0

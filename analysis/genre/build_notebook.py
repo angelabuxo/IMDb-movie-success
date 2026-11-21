@@ -88,6 +88,8 @@ SFS = json.loads((SF / "summary.json").read_text())
 FX = EXP / "share_fixes"
 FXS = json.loads((FX / "summary.json").read_text())
 BRS = json.loads((BR / "summary.json").read_text())
+TM = SRC / "tmdb"
+TMS = json.loads((TM / "summary.json").read_text())
 HSC = EXP / "horror_scripts"
 HSS = json.loads((HSC / "summary.json").read_text())
 
@@ -550,6 +552,41 @@ for ax in axes:
 plt.tight_layout()
 plt.show()
 pd.read_csv(BR / "typicality_per_genre.csv")"""),
+    ("md", """## 20. A second source: TMDB genres and money
+
+TMDB's genres and money figures come from different editors than IMDb's genres and Wikipedia's infoboxes. If the
+result were an artefact of our sources, it would change here. (The TMDB file stays in `data/raw`; only aggregate
+numbers are saved.) First, how well do the genre labels agree? Cohen's kappa corrects the agreement for chance."""),
+    ("code", """pd.read_csv(TM / "genre_agreement.csv").sort_values("kappa", ascending=False)"""),
+    ("md", """The main test with IMDb's genres, TMDB's genres, and consensus genres (a film counts in a genre only when both
+sources give it), on the same films; then with TMDB's money instead of Wikipedia's, on the films both sources have;
+then on the films Wikipedia gave no figures for, and on all films together."""),
+    ("code", """gt = pd.read_csv(TM / "genre_tests.csv")
+order_ = ["IMDb genres", "TMDB genres", "consensus genres", "Wikipedia money, films with both", "TMDB money, films with both",
+          "TMDB money, films Wikipedia lacks", "union: Wikipedia, else TMDB"]
+ex_ = gt.pivot(index="genre", columns="run", values="excess")[order_]
+ph_ = gt.pivot(index="genre", columns="run", values="p_holm")[order_]
+print({k: v for k, v in TMS["money"].items()})
+(ex_.round(3).astype(str) + np.where(ph_ < .05, " *", "")).loc[main.sort_values("excess", ascending=False).index.intersection(ex_.index)]"""),
+    ("md", """`*` marks Holm p < .05. The films Wikipedia gives no figures for are much worse on average (printed above): half
+of them grossed less than their budget. So every absolute return in the main set is too optimistic, as feared. With
+those films added back, the same genres still beat or miss their budgets; Horror's edge shrinks, so part of it was
+Horror's flops being missing from Wikipedia."""),
+    ("md", """## 21. Content rating and Horror subgenres
+
+Two questions TMDB makes possible. **Is a genre effect really a rating effect?** Family films are mostly PG and
+Horror mostly R. The return net of budget and era on genres, with and without the film's US certification:"""),
+    ("code", """print(TMS["rating"])
+display(pd.read_csv(TM / "rating_tests.csv")[["genre", "n_films", "excess", "z", "p_holm"]].rename(columns={"genre": "rating"}))
+re_ = pd.read_csv(TM / "rating_genre_effects.csv")
+display(re_[re_["term"].str.startswith("rating")])
+re_[~re_["term"].str.startswith("rating")].pivot(index="term", columns="model", values="coef_centred").sort_values("genres only", ascending=False)"""),
+    ("code", """pd.read_csv(TM / "rating_mix_by_genre.csv").set_index("genre").loc[main.sort_values("excess", ascending=False).index]"""),
+    ("md", """**Which Horror beats its budget?** Inside IMDb-tagged Horror, subgenres from TMDB keywords, with keyword sets fixed
+before looking (see `q1_tmdb.py`). This tests the supernatural pattern from the exploratory plot words with a
+different measurement (TMDB's keywords, not Wikipedia's plots), though on the same films, so it isn't new data."""),
+    ("code", """print(TMS["horror"])
+pd.read_csv(TM / "horror_subgenres.csv").drop(columns="run")"""),
     ("md", """## 19. Inside Horror, in the screenplays
 
 The word test of the Horror-plot section on the screenplays instead of the Wikipedia plots (Q3's preprocessing,
@@ -586,6 +623,15 @@ print(f"6. Before release: a team's earlier experience in the film's genres "
       f"shuffle p {BRS['specialists']['shuffle_p_genre_experience']}); script typicality "
       f"{t_.loc[('+ script-quality controls, sequels left out', 'script_typicality'), 'coef_per_sd']:+.3f} per SD with script quality held fixed "
       f"(shuffle p {BRS['typicality']['shuffle_p']}).")
+gt_ = pd.read_csv(TM / "genre_tests.csv")
+un_ = gt_[gt_["run"] == "union: Wikipedia, else TMDB"].set_index("genre")
+print(f"7. Second source: the seven hold on TMDB genres and TMDB money; with the {TMS['money']['films_wikipedia_lacks_with_clean_tmdb_money']} films "
+      f"Wikipedia lacks added back (half of them below budget), {sum(un_.loc[g, 'p_holm'] < .05 for g in SEVEN)} of the seven still pass.")
+rt_ = pd.read_csv(TM / "rating_tests.csv").set_index("genre")
+hs2 = pd.read_csv(TM / "horror_subgenres.csv").set_index("subgenre")
+print(f"8. Rating: G {rt_.loc['G', 'excess']:+.2f}, PG {rt_.loc['PG', 'excess']:+.2f}, R {rt_.loc['R', 'excess']:+.2f}; genre order kept "
+      f"(Spearman {TMS['rating']['spearman_genre_effects_with_vs_without_rating']}). Horror subgenres: supernatural "
+      f"{hs2.loc['supernatural', 'excess']:+.2f}, found footage {hs2.loc['found footage', 'excess']:+.2f}, creature {hs2.loc['creature', 'excess']:+.2f}.")
 print()
 print("Exploratory (weak evidence, not used for claims):")
 g = SN["genre_network"]
@@ -606,7 +652,8 @@ print(f"   Horror plots: above-budget words " + ", ".join(wtop[wtop.side == 'hit
 
 CORE = ["The films and the settings", "The main test", "Does the null matter?", "A second method: regression",
         "On the common set", "Check 1: a smooth budget curve", "Check 2: genre x budget tier",
-        "Check 3: without each genre's biggest hits", "Check 5: hit share", "Before release:"]
+        "Check 3: without each genre's biggest hits", "Check 5: hit share", "A second source: TMDB",
+        "Content rating and Horror subgenres", "Before release:"]
 EXPLORATORY = ["Check 4: matched pairs", "The genre network", "Do films made by the same people share genre?",
                "Other ways to say what genre a film is", "Inside Horror: which plot words",
                "Inside Horror, in the screenplays", "The genre distribution through the same analyses",

@@ -737,7 +737,7 @@ def test_notebook_markdown_reads_the_notebooks():
     assert notebook_markdown(NB_MAPS.parent / "missing.ipynb") == ""
 
 
-@pytest.mark.parametrize("view", ["Main test", "Robustness", "Budget tiers", "Before release", "Exploratory: genre network",
+@pytest.mark.parametrize("view", ["Main test", "Robustness", "Budget tiers", "Second source (TMDB)", "Before release", "Exploratory: genre network",
                                   "Exploratory: genre shares", "Exploratory: Horror words"])
 def test_genre_page_views(explorer, view):
     """Every view of the Q1 genre page runs on the committed outputs."""
