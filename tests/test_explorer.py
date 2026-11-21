@@ -194,7 +194,8 @@ def widget(at: AppTest, kind: str, label: str):
 PAGES = [("pages", "home"), ("pages", "text"), ("pages", "network"), ("pages", "profit"),
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
          ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
-         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps"), ("map_pages", "checks")]
+         ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps"), ("map_pages", "checks"),
+         ("genre_page", "genre")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -208,7 +209,7 @@ def test_app_registers_every_page(explorer):
     ok(at)
     from explorer import nav
     assert {"home", "pipeline", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
-            "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb"} <= set(nav.PAGES)
+            "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb", "genre"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))
@@ -734,3 +735,10 @@ def test_notebook_markdown_reads_the_notebooks():
     assert notebook_markdown(NB_CHECKS, "## 6. What the checks show").startswith("## 6.")
     assert notebook_markdown(NB_MAPS, "## 10. What the maps show").startswith("## 10.")
     assert notebook_markdown(NB_MAPS.parent / "missing.ipynb") == ""
+
+
+@pytest.mark.parametrize("view", ["Main test", "Robustness", "Budget tiers", "Genre network", "People and genre",
+                                  "Genre shares", "Before release", "Horror words"])
+def test_genre_page_views(explorer, view):
+    """Every view of the Q1 genre page runs on the committed outputs."""
+    ok(page("genre_page", "genre", {"q1_view": view}))
