@@ -1,68 +1,194 @@
-# Decisions: screenplay analysis (Q3)
+# Screenplay analysis (Q3): decisions and evidence
 
-## Context
+**Question.** Group project (DTU 02805). Main question: what best predicts whether a movie earns a lot compared with its budget: its genre, the people who make it, or its script? This folder answers the script part (Q3): within one genre, do hit scripts differ from flop scripts?
 
-Group project (DTU 02805). Main question: what best predicts whether a movie earns a lot compared with its budget: its genre, the people who make it, or its script?
+**Who decides.** Every decision below was taken by the group. Each has a reason, and where a number supports it the evidence is in the appendix. Nothing here was left to a tool to decide.
 
-My part is Q3: within one genre, do hit scripts differ from flop scripts?
+**Hand-in.** Friday 27 November 2026.
 
-Hand-in: Fri 27 Nov 2026.
+**How to read this file.** Section 1 is the summary. Section 2 lists every decision (D1 to D28) with its reason. Section 3 lists the limitations. The appendix holds the evidence tables. Rules that were fixed before seeing a result are marked **(before results)**. Choices made after looking at results are marked **(post hoc)** and are exploratory.
 
-## What Word2Vec gives us
+## Contents
 
-- **One vector per word, not per script.** Word2Vec slides over every token position in the training text and learns to predict neighbouring words (Skip-gram, negative sampling). The vectors are a by-product. Words in similar contexts get similar directions.
-- **Unsupervised.** It knows nothing about hit/flop or money. Profitability enters only when we compare script vectors with labels.
-- **Static.** One vector per word type, so no polysemy. The axes have no individual meaning.
-- **A script vector is built by us**, as the mean of the vectors of all word occurrences in the script. It captures what kind of contexts the vocabulary comes from.
-- **What the script vector loses:** word order, plot, arc, rare words (diluted by the mean), polysemy. It does NOT reliably capture sentiment (hero and villain have high cosine).
-- **Cosine of two vectors** means similar contexts. It does not mean shared vocabulary or same meaning.
-- **A plain mean is dominated by frequent words.** Toy example: adding "the" three times to an action and a romance script moved their cosine from 0.33 to 0.75. So aggregation is a decision (open decision 6).
+1. [At a glance](#1-at-a-glance)
+2. [Decisions](#2-decisions)
+3. [Limitations](#3-limitations)
+4. [Status and next steps](#4-status-and-next-steps)
+5. [Background: what Word2Vec gives us](#5-background-what-word2vec-gives-us)
+6. [Appendix: evidence](#6-appendix-evidence)
+7. [Rules for this folder](#7-rules-for-this-folder)
 
-## Decided (provisional, can be revisited)
+## 1. At a glance
 
-| Decision | Reason |
-|---|---|
-| Represent each script as a Word2Vec-based vector and ask how much it tells about profitability. Compare against baselines. | A vector is only informative relative to simpler alternatives. |
-| Analyse dialogue and scene description separately first. The combined text is a third, comparison analysis. | They are different registers. Mixing them hides what drives a result and brings in the dialogue/description proportion, which is close to a genre variable. |
-| Leaning (not final): train one Word2Vec on all text, then build two vectors per script (dialogue mean, description mean). | Both vectors then live in the same space and are comparable. |
-| One primary analysis fixed before seeing results. Everything else is labelled exploratory. | Many variants means some look significant by luck. |
-| Write the hypothesis before seeing results. | Avoids fitting the story to the outcome. |
-| Checks: shuffle the hit/flop labels (null); TF-IDF as baseline representation; genre-only as baseline; nearest-neighbour sanity check of a few words; hand validation of the layer split (Task 2). | Each one tests a different way the result could be fake or trivial. |
-| MovieSum tags -> layers: `dialogue` -> dialogue, `scene_description` -> description, `parenthetical` -> its own layer, `character` and `stage_direction` -> other. The parenthetical layer is excluded from both main layers for now. | Parentheticals like "(exasperated)" are not spoken, so adding them to dialogue would contaminate "what the audience hears". Whether to add them later is open (see below). |
-| No cleaning rules in the parser: every element stays in the layer its tag says. Junk (non-header `stage_direction`, numeric or empty `character`, empty tags) is counted as possible leakage in the statistics. | `character` and `stage_direction` are outside both analysis layers, so this noise does not enter the vectors. A filter rule would be one more thing to defend. |
-| Layer statistics (data check) use all 2188 unique ids (one record per id, see the duplicates rule), pooled over train/val/test. The manual sample of 25 films comes from the films with budget and gross. | The statistics check the parser, which does not depend on budget. The sample should be films that reach the analysis. The splits are for summarisation, so they are irrelevant here. |
-| Duplicated imdb ids (12): keep the record with the longest script (most characters). The `* 2.jsonl` copies are ignored (identical to the originals). | The ids are different versions of the same film, so one has to be chosen. Longest = most complete. Applied in `parse_layers.one_per_id`. |
-| Hit/flop is relative within the genre (top quarter vs bottom quarter of ln(gross/budget)), not the absolute "gross >= 2x budget". The middle half is dropped. | The absolute rule gives almost no flops in this sample (e.g. Action: 248 hits, 18 flops) and answers a different question (recovering a multiple). We tried it and it does not discriminate here. Dropping the middle leaves half of each genre's films. |
-| **One shared cleaning rule for money: `analysis.clean_rule` (called, never rewritten) AND no `net_gross` flag in the budget or gross flag column AND no flag on the budget.** A film that passes is `usable_money`. The rule requires budget and gross in US dollars and at least $1,000, drops grosses flagged rentals, regional or direct-to-video, drops films of a streaming distributor, and keeps only films released 1975 to 2025. Non-USD films follow the rule and are dropped (2 of the superseded 1104). A film with any flag on the budget is excluded by the same principle (1 film in the 10k+ scripted set). | **The principle (decision 3 extended):** a gross that is not comparable with a worldwide theatrical gross makes a film look like a flop through measurement, not performance. That applies to flagged infobox grosses (already excluded), to films before 1975 (the repo's README says their grosses are mostly distributor rentals; **we have not checked that claim**), and to streaming-distributor films (28 films in the 100k+ scripted set, all from 2016 on; 14 of the 76 films of the 2020s bin). **The rule was chosen on this principle and NOT by looking at hits or flops; no outcome was used to justify it.** It replaces the earlier rule that excluded any infobox flag (25 films) and replaces the earlier "two rules" wording. The group will need a single rule for all three questions; this is the proposal. |
-| Minimum 50 films in each of the hit and flop groups for a genre to be a main result. Genres below that are exploratory or out. | 30 is a power threshold, not a validity one. With small groups a null result is not informative: there may be a difference we cannot see. The label shuffle protects against false positives, not against low power. |
-| Era rule, written before seeing the decade table: if the share of hits under the within-genre cut is roughly flat across decades, keep that cut. If not, cut quartiles within genre x decade. | If older films have higher gross/budget, hits are mostly old and flops recent, and Word2Vec or Scattertext would find decade differences (vocabulary, script format) and we would read them as success. Era is the most dangerous confounder in this part. |
-| **Universe: all films of `movies_features_10k.csv` with a MovieSum script**, the shared money rule and the layer rule (final N 1598). The 100k+ vote tier alone (final N 1042) becomes a robustness check: repeat the analysis on the 100k+ films only. | (1) Group sizes are comfortable (Thriller is exactly 50 at 100k+, a knife edge). (2) Selection on IMDb votes is partly selection on success, since votes are a consequence of popularity: a flop inside the 100k+ tier is a film with many votes but a low return. The 10k tier reduces this bias **without removing it**: this is a limitation of the whole analysis. (3) It is the universe the other two questions already use, so the common set is much larger. |
-| **Era bins stay as decided:** before 1980, 1980s, 1990s, 2000s, 2010s, 2020s, with minimum cell size 8. 1975-79 is NOT merged into the 1980s. | The era effect is the main confounder and the base rate of hits differs strongly between the 1970s and the 1980s, so merging would reintroduce era inside a bin. Cells below 8 are already excluded by the rule and only a few film-genre pairs are lost (158 of 4201 at 10k+). |
-| **The shared files are built** by `scripts/imdb/build_analysis_set.py` and shared as a dated bundle (`analysis-set-2026-11-19.tar.zst`, branch `angi/shared-analysis-set`, not yet committed): `film_analysis_set.csv` (every film of the 10k+ table, with `tier`, `clean_team_rule`, the net_gross flag, `usable_money`, `usable_ratio_same_currency`, `in_moviesum`, `in_common_set` and the exclusion reasons), `film_genres.csv` and a data dictionary (also `docs/analysis-set.md`). `in_common_set` is the set on which all three questions are compared head to head; each question can use the wider set for its own analysis. `usable_ratio_same_currency` is `usable_money` with the US-dollar condition replaced by "budget and gross in the same currency" (6953 films against 6346: 607 more, 561 of them in rupees), for the questions that only need the ratio; `usable_money` and `in_common_set` (Q3's set) are unchanged. Budgets in different currencies are not comparable in absolute amounts, so an analysis that compares films of similar budget needs USD. No hit/flop labels, no token counts, no script text. | The group asked for the decisions in shared data so that the old analyses can be re-run on the same table. Making the sets a single filter keeps Q3 from being enlarged silently. |
-| **Tier control: no control for the vote tier in the definition of hit/flop** (confirmed by Angi). (i) State the limitation: hits are 82-96 % 100k+ films and flops 26-57 %, and votes are partly a consequence of success, so conditioning on tier would condition on a consequence of the outcome. (ii) Add a "tier-only" baseline (predict hit/flop from tier, genre and era alone) to the comparisons: the script vector has to do better than that to say anything about the script. (iii) Repeat the main analysis on the 100k+ films only, as a robustness check. | Cutting quartiles within genre x era x tier is not viable: too few films per group. Evidence: the tier diagnostic above. |
-| **Multi-genre films: a film counts in every genre it has (treatment (a)).** "Genre X" therefore means "film tagged X". Results for different genres are not independent: whenever more than one genre is analysed, the overlap must be reported (e.g. Comedy-Action share 55 films, Action-Adventure 154; `genre_counts/genre_overlap.csv`). The genre choice itself stays open. | Rejected (b), only the first-listed genre: the `genres` column is in alphabetical order (all 2592 multi-genre rows), so "first" means "first in the alphabet", not "main". Thriller gets 0 films, Drama 48 (below 50), and the groups are not comparable kinds of film. Rejected (c), only single-genre films: only 74 films qualify and Action has none. |
-| **Exclude the films whose dialogue layer or scene-description layer is empty or tiny**, from the whole analysis (both layers, not layer by layer). Rule, in `data_check/layer_stats.py`: fewer than 500 whitespace tokens in the dialogue layer or in the description layer (`tiny_layer`), counted on non-empty `<dialogue>` and `<scene_description>` elements of the script kept by the duplicate rule. The exclusion is applied before the hit/flop quartiles are cut, so hits and flops stay balanced in each genre x era cell. The 500 threshold was my first choice in the data check, not a tuned value. | (1) A script vector is the mean of the word vectors in a layer. With no tokens there is no mean, so these films cannot be represented in that layer. (2) The dialogue-vs-description comparison only makes sense on the same films. If each layer used different films, a difference between layers could come from the films and not from the layer. (3) Among the 18 films with almost no tagged dialogue, the description layer is about twice as long as normal (median about 26,700 tokens vs about 12,400). One likely explanation is dialogue sitting untagged inside the description layer, which would make the description vector unreliable too. This is a hypothesis built from counts and was not verified by reading these films, and the exclusion does not depend on it: either a layer is missing or its content is doubtful. (4) The 12 films with an empty or tiny description have hundreds of `character` elements but 0 or 1 `scene_description` and many empty `<scene />` tags, so their scene content was lost or never tagged. (5) The rule uses only the structure of the scripts, never hit/flop, budget or gross, so it cannot select on the outcome. |
-| Era: hit/flop quartiles are cut within genre x era cells (definition (iii)). Evidence: `genre_counts/decade_hits.csv` (table below). | The hit share depends strongly on the decade (about 70 % in the 1970s, 12-14 % in the 2000s and 2020s, when 25 % is expected everywhere) and the pattern repeats in all six large genres. Cutting inside era removes era from the hit/flop contrast by construction, so era-specific vocabulary and script formats cannot be read as success differences. No shuffle null is needed for the decade spread: the differences are far too large. |
-| Era bins (current, open decision 20): before 1980, 1980s, 1990s, 2000s, 2010s, 2020s. **Minimum cell size 8 films** (genre x era). Cells below 8 are excluded from the primary analysis and listed. This replaces the earlier "cells under 4 are dropped" rule. | Very few early scripts, and a quartile on 4 to 7 films gives groups of 1 or 2 films. |
-| **Manual check, main sample:** 25 films drawn at random (fixed seed 2805) from the final set (1598 films: 179 before 1990, 1419 from 1990 on; drawn 2026-11-19), stratified by era: 10 from before 1990 and 15 from 1990 on. Error rates are reported per era group (pre-1990, 1990+) and per layer, and are NOT pooled into one percentage. | The 30 excluded films are concentrated before 1990 (37 % against 16 %), which suggests that tagging quality depends on era, so errors may be more frequent in older films that pass the threshold. A plain random sample would contain only about 3 pre-1990 films. The sample over-represents old films (10 of 25 against about 11 % of the superseded set), so a pooled rate would not describe the full set. |
-| **Separate small sample of the tiny-layer films of the final universe** (23 films with a script and usable money but a layer under 500 tokens: 13 dialogue-poor, 10 description-poor), never mixed into the error rates above: 5 dialogue-poor films and 3 description-poor films, 10 random elements each, from the description layer (dialogue-poor films) or the dialogue layer (description-poor films). Same 15-word limit, text only in `private/`. A column records "dialogue inside description: yes/no/unclear". | Tests directly the hypothesis that dialogue sits untagged inside the description layer in the dialogue-poor films. |
-| Manual-check points, stratified by layer, about 10 per film: 4 dialogue, 4 scene description, 2 from other (parenthetical, stage_direction, character). Each point is one element, at most 15 words, the layer the parser gave it, and the tags (not the text) of the previous and next element. Only this stratified sample is used to report error rates; no other sample is mixed into them. | `character` and `dialogue` elements outnumber `scene_description` about two to one, so a plain random sample gives too few description points to estimate an error rate per layer. |
-| A separate targeted red-flag sheet (exploratory, no error rate): an automatic list of suspicious elements (description with quote marks or an ALL-CAPS name followed by a colon; dialogue with INT./EXT. or long all-caps runs), about 5 per film for the same 25 films. | Hunts for rare failure modes that a random sample would miss. |
-| **Headings (INT./EXT.) inside dialogue: nothing is cleaned in the parser, and no sensitivity analysis is run** (decided by Angi, 2026-11-19). | They are 0.10 % of dialogue elements (1418 of 1,440,867), in 177 of 1598 films; in 37 films they exceed 1 %. The parser keeps its rule "every element stays in the layer its tag says". The limitation is stated: 11 % of films have at least one such element in the dialogue layer. |
-| **Symbols that are not letters are removed in the preprocessing** (decided by Angi, 2026-11-19). Corrupted words are not repaired and no film is excluded for garbled text. | Removes scan symbols (bullets, tildes, backslashes) and markup residue (`\*`, `[` `]`). The measure of symbol share has no gap (150 films above 1 %, a continuum) and does not isolate the two films called garbled in the manual check (ranks 1 and 113 of 1598), so it cannot support an exclusion rule. Rare tokens from corrupted words are dropped later by a minimum word count (value open decision 15). |
-| **Genres (open decision 1, option 1):** primary **Comedy and Action**, each analysed in the dialogue layer and in the description layer: 4 tests, **all four are reported, never only the best**. **Drama is an exploratory check.** The other genres are not analysed. The hypothesis is written before any text result (open decision 10). | Hypothesis-driven choice with enough films per group (hits = flops: Comedy 136, Action 108; Drama 223). Drama is the largest genre, so it serves as a check with maximum power. Results for different genres are not independent (a film counts in every genre it has); the overlap is reported. |
-| **Hypothesis and measure (open decision 10), written before any text result.** Comedy: the difference between hits and flops is larger in the dialogue layer than in the description layer. Action: it is larger in the description layer. Measure: AUC in cross-validation of hit versus flop from the script vector, per genre and layer; the quantity compared is AUC(dialogue) minus AUC(description). Each AUC is compared with (a) the baseline "tier + genre + era", (b) TF-IDF as a representation and (c) the label shuffle. All 4 tests are reported, nulls included. Drama is exploratory. | The conjecture (not a result): humour lives in how people speak, action spectacle in what is described. A vector that does no better than the tier baseline says nothing about the script. A shuffle protects against false positives, not against low power (minimum 50 films per group). |
-| **Layers (open decision 5):** dialogue and description are tested separately (the 4 tests); "both together" is only a comparison. | Mixing them hides what drives a result and brings in the dialogue/description proportion, which is close to a genre variable. |
-| **Training (open decisions 14, 8):** Word2Vec is trained on the 2188 unique scripts in one space for both layers, our own corpus. GloVe is an optional robustness check. | No label is used, so no outcome leaks into the vectors; the test films do take part in the training, which is stated as a limitation. Size: 48.3 million whitespace tokens (20.2 M dialogue, 28.2 M description; part of the description count is punctuation split off), measured in `layer_stats.csv`. A pretrained space describes its own corpus (Wikipedia, news), not screenplays. |
-| **Word2Vec settings (open decisions 7, 15):** skip-gram with negative sampling, 100 dimensions, window 5, `min_count` 20, 5 seeds with `workers=1`. Robustness: windows 2 and 10. | A narrow window gives more syntactic information, a wide one more topical. Small corpus, so no more dimensions. `workers=1` makes a run reproducible. Seeds are reported by mean and spread of the AUC; **vectors of different seeds are never mixed** (each space has its own axes). `min_count` 20 drops rare words, and with them corrupted words, but also some legitimate rare vocabulary (limitation). |
-| **Aggregation (open decision 6):** TF-IDF-weighted mean as primary, plain mean as robustness. The IDF is computed over the 2188 scripts, **per layer** (a document is the layer of one film). | The plain mean is dominated by frequent words (the "the" example above). IDF = ln(N/df) gives weight 0 to words in every script. Per layer so the documents are comparable within a layer. |
-| **Preprocessing (open decisions 9, 11, 12, 13, 16):** lowercase; symbols that are not letters removed; no lemmatisation; stopwords kept (Word2Vec needs the context, the IDF weighting reduces them); one tokeniser for both layers that joins detached contractions ("do n't" to "don't") and removes attached punctuation; each element (one line of dialogue or one description) is its own context unit and the window never crosses elements; the film's own character names (from its `<character>` tags) removed **only when the token is a character-label token in fewer than 20 of the 2188 films** (`NAME_MAX_FILMS` = 20, about 1 % of the films); parentheticals out of both layers. | A different tokenisation per layer could make a "difference between layers" an artefact. **Why the name filter:** removing every label token took 10.8 % of the dialogue tokens and 17.3 % of the description tokens, because labels are often ordinary words (`voice` is a label in 1419 films, `man` in 1264, `the` in 1112, `guard`, `officer`, `doctor` in 400-580). That deletes the word wherever the label is used and unequally across layers, which is the kind of artefact the single tokeniser was meant to avoid. With the filter it is 1.47 % and 4.2 % (1305 of 34,020 label token types are kept as common words); names shared by many films are reduced by the IDF. **The value 20 is arbitrary, there is no natural cut** (names and ordinary words mix: `john` is a label in 233 films, so it stays in, `police` and `door` in 100 to 300). It was fixed before any AUC was computed, and the only criterion is "the token is specific to a few films"; it is not to be changed after seeing results. Numbers: `preprocess/preprocess_summary.csv`. Implementation choices that are mine, to review: digits are removed too (they are not letters), hyphenated words are split, an apostrophe inside a word is kept. |
-| **Franchises (open decision 4):** only a robustness check, repeating the analysis without the films flagged as franchise, using the raw flag, which is noisy; stated as a limitation. | The Wikidata series property is not a clean franchise flag. |
-| **Limitations to state in the paper (decided):** a character name that is also an ordinary word and a label in fewer than 20 films (e.g. Will, Grace) is removed from that film's text, while common first names shared by 20 or more films stay in; the cut of 20 is arbitrary; label tokens such as `int`, `ext` and `cut` show that some headings are tagged as characters; the test films take part in the unsupervised training; `min_count` 20 also drops some legitimate rare vocabulary. | They follow from decisions above and do not change them. |
+### From scripts to the four tests
 
-### Test settings fixed before any AUC (Gyula, 2026-11-20, for Angi to review)
+| Step | Films |
+|---|---:|
+| Unique MovieSum scripts (one per IMDb id) | 2188 |
+| ... of them in the 10k+ vote table | 2020 |
+| ... that pass the shared money rule | 1621 |
+| ... and have at least 500 tokens in both layers (**final set**) | **1598** |
+| ... of which in the 100k+ vote tier (robustness check) | 1042 |
 
-The table above leaves these unset. They were written and committed before any AUC was computed; `word2vec/` implements them and they are not to be changed after seeing results.
+Hit and flop groups (equal sizes by construction, middle half dropped): **Comedy 136 / 136**, **Action 108 / 108**, Drama 223 / 223 (exploratory).
+
+### The design in one paragraph
+
+Each script becomes two vectors, one for the dialogue and one for the scene description: the TF-IDF-weighted mean of Word2Vec word vectors, from a model trained on all 2188 scripts. A logistic regression predicts hit versus flop inside one genre and one era. We report the AUC in repeated cross-validation, and compare it with a shuffle of the labels, a TF-IDF representation, and a metadata baseline (vote tier, era, other genres). The hypothesis, written before any result: dialogue separates Comedy hits from flops better than description does, and the reverse for Action.
+
+### Decision index
+
+| ID | Topic | Decision in one line |
+|---|---|---|
+| D1 | Approach | Script vector from Word2Vec, always compared with simpler baselines |
+| D2 | Layers | Dialogue and description are tested separately; both together is only a comparison |
+| D3 | Discipline | One primary analysis and the hypothesis fixed before results; the rest exploratory |
+| D4 | Checks | Label shuffle, TF-IDF, metadata baseline, hand validation of the layer split |
+| D5 | Universe | All films of the 10k+ vote table with a MovieSum script (1598); 100k+ only as a check |
+| D6 | Money rule | One shared rule, `usable_money`, chosen on a principle and not on outcomes |
+| D7 | Shared files | One analysis table for the three questions (`analysis-set` bundle) |
+| D8 | Duplicates | Keep the longest script of a duplicated IMDb id |
+| D9 | Tiny layers | Exclude films with fewer than 500 tokens in either layer |
+| D10 | Vote tier | No control in the label; state the limitation; tier-only baseline; 100k+ check |
+| D11 | Hit and flop | Top and bottom quarter of ln(gross/budget) within genre and era; middle dropped |
+| D12 | Era | Cut within genre x era; six era bins; cells under 8 films excluded |
+| D13 | Multi-genre | A film counts in every genre it has |
+| D14 | Group size | At least 50 hits and 50 flops for a main result |
+| D15 | Genres | Comedy and Action primary, Drama exploratory |
+| D16 | Layers from tags | `dialogue`, `scene_description` kept; parentheticals out |
+| D17 | Parser | No cleaning in the parser; headings inside dialogue stay |
+| D18 | Symbols | Non-letter symbols removed in preprocessing; no exclusion for garbled text |
+| D19 | Training corpus | Own corpus, all 2188 scripts, one space for both layers |
+| D20 | Word2Vec settings | Skip-gram, 100 dimensions, window 5, `min_count` 20, 5 seeds |
+| D21 | Aggregation | TF-IDF-weighted mean (primary), plain mean (robustness) |
+| D22 | Preprocessing | One tokeniser for both layers; each element is a context unit |
+| D23 | Character names | Removed only if the token is specific to fewer than 20 films |
+| D24 | Test settings | Classifier, cross-validation, baseline, shuffle and bootstrap fixed before any AUC |
+| D25 | Hypothesis | Comedy: dialogue better; Action: description better |
+| D26 | Franchises | Robustness check only, with the raw flag |
+| D27 | Manual check | 25 films, stratified by era, error rates per era and layer, never pooled |
+| D28 | Follow-ups | 100k+ shuffle, vote check, word lists: post hoc and exploratory |
+
+## 2. Decisions
+
+### A. Design
+
+#### D1. Approach
+- **Decision.** Represent each script as a Word2Vec-based vector and ask how much it tells about success. Always compare with baselines.
+- **Why.** A vector is only informative relative to simpler alternatives.
+
+#### D2. Layers
+- **Decision.** Analyse dialogue and scene description separately (the 4 tests). The combined text is a third, comparison analysis only.
+- **Why.** They are different registers. Mixing them hides what drives a result and brings in the dialogue/description proportion, which is close to a genre variable.
+
+#### D3. Discipline
+- **Decision (before results).** One primary analysis, fixed before seeing results; everything else is labelled exploratory. The hypothesis is written before any result.
+- **Why.** Many variants means some look significant by luck, and a story fitted to the outcome is not evidence.
+
+#### D4. Checks
+- **Decision.** Shuffle the hit/flop labels (null); TF-IDF as a baseline representation; a metadata baseline; hand validation of the layer split; a nearest-neighbour sanity check of a few words (planned; not reported in this folder).
+- **Why.** Each one tests a different way the result could be fake or trivial.
+
+### B. Data
+
+#### D5. Universe
+- **Decision.** All films of `movies_features_10k.csv` that have a MovieSum script, pass the money rule (D6) and the layer rule (D9): **1598 films**. The 100k+ vote tier alone (1042 films) is a robustness check.
+- **Why.** (1) Group sizes are comfortable (Thriller is exactly 50 at 100k+, a knife edge). (2) Selection on IMDb votes is partly selection on success: a flop inside the 100k+ tier is a film with many votes but a low return. The 10k tier reduces this bias **without removing it**. (3) It is the universe the other two questions already use, so the common set is much larger.
+- **Evidence.** Appendix A4.
+
+#### D6. Money rule
+- **Decision.** One shared cleaning rule for money: `analysis.clean_rule` (called, never rewritten), **and** no `net_gross` flag, **and** no flag on the budget. A film that passes is `usable_money`. The rule requires budget and gross in US dollars, at least $1,000 each, drops grosses flagged as rentals, regional or direct-to-video, drops films of a streaming distributor, and keeps only films released 1975 to 2025.
+- **Why.** The principle: a gross that is not comparable with a worldwide theatrical gross makes a film look like a flop through measurement, not performance. That covers flagged infobox grosses, films before 1975 (the README says their grosses are mostly distributor rentals; **this claim has not been checked**) and streaming-distributor films (28 films in the 100k+ scripted set, all from 2016 on). **The rule was chosen on this principle and not by looking at hits or flops.**
+- **Replaces.** An earlier rule that excluded any infobox flag (25 films).
+- **Evidence.** Appendix A4.
+
+#### D7. Shared files
+- **Decision.** The decisions are built into one shared table by `scripts/imdb/build_analysis_set.py` and shared as a dated bundle (`analysis-set-2026-11-19.tar.zst`; data dictionary in `docs/analysis-set.md`). `film_analysis_set.csv` has every film of the 10k+ table with its flags and exclusion reasons; `in_common_set` is the set on which the three questions are compared head to head; `usable_ratio_same_currency` allows questions that only need the ratio to keep 607 more films. No hit/flop labels, token counts or script text are in it.
+- **Why.** One filter for all three questions keeps the sets from being changed silently, and lets the earlier analyses be re-run on the same table.
+
+#### D8. Duplicated IDs
+- **Decision.** For the 12 duplicated IMDb ids, keep the record with the longest script (most characters). The `* 2.jsonl` copies are ignored (identical to the originals). Implemented in `parse_layers.one_per_id`.
+- **Why.** The ids are different versions of the same film, so one has to be chosen; longest means most complete.
+
+#### D9. Films with a tiny layer
+- **Decision.** Exclude, from the whole analysis (both layers), the films with fewer than 500 whitespace tokens in the dialogue layer or in the description layer (rule in `data_check/layer_stats.py`). The exclusion is applied before the hit/flop quartiles are cut, so hits and flops stay balanced in each cell. The value 500 was a first choice, not a tuned one.
+- **Why.** (1) A script vector is the mean of the word vectors of a layer; with no tokens there is no mean. (2) The dialogue-versus-description comparison only makes sense on the same films. (3) Among the 18 films with almost no tagged dialogue, the description layer is about twice as long as usual, which suggests dialogue sitting untagged inside it; this was a hypothesis from counts, and the exclusion does not depend on it (either a layer is missing or its content is doubtful). (4) The 12 films with an empty or tiny description have many `character` elements but 0 or 1 `scene_description`. (5) The rule uses only the structure of the scripts, never the outcome.
+- **Evidence.** Appendix A2, A3 and A6 (manual check of the tiny-layer films).
+
+#### D10. Vote tier
+- **Decision.** No control for the vote tier in the definition of hit/flop. Instead: (i) state the limitation; (ii) include a tier-only baseline (tier, genre and era alone) in the comparisons; (iii) repeat the main analysis on the 100k+ films only.
+- **Why.** Hits are 82 to 96 % 100k+ films and flops 26 to 57 %, and votes are partly a consequence of success, so conditioning on the tier would condition on a consequence of the outcome. Cutting quartiles within genre x era x tier leaves too few films per group.
+- **Evidence.** Appendix A5.
+
+### C. Labels
+
+#### D11. Hit and flop
+- **Decision.** Relative within the genre: top quarter versus bottom quarter of ln(gross/budget). The middle half is dropped.
+- **Why.** The absolute rule "gross at least 2x budget" gives almost no flops in this sample (Action: 248 hits, 18 flops) and answers a different question. Dropping the middle leaves half of each genre's films.
+- **Note.** Gross over budget is not profit.
+
+#### D12. Era
+- **Decision (rule written before seeing the decade table).** If the share of hits under the within-genre cut is roughly flat across decades, keep that cut; if not, cut quartiles within genre x decade. The table showed it is far from flat, so **quartiles are cut within genre x era cells**. Era bins: before 1980, 1980s, 1990s, 2000s, 2010s, 2020s; 1975-79 is **not** merged into the 1980s. **Minimum cell size 8 films**; smaller cells are excluded from the primary analysis.
+- **Why.** The hit share depends strongly on the decade (about 70 % in the 1970s, 12 to 14 % in the 2000s and 2020s, when 25 % is expected), in all six large genres. Cutting inside era removes era from the contrast by construction, so era-specific vocabulary and script formats cannot be read as success differences. Merging 1975-79 into the 1980s would bring era back inside a bin. A quartile on 4 to 7 films gives groups of 1 or 2 films.
+- **Evidence.** Appendix A1.
+
+#### D13. Multi-genre films
+- **Decision.** A film counts in every genre it has. "Genre X" means "film tagged X". Whenever more than one genre is analysed, the overlap is reported (for example Comedy and Action share 55 films; `genre_counts/genre_overlap.csv`, to be recomputed on the final set).
+- **Rejected.** Only the first-listed genre: the `genres` column is in alphabetical order, so "first" means first in the alphabet, not "main" (Thriller gets 0 films, Drama 48). Only single-genre films: only 74 films qualify and Action has none.
+
+#### D14. Group size
+- **Decision.** At least 50 films in each of the hit and flop groups for a genre to be a main result.
+- **Why.** With small groups a null result is not informative: there may be a difference we cannot see. The label shuffle protects against false positives, not against low power.
+
+#### D15. Genres
+- **Decision.** Primary: **Comedy and Action**, each in the dialogue and in the description layer (4 tests; all four are reported, never only the best). **Drama** is an exploratory check. No other genre is analysed.
+- **Why.** A hypothesis-driven choice with enough films per group (Comedy 136, Action 108; Drama 223 is the largest genre, so a check with maximum power). Results for different genres are not independent (D13).
+
+### D. Parsing and cleaning
+
+#### D16. Layers from tags
+- **Decision.** `dialogue` is the dialogue layer, `scene_description` the description layer, `parenthetical` its own layer (excluded from both main layers), and `character` and `stage_direction` are "other".
+- **Why.** Parentheticals such as "(exasperated)" are not spoken, so adding them to the dialogue would contaminate "what the audience hears".
+
+#### D17. No cleaning in the parser
+- **Decision.** Every element stays in the layer its tag says. Junk (non-header `stage_direction`, numeric or empty `character`, empty tags) is counted as possible leakage in the statistics. **Headings (INT./EXT.) inside dialogue are not cleaned and no sensitivity analysis is run.**
+- **Why.** `character` and `stage_direction` are outside both analysis layers, so that noise does not enter the vectors; a filter rule would be one more thing to defend. Headings are 0.10 % of the dialogue elements (1418 of 1,440,867), in 177 of 1598 films (37 films above 1 %).
+- **Evidence.** Appendix A6 and A7.
+
+#### D18. Non-letter symbols
+- **Decision.** Symbols that are not letters are removed in the preprocessing. Corrupted words are not repaired, and no film is excluded for garbled text.
+- **Why.** This removes scan symbols (bullets, tildes, backslashes) and markup residue. The share of symbols has no gap (150 films above 1 %, a continuum) and does not isolate the two films called garbled in the manual check (ranks 1 and 113 of 1598), so it cannot support an exclusion rule. Rare tokens from corrupted words are dropped by `min_count` (D20).
+- **Evidence.** Appendix A7.
+
+### E. Representation
+
+#### D19. Training corpus
+- **Decision.** Word2Vec is trained on the 2188 unique scripts, in one space for both layers, on our own corpus. GloVe is an optional robustness check.
+- **Why.** No label is used, so no outcome leaks into the vectors (the test films do take part in the training: a limitation). A pretrained space describes its own corpus (Wikipedia, news), not screenplays. Size: 48.3 million whitespace tokens (20.2 M dialogue, 28.2 M description; part of the description count is punctuation split off).
+
+#### D20. Word2Vec settings
+- **Decision.** Skip-gram with negative sampling, 100 dimensions, window 5, `min_count` 20, 5 seeds with `workers=1`. Robustness: windows 2 and 10.
+- **Why.** A narrow window gives more syntactic information, a wide one more topical. The corpus is small, so no more dimensions. `workers=1` makes a run reproducible. Seeds are reported as mean and spread of the AUC; **vectors of different seeds are never mixed** (each space has its own axes). `min_count` 20 drops rare words, including corrupted ones, but also some legitimate rare vocabulary.
+
+#### D21. Aggregation
+- **Decision.** TF-IDF-weighted mean as the primary vector, plain mean as robustness. The IDF is computed over the 2188 scripts, **per layer** (a document is the layer of one film).
+- **Why.** A plain mean is dominated by frequent words (section 5). IDF = ln(N/df) gives weight 0 to words in every script. Per layer, so the documents are comparable within a layer.
+
+#### D22. Preprocessing
+- **Decision.** Lowercase; non-letter symbols removed (D18); no lemmatisation; stopwords kept; one tokeniser for both layers that joins detached contractions ("do n't" to "don't") and removes attached punctuation; each element (one line of dialogue or one description) is its own context unit, so the window never crosses elements; parentheticals out of both layers.
+- **Why.** Word2Vec needs the context, and the IDF weighting already reduces stopwords. A different tokenisation per layer could turn a "difference between layers" into an artefact.
+- **Not discussed explicitly, to be reviewed.** Digits are removed too (they are not letters), hyphenated words are split, and an apostrophe inside a word is kept.
+
+#### D23. Character names
+- **Decision.** The film's own character names (from its `<character>` tags) are removed from both layers, **only when the token is a character-label token in fewer than 20 of the 2188 films** (`NAME_MAX_FILMS` = 20, about 1 % of the films).
+- **Why.** Removing every label token took 10.8 % of the dialogue tokens and 17.3 % of the description tokens, because labels are often ordinary words (`voice` is a label in 1419 films, `man` in 1264, `the` in 1112; `guard`, `officer` and `doctor` in 400 to 580). That deletes the word wherever the label is used and unequally across layers, which is the artefact the single tokeniser was meant to avoid. With the filter it is 1.47 % and 4.2 % (1305 of 34,020 label token types are kept as common words); names shared by many films are reduced by the IDF.
+- **The value 20 is arbitrary; there is no natural cut** (names and ordinary words mix: `john` is a label in 233 films, `police` and `door` in 100 to 300). It was fixed before any AUC was computed, the only criterion is "the token is specific to a few films", and it is not to be changed after seeing results.
+- **Numbers.** `preprocess/preprocess_summary.csv`.
+
+### F. The test
+
+#### D24. Test settings fixed before any AUC
+These settings were written and committed before any AUC was computed; `word2vec/` implements them and they are not to be changed after seeing results.
 
 | Setting | Value |
 |---|---|
@@ -77,7 +203,74 @@ The table above leaves these unset. They were written and committed before any A
 | Hypothesis contrast | AUC(dialogue) - AUC(description) per genre, with a 95 % interval from 2000 paired bootstrap resamples of the films (the same films for both layers), on the out-of-fold scores, averaged over seeds and repeats. The interval ignores training variance (stated). Prediction: Comedy > 0, Action < 0. |
 | Robustness | Windows 2 and 10; plain mean instead of TF-IDF weighting; 100k+ tier only. Reported after the primary results, not used to choose them. |
 
-### Evidence: share of hits per decade, quartiles cut within genre only (definition (ii))
+#### D25. Hypothesis
+- **Decision (before results).** Comedy: the difference between hits and flops is larger in the dialogue layer than in the description layer. Action: it is larger in the description layer. Measure: the AUC of hit versus flop from the script vector, per genre and layer; the quantity compared is AUC(dialogue) minus AUC(description). Each AUC is compared with (a) the baseline "tier + genre + era", (b) TF-IDF and (c) the label shuffle. All 4 tests are reported, nulls included.
+- **Why.** The conjecture (not a result): humour lives in how people speak, action spectacle in what is described. A vector that does no better than the tier baseline says nothing about the script.
+
+#### D26. Franchises
+- **Decision.** Only a robustness check: repeat the analysis without the films flagged as franchise, with the raw flag.
+- **Why.** The Wikidata series property is not a clean franchise flag, so this is stated as a limitation.
+
+### G. Validation
+
+#### D27. Manual check
+- **Decision.** 25 films drawn at random (seed 2805) from the final set, stratified by era: 10 from before 1990 and 15 from 1990 on. Per film about 10 points: 4 dialogue, 4 description, 2 from other. Each point is one element of at most 15 words, in the layer the parser gave it, with the tags (not the text) of the previous and next element. Error rates are reported per era group and per layer and are **not** pooled. Two separate sheets, never mixed into the rates: a targeted red-flag sheet (exploratory, about 5 suspicious elements per film) and a sample of the tiny-layer films (5 dialogue-poor and 3 description-poor films, 10 elements each).
+- **Why.** The excluded films are concentrated before 1990 (37 % against 16 %), so tagging quality may depend on era; a plain random sample would hold only about 3 old films. Dialogue and character elements outnumber descriptions about two to one, so a plain sample gives too few description points. The tiny-layer sample tests directly whether dialogue sits untagged inside the description.
+- **Evidence.** Appendix A6.
+
+### H. After the primary results
+
+#### D28. Follow-ups **(post hoc)**
+Requested after the four primary tests had been seen, so they are exploratory:
+- **Shuffle inside 100k+** (`word2vec/subset_tests.py`): the primary pipeline unchanged, 200 permutations, for the four tests, Word2Vec and TF-IDF. The baseline loses its tier column there (constant), so it is genre + era. The folds come from the smaller set, so they differ from those of the primary table.
+- **Interval for vector + baseline** (same script): paired film bootstrap, 2000 resamples of the out-of-fold scores, for the AUC and the gain over the baseline. No refit inside the bootstrap.
+- **log(votes) check** (`word2vec/votes_check.py`): votes still vary more than tenfold inside 100k+, so the tier split leaves popularity in. Observed AUCs only, no shuffle. Votes are partly the outcome (more viewers, more gross), so this measures how much of the separation popularity can carry; it is not a confounder to adjust away.
+- **Word lists** (`words/words.py`): the log-odds ratio with an informative Dirichlet prior (the statistic behind Scattertext's `LogOddsRatioInformativeDirichletPrior`, hand-written because Scattertext does not install on Python 3.13), prior = counts over the 1598 films, minimum 10 labelled films per word, 1000 label permutations within genre x era cells. Fixed before looking at any list. **Changed after looking:** the lists are ranked by the shuffle-calibrated z, because the plain z ranking was led by single letters from a few garbled scripts and by names the 20-film filter keeps. The plain ranking is still in the CSVs.
+
+## 3. Limitations
+
+To be stated in the paper.
+
+- **One annotator** for the manual check, 25 films, snippets of at most 15 words, points clustered by film (the intervals are optimistic).
+- **Gross over budget is not profit**: marketing is missing and cinemas keep part of the gross.
+- **Votes are partly a consequence of success.** The 10k tier reduces the selection bias without removing it; inside 100k+, hits still have far more votes than flops, so the text signal cannot be separated from "a widely seen film".
+- **Era is controlled in decade bins only**, so a recent word can still carry the newest films inside a bin.
+- **The test films take part in the unsupervised training** (no labels, so no outcome leaks).
+- **A character name that is also an ordinary word** and a label in fewer than 20 films (Will, Grace) is removed from that film's text; common first names shared by 20 or more films stay in; the cut of 20 is arbitrary; labels such as `int`, `ext` and `cut` show that some headings are tagged as characters.
+- **`min_count` 20** also drops some legitimate rare vocabulary.
+- **Headings (INT./EXT.) inside dialogue** are not cleaned: 11 % of films have at least one.
+- **Franchises** are flagged with the raw Wikidata flag, which is noisy.
+- **The bootstrap intervals ignore training variance**, so they are too narrow if anything.
+- **The follow-ups are post hoc** (D28).
+- **A weak, spread-out signal.** With 108 to 136 films per group the tests cannot see small differences, and a null result is not proof of no difference.
+
+## 4. Status and next steps
+
+- **Done:** data checks, rules, the manual check, preprocessing, the four tests with their checks, the follow-ups, candidate figures (`figures/`, see its README for which one to use).
+- **Pending:** an independent reproduction of the AUCs, and a check that the "Exception ignored" lines in the Word2Vec training logs are harmless. The word-list results were reproduced exactly.
+- **Pending:** decide with the group how the Q3 result fits the comparison of the three questions on the common set.
+- **Then:** the paper text (what each measurement captures and what it misses, with the checks next to each claim).
+
+## 5. Background: what Word2Vec gives us
+
+- **One vector per word, not per script.** Word2Vec slides over every token position in the training text and learns to predict neighbouring words (skip-gram, negative sampling). The vectors are a by-product. Words in similar contexts get similar directions.
+- **Unsupervised.** It knows nothing about hit/flop or money. Success enters only when we compare script vectors with labels.
+- **Static.** One vector per word type, so no polysemy. The axes have no individual meaning.
+- **A script vector is built by us**, as a weighted mean of the vectors of all word occurrences in the script. It captures what kind of contexts the vocabulary comes from.
+- **What the script vector loses:** word order, plot, arc, rare words (diluted by the mean), polysemy. It does not reliably capture sentiment (hero and villain have a high cosine).
+- **Cosine of two vectors** means similar contexts. It does not mean shared vocabulary or the same meaning.
+- **A plain mean is dominated by frequent words.** Toy example: adding "the" three times to an action and a romance script moved their cosine from 0.33 to 0.75. So aggregation is a decision (D21).
+
+### Questions the vectors cannot answer
+
+- Which words drive a difference. That needs a word-level method (the word lists in D28).
+- Profit. The vector alone says nothing about it.
+
+## 6. Appendix: evidence
+
+Tables, with the script that produced each. Only counts, tags and derived numbers are shown; no script text.
+
+### A1. Share of hits per decade (quartiles cut within genre only)
 
 About 25 % everywhere if the decade did not matter. From `genre_counts/decade_hits.csv` (script `genre_counts.py`); n in brackets (film-genre pairs).
 
@@ -93,7 +286,8 @@ About 25 % everywhere if the decade did not matter. From `genre_counts/decade_hi
 
 (Computed on the superseded 1104-film set; not recomputed under the shared money rule. 1930s and 1940s have 5 and 4 pairs and are in the CSV.)
 
-### Evidence: the 30 films with an empty or tiny layer
+
+### A2. The 30 films with an empty or tiny layer
 
 From `data_check/tiny_layers.csv` (tags and counts only, no text). A layer is "tiny" below 500 tokens. 21 of the 30 were in the superseded 1104-film set; 19 of them in the 100k+ set under the shared rule (see below).
 
@@ -101,7 +295,8 @@ From `data_check/tiny_layers.csv` (tags and counts only, no text). A layer is "t
 - **Dialogue tiny or empty (18 films).** Few or no `character` elements (0 to 9, one case 43) while the description layer is large: median 26,700 tokens against a median of about 12,400 for all films. This suggests that in these films the dialogue sits in the description layer untagged. If so, the description layer is contaminated in the same films, which the name and heading proxies would not catch. Two of them (All Is Lost, The Red Turtle) are known to have almost no dialogue and are probably genuine.
 - This is a hypothesis from counts. The manual check is what can confirm it.
 
-### Cost of the exclusion and who is excluded (numbers on the superseded 1125 / 1104 films)
+
+### A3. Cost of the exclusion and who is excluded (superseded 1125 / 1104-film set)
 
 From `genre_counts/tiny_vs_rest.py` (`tiny_vs_rest.csv`). Only year, genre and the tiny flag are used, never outcomes.
 
@@ -113,7 +308,8 @@ From `genre_counts/tiny_vs_rest.py` (`tiny_vs_rest.csv`). Only year, genre and t
 - **The 500-token threshold is a first pick**, not a tuned value. `data_check/threshold_check.py` (`threshold_table.csv`, `threshold_hist.png`): of 2188 films, 10 have 500 to 1999 tokens in the dialogue layer and 6 in the description layer. There are no films between 250 and 499 tokens in either layer, and the values below 500 stop at 179 (dialogue) and 170 (description) while the next film has 646 and 755. So 500 sits in an empty stretch (about 180 to 650), not in a dense part of the distribution. The bulk of the films has thousands of tokens (median about 9,000 in dialogue, 12,400 in description). Above 650 the left tail thins out gradually, with no second gap, so a threshold of 1000 would just remove 3 more films (2 dialogue, 1 description) from a continuum. Robustness check for later: repeat the analysis with 250 and 1000. Note that 250 gives exactly the same exclusion as 500 (no film in between), so only 1000 is a real variant unless we try something higher.
 - **Limit:** results apply to films with measurable dialogue and description. All Is Lost and The Red Turtle, probably films with genuinely almost no dialogue, are removed by the rule, not because their data is wrong.
 
-### Evidence: the shared rule, two universes, two era binnings
+
+### A4. The shared rule, two universes, two era binnings
 
 From `genre_counts/shared_rule_check.py` (`shared_rule_check.csv`), which rebuilds the set independently and was cross-checked: it gives exactly the same 1598 films as the shared table (`features/film_analysis_set.csv`). Only tags, counts, genre, year and the money rule are used; hit and flop are group sizes from the quartile cut, never outcomes. Hits = flops in every cell by construction (middle half dropped). A genre x era cell with fewer than 8 films is excluded.
 
@@ -175,7 +371,8 @@ From `genre_counts/shared_rule_check.py` (`shared_rule_check.csv`), which rebuil
 
 The tiny-layer rate is not higher in the less popular films; if anything it is lower (Fisher exact p = 0.033 for all scripted films, 0.120 among those with usable money). The extra films are somewhat older (20 % of the scripted 10k-100k films are from before 1990, against 13 % at 100k+). The tagging of the extra films does not look worse by this measure; it says nothing about subtler leakage, which only the manual check can look at. The final set under (b) has 556 more films than (a).
 
-### Evidence: tier diagnostic (counts only)
+
+### A5. Tier diagnostic (counts only)
 
 From `genre_counts/tier_diagnostic.py` (`tier_diagnostic.csv`). Final set (1598 films, 1042 at 100k+ = 65.2 %, 556 at 10k-100k), labels as decided (quartiles within genre x current era cell, cells under 8 excluded, a film counted once per genre, so the pooled lines count film-genre pairs). Share of 100k+ films:
 
@@ -190,9 +387,10 @@ From `genre_counts/tier_diagnostic.py` (`tier_diagnostic.csv`). Final set (1598 
 | Pooled, six main genres | 623/710 (87.7 %) | 247/710 (34.8 %) | 979/1381 (70.9 %) | 1849/2801 (66.0 %) |
 | Pooled, all genres | 911/1036 (87.9 %) | 377/1036 (36.4 %) | 1387/1971 (70.4 %) | 2675/4043 (66.2 %) |
 
-Nothing is decided from this; whether it needs a control is open decision 21.
+Decided in D10: no control in the label; the limitation is stated.
 
-### Evidence: manual check, filled 2026-11-19 (one annotator, Angi)
+
+### A6. Manual check (one annotator)
 
 From `data_check/summarize_sheets.py` (`manual_check_summary.csv`; numbers only, the filled sheets stay in `private/`). The 95 % intervals are Wilson intervals that treat the points as independent; they are not (10 points per film, 25 films), so the real uncertainty is larger. **Limits:** one annotator (no agreement measure, a second annotator was considered and not done), snippets of at most 15 words, 25 films.
 
@@ -224,9 +422,10 @@ Only one of the three errors is a content error (a description sentence tagged a
 | Dialogue-poor (dialogue inside the description?) | 5 | 10 / 38 / 2 |
 | Description-poor (description inside the dialogue?) | 3 | 7 / 19 / 4 |
 
-By film (yes of 10): dialogue-poor 5, 3, 2, 0, 0; description-poor 4, 3, 0. So the hypothesis that dialogue sits untagged inside the description holds in 3 of the 5 dialogue-poor films and not in the other 2 (there the dialogue is simply missing or genuinely absent). **This does not change the exclusion rule** (decision "Exclude the films whose dialogue layer...", point 5 and the reasoning): either a layer is missing or its content is doubtful.
+By film (yes of 10): dialogue-poor 5, 3, 2, 0, 0; description-poor 4, 3, 0. So the hypothesis that dialogue sits untagged inside the description holds in 3 of the 5 dialogue-poor films and not in the other 2 (there the dialogue is simply missing or genuinely absent). **This does not change the exclusion rule** (D9): either a layer is missing or its content is doubtful.
 
-### Evidence: prevalence of two failure modes in the final set (1598 films)
+
+### A7. Prevalence of two failure modes in the final set (1598 films)
 
 From `data_check/prevalence.py` (`prevalence_summary.csv`, `prevalence_by_film.csv`); only tags and characters, no outcome.
 
@@ -234,18 +433,12 @@ From `data_check/prevalence.py` (`prevalence_summary.csv`, `prevalence_by_film.c
 - **Symbols that are not prose** (share of whitespace tokens with a symbol that is not a letter, a digit or ordinary punctuation; accented letters do not count): median 0.12 %, 95th percentile 2.1 %, maximum 14.3 %. 150 films are above 1 %, 83 above 2 %, 25 above 5 %, 3 above 10 %. It is a continuum, without a gap, so **it gives no clean exclusion rule**.
 - **The measure mixes two different problems.** Old scanned scripts (The Fly II, Fatal Attraction, Rocky II, Mallrats, Con Air) carry scan symbols (bullets, tildes, backslashes). Modern scripts (22 Jump Street, Minari, The Farewell) carry markup residue (`\*`, `[` `]`) and are not corrupted words. A first version counted accented letters and wrongly flagged a French-language film (Anatomy of a Fall); it was fixed to count symbols only.
 - **The measure does not isolate the garbled-text films.** The two films the manual check called "text seems encrypted" are rank 1 (The Fly II, 14.3 %) and rank 113 (Basic Instinct 2, 1.35 %) of 1598. So rank 113 is not separated from the rest by this measure. A measure for corrupted words (letters inside words, not symbols) would need a second method.
-- **What this means for decisions A and B** (below, open): stripping non-letter symbols in the preprocessing removes the symbol type of noise in both cases; it does not repair corrupted words. Headings inside dialogue are rare per element (0.1 %), and 37 films are above 1 %; decided: no cleaning and no sensitivity run, the limitation is stated.
+- **What this means for D17 and D18.** Stripping non-letter symbols in the preprocessing removes the symbol type of noise in both cases; it does not repair corrupted words. Headings inside dialogue are rare per element (0.1 %), and 37 films are above 1 %; decided in D17: no cleaning and no sensitivity run, the limitation is stated.
 
-## Follow-ups Angi asked for on 2026-11-21 (Gyula, for Angi to review)
 
-- **Shuffle inside 100k+** (`word2vec/subset_tests.py`): the primary pipeline unchanged, 200 label permutations with the same permutation seeds, for Comedy and Action x dialogue and description, Word2Vec and TF-IDF. The baseline loses its tier column there (it is constant), so it is genre + era. The folds are cut from the smaller set with the same settings, so they can't be the same folds as in `primary.csv`.
-- **Interval for vector + baseline** (same script): paired film bootstrap, 2000 resamples, of the out-of-fold scores, for the AUC and for the gain over the baseline. No refit inside the bootstrap.
-- **log(votes) check** (`word2vec/votes_check.py`): votes still vary more than tenfold inside 100k+, so the tier split leaves popularity in. Observed AUCs only, no shuffle. Votes are partly the outcome (more viewers, more gross), so this measures how much of the separation popularity can carry, not a confounder to adjust away.
-- **Word lists** (`words/words.py`): the log-odds ratio with an informative Dirichlet prior (Scattertext's `LogOddsRatioInformativeDirichletPrior`, hand-rolled because Scattertext doesn't install on Python 3.13), prior = counts over the 1598 films, minimum 10 labelled films per word, 1000 label permutations within genre x era cells. Fixed before looking at any list. **Changed after looking:** the lists are ranked by the shuffle-calibrated z, because the plain z ranking was led by single letters from a few garbled scripts and by names the T = 20 filter keeps. The plain ranking is still written to the CSVs.
+### A8. Superseded numbers (kept for the trace)
 
-## Superseded (kept for the trace)
-
-These numbers come from the first money rule (any infobox flag, different currencies dropped) and were the basis of the first manual-check sheets. They are replaced by the shared rule above. The first manual-check sheets in `data_check/` were drawn from this set and were redrawn on 2026-11-19 from the final set (the earlier versions are in git history; none had been filled).
+These numbers come from the first money rule (any infobox flag, different currencies dropped) and were the basis of the first manual-check sheets. They are replaced by the shared rule (D6). The first manual-check sheets in `data_check/` were drawn from this set and were redrawn on 2026-11-19 from the final set (the earlier versions are in git history; none had been filled).
 
 - Films with a script, budget and gross (same currency, positive): 1149 before flags; 25 flagged films excluded gave 1125; 4 films with different budget and gross currency had already been dropped.
 - 30 films with an empty or tiny layer (fewer than 500 tokens); 21 were in the 1125 set, so **the final set was 1104 films**.
@@ -254,46 +447,8 @@ These numbers come from the first money rule (any infobox flag, different curren
 - Pre-1980 bin: 52 films, of which 32 were released before 1975 and are dropped by the shared rule, leaving 20.
 - Hits and flops for the six genres under (b) and (c) multi-genre treatments (`cells_by_treatment.csv`) were computed on this set.
 
-## Pending
 
-- Committed locally on 2026-11-19: the shared files on `angi/shared-analysis-set` (worktree `build/shared-analysis-set`) and this folder on `angi/scripts-analysis`. Not pushed, no PR yet.
-- The manual-check sheets were filled by Angi on 2026-11-19 (summary above). `summarize_sheets.py` and `prevalence.py` are written and run; not yet committed.
-- Decided after the check: A (nothing cleaned, no sensitivity run), B (non-letter symbols removed in preprocessing), genres (Comedy and Action primary, Drama exploratory). Hypothesis (open decision 10) to be written next.
-
-## Open decisions (Angi decides)
-
-1. ~~Genre(s)~~ Decided: primary Comedy and Action, Drama exploratory (see the decided table); original options kept below for the trace. Multi-genre treatment is decided (see above), so a genre means "film tagged X". The rule must be written before looking at any text result.
-   - **Facts.** With the 50-film threshold, the era rule and the shared money rule, on the decided universe (b) the genres with at least 50 hits and 50 flops are Drama (223), Comedy (136), Action (108), Adventure (84), Crime (85), Thriller (74), Romance (59), Horror (52) and Mystery (50, exactly at the limit). About 93 % of films had more than one genre on the superseded 1104-film set, so results for, say, Drama and Crime are not independent (`genre_overlap.csv`, computed on that set; to be recomputed on the final set).
-   - **Option 1: Comedy and Action**, tied to a hypothesis written before any text result (Comedy may depend more on dialogue, Action on scene description). Both have many films per group. Two genres x two layers means four tests: report all four, never pick the best.
-   - **Option 2: the largest genre (Drama).** Maximum power and a simple rule, but a broad catch-all genre.
-   - **Option 3: all genres above the size threshold**, with one declared primary and the rest exploratory.
-2. ~~Definition of hit and flop~~ Decided: relative, within genre x era (see above). Note: gross is not profit.
-3. ~~The middle~~ Decided: dropped.
-4. ~~Franchises and era~~ Decided (see the decided table). not the focus, but report results with and without them as a cheap robustness check.
-5. ~~Primary layer~~ Decided (see the decided table). dialogue, description or both.
-6. ~~Aggregation~~ Decided (see the decided table). plain mean vs TF-IDF-weighted mean (and stopword handling).
-7. ~~Window size~~ Decided (see the decided table). narrow (style/syntax) vs wide (topic).
-8. ~~Training data~~ Decided (see the decided table). our scripts vs a pretrained space (GloVe is trained on Wikipedia and news, not screenplays).
-9. ~~Preprocessing~~ Decided (see the decided table). lowercase, character names, stopwords, lemmatisation.
-10. ~~Hypothesis~~ Decided (see the decided table)., e.g. "description separates hits from flops more than dialogue does".
-11. ~~Uniform tokenisation across layers.~~ Decided (see the decided table). The description layer has punctuation split off (` ,`) and the dialogue layer mostly not, and contractions differ (`Do n't` vs `you're`). If not unified, a "difference between layers" could be a tokenisation artefact. Quantified in the data check, not fixed.
-12. ~~Context unit.~~ Decided (see the decided table). Treat each element (one dialogue line, one description) as its own context unit, so the Word2Vec window never crosses elements.
-13. ~~Character names inside dialogue and description text.~~ Decided (see the decided table). Option: build a per-film name list from that film's own `<character>` tags and drop those tokens.
-14. ~~Which scripts train Word2Vec~~ Decided (see the decided table). all 2188 unique ids vs only those with budget and gross.
-15. ~~Word2Vec settings~~ Decided (see the decided table). window size, dimensions (window size also under 7).
-16. ~~Parentheticals~~ Decided (see the decided table). add them to dialogue later or keep them out.
-17. ~~Minimum tokens per layer~~ Decided: films with fewer than 500 tokens in the dialogue or the description layer are excluded (see above).
-18. ~~Multi-genre treatment~~ Decided: (a), see above.
-19. ~~Universe~~ Decided: all films of the 10k+ table (b); 100k+ only is the robustness check (see above).
-20. ~~Era bins~~ Decided: current bins, minimum cell 8 (see above).
-21. ~~Tier control~~ Decided: no control in the hit/flop definition; limitation stated, tier-only baseline, 100k+ robustness check (see above).
-
-## Questions the vectors cannot answer
-
-- Which words drive a difference. That is Scattertext's job.
-- Profit. The vector alone says nothing about it.
-
-## Rules for this folder
+## 7. Rules for this folder
 
 - Screenplays are copyrighted (MovieSum is CC BY-NC 4.0). No script text is committed. Anything containing script text goes in `scripts-analysis/private/` (gitignored).
 - Snippets shown in chat are at most 15 words.

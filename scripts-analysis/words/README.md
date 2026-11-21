@@ -1,6 +1,6 @@
 # Which words separate hits from flops
 
-Angi asked for this on 2026-11-21 as the follow-up to the Word2Vec tests: a Scattertext-style look at Action and Comedy, on the same hit/flop labels, the 1598-film set and the same preprocessing (T = 20 names filter), with a shuffle check and a look back at the text. Every number below comes from `results/*.csv`, written by `words.py`.
+This was requested on 2026-11-21 as the follow-up to the Word2Vec tests: a Scattertext-style look at Action and Comedy, on the same hit/flop labels, the 1598-film set and the same preprocessing (T = 20 names filter), with a shuffle check and a look back at the text. Every number below comes from `results/*.csv`, written by `words.py`.
 
 ## How it works
 

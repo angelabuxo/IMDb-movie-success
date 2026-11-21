@@ -1,4 +1,4 @@
-"""Which words separate hits from flops (Angi's follow-up, 2026-11-21). The Scattertext statistic, hand-rolled.
+"""Which words separate hits from flops (follow-up requested on 2026-11-21). The Scattertext statistic, hand-rolled.
 
 Scattertext 0.2.2 pins scipy 1.13, which doesn't build on Python 3.13, so this computes the statistic Scattertext
 offers as LogOddsRatioInformativeDirichletPrior: the log-odds ratio with an informative Dirichlet prior (Monroe,
