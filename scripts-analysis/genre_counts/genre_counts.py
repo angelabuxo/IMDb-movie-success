@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("IMDB_DATA_DIR", ROOT / "data" / "raw"))
 OUT = Path(__file__).resolve().parent
-MIN_GROUP = 50  # Angi: groups below this are exploratory or out
+MIN_GROUP = 50  # decided by the group (D14): groups below this are exploratory or out
 
 
 FLAGGED = []
@@ -54,12 +54,12 @@ def load_films(exclude_tiny=True):
         for r in csv.DictReader(f):
             if r["tconst"] not in ids or not r["b"] or not r["g"]:
                 continue
-            if r["tconst"] in tiny:  # Angi: excluded from the whole analysis
+            if r["tconst"] in tiny:  # decided by the group (D9): excluded from the whole analysis
                 continue
             b, g = float(r["b"]), float(r["g"])
             if b <= 0 or g <= 0:
                 continue
-            # Angi: drop films whose budget or gross carries an infobox flag
+            # first money rule, superseded by D6: drop films whose budget or gross carries an infobox flag
             # (regional, rentals, net_gross, direct_to_video): not comparable
             if r["budget_flag"] or r["gross_flag"]:
                 FLAGGED.append(r["tconst"])

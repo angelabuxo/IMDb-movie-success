@@ -24,8 +24,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from genre_counts import OUT, load_films  # noqa: E402
 
-MIN_CELL = 8     # Angi: genre x era cells below this are excluded
-MIN_GROUP = 50   # Angi: hit and flop groups needed for a main genre
+MIN_CELL = 8     # decided by the group (D12): genre x era cells below this are excluded
+MIN_GROUP = 50   # decided by the group (D14): hit and flop groups needed for a main genre
 
 
 def era(decade):

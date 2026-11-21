@@ -1,4 +1,4 @@
-"""Two follow-ups Angi asked for on 2026-11-21, with the primary pipeline of run_tests.py unchanged.
+"""Two follow-ups requested on 2026-11-21, with the primary pipeline of run_tests.py unchanged.
 
 1. Label shuffle inside the 100k+ tier only (Comedy and Action x dialogue and description). The baseline loses
    its tier column there (it is constant), so this asks whether the vector still beats a shuffle once the vote

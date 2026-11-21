@@ -6,7 +6,7 @@ hit = top quarter, flop = bottom quarter, middle half kept only as a baseline. A
 of its genres (treatment (a)), so the pooled lines count film-genre pairs.
 
 It shows whether the vote tier is unevenly spread between hits and flops. It does not say why, and it
-decides nothing: whether it needs a control is Angi's call.
+decides nothing: whether it needs a control was decided later by the group (D10).
 
 Run:  python3 -I scripts-analysis/genre_counts/tier_diagnostic.py     (writes tier_diagnostic.csv)
 """

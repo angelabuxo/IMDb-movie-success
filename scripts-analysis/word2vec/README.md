@@ -1,6 +1,6 @@
 # Word2Vec script vectors: the four tests
 
-This folder runs the test Angi set up in `../DECISIONS.md`. The settings it left open were fixed and committed before any AUC was computed (section "Test settings fixed before any AUC"). Every number below comes from `results/*.csv`.
+This folder runs the test set up in `../DECISIONS.md`. The settings it left open were fixed and committed before any AUC was computed (section "Test settings fixed before any AUC"). Every number below comes from `results/*.csv`.
 
 ## How to run it
 

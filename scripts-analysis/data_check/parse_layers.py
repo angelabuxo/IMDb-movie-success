@@ -1,6 +1,6 @@
 """Split a MovieSum screenplay into layers, using only the tags it already has.
 
-Rules (DECISIONS.md, decided by Angi):
+Rules (DECISIONS.md, D16, decided by the group):
     <dialogue>           -> layer "dialogue"
     <scene_description>  -> layer "description"
     <parenthetical>      -> layer "parenthetical"  (kept apart, excluded from both main layers)
@@ -70,7 +70,7 @@ def read_records(data_dir):
 
 
 def one_per_id(records):
-    """Angi's rule for duplicated imdb ids: keep the record with the longest script
+    """The group's rule (D8) for duplicated imdb ids: keep the record with the longest script
     (most characters). On a tie, the first one read is kept."""
     best = {}
     for r in records:
