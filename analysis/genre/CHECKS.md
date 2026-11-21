@@ -60,6 +60,22 @@ Each genre's 5 and then 10 highest ratios are dropped, and the shuffle drops the
 
 Nothing moves. Horror goes from +0.203 to +0.196 without its top 10, and every excess in the table stays within 0.03 of the main one. The handful of extreme films, *Obsession* included, isn't what makes any genre stand out. Sci-Fi passes here (p 0.030) but not in the main test (p 0.059). It sits at the edge in both.
 
+## 3b. Outliers at both ends, across all films
+
+`outputs/checks/outliers.csv`: the main test after removing the most extreme films overall, the biggest hits and the worst flops together, with the budget deciles recut each time. The 20 films of the first cut are listed in `outliers_removed.csv`. The highest include *One Cut of the Dead*, *Paranormal Activity*, *Obsession* and *The Blair Witch Project*, and the lowest *Interstate 60*, *Best Man Down* and *Cherry 2000*.
+
+| Genre | Main | 10 highest and 10 lowest removed | Top and bottom 1 % (126 films) | Top and bottom 5 % (634 films) |
+|---|---|---|---|---|
+| Animation | +0.316 | +0.329 | +0.322 | +0.248 |
+| Family | +0.266 | +0.258 | +0.222 | +0.120 (p 0.09) |
+| Horror | +0.203 | +0.195 | +0.173 | +0.146 |
+| Drama | -0.130 | -0.128 | -0.124 | -0.099 |
+| Action | -0.145 | -0.144 | -0.105 | -0.032 (p 0.62) |
+| Crime | -0.197 | -0.205 | -0.192 | -0.138 |
+| History | -0.330 | -0.337 | -0.335 | -0.344 |
+
+All seven genres pass with the 20 most extreme films removed, and with the top and bottom 1 % removed (Holm p < .05). With 5 % removed at each end, Animation, Horror, Drama, Crime and History still pass. Family weakens to p 0.09, and Action's deficit nearly disappears (-0.032). So Action earns less mainly because it has more extreme flops, not because typical Action films do a little worse. Cutting 5 % of films at each end throws away real films, so this is the harshest version of the check. *Obsession* sits in the first cut and changes nothing. Removing an outlier tests whether it drives the result, not whether its figures are right, so the hand check of extreme rows is still worth doing.
+
 ## 4. Matched pairs (exploratory)
 
 *Exploratory: a different estimand from the main test (comparison films come only from outside the genre), not corrected for testing 18 genres, and it repeats what the shuffle and the regression already show. Kept for the record, not used for claims.*

@@ -84,6 +84,11 @@ def _robustness(sh: pd.DataFrame, summ: dict):
     if (chk / "trim.csv").exists():
         tr = table(chk / "trim.csv")
         t["without top 10"] = tr[tr["check"] == "trim_top10"].set_index("genre")["excess"]
+    if (chk / "outliers.csv").exists():
+        ol = table(chk / "outliers.csv")
+        for c, lab in (("10 highest and 10 lowest films", "without 20 extreme films"), ("top and bottom 1%", "without top/bottom 1%"),
+                       ("top and bottom 5%", "without top/bottom 5%")):
+            t[lab] = ol[ol["check"] == c].set_index("genre")["excess"]
     show_df(t.sort_values("budget deciles: excess", ascending=False).reset_index(names="genre"), "q1_robust")
     us = summ.get("sets", {}).get("usable_money", {})
     if us:

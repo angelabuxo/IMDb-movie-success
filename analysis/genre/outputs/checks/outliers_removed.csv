@@ -1,0 +1,21 @@
+side,imdb_id,title,year,genres,budget,gross,ln_gross_over_budget
+highest,tt7914416,One Cut of the Dead,2017,"Comedy,Drama,Horror",25000.0,31200000.0,7.129298
+highest,tt1179904,Paranormal Activity,2007,"Horror,Mystery",232500.0,194200000.0,6.727754
+highest,tt37287335,Obsession,2025,"Fantasy,Horror,Thriller",675000.0,525000000.0,6.656441
+highest,tt0185937,The Blair Witch Project,1999,"Horror,Mystery",475000.0,248600000.0,6.260286
+highest,tt2309260,The Gallows,2015,"Horror,Mystery,Thriller",100000.0,43000000.0,6.063785
+highest,tt0390521,Super Size Me,2004,Documentary,65000.0,22200000.0,5.83346
+highest,tt0104815,El Mariachi,1992,"Action,Crime,Thriller",7225.0,2000000.0,5.623355
+highest,tt0075148,Rocky,1976,"Drama,Sport",1000000.0,225000000.0,5.4161
+highest,tt0077651,Halloween,1978,"Horror,Thriller",312500.0,70000000.0,5.411646
+highest,tt0109445,Clerks,1994,Comedy,27575.0,4400000.0,5.07245
+lowest,tt2295722,Falcon Rising,2014,"Action,Adventure",4500000.0,11774.0,-5.945939
+lowest,tt0862856,Trick 'r Treat,2007,"Comedy,Horror",12000000.0,27909.0,-6.063713
+lowest,tt0249516,Foodfight!,2012,"Adventure,Animation,Comedy",55000000.0,120323.0,-6.124909
+lowest,tt1817771,Freaks of Nature,2015,"Comedy,Horror,Sci-Fi",33000000.0,70958.0,-6.142175
+lowest,tt2355495,Barefoot,2014,"Comedy,Drama,Romance",7400000.0,15071.0,-6.196463
+lowest,tt1519461,Area 51,2015,"Horror,Mystery,Sci-Fi",5000000.0,7556.0,-6.494851
+lowest,tt10554232,Dara of Jasenovac,2020,"Drama,War",36000000.0,52786.0,-6.525028
+lowest,tt0092746,Cherry 2000,1987,"Action,Adventure,Comedy",10000000.0,14000.0,-6.571283
+lowest,tt1885300,Best Man Down,2012,"Comedy,Drama",1500000.0,1938.0,-6.651564
+lowest,tt0165832,Interstate 60,2002,"Adventure,Comedy,Drama",7000000.0,8449.0,-6.719617

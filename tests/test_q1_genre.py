@@ -89,3 +89,16 @@ def test_genre_coefs_drops_one_share_column():
     y = 2 * S[:, 0] + rng.normal(0, .1, n)
     c = genre_coefs(y, f, S, ["A", "B", "C"]).set_index("genre")
     assert c.loc["A", "coef_centred"] > c.loc["B", "coef_centred"] and abs(c["coef_centred"].sum()) < 1e-6
+
+
+def test_outliers_remove_both_ends(monkeypatch):
+    films, genres = toy()
+    films["title"], films["year"], films["genres"], films["gross"] = "t", 2000, "A", 1.0
+    f, keep, M = q.prepare(films, genres, "usable_money", keep=["A", "B", "C"])
+    from analysis.genre import q1_checks as ck
+    monkeypatch.setattr(ck, "OUTLIER_CUTS", (("10 highest and 10 lowest films", 10), ("top and bottom 5%", 0.05)))
+    rows, gone = ck.outliers(f, keep, M, 20)
+    d = pd.DataFrame(rows)
+    assert d.groupby("check")["films_removed"].first().to_dict() == {"10 highest and 10 lowest films": 20, "top and bottom 5%": 20}
+    assert len(gone) == 20 and set(gone["side"]) == {"highest", "lowest"}
+    assert d.loc[d["genre"] == "A", "n_films"].eq(180).all()

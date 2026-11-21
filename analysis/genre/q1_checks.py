@@ -7,6 +7,8 @@ different choice would change; none replaces the main test.
                shuffled within budget deciles among the tier's films; cells with under MIN_CELL films are left blank
   3 trim       each genre's mean without its k highest ratios (k = 5, 10), against a shuffle that drops the top k
                the same way; the top films are listed by title and year
+  3b outliers  the main test after removing the most extreme films at both ends across all films (the 10 highest and
+               10 lowest ratios, then the top and bottom 1 % and 5 %), budget deciles recut; the 20 removed films listed
   4 matched    every film of a genre against the K_MATCH films outside it with the nearest ln(budget) in the same
                era bin; the mean difference with a 95 % bootstrap interval over the genre's films
   5 hit share  share of the genre's films in the top quarter of ln(gross / budget) (quartiles cut within era bin),
@@ -29,6 +31,7 @@ OUT = MAIN_OUT / "checks"
 TIERS = [(0, 5e6, "under $5M"), (5e6, 30e6, "$5-30M"), (30e6, 100e6, "$30-100M"), (100e6, np.inf, "$100M+")]
 MIN_CELL = 20
 TRIM = (5, 10)
+OUTLIER_CUTS = (("10 highest and 10 lowest films", 10), ("top and bottom 1%", 0.01), ("top and bottom 5%", 0.05))
 K_MATCH = 5
 N_BOOT = 2000
 
@@ -118,6 +121,32 @@ def trim(f, keep, M, perms):
     return rows, tops
 
 
+def outliers(f, keep, M, perms):
+    """The main test after removing the most extreme ratios at both ends, across all films: the k highest and k
+    lowest ln(gross / budget), or a share of films at each end. Budget deciles are recut on the remaining films."""
+    y = f["ln_gross_over_budget"].to_numpy()
+    r = pd.Series(y).rank(method="first").to_numpy()
+    rows, removed = [], []
+    for name, cut in OUTLIER_CUTS:
+        k = int(cut) if cut >= 1 else int(round(cut * len(y)))
+        keep_rows = (r > k) & (r <= len(y) - k)
+        fk = f[keep_rows].reset_index(drop=True)
+        fk["budget_bin"] = pd.qcut(np.log(fk["budget"]).rank(method="first"), 10, labels=False)
+        Mk, yk = M[keep_rows], y[keep_rows]
+        obs = yk @ Mk / Mk.sum(0)
+        nl = permuted_means(yk, Mk, strata(fk, "budget"), perms, np.random.default_rng(SEED + 350 + len(rows)))
+        mu, sd, p = stats(obs, nl, perms)
+        ph = holm(p)
+        rows += [{"check": name, "films_removed": int((~keep_rows).sum()), "genre": g, "n_films": int(Mk[:, j].sum()),
+                  "excess": round(obs[j] - mu[j], 4), "z": round((obs[j] - mu[j]) / sd[j], 2), "p_holm": round(ph[j], 5)}
+                 for j, g in enumerate(keep)]
+        if cut == 10:
+            gone = f[~keep_rows].assign(side=np.where(r[~keep_rows] > len(y) - k, "highest", "lowest"))
+            removed = gone[["side", "imdb_id", "title", "year", "genres", "budget", "gross", "ln_gross_over_budget"]].sort_values(
+                "ln_gross_over_budget", ascending=False)
+    return rows, removed
+
+
 def matched(f, keep, M):
     y = f["ln_gross_over_budget"].to_numpy()
     lb = f["ln_budget"].to_numpy()
@@ -200,6 +229,9 @@ def main():
     d.to_csv(OUT / "tiers.csv", index=False)
     tr, tops = trim(f, keep, M, min(a.perms, 2000))
     pd.DataFrame(tr).to_csv(OUT / "trim.csv", index=False)
+    ol, gone = outliers(f, keep, M, a.perms)
+    pd.DataFrame(ol).to_csv(OUT / "outliers.csv", index=False)
+    gone.to_csv(OUT / "outliers_removed.csv", index=False)
     pd.DataFrame(tops).to_csv(OUT / "top_films.csv", index=False)
     pd.DataFrame(matched(f, keep, M)).to_csv(OUT / "matched.csv", index=False)
     pd.DataFrame(shares(f, keep, M, a.perms)).to_csv(OUT / "shares.csv", index=False)

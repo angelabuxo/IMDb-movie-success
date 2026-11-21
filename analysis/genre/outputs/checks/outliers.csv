@@ -1,0 +1,55 @@
+check,films_removed,genre,n_films,excess,z,p_holm
+10 highest and 10 lowest films,20,Action,1676,-0.1444,-5.98,0.0018
+10 highest and 10 lowest films,20,Adventure,1341,0.0577,2.18,0.18968
+10 highest and 10 lowest films,20,Animation,357,0.3292,5.77,0.0018
+10 highest and 10 lowest films,20,Biography,467,-0.1578,-2.66,0.07829
+10 highest and 10 lowest films,20,Comedy,2481,0.069,3.28,0.0176
+10 highest and 10 lowest films,20,Crime,1266,-0.2052,-6.06,0.0018
+10 highest and 10 lowest films,20,Drama,3218,-0.1278,-7.79,0.0018
+10 highest and 10 lowest films,20,Family,368,0.2576,4.3,0.0024
+10 highest and 10 lowest films,20,Fantasy,551,-0.111,-2.12,0.20458
+10 highest and 10 lowest films,20,History,191,-0.3371,-3.72,0.0018
+10 highest and 10 lowest films,20,Horror,807,0.1948,4.05,0.0018
+10 highest and 10 lowest films,20,Music,214,0.1193,1.22,0.88191
+10 highest and 10 lowest films,20,Mystery,727,0.0199,0.4,1.0
+10 highest and 10 lowest films,20,Romance,1000,0.0779,1.96,0.24348
+10 highest and 10 lowest films,20,Sci-Fi,489,-0.1275,-2.4,0.13359
+10 highest and 10 lowest films,20,Sport,170,-0.0077,-0.08,1.0
+10 highest and 10 lowest films,20,Thriller,1065,0.0214,0.55,1.0
+10 highest and 10 lowest films,20,War,100,-0.3765,-2.77,0.048
+top and bottom 1%,126,Action,1655,-0.105,-4.57,0.0018
+top and bottom 1%,126,Adventure,1328,0.0616,2.5,0.09439
+top and bottom 1%,126,Animation,355,0.3225,6.05,0.0018
+top and bottom 1%,126,Biography,465,-0.1598,-2.87,0.043
+top and bottom 1%,126,Comedy,2446,0.066,3.41,0.0099
+top and bottom 1%,126,Crime,1254,-0.1916,-6.14,0.0018
+top and bottom 1%,126,Drama,3166,-0.1238,-8.18,0.0018
+top and bottom 1%,126,Family,366,0.2216,3.9,0.0018
+top and bottom 1%,126,Fantasy,543,-0.12,-2.48,0.09439
+top and bottom 1%,126,History,190,-0.3348,-3.98,0.0018
+top and bottom 1%,126,Horror,771,0.1728,3.91,0.0018
+top and bottom 1%,126,Music,211,0.0946,1.05,1.0
+top and bottom 1%,126,Mystery,709,0.0007,0.02,1.0
+top and bottom 1%,126,Romance,985,0.0976,2.67,0.07649
+top and bottom 1%,126,Sci-Fi,477,-0.0594,-1.22,1.0
+top and bottom 1%,126,Sport,168,-0.0701,-0.75,1.0
+top and bottom 1%,126,Thriller,1042,0.0299,0.84,1.0
+top and bottom 1%,126,War,98,-0.3161,-2.52,0.09439
+top and bottom 5%,634,Action,1556,-0.0323,-1.7,0.62154
+top and bottom 5%,634,Adventure,1258,0.0662,3.27,0.0132
+top and bottom 5%,634,Animation,335,0.2475,5.48,0.0018
+top and bottom 5%,634,Biography,439,-0.2037,-4.5,0.0018
+top and bottom 5%,634,Comedy,2276,0.0587,3.76,0.0048
+top and bottom 5%,634,Crime,1159,-0.138,-5.41,0.0018
+top and bottom 5%,634,Drama,2897,-0.0986,-7.97,0.0018
+top and bottom 5%,634,Family,355,0.1198,2.55,0.09089
+top and bottom 5%,634,Fantasy,497,-0.0249,-0.62,1.0
+top and bottom 5%,634,History,181,-0.3443,-4.87,0.0018
+top and bottom 5%,634,Horror,664,0.1458,3.95,0.0039
+top and bottom 5%,634,Music,188,0.0194,0.27,1.0
+top and bottom 5%,634,Mystery,623,0.0028,0.07,1.0
+top and bottom 5%,634,Romance,920,0.0351,1.18,1.0
+top and bottom 5%,634,Sci-Fi,439,-0.0191,-0.46,1.0
+top and bottom 5%,634,Sport,160,-0.2044,-2.71,0.08199
+top and bottom 5%,634,Thriller,934,0.0349,1.2,1.0
+top and bottom 5%,634,War,89,-0.2005,-1.96,0.39276

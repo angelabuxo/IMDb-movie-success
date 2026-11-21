@@ -252,6 +252,19 @@ pd.DataFrame({"main": main["excess"], "without top 5": tr["trim_top5"], "without
               "p_holm top 10": trim[trim["check"] == "trim_top10"].set_index("genre")["p_holm"]}).sort_values("main", ascending=False)"""),
     ("code", """print("The films dropped from Horror:")
 tops[(tops["genre"] == "Horror") & (tops["rank"] <= 10)][["title", "year", "budget", "gross", "ln_ratio"]].reset_index(drop=True)"""),
+    ("md", """**Outliers at both ends, across all films.** Instead of each genre's top films, remove the most extreme films
+overall, the biggest hits and the worst flops together, recut the budget deciles and rerun the main test. This asks
+whether a few films drive the result, not whether their figures are right (Blair Witch is extreme and real)."""),
+    ("code", """ol = pd.read_csv(CHK / "outliers.csv")
+tab = pd.DataFrame({("main", "excess"): main["excess"], ("main", "Holm p"): main["p_holm"]})
+for c in ol["check"].unique():
+    x = ol[ol["check"] == c].set_index("genre")
+    lab = f"{c} ({x['films_removed'].iloc[0]} films)"
+    tab[(lab, "excess")], tab[(lab, "Holm p")] = x["excess"], x["p_holm"]
+tab.columns = pd.MultiIndex.from_tuples(tab.columns)
+tab.sort_values(("main", "excess"), ascending=False)"""),
+    ("code", """print("The 20 films removed in the first cut:")
+pd.read_csv(CHK / "outliers_removed.csv")[["side", "title", "year", "genres", "ln_gross_over_budget"]]"""),
     ("md", """## 9. Check 4: matched pairs
 
 Each film against the 5 films outside its genre with the closest budget in the same era; the mean difference
