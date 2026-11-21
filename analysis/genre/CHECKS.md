@@ -60,7 +60,9 @@ Each genre's 5 and then 10 highest ratios are dropped, and the shuffle drops the
 
 Nothing moves. Horror goes from +0.203 to +0.196 without its top 10, and every excess in the table stays within 0.03 of the main one. The handful of extreme films, *Obsession* included, isn't what makes any genre stand out. Sci-Fi passes here (p 0.030) but not in the main test (p 0.059). It sits at the edge in both.
 
-## 4. Matched pairs
+## 4. Matched pairs (exploratory)
+
+*Exploratory: a different estimand from the main test (comparison films come only from outside the genre), not corrected for testing 18 genres, and it repeats what the shuffle and the regression already show. Kept for the record, not used for claims.*
 
 Each film is compared with the 5 films outside its genre that have the closest budget in the same era. The mean difference gets a 95 % bootstrap interval over the genre's films (`outputs/checks/matched.csv`). This is the most literal reading of "compared with films of similar budgets".
 

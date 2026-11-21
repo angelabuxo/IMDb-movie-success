@@ -27,7 +27,7 @@ before the return tests in this script run.
 
 Return comparisons use 5-fold CV R2 (5 repeats) of ln(gross / budget) on budget decile + era plus each genre
 representation, on the same films. Outputs in analysis/genre/outputs/share_fixes/. Numbers only.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.q1_share_fixes [--perms 10000]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.exploratory.q1_share_fixes [--perms 10000]
 """
 from __future__ import annotations
 
@@ -38,9 +38,10 @@ import numpy as np
 import pandas as pd
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, holm, load, permuted_means, prepare, strata
-from analysis.genre.q1_shares import cv_r2
+from analysis.genre.exploratory import EXP_OUT
+from analysis.genre.exploratory.q1_shares import cv_r2
 
-OUT = MAIN_OUT / "share_fixes"
+OUT = EXP_OUT / "share_fixes"
 P_GRID = (0.5, 1, 1.5, 2, 3, 4)
 CANDIDATES = {
     "Action": ["action"], "Adventure": ["adventure"], "Animation": ["animation", "animated"],

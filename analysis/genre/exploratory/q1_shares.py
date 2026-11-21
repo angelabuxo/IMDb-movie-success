@@ -23,7 +23,7 @@ Tests, on the usable-money films that have each representation:
                        then adding each representation, on the films that have all of them; repeated 5 times.
 
 Outputs in analysis/genre/outputs/shares/. Numbers only.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.q1_shares [--perms 10000]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.exploratory.q1_shares [--perms 10000]
 """
 from __future__ import annotations
 
@@ -34,8 +34,9 @@ import numpy as np
 import pandas as pd
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, holm, load, permuted_means, prepare, strata
+from analysis.genre.exploratory import EXP_OUT
 
-OUT = MAIN_OUT / "shares"
+OUT = EXP_OUT / "shares"
 KM_SEEDS = 10
 
 

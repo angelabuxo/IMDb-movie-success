@@ -24,7 +24,7 @@ These settings were fixed in the script before any genre result was looked at.
 - **Checks.**
   - The shuffle without any budget matching.
   - The shuffle within budget decile × era. Returns fall a lot by decade, so era could stand in for genre.
-  - The shuffle within 50 budget bins instead of 10. I added this one after the results, when I saw that the lowest decile runs from $5k to $3.2M, which is where most cheap horror films sit.
+  - The shuffle within 50 budget bins instead of 10 (redundant: the smooth budget curve in CHECKS.md answers the same worry without any bins). I added this one after the results, when I saw that the lowest decile runs from $5k to $3.2M, which is where most cheap horror films sit.
   - The budget shuffle on the percentile rank of ln(gross / budget). A few micro-budget horror hits such as *Paranormal Activity* sit far out on the log scale, and on ranks each film counts once.
   - A second method: OLS of ln(gross / budget) on all genres together, budget decile and era, with HC3 errors.
 - **Left out on purpose.** The vote tier. Votes are partly a result of success, so matching on them would match on the outcome.
@@ -71,6 +71,22 @@ This is the set where Q1, Q2 and Q3 are compared head to head. It has 12 genres 
 - Genre adds 0.026 to the R² (0.020 adjusted), on top of 0.129 for budget and era. The rank agreement with the shuffle is lower than on the full set (Spearman 0.74).
 
 So on the common set, genre tells us a little, and Crime is the one robust signal.
+
+## Before release: genre specialists and script typicality
+
+`q1_before_release.py` ties genre to the people (Q2) and the screenplays (Q3) with two measures that exist before a film comes out. Outputs are in `outputs/before_release/`. It needs IMDb's `title.principals` and `title.basics` (`scripts/get_data.py imdb`) and ran in about 8 min on the HPC.
+
+**Genre specialists.** A film's team is its directors, writers, producers and first three billed actors. Their history is every earlier theatrical film they're credited on in IMDb, noticed or not, with IMDb's genres. Holding genre and a sequel flag fixed, the return net of budget and era rises with how much of the team's earlier work was in the film's genres: +0.084 per SD (+0.032 to +0.137, 6,316 films), and +0.070 with the 783 sequels left out (+0.009 to +0.132). It falls with how spread the team's past is over genres (-0.077). Shuffling genre experience within genre × budget decile and refitting the same model gives p 0.001. The fifth of films whose teams worked most in their genres beats its budget by +0.18.
+
+The first version counted a person's earlier films only among our 12,673 films, which are films that later got 10,000 or more IMDb votes. That let a noticed, successful past leak into "experience". With the full history, the amount of earlier experience stops predicting anything: -0.013 per SD (p 0.56), against +0.105 in the first version. Genre experience and genre breadth barely change. So the leak inflated "experienced teams do well", but not "specialised teams do well". Both versions are in `specialists_ols.csv`.
+
+**Script typicality.** A script is typical when its embedding sits close to the other scripts of its genres, relative to all scripts. A garbled or oddly formatted file would also sit far from its genre. So Q3's script-quality measures are held fixed too: length, dialogue share, scene headings inside dialogue, upper-case and punctuation noise, tiny layers, and on the final 1,598 films the symbol-noise share. Typical scripts beat their budgets: +0.104 per SD without the quality controls, +0.106 with them (+0.047 to +0.166, 1,619 films), +0.101 without sequels, and +0.102 with the symbol-noise share added. None of the quality measures goes with typicality by more than Spearman 0.09 (`typicality_quality.csv`), so typicality isn't file quality. Shuffling it within genre × budget decile and refitting the same model gives p 0.001.
+
+Both measures say films that stay in their genre lane beat their budgets, and neither uses anything from after release. Both are correlations: a specialised team may also pick safer projects, and a typical script may be easier to market.
+
+## Exploratory parts
+
+Some analyses were run and are kept, but they're weak evidence and aren't used for claims: the genre network and its families, genre assortativity, the Tag Genome and plot genre shares, and the Horror word lists. They're in [`exploratory/`](exploratory/README.md), which says why for each. The matched-pairs check in CHECKS.md and the 50-bin shuffle here are redundant with the smooth-curve check.
 
 ## What this measures and what it misses
 

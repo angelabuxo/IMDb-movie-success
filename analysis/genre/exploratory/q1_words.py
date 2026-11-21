@@ -18,7 +18,7 @@ don't? (Course week 6, comparing groups of documents.) Added after the main resu
 What it misses: a Wikipedia plot is written after release, by editors, at whatever length they chose, so the
 words describe the story as remembered, not the film as marketed. Counts and words only are written; no plot text
 leaves data/raw (the token counts are cached in analysis/genre/private/, which git ignores).
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.q1_words [--perms 1000] [--genre Horror]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.exploratory.q1_words [--perms 1000] [--genre Horror]
 """
 from __future__ import annotations
 
@@ -34,8 +34,9 @@ import pandas as pd
 from scipy import sparse
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, load, prepare
+from analysis.genre.exploratory import EXP_OUT
 
-OUT = MAIN_OUT / "words"
+OUT = EXP_OUT / "words"
 PRIVATE = Path(__file__).resolve().parent / "private"
 SOURCES = ("wiki/articles.jsonl", "wiki/articles_10k.jsonl")
 HEADINGS = ("plot", "plot summary", "plot synopsis", "synopsis", "premise", "summary", "story", "storyline", "plot overview")
@@ -116,7 +117,7 @@ def main():
     f["net"] = f["ln_gross_over_budget"] - f.groupby(cell)["ln_gross_over_budget"].transform("mean")
     member = M[:, keep.index(a.genre)] == 1
     if a.membership != "imdb":
-        from analysis.genre.q1_shares import shares
+        from analysis.genre.exploratory.q1_shares import shares
         S, has = shares("genre_shares.csv", f, keep)
         member = has & (np.nan_to_num(S).argmax(1) == keep.index(a.genre)) if a.membership == "tag_genome" else member & has
     g = f[member & f["imdb_id"].isin(counts)].reset_index(drop=True)

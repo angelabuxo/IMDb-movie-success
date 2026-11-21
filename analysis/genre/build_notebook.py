@@ -67,7 +67,9 @@ trim = pd.read_csv(CHK / "trim.csv")
 tops = pd.read_csv(CHK / "top_films.csv")
 matched = pd.read_csv(CHK / "matched.csv")
 shares = pd.read_csv(CHK / "shares.csv")
-NET, SHR, WRD = SRC / "network", SRC / "shares", SRC / "words"
+EXP = REPO / "analysis" / "genre" / "exploratory" / "outputs"   # weak evidence, not used for claims
+BR = SRC / "before_release"
+NET, SHR, WRD = EXP / "network", EXP / "shares", EXP / "words"
 SN = json.loads((NET / "summary.json").read_text())
 pairs = pd.read_csv(NET / "genre_pairs.csv")
 families = pd.read_csv(NET / "genre_families.csv")
@@ -81,12 +83,13 @@ SW = json.loads((WRD / "horror_summary.json").read_text())
 wtop = pd.read_csv(WRD / "horror_top.csv")
 wlists = pd.read_csv(WRD / "horror_list_null.csv")
 from IPython.display import Image, display
-SF = SRC / "share_followups"
+SF = EXP / "share_followups"
 SFS = json.loads((SF / "summary.json").read_text())
-FX = SRC / "share_fixes"
+FX = EXP / "share_fixes"
 FXS = json.loads((FX / "summary.json").read_text())
-SNW = SRC / "scripts_network"
-SNS = json.loads((SNW / "summary.json").read_text())
+BRS = json.loads((BR / "summary.json").read_text())
+HSC = EXP / "horror_scripts"
+HSS = json.loads((HSC / "summary.json").read_text())
 
 BLUE, RED, GREY, INK = "#2f6db5", "#c0504d", "#b8b8b8", "#222"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9, "axes.spines.top": False, "axes.spines.right": False})
@@ -415,7 +418,7 @@ print(f"share network: {sn['backbone_links']} backbone links ({sn['shared_links'
 pd.read_csv(SF / "share_network_families.csv")"""),
     ("code", """asr = pd.read_csv(SF / "assortativity.csv").pivot(index="genre", columns="representation", values="assortativity")
 asr.sort_values("tag_genome_shares", ascending=False)"""),
-    ("md", """**Horror words, three ways.** The same word test as section 14 on (a) every IMDb-tagged Horror film,
+    ("md", """**Horror words, three ways.** The same word test as the Horror-plot section on (a) every IMDb-tagged Horror film,
 (b) IMDb-tagged Horror films with Tag Genome scores, (c) films whose largest Tag Genome share is Horror. If (b) and
 (c) agree with each other but not with (a), the difference comes from which films are in (the Tag Genome stops in
 2014), not from how Horror is defined."""),
@@ -431,7 +434,7 @@ for name, tag in runs.items():
 pd.DataFrame(cols)"""),
     ("md", """## 16. Fixing the genre distribution's weaknesses
 
-Section 15 used the Tag Genome shares as they were built for `tag_shares.ipynb`. A critical look found six
+The section before used the Tag Genome shares as they were built for `tag_shares.ipynb`. A critical look found six
 problems: the shares carry reception (ratings, critics), the power of 2 in their construction was arbitrary and moved
 the result, the films covered are older and much-tagged, everything in them is measured after release, each genre
 rested on one tag, and the "effective number of genres" partly measured fame. `q1_share_fixes.py` fixes each one,
@@ -498,20 +501,30 @@ print(f"{FXS['films_dominant_not_in_imdb']} films disagree; sample of {len(hc)};
 if (hc["which_is_right"] != "").any():
     print(hc.loc[hc["which_is_right"] != "", "which_is_right"].str.lower().value_counts())
 hc[["title", "year", "imdb_genres", "tag_genome_top3"]].head(10)"""),
-    ("md", """## 17. Genre with the people and the screenplays
+    ("md", """## 17. Before release: genre specialists and script typicality
 
-Three ways to tie genre to Q2's network and Q3's screenplays, all from information that exists before release.
+Two measures that tie genre to Q2's people and Q3's screenplays and exist before a film comes out.
 
-**Genre specialists.** A film's team is its directors, writers, producers and first three billed actors. Their
-earlier films (released in an earlier year, so nothing about this film or later ones leaks in) say how much of the
-team's experience is in this film's genres (`genre_experience`), how much experience it has at all
-(`prior_credits`), and how spread over genres it is (`genre_breadth`). Outcome: the return net of budget decile and
-era. Genre dummies and a sequel flag are held fixed, because a sequel keeps both its team and its genre."""),
-    ("code", """sp_ = pd.read_csv(SNW / "specialists_ols.csv")
-print(SNS["specialists"])
-sp_"""),
-    ("code", """sq = pd.read_csv(SNW / "specialists_quintiles.csv")
-tq = pd.read_csv(SNW / "typicality_quintiles.csv")
+**Genre specialists.** A film's team is its directors, writers, producers and first three billed actors (IMDb's
+`title.principals`). Their earlier films are every earlier theatrical film they're credited on in IMDb's full
+`title.basics`, noticed or not. (The first version counted only films that later got 10,000+ IMDb votes, which let
+a successful past leak into "experience"; its numbers are kept below as a comparison.) Per film: the share of the
+team's earlier credits in the film's genres (`genre_experience`), how many earlier credits (`prior_credits`), and how
+spread over genres they are (`genre_breadth`). Outcome: the return net of budget decile and era; genre dummies and a
+sequel flag held fixed. The shuffle refits exactly the reported model."""),
+    ("code", """print(BRS["specialists"])
+pd.read_csv(BR / "specialists_ols.csv")"""),
+    ("md", """**Script typicality.** How close a screenplay's embedding is to the usual screenplay of its genres. A garbled or
+oddly formatted script file would also sit far from its genre, so Q3's script-quality measures (length, dialogue
+share, unparsed elements, scene headings inside dialogue, upper-case and punctuation noise, tiny layers, and on the
+final set the symbol-noise share) are held fixed too. If typicality only measured clean files, they would take its
+coefficient away."""),
+    ("code", """print(BRS["typicality"])
+display(pd.read_csv(BR / "typicality_ols.csv"))
+print("How each quality measure goes with typicality and with the return:")
+pd.read_csv(BR / "typicality_quality.csv")"""),
+    ("code", """sq = pd.read_csv(BR / "specialists_quintiles.csv")
+tq = pd.read_csv(BR / "typicality_quintiles.csv")
 fig, axes = plt.subplots(1, 2, figsize=(8.4, 3.2), sharey=True)
 axes[0].bar(sq["quintile"], sq["mean_net_return"], color=BLUE)
 axes[0].set_xticks(sq["quintile"], sq["genre_experience_range"], fontsize=7)
@@ -522,74 +535,127 @@ axes[1].set_xlabel("script typicality for its genres (quintile)")
 for ax in axes:
     ax.axhline(0, color="#999", lw=.6)
 plt.tight_layout()
-plt.show()"""),
-    ("md", """**Script typicality.** How close a screenplay's embedding is to the usual screenplay of its genres (the mean of the
-other films in each genre, minus its closeness to all scripts). A typical script is one that reads like its genre.
-Same outcome and controls; the right panel above shows the quintiles."""),
-    ("code", """print(SNS["typicality"])
-display(pd.read_csv(SNW / "typicality_ols.csv"))
-pd.read_csv(SNW / "typicality_per_genre.csv")"""),
-    ("md", """**Supernatural Horror in the screenplays.** Section 14 found that Horror films beating their budgets have
-supernatural plots on Wikipedia, which is written after release. The same word test on the screenplays (Q3's
-preprocessing, description and dialogue layers), and the same supernatural word set counted in the scripts:"""),
-    ("code", """hs_ = SNS["horror_scripts"]
-print({k: v for k, v in hs_.items() if k != "supernatural_in_script"})
-print("supernatural words in the script:", hs_["supernatural_in_script"])
-hw = pd.read_csv(SNW / "horror_script_words.csv")
+plt.show()
+pd.read_csv(BR / "typicality_per_genre.csv")"""),
+    ("md", """## 19. Inside Horror, in the screenplays
+
+The word test of the Horror-plot section on the screenplays instead of the Wikipedia plots (Q3's preprocessing,
+description and dialogue layers), and the same supernatural word set counted in the scripts. It does not replicate."""),
+    ("code", """print({k: v for k, v in HSS.items() if k != "supernatural_in_script"})
+print("supernatural words in the script:", HSS["supernatural_in_script"])
+hw = pd.read_csv(HSC / "horror_script_words.csv")
 pd.DataFrame({(l, sd): hw[(hw.layer == l) & (hw.side == sd)]["word"].head(10).to_numpy()
               for l in ("description", "dialogue") for sd in ("hit", "flop")})"""),
-    ("code", """pd.read_csv(SNW / "horror_script_list_null.csv").pivot(index=["layer", "side"], columns="k", values="p")"""),
+    ("code", """pd.read_csv(HSC / "horror_script_list_null.csv").pivot(index=["layer", "side"], columns="k", values="p")"""),
     ("md", """## 18. Summary
 
 Printed from the cells above, so it changes with the data."""),
     ("code", """up = [g for g in SEVEN if main.loc[g, "excess"] > 0]
 down = [g for g in SEVEN if main.loc[g, "excess"] < 0]
 v = S["sets"]["usable_money"]
+print("Core:")
 print(f"1. Main test ({v['films']:,} films): above their budgets: " + ", ".join(f"{g} x{np.exp(main.loc[g, 'excess']):.2f}" for g in up)
       + "; below: " + ", ".join(f"{g} x{np.exp(main.loc[g, 'excess']):.2f}" for g in down) + ".")
 print(f"2. These pass with no matching, budget deciles, budget x era and ranks. Genre adds {v['r2_added_by_genre']:.3f} to R2 "
       f"on top of budget and era ({v['r2_budget_era']:.3f}).")
-keep = all(np.sign(sm.loc[g, 'excess']) == np.sign(main.loc[g, 'excess']) and
-           np.sign(tr.loc[g, 'trim_top10']) == np.sign(main.loc[g, 'excess']) and
-           np.sign(m.loc[g, 'excess']) == np.sign(main.loc[g, 'excess']) for g in SEVEN)
-print(f"3. Same sign in the smooth-curve, trimmed and matched checks for all of them: {keep}.")
-mid = f[(f["p_holm"] < .05)]
-print(f"4. Budget tiers: {len(mid)} of {len(f)} cells pass, " + ", ".join(f"{t} {(mid['tier'] == t).sum()}" for t in names) + ".")
+keep_ = all(np.sign(sm.loc[g, 'excess']) == np.sign(main.loc[g, 'excess']) and
+            np.sign(tr.loc[g, 'trim_top10']) == np.sign(main.loc[g, 'excess']) for g in SEVEN)
+print(f"3. Same sign with the smooth budget curve and without each genre's top 10 films, for all of them: {keep_}.")
+ft = tiers[tiers["excess"].notna()]
+mid = ft[ft["p_holm"] < .05]
+print(f"4. Budget tiers: {len(mid)} of {len(ft)} cells pass, " + ", ".join(f"{t} {(mid['tier'] == t).sum()}" for t in names) + ".")
 cs = view("in_common_set")
 print("5. Common set: passes the budget shuffle: " + ", ".join(f"{g} {cs.loc[g, 'excess']:+.3f}" for g in cs.index[cs["p_holm"] < .05]) + ".")
+o_ = pd.read_csv(BR / "specialists_ols.csv").set_index(["films", "term"])
+t_ = pd.read_csv(BR / "typicality_ols.csv").set_index(["films", "term"])
+print(f"6. Before release: a team's earlier experience in the film's genres "
+      f"{o_.loc[('history: all earlier IMDb movies, sequels left out', 'genre_experience'), 'coef_per_sd']:+.3f} per SD (sequels left out; "
+      f"shuffle p {BRS['specialists']['shuffle_p_genre_experience']}); script typicality "
+      f"{t_.loc[('+ script-quality controls, sequels left out', 'script_typicality'), 'coef_per_sd']:+.3f} per SD with script quality held fixed "
+      f"(shuffle p {BRS['typicality']['shuffle_p']}).")
+print()
+print("Exploratory (weak evidence, not used for claims):")
 g = SN["genre_network"]
-print(f"6. Genre network: {g['backbone_links']} of {g['pairs']} pairs beat the null; Louvain finds {g['families']} families "
-      f"(modularity {g['modularity']:.3f}, rewired p {g['modularity_p']}); family excesses: "
-      + ", ".join(f"{r['excess']:+.3f}" for _, r in families.iterrows()) + ".")
-print(f"7. Film network: {fn['share_links_sharing_a_genre']:.0%} of shared-people links join films of a common genre "
-      f"against {fn['share_null_mean']:.0%} after shuffling; {(assort['p_holm'] < .05).sum()} of {len(assort)} genres assortative.")
+print(f"   Genre network: {g['backbone_links']} of {g['pairs']} pairs beat the null; {g['families']} Louvain families, "
+      f"modularity no stronger than a rewired network (p {g['modularity_p']}).")
+print(f"   Film network: {fn['share_links_sharing_a_genre']:.0%} of shared-people links join films of a common genre "
+      f"against {fn['share_null_mean']:.0%} after shuffling (a description, not a test of anything surprising).")
 r = cv.set_index("model")["added_over_budget_era"]
-print("8. CV R2 added over budget + era: " + ", ".join(f"{k.lstrip('+ ')} {v:+.3f}" for k, v in r.items() if k != "budget + era") + ".")
-lk2 = lk.set_index(["target", "model"])["added"]
-print(f"9. Tag Genome shares: add {lk2[('ln_ratio', '+ Tag Genome shares')]:+.3f} to the return's CV R2 against "
-      f"{lk2[('ln_ratio', '+ IMDb tags')]:+.3f} for the tags, and {lk2[('ln_votes', '+ Tag Genome shares')]:+.3f} against "
-      f"{lk2[('ln_votes', '+ IMDb tags')]:+.3f} to ln(votes); share network NMI with the tag families {sn['nmi_with_imdb_families']}.")
-print(f"10. Horror plots: above-budget words " + ", ".join(wtop[wtop.side == 'hit']['word'].head(6))
-      + "; below-budget words " + ", ".join(wtop[wtop.side == 'flop']['word'].head(6)) + ".")
+print("   CV R2 added over budget + era: " + ", ".join(f"{k.lstrip('+ ')} {v:+.3f}" for k, v in r.items() if k != "budget + era") + ".")
 fc_ = cr.set_index(["films", "model"])["added"]
-sc_ = pd.read_csv(FX / "script_shares_cv_r2.csv").set_index(["films", "model"])["added"]
-print(f"11. Fixed shares (power {FXS['power_chosen']}, {len(FXS['mapping_changed'])} genres remapped): with rating and votes held fixed they add "
-      f"{fc_[('tag_genome_films, rating and votes in base', 'shares (chosen)')]:+.3f} against {fc_[('tag_genome_films, rating and votes in base', 'IMDb tags')]:+.3f} for the tags; "
-      f"script-based shares (before release) add {sc_[('common set, rating and votes in base', 'script shares (MiniLM)')]:+.3f} against "
-      f"{sc_[('common set, rating and votes in base', 'IMDb tags')]:+.3f} for the tags on the common set.")
-o_ = pd.read_csv(SNW / "specialists_ols.csv").set_index(["films", "term"])
-t_ = pd.read_csv(SNW / "typicality_ols.csv").set_index(["films", "term"])
-print(f"12. Before release: a team's earlier experience in the film's genres {o_.loc[('sequels left out', 'genre_experience'), 'coef_per_sd']:+.3f} per SD "
-      f"(sequels left out; shuffle p {SNS['specialists']['shuffle_p_genre_experience']}); script typicality "
-      f"{t_.loc[('sequels left out', 'script_typicality'), 'coef_per_sd']:+.3f} per SD (shuffle p {SNS['typicality']['shuffle_p']}); "
-      f"supernatural words in Horror scripts {hs_['supernatural_in_script']['difference']:+.3f} (p {hs_['supernatural_in_script']['p']}).")"""),
+print(f"   Fixed Tag Genome shares, rating and votes held fixed: {fc_[('tag_genome_films, rating and votes in base', 'shares (chosen)')]:+.3f} "
+      f"against {fc_[('tag_genome_films, rating and votes in base', 'IMDb tags')]:+.3f} for the tags.")
+print(f"   Horror plots: above-budget words " + ", ".join(wtop[wtop.side == 'hit']['word'].head(6))
+      + "; in the scripts this does not replicate (supernatural words "
+      f"{HSS['supernatural_in_script']['difference']:+.3f}, p {HSS['supernatural_in_script']['p']}).")"""),
 ]
+
+
+CORE = ["The films and the settings", "The main test", "Does the null matter?", "A second method: regression",
+        "On the common set", "Check 1: a smooth budget curve", "Check 2: genre x budget tier",
+        "Check 3: without each genre's biggest hits", "Check 5: hit share", "Before release:"]
+EXPLORATORY = ["Check 4: matched pairs", "The genre network", "Do films made by the same people share genre?",
+               "Other ways to say what genre a film is", "Inside Horror: which plot words",
+               "Inside Horror, in the screenplays", "The genre distribution through the same analyses",
+               "Fixing the genre distribution's weaknesses"]
+WHY = {
+    "Check 4: matched pairs": "a different estimand from the main test, not corrected for testing 18 genres, and it repeats what the shuffle and the regression already show",
+    "The genre network": "the backbone is a fine description, but the Louvain families are no stronger than a rewired network, so testing their returns tests groups that may not exist",
+    "Do films made by the same people share genre?": "the null shuffles away all structure, so a huge z was guaranteed; people repeating genres is expected and largely sequels and franchises",
+    "Other ways to say what genre a film is": "Tag Genome and plots are written after release and carry reception; plot clusters are a null result",
+    "Inside Horror: which plot words": "post-release text, post-hoc word set, and it does not replicate in the screenplays",
+    "Inside Horror, in the screenplays": "the replication attempt of the plot words; it fails",
+    "The genre distribution through the same analyses": "post-release measure that carries reception, with many variants tried",
+    "Fixing the genre distribution's weaknesses": "careful, but it repairs a measure the analysis doesn't rely on; the script-predicted shares learn from a target that carries reception",
+}
+
+
+def ordered(cells):
+    """Intro and setup, the core sections, one exploratory part (each section with a line on why it's there), summary.
+    Sections are renumbered; nothing is dropped."""
+    blocks, cur, head = {}, None, []
+    for kind, src in cells:
+        if kind == "md" and src.startswith("## "):
+            cur = src.split("\n", 1)[0][3:].split(". ", 1)[1]
+            blocks[cur] = []
+        (blocks[cur] if cur else head).append([kind, src])
+    find = lambda key: next(k for k in blocks if k.startswith(key))
+    out, n, toc = list(head), 0, []
+    for key in CORE:
+        n += 1
+        k = find(key)
+        toc.append(f"{n}. {k}")
+        b = blocks.pop(k)
+        rest = b[0][1].split("\n", 1)[1] if "\n" in b[0][1] else ""
+        b[0][1] = f"## {n}. {k}\n" + rest
+        out += b
+    out.append(["md", "# Exploratory: weak evidence, not used for claims\n\nThese analyses were run and are kept for the record, "
+                      "with their outputs in `analysis/genre/exploratory/`. Each says in one line why it is here."])
+    toc.append("Exploratory part:")
+    for key in EXPLORATORY:
+        n += 1
+        k = find(key)
+        toc.append(f"{n}. {k}")
+        b = blocks.pop(k)
+        rest = b[0][1].split("\n", 1)[1] if "\n" in b[0][1] else ""
+        b[0][1] = f"## {n}. {k}\n\n*Exploratory: {WHY[key]}.*\n" + rest
+        out += b
+    k = find("Summary")
+    n += 1
+    b = blocks.pop(k)
+    b[0][1] = f"## {n}. Summary" + ("\n" + b[0][1].split("\n", 1)[1] if "\n" in b[0][1] else "")
+    toc.append(f"{n}. Summary")
+    out += b
+    assert not blocks, f"sections not placed: {list(blocks)}"
+    intro = out[0][1]
+    out[0][1] = intro.split("Sections:")[0] + "Sections:\n" + "\n".join(toc)
+    return [tuple(c) for c in out]
 
 
 def main():
     nb = nbf.v4.new_notebook()
     nb.metadata["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
-    nb.cells = [nbf.v4.new_markdown_cell(src) if kind == "md" else nbf.v4.new_code_cell(src) for kind, src in CELLS]
+    nb.cells = [nbf.v4.new_markdown_cell(src) if kind == "md" else nbf.v4.new_code_cell(src) for kind, src in ordered(CELLS)]
     if "--no-run" not in sys.argv:
         from nbconvert.preprocessors import ExecutePreprocessor
         ExecutePreprocessor(timeout=600, kernel_name="python3").preprocess(nb, {"metadata": {"path": str(OUT.parent)}})

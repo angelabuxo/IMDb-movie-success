@@ -45,7 +45,7 @@ def test_holm():
 
 
 def test_curveball_keeps_both_margins():
-    from analysis.genre.q1_network import cooc, curveball
+    from analysis.genre.exploratory.q1_network import cooc, curveball
     rng = np.random.default_rng(3)
     M = (rng.random((60, 6)) < .35).astype(int)
     rows = [set(np.flatnonzero(m)) for m in M]
@@ -57,21 +57,21 @@ def test_curveball_keeps_both_margins():
 
 
 def test_assortativity_signs():
-    from analysis.genre.q1_network import assortativity
+    from analysis.genre.exploratory.q1_network import assortativity
     edges = np.array([[0, 1], [2, 3], [4, 5], [0, 2]])
     assert assortativity(edges[:3], np.array([1, 1, 0, 0, 1, 1])) > .99
     assert assortativity(np.array([[0, 1], [2, 3]]), np.array([1, 0, 1, 0])) < -.99
 
 
 def test_log_odds_symmetric():
-    from analysis.genre.q1_words import log_odds_z
+    from analysis.genre.exploratory.q1_words import log_odds_z
     a = np.array([5., 5., 5.])
     z = log_odds_z(np.array([10., 2., 4.]), np.array([2., 10., 4.]), a)
     assert z[0] > 0 > z[1] and abs(z[0] + z[1]) < 1e-9
 
 
 def test_shares_sum_to_one_and_keep_order():
-    from analysis.genre.q1_share_fixes import to_shares
+    from analysis.genre.exploratory.q1_share_fixes import to_shares
     R = np.array([[0.9, 0.3, 0.1], [0.2, 0.2, 0.8]])
     for p in (0.5, 1, 1.5, 2, 4):
         S = to_shares(R, p)
@@ -81,7 +81,7 @@ def test_shares_sum_to_one_and_keep_order():
 
 
 def test_genre_coefs_drops_one_share_column():
-    from analysis.genre.q1_share_fixes import genre_coefs
+    from analysis.genre.exploratory.q1_share_fixes import genre_coefs
     rng = np.random.default_rng(5)
     n = 400
     f = pd.DataFrame({"budget_bin": rng.integers(0, 3, n), "era_bin": rng.choice(["1990s", "2000s"], n)})

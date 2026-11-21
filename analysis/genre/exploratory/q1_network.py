@@ -23,7 +23,7 @@ B. Genre assortativity on the film network (week 3, mixing patterns). Films are 
    share at least one genre, against the same null.
 
 Outputs in analysis/genre/outputs/network/. Numbers only.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.q1_network [--null 1000] [--perms 10000]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.exploratory.q1_network [--null 1000] [--perms 10000]
 """
 from __future__ import annotations
 
@@ -36,8 +36,9 @@ import pandas as pd
 from scipy import sparse
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, holm, load, permuted_means, prepare, strata
+from analysis.genre.exploratory import EXP_OUT
 
-OUT = MAIN_OUT / "network"
+OUT = EXP_OUT / "network"
 SEEDS = 20
 ALPHA = .05
 ROLES = ("director", "writer", "producer")

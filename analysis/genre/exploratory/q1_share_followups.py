@@ -20,7 +20,7 @@ can be compared on equal footing.
                both have Tag Genome scores), against shares shuffled between films of the same era.
 
 Outputs in analysis/genre/outputs/share_followups/. Numbers only.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.q1_share_followups [--perms 10000]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.genre.exploratory.q1_share_followups [--perms 10000]
 """
 from __future__ import annotations
 
@@ -33,10 +33,11 @@ import pandas as pd
 
 from analysis.genre import q1_checks as ck
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, holm, load, permuted_means, prepare, strata
-from analysis.genre.q1_network import assortativity, film_network, louvain, labels
-from analysis.genre.q1_shares import cv_r2, shares
+from analysis.genre.exploratory import EXP_OUT
+from analysis.genre.exploratory.q1_network import assortativity, film_network, louvain, labels
+from analysis.genre.exploratory.q1_shares import cv_r2, shares
 
-OUT = MAIN_OUT / "share_followups"
+OUT = EXP_OUT / "share_followups"
 
 
 def leak(f, keep, M, G):
@@ -112,8 +113,8 @@ def share_network(keep, G, n_null):
     parts, mods = louvain(Gr, 20)
     best = int(np.argmax(mods))
     lab = labels(parts[best], keep)
-    imdb_nodes = pd.read_csv(MAIN_OUT / "network" / "genre_nodes.csv").set_index("genre").reindex(keep)
-    imdb_pairs = pd.read_csv(MAIN_OUT / "network" / "genre_pairs.csv")
+    imdb_nodes = pd.read_csv(EXP_OUT / "network" / "genre_nodes.csv").set_index("genre").reindex(keep)
+    imdb_pairs = pd.read_csv(EXP_OUT / "network" / "genre_pairs.csv")
     ib = {frozenset((a, b)) for a, b, k in zip(imdb_pairs["genre_a"], imdb_pairs["genre_b"], imdb_pairs["backbone"]) if k}
     sb = {frozenset((keep[i], keep[j])) for i, j in zip(*iu) if back[i, j]}
     pairs = pd.DataFrame([{"genre_a": keep[i], "genre_b": keep[j], "soft_cooc": round(C[i, j], 2), "expected": round(mu[i, j], 2),
