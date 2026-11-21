@@ -1,0 +1,17 @@
+genre,set,n_hit,n_flop,median_votes_hit,median_votes_flop,model,layer,auc
+Comedy,all labelled,136,136,310393,65747,log_votes_raw,-,0.8815
+Comedy,all labelled,136,136,310393,65747,baseline+votes,-,0.8145
+Comedy,all labelled,136,136,310393,65747,w2v+baseline+votes,dialogue,0.8409
+Comedy,all labelled,136,136,310393,65747,w2v+baseline+votes,description,0.8385
+Comedy,100k+,119,42,355030,145148,log_votes_raw,-,0.8181
+Comedy,100k+,119,42,355030,145148,baseline+votes,-,0.7431
+Comedy,100k+,119,42,355030,145148,w2v+baseline+votes,dialogue,0.6655
+Comedy,100k+,119,42,355030,145148,w2v+baseline+votes,description,0.7303
+Action,all labelled,108,108,522416,83034,log_votes_raw,-,0.9258
+Action,all labelled,108,108,522416,83034,baseline+votes,-,0.8793
+Action,all labelled,108,108,522416,83034,w2v+baseline+votes,dialogue,0.8635
+Action,all labelled,108,108,522416,83034,w2v+baseline+votes,description,0.8722
+Action,100k+,104,45,535638,159953,log_votes_raw,-,0.8767
+Action,100k+,104,45,535638,159953,baseline+votes,-,0.7954
+Action,100k+,104,45,535638,159953,w2v+baseline+votes,dialogue,0.7806
+Action,100k+,104,45,535638,159953,w2v+baseline+votes,description,0.7893

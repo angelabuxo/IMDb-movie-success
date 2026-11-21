@@ -1,0 +1,5 @@
+genre,layer,n,auc_w2v_plus_baseline,ci95_lo,ci95_hi,auc_baseline,difference,diff_ci95_lo,diff_ci95_hi,boot
+Comedy,dialogue,272,0.7643,0.7122,0.8127,0.7817,-0.0174,-0.0568,0.0214,2000
+Comedy,description,272,0.7664,0.7137,0.8146,0.7817,-0.0153,-0.0498,0.0179,2000
+Action,dialogue,216,0.7687,0.7151,0.8195,0.7059,0.0628,0.0133,0.1093,2000
+Action,description,216,0.7854,0.732,0.8347,0.7059,0.0795,0.0347,0.1251,2000
