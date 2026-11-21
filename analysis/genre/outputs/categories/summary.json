@@ -1,0 +1,25 @@
+{
+ "wikidata": {
+  "films_with_wikidata_genre": 6344,
+  "distinct_genres": 331,
+  "genres_tested": 112
+ },
+ "keyword_network": {
+  "keywords_in_min_films": 470,
+  "kept": 355,
+  "null_samples": 200,
+  "backbone_links": 1113,
+  "nodes_in_backbone": 346,
+  "louvain_seeds": 20,
+  "modularity": 0.663,
+  "mean_nmi_best_vs_other_seeds": 0.874,
+  "rewired_modularity_mean": 0.4993,
+  "rewired_modularity_max": 0.5157,
+  "modularity_p": 0.0196,
+  "categories": 13,
+  "films_with_two_kept_keywords_in_categories": 4792,
+  "nmi_main_category_vs_rarest_imdb_genre": 0.211,
+  "nmi_main_category_vs_main_wikidata_genre": 0.17
+ },
+ "perms": 10000
+}

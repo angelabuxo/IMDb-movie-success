@@ -1,0 +1,73 @@
+check,tier,genre,n_films,mean,excess,z,p,p_holm,representation
+tiers,under $5M,Action,31,1.6208,0.2628,1.83,0.06519,1.0,tag_genome_shares
+tiers,under $5M,Adventure,15,,,,,,tag_genome_shares
+tiers,under $5M,Animation,4,,,,,,tag_genome_shares
+tiers,under $5M,Biography,14,,,,,,tag_genome_shares
+tiers,under $5M,Comedy,50,1.6037,0.2736,1.76,0.07429,1.0,tag_genome_shares
+tiers,under $5M,Crime,33,1.2158,-0.1683,-1.08,0.27887,1.0,tag_genome_shares
+tiers,under $5M,Drama,143,1.1863,-0.197,-2.57,0.0104,0.35356,tag_genome_shares
+tiers,under $5M,Family,5,,,,,,tag_genome_shares
+tiers,under $5M,Fantasy,12,,,,,,tag_genome_shares
+tiers,under $5M,History,8,,,,,,tag_genome_shares
+tiers,under $5M,Horror,79,1.4264,0.0281,0.19,0.84172,1.0,tag_genome_shares
+tiers,under $5M,Music,20,1.8661,0.474,1.72,0.08979,1.0,tag_genome_shares
+tiers,under $5M,Mystery,14,,,,,,tag_genome_shares
+tiers,under $5M,Romance,37,1.2931,-0.1005,-0.61,0.54535,1.0,tag_genome_shares
+tiers,under $5M,Sci-Fi,8,,,,,,tag_genome_shares
+tiers,under $5M,Sport,6,,,,,,tag_genome_shares
+tiers,under $5M,Thriller,26,1.2561,-0.1158,-0.83,0.40506,1.0,tag_genome_shares
+tiers,under $5M,War,4,,,,,,tag_genome_shares
+tiers,$5-30M,Action,197,0.6005,0.0044,0.1,0.92111,1.0,tag_genome_shares
+tiers,$5-30M,Adventure,111,0.6769,0.0858,1.92,0.05619,1.0,tag_genome_shares
+tiers,$5-30M,Animation,25,0.7876,0.1788,1.15,0.24758,1.0,tag_genome_shares
+tiers,$5-30M,Biography,68,0.33,-0.2824,-3.19,0.0027,0.09989,tag_genome_shares
+tiers,$5-30M,Comedy,344,0.7406,0.1415,3.42,0.0008,0.032,tag_genome_shares
+tiers,$5-30M,Crime,111,0.3345,-0.272,-4.53,0.0001,0.0048,tag_genome_shares
+tiers,$5-30M,Drama,383,0.461,-0.1507,-4.53,0.0001,0.0048,tag_genome_shares
+tiers,$5-30M,Family,55,1.0756,0.477,5.92,0.0001,0.0048,tag_genome_shares
+tiers,$5-30M,Fantasy,79,0.5145,-0.0911,-1.47,0.14349,1.0,tag_genome_shares
+tiers,$5-30M,History,36,0.7363,0.1314,1.36,0.17538,1.0,tag_genome_shares
+tiers,$5-30M,Horror,141,0.8187,0.2093,2.58,0.0112,0.36956,tag_genome_shares
+tiers,$5-30M,Music,58,0.5215,-0.099,-0.93,0.35326,1.0,tag_genome_shares
+tiers,$5-30M,Mystery,50,0.455,-0.1588,-1.94,0.05389,1.0,tag_genome_shares
+tiers,$5-30M,Romance,164,0.7773,0.1802,3.68,0.0002,0.0088,tag_genome_shares
+tiers,$5-30M,Sci-Fi,49,0.2103,-0.3894,-4.24,0.0002,0.0088,tag_genome_shares
+tiers,$5-30M,Sport,40,0.6463,0.0179,0.15,0.87181,1.0,tag_genome_shares
+tiers,$5-30M,Thriller,112,0.6014,0.0028,0.05,0.9594,1.0,tag_genome_shares
+tiers,$5-30M,War,28,0.3261,-0.2696,-2.19,0.0273,0.86071,tag_genome_shares
+tiers,$30-100M,Action,232,0.511,-0.0509,-1.88,0.06149,1.0,tag_genome_shares
+tiers,$30-100M,Adventure,107,0.6369,0.066,2.25,0.0269,0.86071,tag_genome_shares
+tiers,$30-100M,Animation,35,0.8926,0.3134,3.71,0.0002,0.0088,tag_genome_shares
+tiers,$30-100M,Biography,25,0.4625,-0.0835,-0.84,0.40036,1.0,tag_genome_shares
+tiers,$30-100M,Comedy,215,0.6623,0.1155,3.08,0.0019,0.07409,tag_genome_shares
+tiers,$30-100M,Crime,60,0.5203,-0.0287,-0.52,0.60044,1.0,tag_genome_shares
+tiers,$30-100M,Drama,151,0.4179,-0.1276,-3.68,0.0003,0.0123,tag_genome_shares
+tiers,$30-100M,Family,48,0.8932,0.3215,5.5,0.0001,0.0048,tag_genome_shares
+tiers,$30-100M,Fantasy,66,0.4452,-0.1251,-2.58,0.0101,0.35346,tag_genome_shares
+tiers,$30-100M,History,23,0.4166,-0.1428,-1.56,0.11679,1.0,tag_genome_shares
+tiers,$30-100M,Horror,39,0.4801,-0.0627,-0.63,0.52755,1.0,tag_genome_shares
+tiers,$30-100M,Music,26,0.6118,0.0704,0.6,0.54325,1.0,tag_genome_shares
+tiers,$30-100M,Mystery,31,0.5174,-0.0302,-0.41,0.68583,1.0,tag_genome_shares
+tiers,$30-100M,Romance,122,0.6596,0.1149,2.68,0.0074,0.26637,tag_genome_shares
+tiers,$30-100M,Sci-Fi,60,0.3801,-0.1902,-3.05,0.0024,0.09119,tag_genome_shares
+tiers,$30-100M,Sport,26,0.3751,-0.1627,-1.43,0.15228,1.0,tag_genome_shares
+tiers,$30-100M,Thriller,90,0.5037,-0.0482,-1.11,0.26717,1.0,tag_genome_shares
+tiers,$30-100M,War,23,0.3836,-0.1882,-1.96,0.05189,1.0,tag_genome_shares
+tiers,$100M+,Action,62,0.8394,-0.041,-1.48,0.13799,1.0,tag_genome_shares
+tiers,$100M+,Adventure,41,0.8954,0.015,0.65,0.51295,1.0,tag_genome_shares
+tiers,$100M+,Animation,17,,,,,,tag_genome_shares
+tiers,$100M+,Biography,2,,,,,,tag_genome_shares
+tiers,$100M+,Comedy,18,,,,,,tag_genome_shares
+tiers,$100M+,Crime,4,,,,,,tag_genome_shares
+tiers,$100M+,Drama,11,,,,,,tag_genome_shares
+tiers,$100M+,Family,17,,,,,,tag_genome_shares
+tiers,$100M+,Fantasy,23,0.9066,0.0268,0.5,0.61754,1.0,tag_genome_shares
+tiers,$100M+,History,5,,,,,,tag_genome_shares
+tiers,$100M+,Horror,1,,,,,,tag_genome_shares
+tiers,$100M+,Music,2,,,,,,tag_genome_shares
+tiers,$100M+,Mystery,2,,,,,,tag_genome_shares
+tiers,$100M+,Romance,12,,,,,,tag_genome_shares
+tiers,$100M+,Sci-Fi,21,0.8167,-0.0635,-0.96,0.33667,1.0,tag_genome_shares
+tiers,$100M+,Sport,0,,,,,,tag_genome_shares
+tiers,$100M+,Thriller,9,,,,,,tag_genome_shares
+tiers,$100M+,War,7,,,,,,tag_genome_shares

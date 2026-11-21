@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st  # noqa: E402
 
-from explorer import attribution_page, embedding_page, graph_pages, map_pages, nav, pages, pipeline_page  # noqa: E402
+from explorer import attribution_page, embedding_page, genre_page, graph_pages, map_pages, nav, pages, pipeline_page  # noqa: E402
 from explorer.log import logged, setup  # noqa: E402
 
 setup()
@@ -29,6 +29,7 @@ P = {
     "embeddings": st.Page(logged(embedding_page.embeddings), title="Text embeddings", icon=":material/scatter_plot:",
                           url_path="embeddings"),
     "network": st.Page(logged(pages.network), title="Network results", icon=":material/hub:", url_path="network"),
+    "genre": st.Page(logged(genre_page.genre), title="Q1: genre and returns", icon=":material/category:", url_path="genre"),
     "graph": st.Page(logged(graph_pages.whole_graph), title="Whole graph", icon=":material/scatter_plot:", url_path="graph"),
     "node": st.Page(logged(graph_pages.node), title="Node explorer", icon=":material/account_tree:", url_path="node"),
     "scripts": st.Page(logged(graph_pages.screenplays), title="Screenplays", icon=":material/description:", url_path="scripts"),
@@ -50,7 +51,7 @@ nav.PAGES.update(P)
 
 st.navigation({
     "Overview": [P["home"], P["pipeline"]],
-    "Notebooks": [P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"]],
+    "Notebooks": [P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"], P["genre"]],
     "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
     "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
                           P["checks"], P["tmdb"]],

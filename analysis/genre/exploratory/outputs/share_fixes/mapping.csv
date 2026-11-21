@@ -1,0 +1,43 @@
+genre,candidate,auc,current,chosen
+Action,action,0.9456,True,True
+Adventure,adventure,0.9092,True,True
+Animation,animation,0.9961,True,True
+Animation,animated,0.9952,False,False
+Animation,"mean of animation, animated",0.9954,False,False
+Biography,biographical,0.9616,True,False
+Biography,biography,0.9503,False,False
+Biography,true story,0.8952,False,False
+Biography,"mean of biographical, biography, true story",0.9691,False,True
+Comedy,comedy,0.9366,True,False
+Comedy,funny,0.9254,False,False
+Comedy,"mean of comedy, funny",0.9397,False,True
+Crime,crime,0.895,True,True
+Drama,drama,0.8613,True,True
+Drama,dramatic,0.7906,False,False
+Drama,"mean of drama, dramatic",0.8524,False,False
+Family,kids and family,0.8793,True,False
+Family,family,0.9043,False,False
+Family,kids,0.9221,False,False
+Family,children,0.9022,False,False
+Family,"mean of kids and family, family, kids, children",0.928,False,True
+Fantasy,fantasy,0.8587,True,True
+History,history,0.9494,True,False
+History,historical,0.9607,False,False
+History,"mean of history, historical",0.9614,False,True
+Horror,horror,0.9913,True,True
+Horror,scary,0.9603,False,False
+Horror,creepy,0.9101,False,False
+Horror,"mean of horror, scary, creepy",0.9836,False,False
+Music,music,0.9398,True,True
+Mystery,mystery,0.8862,True,True
+Romance,romance,0.8596,True,False
+Romance,romantic,0.877,False,False
+Romance,"mean of romance, romantic",0.8876,False,True
+Sci-Fi,sci-fi,0.9448,True,True
+Sci-Fi,science fiction,0.8991,False,False
+Sci-Fi,"mean of sci-fi, science fiction",0.9345,False,False
+Sport,sports,0.9857,True,True
+Thriller,thriller,0.8204,True,False
+Thriller,suspense,0.8057,False,False
+Thriller,"mean of thriller, suspense",0.8307,False,True
+War,war,0.9723,True,True

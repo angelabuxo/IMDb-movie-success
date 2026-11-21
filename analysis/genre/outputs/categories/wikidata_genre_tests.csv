@@ -1,0 +1,113 @@
+run,category,films,mean,excess,z,p_holm
+Wikidata genre,Christmas film,121.0,0.799,0.2471,2.09,1.0
+Wikidata genre,LGBTQ-related film,348.0,0.5757,-0.0225,-0.28,1.0
+Wikidata genre,Western,84.0,0.25,-0.3047,-2.1,1.0
+Wikidata genre,Western film,93.0,0.3465,-0.2139,-1.53,1.0
+Wikidata genre,action comedy film,78.0,0.502,-0.0676,-0.5,1.0
+Wikidata genre,action film,1722.0,0.5702,-0.0177,-0.73,1.0
+Wikidata genre,action thriller,58.0,0.9221,0.3495,2.39,1.0
+Wikidata genre,adventure fiction,725.0,0.7656,0.1246,3.33,0.06299
+Wikidata genre,adventure film,795.0,0.7676,0.1303,3.65,0.0294
+Wikidata genre,age-targeted film,690.0,0.8623,0.2769,5.85,0.0112
+Wikidata genre,animated film,62.0,0.7921,0.1751,1.19,1.0
+Wikidata genre,biographical film,445.0,0.3721,-0.1309,-2.09,1.0
+Wikidata genre,black comedy,111.0,0.7007,0.1167,0.82,1.0
+Wikidata genre,black comedy film,93.0,0.6096,0.0197,0.13,1.0
+Wikidata genre,buddy cop film,87.0,0.8958,0.3339,2.76,0.50995
+Wikidata genre,buddy film,342.0,0.91,0.3715,5.53,0.0112
+Wikidata genre,children's film,220.0,0.8017,0.2106,2.85,0.40036
+Wikidata genre,comedy,2186.0,0.6608,0.1098,4.62,0.0112
+Wikidata genre,comedy drama,500.0,0.6348,0.0715,1.15,1.0
+Wikidata genre,comedy film,1986.0,0.7063,0.1552,6.14,0.0112
+Wikidata genre,comedy horror,162.0,0.3015,-0.3301,-2.76,0.37596
+Wikidata genre,comedy horror film,56.0,0.5268,-0.0682,-0.34,1.0
+Wikidata genre,coming-of-age fiction,244.0,0.9566,0.37,3.83,0.0294
+Wikidata genre,coming-of-age film,243.0,0.953,0.3653,3.77,0.0294
+Wikidata genre,crime drama film,74.0,1.0149,0.4534,2.85,0.37916
+Wikidata genre,crime fiction,839.0,0.4858,-0.0516,-1.15,1.0
+Wikidata genre,crime film,1167.0,0.4906,-0.0507,-1.39,1.0
+Wikidata genre,crime thriller film,157.0,0.6612,0.1024,0.96,1.0
+Wikidata genre,cyberpunk,47.0,0.4416,-0.2242,-1.23,1.0
+Wikidata genre,detective fiction,40.0,0.9782,0.3325,1.65,1.0
+Wikidata genre,disaster film,73.0,0.7825,0.1628,1.15,1.0
+Wikidata genre,documentary film,68.0,1.576,0.7438,3.39,0.06299
+Wikidata genre,drama fiction,3082.0,0.4882,-0.0746,-4.14,0.0112
+Wikidata genre,drama film,2960.0,0.4952,-0.0685,-3.68,0.0294
+Wikidata genre,dystopian fiction,174.0,0.4015,-0.2183,-2.3,1.0
+Wikidata genre,dystopian film,156.0,0.4409,-0.182,-1.82,1.0
+Wikidata genre,epic film,73.0,0.753,0.1103,0.92,1.0
+Wikidata genre,erotic film,70.0,0.7927,0.1984,1.1,1.0
+Wikidata genre,erotic thriller,55.0,0.5462,0.0095,0.05,1.0
+Wikidata genre,exploitation film,116.0,0.644,-0.0087,-0.06,1.0
+Wikidata genre,family film,233.0,1.0636,0.4331,6.4,0.0112
+Wikidata genre,fantasy,798.0,0.6836,0.0653,1.66,1.0
+Wikidata genre,fantasy film,805.0,0.6783,0.0608,1.56,1.0
+Wikidata genre,female buddy film,53.0,1.1322,0.6052,3.19,0.16338
+Wikidata genre,fiction film,217.0,0.6023,0.0522,0.59,1.0
+Wikidata genre,film,5488.0,0.5587,-0.0092,-1.24,1.0
+Wikidata genre,film noir,171.0,0.4362,-0.1206,-1.11,1.0
+Wikidata genre,flashback film,57.0,1.136,0.4887,2.99,0.24068
+Wikidata genre,found footage film,44.0,1.5662,0.8036,2.97,0.29967
+Wikidata genre,ghost film,121.0,1.3354,0.7502,5.85,0.0112
+Wikidata genre,heist film,137.0,0.5027,-0.0493,-0.45,1.0
+Wikidata genre,historical drama,50.0,0.5028,-0.0358,-0.22,1.0
+Wikidata genre,historical film,123.0,0.3466,-0.2133,-1.95,1.0
+Wikidata genre,holiday-themed film,122.0,0.7983,0.2437,2.08,1.0
+Wikidata genre,hood film,56.0,0.804,0.2522,1.27,1.0
+Wikidata genre,horror film,922.0,0.813,0.2045,4.51,0.0112
+Wikidata genre,independent film,73.0,0.9938,0.2521,1.25,1.0
+Wikidata genre,legal drama,52.0,0.6285,0.143,0.83,1.0
+Wikidata genre,martial arts film,116.0,0.8263,0.2323,1.86,1.0
+Wikidata genre,mature film,64.0,0.6179,-0.0076,-0.04,1.0
+Wikidata genre,melodrama,77.0,1.0206,0.4708,3.17,0.10439
+Wikidata genre,monster film,254.0,0.5539,-0.0557,-0.64,1.0
+Wikidata genre,musical film,324.0,0.7492,0.1869,2.6,0.62154
+Wikidata genre,mystery film,470.0,0.727,0.1838,3.01,0.16338
+Wikidata genre,neo-noir,167.0,0.4632,-0.0929,-0.85,1.0
+Wikidata genre,non-fiction film,52.0,1.7125,0.8521,3.28,0.07039
+Wikidata genre,parody,74.0,0.6896,0.1246,0.74,1.0
+Wikidata genre,parody film,81.0,0.6521,0.0778,0.48,1.0
+Wikidata genre,period drama film,45.0,0.5553,-0.0354,-0.23,1.0
+Wikidata genre,political film,174.0,0.4642,-0.1502,-1.57,1.0
+Wikidata genre,political thriller,60.0,0.3843,-0.1696,-1.06,1.0
+Wikidata genre,political thriller film,59.0,0.3692,-0.1861,-1.15,1.0
+Wikidata genre,post-apocalyptic fiction,94.0,0.3931,-0.2393,-1.83,1.0
+Wikidata genre,post-apocalyptic film,92.0,0.4061,-0.2272,-1.72,1.0
+Wikidata genre,prison film,70.0,0.5349,-0.0037,-0.02,1.0
+Wikidata genre,pseudo-documentary,56.0,1.3332,0.5933,2.55,0.72713
+Wikidata genre,psychological drama,54.0,1.0726,0.4907,2.46,0.9589
+Wikidata genre,psychological drama film,52.0,1.108,0.5263,2.61,0.63504
+Wikidata genre,psychological film,95.0,1.1138,0.5374,3.63,0.0465
+Wikidata genre,psychological horror film,55.0,1.0311,0.4669,2.42,1.0
+Wikidata genre,psychological thriller,128.0,0.9008,0.3236,2.53,0.93711
+Wikidata genre,psychological thriller film,80.0,1.1698,0.5843,3.61,0.0465
+Wikidata genre,romance film,740.0,0.7569,0.2195,4.47,0.0112
+Wikidata genre,romantic comedy,631.0,0.7071,0.192,3.71,0.0465
+Wikidata genre,romantic comedy film,280.0,0.9039,0.3892,4.84,0.0112
+Wikidata genre,science fiction,777.0,0.5462,-0.0679,-1.62,1.0
+Wikidata genre,science fiction action film,46.0,0.7625,0.1007,0.63,1.0
+Wikidata genre,science fiction comedy,53.0,0.0214,-0.5245,-2.87,0.39776
+Wikidata genre,science fiction film,797.0,0.5515,-0.0646,-1.56,1.0
+Wikidata genre,science fiction horror film,70.0,0.8845,0.3431,2.11,1.0
+Wikidata genre,slasher film,157.0,1.1222,0.4696,3.66,0.0376
+Wikidata genre,speculative fiction,91.0,0.8114,0.1663,1.4,1.0
+Wikidata genre,speculative fiction film,1512.0,0.5857,-0.0319,-1.16,1.0
+Wikidata genre,splatter film,67.0,0.801,0.097,0.48,1.0
+Wikidata genre,sport film,166.0,0.6599,0.137,1.35,1.0
+Wikidata genre,spy film,122.0,0.7858,0.2158,2.17,1.0
+Wikidata genre,superhero fiction,155.0,0.8525,0.1293,1.69,1.0
+Wikidata genre,superhero film,154.0,0.8572,0.1349,1.75,1.0
+Wikidata genre,supernatural film,180.0,1.3407,0.758,7.13,0.0112
+Wikidata genre,supernatural horror film,87.0,1.3985,0.8099,5.1,0.0112
+Wikidata genre,survival film,40.0,1.0296,0.4325,2.05,1.0
+Wikidata genre,suspense film,103.0,1.1888,0.5943,4.24,0.0112
+Wikidata genre,teen film,499.0,0.8632,0.284,4.42,0.0112
+Wikidata genre,thriller,1335.0,0.5836,0.0222,0.67,1.0
+Wikidata genre,thriller film,1515.0,0.5605,-0.0001,-0.0,1.0
+Wikidata genre,time-travel film,64.0,1.0684,0.4448,2.81,0.44076
+Wikidata genre,trial film,50.0,0.6167,0.1338,0.77,1.0
+Wikidata genre,vampire film,78.0,0.3196,-0.2653,-1.76,1.0
+Wikidata genre,vigilante film,83.0,0.5442,-0.0273,-0.18,1.0
+Wikidata genre,war film,238.0,0.3147,-0.242,-3.02,0.16338
+Wikidata genre,woman's film,54.0,1.0945,0.5703,3.05,0.25417
+Wikidata genre,zombie film,76.0,0.3945,-0.2573,-1.43,1.0

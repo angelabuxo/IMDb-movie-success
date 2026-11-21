@@ -1,0 +1,43 @@
+{
+ "usable_money_films": 6346,
+ "with_tmdb_row": 6346,
+ "shared_genres": [
+  "Action",
+  "Adventure",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "History",
+  "Horror",
+  "Music",
+  "Mystery",
+  "Romance",
+  "Sci-Fi",
+  "Thriller",
+  "War"
+ ],
+ "perms": 10000,
+ "genre_test_films": 6313,
+ "money": {
+  "usable_films_with_clean_tmdb_money": 5831,
+  "corr_ln_ratio_wikipedia_tmdb": 0.951,
+  "films_wikipedia_lacks_with_clean_tmdb_money": 677,
+  "union_films": 7023,
+  "mean_ln_ratio_usable": 0.573,
+  "mean_ln_ratio_wikipedia_lacks": -0.379,
+  "share_below_budget_usable": 0.279,
+  "share_below_budget_wikipedia_lacks": 0.51
+ },
+ "rating": {
+  "films_with_rating": 5735,
+  "spearman_genre_effects_with_vs_without_rating": 0.977
+ },
+ "horror": {
+  "films": 816,
+  "with_keywords": 814,
+  "in_any_subgenre": 545
+ }
+}

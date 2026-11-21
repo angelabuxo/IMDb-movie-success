@@ -1,0 +1,13 @@
+genre,films,corr_typicality_net_return
+Action,438,0.139
+Adventure,342,0.119
+Biography,157,0.13
+Comedy,549,0.106
+Crime,342,0.034
+Drama,893,0.108
+Fantasy,147,0.15
+Horror,203,0.125
+Mystery,198,0.174
+Romance,231,0.172
+Sci-Fi,168,0.114
+Thriller,298,0.14

@@ -1,0 +1,15 @@
+{
+ "genre": "Horror",
+ "membership": "tag_genome",
+ "films_with_plot": 351,
+ "hits": 88,
+ "flops": 88,
+ "vocab": 990,
+ "names_dropped": 38192,
+ "min_df": 10,
+ "perms": 1000,
+ "familywise_p_max_abs_calibrated_z": 0.0819,
+ "max_abs_calibrated_z": 3.64,
+ "median_plot_words_hit": 611,
+ "median_plot_words_flop": 655
+}

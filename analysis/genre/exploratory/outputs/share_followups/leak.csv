@@ -1,0 +1,10 @@
+target,model,cv_r2,added
+ln_votes,base,0.2438,0.0
+ln_votes,+ IMDb tags,0.2653,0.0215
+ln_votes,+ Tag Genome shares,0.2614,0.0176
+ln_ratio,base,0.0926,0.0
+ln_ratio,+ IMDb tags,0.1088,0.0162
+ln_ratio,+ Tag Genome shares,0.1223,0.0297
+ln_ratio_votes_in_base,base,0.3493,0.0
+ln_ratio_votes_in_base,+ IMDb tags,0.382,0.0327
+ln_ratio_votes_in_base,+ Tag Genome shares,0.4035,0.0543

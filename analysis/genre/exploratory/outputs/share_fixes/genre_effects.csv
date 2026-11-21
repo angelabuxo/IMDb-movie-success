@@ -1,0 +1,73 @@
+genre,coef_centred,lo,hi,reference,representation
+Action,0.0383,-0.0703,0.147,,IMDb tags
+Adventure,-0.0302,-0.1498,0.0893,,IMDb tags
+Animation,0.321,0.1469,0.495,,IMDb tags
+Biography,0.045,-0.1223,0.2123,,IMDb tags
+Comedy,-0.0273,-0.1407,0.086,,IMDb tags
+Crime,-0.1511,-0.2565,-0.0457,,IMDb tags
+Drama,-0.1641,-0.2643,-0.0638,,IMDb tags
+Family,0.2681,0.1336,0.4027,,IMDb tags
+Fantasy,-0.1273,-0.2684,0.0139,,IMDb tags
+History,-0.114,-0.3486,0.1206,,IMDb tags
+Horror,0.1141,-0.0487,0.277,,IMDb tags
+Music,0.0446,-0.1695,0.2588,,IMDb tags
+Mystery,0.0197,-0.1221,0.1615,,IMDb tags
+Romance,0.1982,0.0838,0.3127,,IMDb tags
+Sci-Fi,-0.1548,-0.3095,-0.0002,,IMDb tags
+Sport,-0.0419,-0.2357,0.152,,IMDb tags
+Thriller,0.115,-0.0027,0.2327,,IMDb tags
+War,-0.3535,-0.7122,0.0052,,IMDb tags
+Action,0.0678,-0.0237,0.1593,,"IMDb tags, rating and votes fixed"
+Adventure,-0.0653,-0.1653,0.0348,,"IMDb tags, rating and votes fixed"
+Animation,0.3695,0.225,0.514,,"IMDb tags, rating and votes fixed"
+Biography,0.0049,-0.1304,0.1401,,"IMDb tags, rating and votes fixed"
+Comedy,0.0356,-0.0646,0.1357,,"IMDb tags, rating and votes fixed"
+Crime,-0.169,-0.2578,-0.0803,,"IMDb tags, rating and votes fixed"
+Drama,-0.0915,-0.1805,-0.0025,,"IMDb tags, rating and votes fixed"
+Family,0.3994,0.2928,0.5061,,"IMDb tags, rating and votes fixed"
+Fantasy,-0.2361,-0.3528,-0.1193,,"IMDb tags, rating and votes fixed"
+History,0.0518,-0.1183,0.222,,"IMDb tags, rating and votes fixed"
+Horror,-0.0305,-0.1743,0.1134,,"IMDb tags, rating and votes fixed"
+Music,0.2002,0.0041,0.3963,,"IMDb tags, rating and votes fixed"
+Mystery,0.0117,-0.1055,0.1289,,"IMDb tags, rating and votes fixed"
+Romance,0.26,0.1655,0.3545,,"IMDb tags, rating and votes fixed"
+Sci-Fi,-0.408,-0.5336,-0.2824,,"IMDb tags, rating and votes fixed"
+Sport,0.0262,-0.1292,0.1816,,"IMDb tags, rating and votes fixed"
+Thriller,0.0023,-0.0949,0.0994,,"IMDb tags, rating and votes fixed"
+War,-0.4291,-0.713,-0.1453,,"IMDb tags, rating and votes fixed"
+Action,0.7753,0.7753,0.7753,Action,shares + log total
+Adventure,-0.189,-0.8588,0.4808,Action,shares + log total
+Animation,-0.6574,-1.1941,-0.1207,Action,shares + log total
+Biography,-0.3023,-0.9599,0.3552,Action,shares + log total
+Comedy,1.2363,0.882,1.5905,Action,shares + log total
+Crime,-0.9222,-1.515,-0.3294,Action,shares + log total
+Drama,0.4827,0.1041,0.8613,Action,shares + log total
+Family,2.3786,1.7817,2.9754,Action,shares + log total
+Fantasy,-1.2232,-1.8098,-0.6367,Action,shares + log total
+History,-0.1524,-0.8626,0.5577,Action,shares + log total
+Horror,0.5795,0.1275,1.0314,Action,shares + log total
+Music,0.5543,0.037,1.0716,Action,shares + log total
+Mystery,-1.0586,-1.77,-0.3473,Action,shares + log total
+Romance,1.5082,1.1336,1.8828,Action,shares + log total
+Sci-Fi,-1.4796,-2.1001,-0.8591,Action,shares + log total
+Sport,-0.5248,-1.1691,0.1195,Action,shares + log total
+Thriller,0.9914,0.3605,1.6222,Action,shares + log total
+War,-1.9965,-3.0934,-0.8997,Action,shares + log total
+Action,0.6276,0.6276,0.6276,Action,"shares + log total, rating and votes fixed"
+Adventure,-0.1339,-0.7388,0.4711,Action,"shares + log total, rating and votes fixed"
+Animation,-0.1555,-0.6368,0.3258,Action,"shares + log total, rating and votes fixed"
+Biography,0.0645,-0.5124,0.6413,Action,"shares + log total, rating and votes fixed"
+Comedy,0.4281,0.1232,0.7329,Action,"shares + log total, rating and votes fixed"
+Crime,-1.0691,-1.5653,-0.573,Action,"shares + log total, rating and votes fixed"
+Drama,-0.0349,-0.4002,0.3303,Action,"shares + log total, rating and votes fixed"
+Family,3.1469,2.6218,3.672,Action,"shares + log total, rating and votes fixed"
+Fantasy,-1.2806,-1.7678,-0.7935,Action,"shares + log total, rating and votes fixed"
+History,0.4105,-0.1642,0.9852,Action,"shares + log total, rating and votes fixed"
+Horror,-0.0931,-0.4835,0.2973,Action,"shares + log total, rating and votes fixed"
+Music,0.3331,-0.1544,0.8207,Action,"shares + log total, rating and votes fixed"
+Mystery,-0.9347,-1.5702,-0.2993,Action,"shares + log total, rating and votes fixed"
+Romance,1.3341,1.011,1.6572,Action,"shares + log total, rating and votes fixed"
+Sci-Fi,-1.7188,-2.2572,-1.1803,Action,"shares + log total, rating and votes fixed"
+Sport,0.1258,-0.433,0.6846,Action,"shares + log total, rating and votes fixed"
+Thriller,0.5129,-0.0493,1.075,Action,"shares + log total, rating and votes fixed"
+War,-1.5628,-2.4601,-0.6656,Action,"shares + log total, rating and votes fixed"

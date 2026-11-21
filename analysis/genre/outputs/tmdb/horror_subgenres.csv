@@ -1,0 +1,5 @@
+run,subgenre,n_films,mean,excess,z,p_holm,mean_other_horror,median,median_other_horror,share_beating_other_horror_median
+Horror subgenre (return net of budget and era),supernatural,231,0.8308,0.6025,6.37,0.0004,-0.0077,0.9002,0.2238,0.697
+Horror subgenre (return net of budget and era),slasher,166,0.5112,0.2885,2.3,0.0219,0.1577,0.6576,0.3127,0.627
+Horror subgenre (return net of budget and era),found footage,50,1.6044,1.4796,5.09,0.0004,0.1399,1.7424,0.3531,0.78
+Horror subgenre (return net of budget and era),creature,202,-0.106,-0.3213,-3.28,0.0026,0.3401,0.2499,0.4777,0.436

@@ -30,7 +30,7 @@ from explorer.log import LOG_DIR, setup  # noqa: E402
 
 TIMEOUT = 600
 PAGES = [("pages", "home"), ("pipeline_page", "pipeline"), ("pages", "text"),
-         ("embedding_page", "embeddings"), ("map_pages", "maps"), ("map_pages", "checks"), ("pages", "network"),
+         ("embedding_page", "embeddings"), ("map_pages", "maps"), ("map_pages", "checks"), ("pages", "network"), ("genre_page", "genre"),
          ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
          ("pages", "profit"), ("attribution_page", "attribution"), ("pages", "calendar"), ("pages", "tags"),
          ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"), ("pages", "tmdb")]

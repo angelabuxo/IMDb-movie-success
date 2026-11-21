@@ -1,0 +1,30 @@
+{
+ "films": 6346,
+ "films_with_tag_genome": 4231,
+ "power_chosen": 1.5,
+ "mapping_changed": [
+  "Biography",
+  "Comedy",
+  "Family",
+  "History",
+  "Romance",
+  "Thriller"
+ ],
+ "spearman_effects": {
+  "IMDb tags ~ IMDb tags, rating and votes fixed": 0.767,
+  "IMDb tags ~ shares + log total": 0.618,
+  "IMDb tags ~ shares + log total, rating and votes fixed": 0.598,
+  "IMDb tags, rating and votes fixed ~ shares + log total": 0.649,
+  "IMDb tags, rating and votes fixed ~ shares + log total, rating and votes fixed": 0.759,
+  "shares + log total ~ shares + log total, rating and votes fixed": 0.924
+ },
+ "coverage": {
+  "cells_without_scored_films_share_of_full": 0.09,
+  "corr_full_vs_subset": 0.972,
+  "corr_full_vs_reweighted": 0.95,
+  "mean_abs_gap_subset": 0.1388,
+  "mean_abs_gap_reweighted": 0.0933
+ },
+ "common_set_films": 1598,
+ "films_dominant_not_in_imdb": 562
+}

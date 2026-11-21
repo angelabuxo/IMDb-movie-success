@@ -1,0 +1,19 @@
+imdb_genre,wikidata_genre,imdb_films,wikidata_films,kappa,p_wikidata_given_imdb
+Action,action film,1679,1722,0.747,0.825
+Adventure,adventure film,1345,795,0.545,0.491
+Animation,animated film,358,62,0.23,0.142
+Biography,biographical film,467,445,0.83,0.822
+Comedy,comedy film,2490,1986,0.691,0.718
+Crime,crime film,1267,1167,0.66,0.696
+Drama,drama film,3224,2960,0.64,0.782
+Family,family film,368,233,0.204,0.196
+Fantasy,fantasy film,552,805,0.524,0.705
+History,historical film,191,123,0.374,0.319
+Horror,horror film,816,922,0.837,0.915
+Music,musical film,214,324,0.504,0.659
+Mystery,mystery film,731,470,0.404,0.376
+Romance,romance film,1001,740,0.503,0.496
+Sci-Fi,science fiction film,491,797,0.638,0.882
+Sport,sport film,171,166,0.601,0.602
+Thriller,thriller film,1069,1515,0.401,0.628
+War,war film,101,238,0.46,0.792

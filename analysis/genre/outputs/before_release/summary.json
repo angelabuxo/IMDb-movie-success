@@ -1,0 +1,20 @@
+{
+ "specialists": {
+  "films": 6316,
+  "films_without_earlier_credits": 30,
+  "sequels": 783,
+  "median_earlier_credits": 77.0,
+  "shuffle_coef_genre_experience": 0.0844,
+  "shuffle_p_genre_experience": 0.001,
+  "shuffle_model": "same as the 'sequel flag controlled' row",
+  "perms": 1000,
+  "first_version_median_earlier_credits": 36.99999999999999
+ },
+ "typicality": {
+  "films": 1619,
+  "shuffle_coef": 0.1063,
+  "shuffle_p": 0.001,
+  "shuffle_model": "same as the '+ script-quality controls' row",
+  "perms": 1000
+ }
+}

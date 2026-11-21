@@ -1,0 +1,6 @@
+a,b,nmi,share_of_films,null_mean
+tag_genome_dominant,plot_dominant,0.29,,
+tag_genome_dominant,plot_cluster,0.256,,
+plot_dominant,plot_cluster,0.29,,
+tag_genome_dominant,one of the film's IMDb genres,,0.869,0.248
+plot_dominant,one of the film's IMDb genres,,0.786,0.325

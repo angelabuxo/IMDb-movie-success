@@ -1,0 +1,41 @@
+{
+ "genre_network": {
+  "null_samples": 1000,
+  "pairs": 153,
+  "backbone_links": 41,
+  "disparity_links": 24,
+  "both": 21,
+  "backbone_only": 20,
+  "disparity_only": 3,
+  "louvain_seeds": 20,
+  "modularity": 0.3905,
+  "modularity_min_max_over_seeds": [
+   0.3797,
+   0.3905
+  ],
+  "mean_nmi_best_vs_other_seeds": 0.769,
+  "null_modularity_mean": 0.3981,
+  "null_modularity_max": 0.5166,
+  "null_modularity_samples": 200,
+  "modularity_p": 0.6219,
+  "families": 3
+ },
+ "film_network": {
+  "films": 6346,
+  "people": 18868,
+  "links": 180396,
+  "films_with_no_link": 85,
+  "mean_degree": 56.85,
+  "roles": [
+   "director",
+   "writer",
+   "producer",
+   "actor (first 3 billed)"
+  ],
+  "perms": 1000,
+  "share_links_sharing_a_genre": 0.718,
+  "share_null_mean": 0.5582,
+  "share_null_hi95": 0.5637,
+  "share_p": 0.001
+ }
+}

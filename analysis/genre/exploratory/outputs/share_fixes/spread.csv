@@ -1,0 +1,5 @@
+model,coef_per_sd,lo,hi,p
+effective genres alone,0.1291,0.0898,0.1685,1.31e-10
++ log total,-0.1565,-0.2158,-0.0972,2.33e-07
+"+ log total, rating, ln votes",-0.1168,-0.1737,-0.0599,5.78e-05
+"IMDb number of genres, + rating, ln votes",-0.1224,-0.1571,-0.0878,4.46e-12

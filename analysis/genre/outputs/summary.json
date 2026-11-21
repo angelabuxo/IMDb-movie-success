@@ -1,0 +1,65 @@
+{
+ "min_films": 100,
+ "budget_bins": 10,
+ "fine_budget_bins": 50,
+ "seed": 2805,
+ "perms": 10000,
+ "sets": {
+  "usable_money": {
+   "films": 6346,
+   "genres_kept": [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Biography",
+    "Comedy",
+    "Crime",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "History",
+    "Horror",
+    "Music",
+    "Mystery",
+    "Romance",
+    "Sci-Fi",
+    "Sport",
+    "Thriller",
+    "War"
+   ],
+   "films_with_no_kept_genre": 14,
+   "mean_genres_per_film": 2.61,
+   "all_film_mean_ln_ratio": 0.5729,
+   "r2_budget_era": 0.0634,
+   "r2_budget_era_genre": 0.0959,
+   "r2_added_by_genre": 0.0324,
+   "adj_r2_added_by_genre": 0.0299,
+   "spearman_ols_vs_shuffle_excess": 0.934
+  },
+  "in_common_set": {
+   "films": 1598,
+   "genres_kept": [
+    "Action",
+    "Adventure",
+    "Biography",
+    "Comedy",
+    "Crime",
+    "Drama",
+    "Fantasy",
+    "Horror",
+    "Mystery",
+    "Romance",
+    "Sci-Fi",
+    "Thriller"
+   ],
+   "films_with_no_kept_genre": 0,
+   "mean_genres_per_film": 2.45,
+   "all_film_mean_ln_ratio": 1.0047,
+   "r2_budget_era": 0.1292,
+   "r2_budget_era_genre": 0.1553,
+   "r2_added_by_genre": 0.026,
+   "adj_r2_added_by_genre": 0.0197,
+   "spearman_ols_vs_shuffle_excess": 0.741
+  }
+ }
+}

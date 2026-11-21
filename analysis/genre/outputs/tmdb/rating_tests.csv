@@ -1,0 +1,6 @@
+run,genre,n_films,mean,excess,z,p_holm
+rating group,G,117,1.1121,0.5616,4.99,0.0005
+rating group,PG,979,0.9126,0.3494,9.23,0.0005
+rating group,PG-13,1919,0.6409,0.0832,3.55,0.0005
+rating group,R,2720,0.4536,-0.1031,-5.13,0.0005
+rating group,other,611,0.2428,-0.4698,-7.62,0.0005
