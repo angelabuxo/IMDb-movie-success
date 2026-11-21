@@ -1,0 +1,17 @@
+films,model,cv_r2,added
+common set,IMDb tags,0.1214,0.0079
+common set,script shares (MiniLM),0.115,0.0015
+common set,script shares (Word2Vec),0.1171,0.0036
+common set,IMDb tags + script shares (MiniLM),0.1193,0.0058
+"common set, rating and votes in base",IMDb tags,0.4485,0.025
+"common set, rating and votes in base",script shares (MiniLM),0.4462,0.0227
+"common set, rating and votes in base",script shares (Word2Vec),0.4483,0.0248
+"common set, rating and votes in base",IMDb tags + script shares (MiniLM),0.4533,0.0298
+"common set, target rating",IMDb tags,0.1891,0.1788
+"common set, target rating",script shares (MiniLM),0.1271,0.1169
+"common set, target rating",script shares (Word2Vec),0.1169,0.1066
+"common set, target rating",IMDb tags + script shares (MiniLM),0.2043,0.194
+"common set, target ln_votes",IMDb tags,0.2072,0.0062
+"common set, target ln_votes",script shares (MiniLM),0.2101,0.0091
+"common set, target ln_votes",script shares (Word2Vec),0.203,0.0021
+"common set, target ln_votes",IMDb tags + script shares (MiniLM),0.2166,0.0157

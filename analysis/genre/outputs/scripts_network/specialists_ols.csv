@@ -1,0 +1,7 @@
+term,coef_per_sd,lo,hi,p,films
+genre_experience,0.0784,0.0281,0.1286,0.00224,"all, sequel flag controlled"
+prior_credits,0.1048,0.0555,0.1541,3.11e-05,"all, sequel flag controlled"
+genre_breadth,-0.0979,-0.1564,-0.0394,0.00104,"all, sequel flag controlled"
+genre_experience,0.0763,0.0206,0.132,0.00727,sequels left out
+prior_credits,0.0952,0.0417,0.1486,0.000481,sequels left out
+genre_breadth,-0.0955,-0.1587,-0.0324,0.00302,sequels left out

@@ -1,0 +1,37 @@
+representation,genre,weight,excess,z,p_holm
+IMDb tags,Action,429.0,-0.0905,-2.38,0.25197
+IMDb tags,Adventure,338.0,0.1204,2.76,0.10719
+IMDb tags,Animation,71.0,0.1202,1.17,1.0
+IMDb tags,Biography,155.0,-0.1466,-1.71,1.0
+IMDb tags,Comedy,541.0,-0.014,-0.35,1.0
+IMDb tags,Crime,338.0,-0.2195,-4.08,0.0036
+IMDb tags,Drama,882.0,-0.0807,-3.28,0.0221
+IMDb tags,Family,49.0,0.1927,1.43,1.0
+IMDb tags,Fantasy,146.0,-0.0044,-0.06,1.0
+IMDb tags,History,52.0,-0.1128,-0.81,1.0
+IMDb tags,Horror,200.0,0.1739,2.16,0.43676
+IMDb tags,Music,41.0,0.0621,0.34,1.0
+IMDb tags,Mystery,198.0,0.0338,0.43,1.0
+IMDb tags,Romance,228.0,0.1097,1.53,1.0
+IMDb tags,Sci-Fi,163.0,-0.0702,-0.97,1.0
+IMDb tags,Sport,30.0,0.043,0.2,1.0
+IMDb tags,Thriller,297.0,0.0281,0.47,1.0
+IMDb tags,War,21.0,0.2776,1.17,1.0
+script shares (MiniLM),Action,176.9,0.0001,0.01,1.0
+script shares (MiniLM),Adventure,108.9,0.038,2.58,0.16558
+script shares (MiniLM),Animation,29.6,0.0761,2.36,0.29117
+script shares (MiniLM),Biography,48.1,-0.0628,-2.32,0.29117
+script shares (MiniLM),Comedy,168.0,-0.0018,-0.08,1.0
+script shares (MiniLM),Crime,92.0,-0.0655,-2.63,0.16558
+script shares (MiniLM),Drama,237.5,-0.0287,-1.79,0.85791
+script shares (MiniLM),Family,54.3,0.0503,2.34,0.29117
+script shares (MiniLM),Fantasy,70.0,0.0359,1.83,0.85791
+script shares (MiniLM),History,40.1,-0.0482,-1.49,1.0
+script shares (MiniLM),Horror,92.7,0.039,1.17,1.0
+script shares (MiniLM),Music,41.7,0.0467,1.44,1.0
+script shares (MiniLM),Mystery,49.4,-0.0186,-0.82,1.0
+script shares (MiniLM),Romance,127.7,0.0301,1.28,1.0
+script shares (MiniLM),Sci-Fi,67.2,-0.0082,-0.3,1.0
+script shares (MiniLM),Sport,23.9,0.01,0.2,1.0
+script shares (MiniLM),Thriller,136.0,-0.018,-1.13,1.0
+script shares (MiniLM),War,33.9,0.0205,0.64,1.0

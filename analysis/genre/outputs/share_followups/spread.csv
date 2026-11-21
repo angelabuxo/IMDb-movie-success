@@ -1,0 +1,9 @@
+measure,group,films,mean,excess,z,p_holm
+effective_genres_tag_genome,q1 (1.04-2.09),847,0.6549,-0.118,-2.95,0.0096
+effective_genres_tag_genome,q2 (2.09-2.73),846,0.5707,-0.1128,-2.95,0.0102
+effective_genres_tag_genome,q3 (2.73-3.40),846,0.6018,-0.0887,-2.31,0.0392
+effective_genres_tag_genome,q4 (3.40-4.34),846,0.6992,0.0239,0.67,0.49975
+effective_genres_tag_genome,q5 (4.34-10.30),846,0.9727,0.2957,8.48,0.0005
+imdb_n_genres,1 genre,347,1.0458,0.2376,3.34,0.001
+imdb_n_genres,2 genres,1090,0.7721,0.0567,1.71,0.08939
+imdb_n_genres,3 genres,2794,0.6287,-0.0516,-3.75,0.0006

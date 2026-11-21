@@ -1,0 +1,8 @@
+model,cv_r2,sd_over_repeats,features,added_over_budget_era
+budget + era,0.0937,0.0015,15,0.0
++ IMDb tags (0/1),0.1094,0.0022,33,0.0157
++ Tag Genome shares,0.1255,0.0035,33,0.0318
++ plot shares,0.1189,0.0032,33,0.0252
++ plot clusters,0.0944,0.0021,33,0.0007
++ plot embedding,0.1416,0.0018,399,0.0479
++ IMDb tags + Tag Genome shares,0.133,0.0038,51,0.0393

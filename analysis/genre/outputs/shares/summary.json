@@ -1,0 +1,11 @@
+{
+ "films": 6346,
+ "with_tag_genome": 4231,
+ "with_plot_shares": 6303,
+ "with_plot_vector": 6303,
+ "kmeans_k": 18,
+ "kmeans_seeds": 10,
+ "kmeans_mean_nmi_best_vs_other_seeds": 0.699,
+ "perms": 10000,
+ "films_with_all": 4203
+}

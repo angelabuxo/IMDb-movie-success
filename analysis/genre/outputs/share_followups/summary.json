@@ -1,0 +1,24 @@
+{
+ "films": 4231,
+ "genres": 18,
+ "perms": 10000,
+ "spread": {
+  "spearman_effective_genres_vs_budget_netted_return": 0.112,
+  "p": 2.35e-13,
+  "spearman_effective_genres_vs_budget_netted_ln_votes": 0.167,
+  "spearman_imdb_n_genres_vs_budget_netted_ln_votes": -0.025
+ },
+ "share_network": {
+  "null_samples": 1000,
+  "backbone_links": 34,
+  "imdb_backbone_links": 41,
+  "shared_links": 22,
+  "families": 5,
+  "modularity": 0.1391,
+  "nmi_with_imdb_families": 0.412
+ },
+ "film_network": {
+  "films": 4231,
+  "links": 98524
+ }
+}

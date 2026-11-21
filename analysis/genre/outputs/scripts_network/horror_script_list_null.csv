@@ -1,0 +1,13 @@
+layer,side,k,p
+description,hit,5,0.6603
+description,hit,10,0.8022
+description,hit,20,0.6743
+description,flop,5,0.0609
+description,flop,10,0.009
+description,flop,20,0.024
+dialogue,hit,5,0.2418
+dialogue,hit,10,0.2947
+dialogue,hit,20,0.2737
+dialogue,flop,5,0.0949
+dialogue,flop,10,0.0779
+dialogue,flop,20,0.1838
