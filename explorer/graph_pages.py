@@ -484,11 +484,64 @@ def movie_network_view(stamp: float, roles: tuple, tiers: tuple, clean_only: boo
         })
     return {
         "ids": films.id.to_numpy()[top].tolist(),
-        "r": r[order], "c": c[order], "w": w[order], "xy": xy,
+        "r": r, "c": c, "w": w, "draw_r": r[order], "draw_c": c[order], "xy": xy,
         "degree": np.asarray(graph.degree()), "weighted_degree": np.asarray(graph.strength(weights=w.tolist())),
         "pagerank": np.asarray(graph.pagerank(weights=w.tolist())),
         "links": int(len(r)), "isolates": int(len(films) - len(top)),
         "communities": communities, "community_comparison": method_comparison,
+    }
+
+
+def _network_assortativity(ids: np.ndarray, by: pd.DataFrame, r: np.ndarray, c: np.ndarray,
+                           shuffles: int = 200, seed: int = 2805) -> dict:
+    """Adjusted edge assortativity on the complete weighted graph among the selected films."""
+    frame = by.loc[ids].copy()
+    genres = sorted({g for value in frame["genres"].fillna("") for g in value.split(",") if g})
+    eras = sorted({int(y) // 10 for y in frame["year"].dropna()})
+    decade = (frame["year"].fillna(0).astype(int) // 10).to_numpy()
+    y = pd.to_numeric(frame["log_multiple"], errors="coerce").to_numpy()
+    budget = np.log(pd.to_numeric(frame["budget_usd"], errors="coerce").clip(lower=1).to_numpy())
+    columns = [np.ones(len(frame)), budget]
+    columns += [((decade // 1) == e).astype(float) for e in eras[1:]]
+    columns += [frame["genres"].fillna("").apply(
+        lambda value, genre=g: float(genre in {item for item in value.split(",") if item})
+    ).to_numpy() for g in genres]
+    x = np.column_stack(columns)
+    good = np.isfinite(y) & np.all(np.isfinite(x), axis=1)
+    if good.sum() < 3:
+        return {"observed": None, "mean": None, "null_95": None, "p": None, "pairs": len(r)}
+    beta = np.linalg.lstsq(x[good], y[good], rcond=None)[0]
+    residual = y.copy()
+    residual[good] = y[good] - x[good] @ beta
+    residual -= residual[good].mean()
+    residual /= residual[good].std(ddof=1) if residual[good].std(ddof=1) else 1
+
+    def corr(values):
+        if not (np.all(np.isfinite(values[r])) and np.all(np.isfinite(values[c]))):
+            return float("nan")
+        a, b = values[r], values[c]
+        if len(a) < 2 or a.std(ddof=1) == 0 or b.std(ddof=1) == 0:
+            return float("nan")
+        return float(np.corrcoef(a, b)[0, 1])
+
+    observed = corr(residual)
+    rng = np.random.default_rng(seed)
+    null = []
+    for _ in range(shuffles):
+        shuffled = residual.copy()
+        for era in np.unique(decade):
+            pos = np.flatnonzero(decade == era)
+            shuffled[pos] = residual[rng.permutation(pos)]
+        null.append(corr(shuffled))
+    null = np.asarray([value for value in null if np.isfinite(value)])
+    if not len(null) or not np.isfinite(observed):
+        return {"observed": None, "mean": None, "null_95": None, "p": None, "pairs": len(r)}
+    return {
+        "observed": round(observed, 4),
+        "mean": round(float(null.mean()), 4),
+        "null_95": round(float(np.quantile(null, 0.95)), 4),
+        "p": round(float((1 + np.sum(null >= observed)) / (1 + len(null))), 4),
+        "pairs": len(r),
     }
 
 
@@ -579,8 +632,19 @@ def movie_network():
     membership = v["communities"][community_method]
     centrality["community"] = membership
     st.caption(f"{len(ids):,} films shown, {v['links']:,} links in the filtered network "
-               f"({len(v['r']):,} drawn); {v['isolates']:,} filtered films had no link.")
+               f"({len(v['draw_r']):,} drawn); {v['isolates']:,} filtered films had no link.")
     with st.expander("Communities and log gross/budget summaries"):
+        assortativity = _network_assortativity(ids, by, v["r"], v["c"])
+        if assortativity["observed"] is not None:
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Edge pairs", f"{assortativity['pairs']:,}")
+            c2.metric("Adjusted assortativity", f"{assortativity['observed']:+.3f}")
+            c3.metric("Shuffle mean", f"{assortativity['mean']:+.3f}")
+            c4.metric("Shuffle p", f"{assortativity['p']:.4f}")
+            st.caption("Assortativity is Pearson correlation of adjusted ln(gross/budget) across the "
+                       "two ends of every retained edge; 200 permutations shuffle returns within decade.")
+        else:
+            st.caption("Not enough linked films with usable return values to calculate assortativity.")
         st.caption("Communities use all weighted links inside the displayed 1,200-film cap, not only the strongest "
                    "10,000 links shown. Infomap optimizes a flow description length rather than modularity; "
                    "modularity is shown here only as a comparable diagnostic.")
@@ -588,8 +652,9 @@ def movie_network():
         st.dataframe(_community_summary(ids, by, membership), width="stretch", hide_index=True)
 
     fig = go.Figure()
-    if len(v["r"]):
-        fig.add_trace(_edge_trace(v["xy"], v["r"], v["c"], opacity=.2 if len(v["r"]) > 3000 else .35))
+    if len(v["draw_r"]):
+        fig.add_trace(_edge_trace(v["xy"], v["draw_r"], v["draw_c"],
+                                  opacity=.2 if len(v["draw_r"]) > 3000 else .35))
     if colour == "ln(gross/budget)":
         colours, colourbar = np.clip(by.log_multiple.to_numpy(), -3, 3), dict(title="ln multiple")
         marker = dict(color=colours, colorscale="RdBu", cmid=0, showscale=True, colorbar=colourbar)

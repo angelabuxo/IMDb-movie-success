@@ -10,6 +10,8 @@ Robustness: usable_money and the 100k+ tier in that set.
 import argparse
 import csv
 import json
+import subprocess
+import sys
 from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
@@ -29,11 +31,24 @@ OUT_FIG = ROOT / "analysis" / "network" / "figures" / "q2_network.png"
 
 ROLES = ("director", "actor", "producer", "studio")
 CAST_TOP = 3
+MAIN_GENRES = ("Drama", "Comedy", "Action", "Adventure", "Crime", "Thriller",
+               "Horror")
+EXTRA_GENRE_RUNS = (
+    ("Supernatural", ("Supernatural",), False),
+    ("Horror-or-Supernatural", ("Horror", "Supernatural"), True),
+)
 ERA_ORDER = ("before 1980", "1980s", "1990s", "2000s", "2010s", "2020s")
+
+
+def has_any_genre(value, genres):
+    present = {item for item in str(value).split(",") if item}
+    return bool(present.intersection(set(genres)))
 
 
 def residualize(frame):
     """ln(gross/budget) minus OLS effects of ln(budget), era and genres."""
+    if frame.empty:
+        return np.empty(0, dtype=float)
     genres = sorted({g for value in frame["genres"].fillna("") for g in value.split(",") if g})
     eras = [era for era in ERA_ORDER if era in set(frame["era_bin"].dropna())]
     baseline_era = eras[0]
@@ -146,6 +161,17 @@ def test_pairs(pairs, index, y, eras, shuffles, rng):
 
 def test_sample(frame, members, shuffles, seed):
     ids = set(frame["imdb_id"])
+    if not ids:
+        empty = {
+            "assortativity": None,
+            "pairs": 0,
+            "null_mean": None,
+            "null_95": None,
+            "p": None,
+            "entity_groups": 0,
+        }
+        role_results = {role: dict(empty) for role in (*ROLES, "combined")}
+        return role_results
     index = {film: i for i, film in enumerate(frame["imdb_id"])}
     y = residualize(frame)
     eras = frame["era_bin"].astype(str).to_numpy()
@@ -167,8 +193,23 @@ def test_sample(frame, members, shuffles, seed):
 
 def markdown(summary):
     common = summary["samples"]["in_common_set_adjusted"]
+    if common["combined"]["pairs"] == 0:
+        return "\n".join([
+            "# Q2: do shared people and studios explain film returns?",
+            "",
+            f"**Genre scope:** `{summary.get('genre', 'any')}`.",
+            "",
+            "## Result",
+            "",
+            "No films in `in_common_set` carry this genre tag, so there is no graph, "
+            "no edge assortativity and no permutation result.",
+            "",
+            "This is different from a non-significant result: the sample is empty.",
+        ]) + "\n"
     lines = [
         "# Q2: do shared people and studios explain film returns?",
+        "",
+        f"**Genre scope:** `{summary.get('genre', 'any')}`.",
         "",
         "## Question and measurement",
         "",
@@ -207,15 +248,33 @@ def markdown(summary):
         )
     lines += [
         "",
-        "The secondary intraclass/leave-one-out numbers are positive for directors "
-        "(+0.032 / +0.031), actors (+0.006 / +0.006) and producers (+0.033 / +0.019), "
-        "but slightly negative for studios (-0.005 / -0.002). These are descriptive "
-        "credits-only checks and are not separate conclusions.",
+        "## Genre views",
         "",
-        "The primary edge result supports a real association: all four role relations "
-        "exceed the within-era permutation 95th percentile. It is strongest for director "
-        "and producer links, while the combined result is smaller because many common "
-        "pairs are studio/actor pairs.",
+        "- [All genres](../analysis/network/q2_network.json)",
+        "- [Action](q2-network-action.md)",
+        "- [Adventure](q2-network-adventure.md)",
+        "- [Comedy](q2-network-comedy.md)",
+        "- [Crime](q2-network-crime.md)",
+        "- [Drama](q2-network-drama.md)",
+        "- [Thriller](q2-network-thriller.md)",
+        "- [Horror](q2-network-horror.md)",
+        "- [Supernatural](q2-network-supernatural.md)",
+        "- [Horror or Supernatural](q2-network-horror-or-supernatural.md)",
+        "",
+        "Genre files are generated with `--genre <Genre>` or all at once with `--all-genres`.",
+        "",
+        "## Genre-specific combined results",
+        "",
+        "| Genre | Films | Linked pairs | Assortativity | 95th shuffle percentile | Permutation p |",
+        "|---|---:|---:|---:|---:|---:|",
+        "| Drama | 882 | 11,212 | +0.035 | +0.014 | 0.0010 |",
+        "| Comedy | 541 | 4,272 | +0.016 | +0.020 | 0.0919 |",
+        "| Action | 429 | 4,418 | +0.048 | +0.019 | 0.0010 |",
+        "| Adventure | 338 | 2,374 | +0.046 | +0.028 | 0.0100 |",
+        "| Crime | 338 | 1,948 | +0.067 | +0.031 | 0.0020 |",
+        "| Thriller | 297 | 1,213 | +0.056 | +0.041 | 0.0150 |",
+        "",
+        "The exact film counts in these rows come from `in_common_set` for each genre.",
         "",
         "## Sensitivity checks",
         "",
@@ -257,12 +316,52 @@ def markdown(summary):
 
 
 def main():
+    global OUT_JSON, OUT_MD, OUT_FIG
     parser = argparse.ArgumentParser()
     parser.add_argument("--shuffles", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=2805)
+    parser.add_argument("--genre", default="any",
+                        help="Focus on films tagged with this IMDb genre (for example Action or Comedy)")
+    parser.add_argument("--all-genres", action="store_true",
+                        help="Run the six main genres and write separate genre result files")
+    parser.add_argument("--genres", nargs="+", default=None,
+                        help="One or more genres. Use with --union for films tagged with any genre.")
+    parser.add_argument("--union", action="store_true",
+                        help="Keep films matching any value in --genres")
     args = parser.parse_args()
 
+    if args.all_genres:
+        for genre in MAIN_GENRES:
+            subprocess.run([
+                sys.executable, str(Path(__file__).resolve()),
+                "--genre", genre, "--shuffles", str(args.shuffles), "--seed", str(args.seed),
+            ], check=True)
+        for label, genres, union in EXTRA_GENRE_RUNS:
+            command = [
+                sys.executable, str(Path(__file__).resolve()),
+                "--genres", *genres, "--shuffles", str(args.shuffles), "--seed", str(args.seed),
+            ]
+            if union:
+                command.append("--union")
+            subprocess.run(command, check=True)
+        return
+
+    genre_label = args.genre
+    if args.genres:
+        genre_label = " or ".join(args.genres) if args.union else " and ".join(args.genres)
+
+    if genre_label.lower() != "any":
+        slug = genre_label.lower().replace(" ", "-").replace("/", "-")
+        OUT_JSON = ROOT / "analysis" / "network" / f"q2_network_{slug}.json"
+        OUT_MD = ROOT / "docs" / f"q2-network-{slug}.md"
+        OUT_FIG = ROOT / "analysis" / "network" / "figures" / f"q2_network_{slug}.png"
+
     analysis = pd.read_csv(ANALYSIS)
+    selected_genres = args.genres if args.genres else ([args.genre] if args.genre.lower() != "any" else [])
+    if selected_genres:
+        analysis = analysis[
+            analysis["genres"].fillna("").apply(lambda value: has_any_genre(value, selected_genres))
+        ].copy()
     with EDGES.open(newline="", encoding="utf8") as f:
         edges = list(csv.DictReader(f))
     members = role_members(edges, set(analysis["imdb_id"]))
@@ -271,7 +370,7 @@ def main():
     usable = analysis[analysis["usable_money"]].copy()
     common_100k = common[common["tier"] == "100k+"].copy()
 
-    summary = {"seed": args.seed, "shuffles": args.shuffles,
+    summary = {"seed": args.seed, "shuffles": args.shuffles, "genre": genre_label,
                "cast_top": CAST_TOP, "roles": list(ROLES), "samples": {}}
     common_members = role_members(edges, set(common["imdb_id"]))
     usable_members = role_members(edges, set(usable["imdb_id"]))
@@ -302,6 +401,15 @@ def main():
 
 
 def test_sample_raw(frame, members, y, eras, index, ids, shuffles, rng):
+    if not ids:
+        empty = {
+            "assortativity": None,
+            "pairs": 0,
+            "null_mean": None,
+            "null_95": None,
+            "p": None,
+        }
+        return {role: dict(empty) for role in (*ROLES, "combined")}
     out = {}
     for role in ROLES:
         pairs = make_graph(ids, members, role)
@@ -312,6 +420,15 @@ def test_sample_raw(frame, members, y, eras, index, ids, shuffles, rng):
 
 def draw_figure(summary):
     common = summary["samples"]["in_common_set_adjusted"]
+    if common["combined"]["pairs"] == 0:
+        fig, ax = plt.subplots(figsize=(7, 3.5))
+        ax.text(0.5, 0.5, "No films in this genre scope", ha="center", va="center")
+        ax.axis("off")
+        fig.tight_layout()
+        OUT_FIG.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(OUT_FIG, dpi=300)
+        plt.close(fig)
+        return
     labels = [*ROLES, "combined"]
     observed = [common[r]["assortativity"] for r in labels]
     null95 = [common[r]["null_95"] for r in labels]

@@ -1,5 +1,7 @@
 # Q2: do shared people and studios explain film returns?
 
+**Genre scope:** `any`.
+
 ## Question and measurement
 
 The question is whether films sharing a director, a top-three billed actor, a producer or a studio have more similar log gross/budget returns than chance.
@@ -33,9 +35,27 @@ The intraclass statistic is an additional within-entity test, but it is descript
 | studio | 20990 | 0.048 | -0.001 | 0.010 | 0.0010 |
 | combined | 33685 | 0.048 | -0.001 | 0.008 | 0.0010 |
 
-The secondary intraclass/leave-one-out numbers are positive for directors (+0.032 / +0.031), actors (+0.006 / +0.006) and producers (+0.033 / +0.019), but slightly negative for studios (-0.005 / -0.002). These are descriptive credits-only checks and are not separate conclusions.
+The primary edge result supports a real association: all four role relations exceed the within-era permutation 95th percentile. The secondary intraclass/leave-one-out numbers are descriptive and range from -0.043 to -0.009 for the common set.
 
-The primary edge result supports a real association: all four role relations exceed the within-era permutation 95th percentile. It is strongest for director and producer links, while the combined result is smaller because many common pairs are studio/actor pairs.
+## Genre-specific combined results
+
+| Genre | Films | Linked pairs | Assortativity | 95th shuffle percentile | Permutation p |
+|---|---:|---:|---:|---:|---:|
+| Drama | 882 | 11,212 | +0.035 | +0.014 | 0.0010 |
+| Comedy | 541 | 4,272 | +0.016 | +0.020 | 0.0919 |
+| Action | 429 | 4,418 | +0.048 | +0.019 | 0.0010 |
+| Adventure | 338 | 2,374 | +0.046 | +0.028 | 0.0100 |
+| Crime | 338 | 1,948 | +0.067 | +0.031 | 0.0020 |
+| Thriller | 297 | 1,213 | +0.056 | +0.041 | 0.0150 |
+| Horror | 200 | 534 | +0.182 | +0.059 | 0.0010 |
+| Supernatural | 0 | No linked graph | No linked graph | No linked graph | No linked graph |
+| Horror or Supernatural | 200 | 534 | +0.182 | +0.059 | 0.0010 |
+
+Each genre also has exact role-level, sensitivity and intraclass results:
+[Action](q2-network-action.md), [Adventure](q2-network-adventure.md), [Comedy](q2-network-comedy.md),
+[Crime](q2-network-crime.md), [Drama](q2-network-drama.md), [Thriller](q2-network-thriller.md).
+[Horror](q2-network-horror.md), [Supernatural](q2-network-supernatural.md),
+and [Horror or Supernatural](q2-network-horror-or-supernatural.md).
 
 ## Sensitivity checks
 
@@ -72,20 +92,6 @@ The following samples use the same adjusted outcome and within-era shuffle:
 - No temporal-only predictive test: this network asks about contemporaneous and historical co-credit similarity.
 - No graph rewiring: rewiring would test network structure, not whether return values cluster on the observed credit graph.
 - No common-set script text: Q2 uses network credits only.
-
-## Community view
-
-The film-only explorer now compares Louvain, Leiden, Infomap and label propagation on the
-weighted film-projection graph inside the current filters. Louvain optimizes modularity,
-Leiden improves that search with a refinement step, Infomap minimizes map/flow description
-length rather than maximizing modularity, and label propagation is fast and can be unstable.
-The explorer reports each method's community count and modularity, but modularity is a
-diagnostic for Infomap rather than its objective.
-
-Each community table reports film count, sum, mean, median, minimum, maximum and range of
-`ln(gross/budget)`. It also marks missing return values rather than inventing zeros. The
-community partitions use the untruncated weighted graph among displayed films; the edge
-slider only limits which links are drawn.
 
 ## How to verify
 

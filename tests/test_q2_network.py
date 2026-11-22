@@ -2,7 +2,20 @@ import numpy as np
 import pandas as pd
 
 import scripts.network.q2_network as q2
-from explorer.graph_pages import _community_summary
+from explorer.graph_pages import _community_summary, _network_assortativity
+
+
+def test_has_any_genre_supports_union():
+    assert q2.has_any_genre("Horror,Thriller", ["Horror", "Supernatural"])
+    assert not q2.has_any_genre("Drama,Comedy", ["Horror", "Supernatural"])
+
+
+def test_empty_genre_sample_is_explicit():
+    empty = pd.DataFrame(columns=["imdb_id"])
+    result = q2.test_sample(empty, {}, 20, 2805)
+    assert len(result) == 5
+    assert result["combined"]["pairs"] == 0
+    assert result["combined"]["assortativity"] is None
 
 
 def test_shuffle_within_era_preserves_strata():
@@ -50,3 +63,18 @@ def test_community_summary_reports_return_statistics():
     assert first["maximum"] == 3.0
     assert first["range"] == 2.0
     assert second["films"] == 1
+
+
+def test_network_assortativity_uses_all_retained_pairs():
+    ids = np.array(["f1", "f2", "f3", "f4"])
+    by = pd.DataFrame({
+        "label": ["One", "Two", "Three", "Four"],
+        "genres": ["Action,Drama", "Action", "Drama", "Comedy"],
+        "year": [2000, 2001, 2002, 2003],
+        "budget_usd": [10.0, 10.0, 10.0, 10.0],
+        "log_multiple": [1.0, 1.2, -1.0, -1.2],
+    }, index=ids)
+    result = _network_assortativity(ids, by, np.array([0, 1, 2]), np.array([1, 2, 3]),
+                                    shuffles=20, seed=2805)
+    assert result["pairs"] == 3
+    assert result["observed"] is not None

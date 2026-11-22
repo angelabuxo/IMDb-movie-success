@@ -1,0 +1,258 @@
+{
+  "seed": 2805,
+  "shuffles": 1000,
+  "genre": "Action",
+  "cast_top": 3,
+  "roles": [
+    "director",
+    "actor",
+    "producer",
+    "studio"
+  ],
+  "samples": {
+    "in_common_set": {
+      "films": 429
+    },
+    "in_common_set_adjusted": {
+      "director": {
+        "assortativity": 0.0747,
+        "pairs": 295,
+        "null_mean": -0.0013,
+        "null_95": 0.098,
+        "p": 0.0989,
+        "entity_groups": 85,
+        "intraclass": {
+          "groups": 85,
+          "credits": 245,
+          "similarity": -0.012626377274769451,
+          "loo_r": 0.001222781133299035
+        }
+      },
+      "actor": {
+        "assortativity": 0.063,
+        "pairs": 1148,
+        "null_mean": -0.0039,
+        "null_95": 0.0461,
+        "p": 0.018,
+        "entity_groups": 222,
+        "intraclass": {
+          "groups": 222,
+          "credits": 709,
+          "similarity": -0.0051767043417942915,
+          "loo_r": 0.004041752969933458
+        }
+      },
+      "producer": {
+        "assortativity": 0.1045,
+        "pairs": 1190,
+        "null_mean": -0.0054,
+        "null_95": 0.0448,
+        "p": 0.001,
+        "entity_groups": 214,
+        "intraclass": {
+          "groups": 214,
+          "credits": 677,
+          "similarity": -0.042600311000290825,
+          "loo_r": -0.049474003952001
+        }
+      },
+      "studio": {
+        "assortativity": 0.0606,
+        "pairs": 2984,
+        "null_mean": -0.0043,
+        "null_95": 0.0278,
+        "p": 0.002,
+        "entity_groups": 163,
+        "intraclass": {
+          "groups": 163,
+          "credits": 733,
+          "similarity": -0.010379608940244811,
+          "loo_r": 0.0023833439556574785
+        }
+      },
+      "combined": {
+        "assortativity": 0.0476,
+        "pairs": 4418,
+        "null_mean": -0.0046,
+        "null_95": 0.0191,
+        "p": 0.001,
+        "entity_groups": 684
+      }
+    },
+    "usable_money_adjusted": {
+      "director": {
+        "assortativity": 0.1749,
+        "pairs": 2198,
+        "null_mean": -0.0021,
+        "null_95": 0.0318,
+        "p": 0.001,
+        "entity_groups": 341,
+        "intraclass": {
+          "groups": 341,
+          "credits": 1160,
+          "similarity": 0.04134738505293423,
+          "loo_r": 0.041344419233618965
+        }
+      },
+      "actor": {
+        "assortativity": 0.0699,
+        "pairs": 10732,
+        "null_mean": -0.0013,
+        "null_95": 0.0141,
+        "p": 0.001,
+        "entity_groups": 834,
+        "intraclass": {
+          "groups": 834,
+          "credits": 3413,
+          "similarity": -0.005658303454975533,
+          "loo_r": -0.02674844796828271
+        }
+      },
+      "producer": {
+        "assortativity": 0.1491,
+        "pairs": 9492,
+        "null_mean": -0.0014,
+        "null_95": 0.0151,
+        "p": 0.001,
+        "entity_groups": 778,
+        "intraclass": {
+          "groups": 778,
+          "credits": 3297,
+          "similarity": 0.00826681105662086,
+          "loo_r": 0.044079646130425046
+        }
+      },
+      "studio": {
+        "assortativity": 0.0859,
+        "pairs": 28919,
+        "null_mean": -0.0015,
+        "null_95": 0.0078,
+        "p": 0.001,
+        "entity_groups": 589,
+        "intraclass": {
+          "groups": 589,
+          "credits": 3366,
+          "similarity": 0.01947290273947433,
+          "loo_r": 0.033949809124822206
+        }
+      },
+      "combined": {
+        "assortativity": 0.0865,
+        "pairs": 42545,
+        "null_mean": -0.001,
+        "null_95": 0.0064,
+        "p": 0.001,
+        "entity_groups": 2542
+      }
+    },
+    "common_100k_adjusted": {
+      "director": {
+        "assortativity": 0.0621,
+        "pairs": 222,
+        "null_mean": -0.0035,
+        "null_95": 0.1104,
+        "p": 0.1538,
+        "entity_groups": 65,
+        "intraclass": {
+          "groups": 65,
+          "credits": 187,
+          "similarity": -0.03545180702651063,
+          "loo_r": 0.07565452309026198
+        }
+      },
+      "actor": {
+        "assortativity": 0.0069,
+        "pairs": 819,
+        "null_mean": -0.0073,
+        "null_95": 0.0476,
+        "p": 0.3237,
+        "entity_groups": 167,
+        "intraclass": {
+          "groups": 167,
+          "credits": 526,
+          "similarity": -0.07356552268450334,
+          "loo_r": -0.11524415818739413
+        }
+      },
+      "producer": {
+        "assortativity": 0.0697,
+        "pairs": 841,
+        "null_mean": -0.0059,
+        "null_95": 0.0536,
+        "p": 0.015,
+        "entity_groups": 163,
+        "intraclass": {
+          "groups": 163,
+          "credits": 525,
+          "similarity": -0.07326055546184485,
+          "loo_r": -0.03872775898863839
+        }
+      },
+      "studio": {
+        "assortativity": 0.0118,
+        "pairs": 2267,
+        "null_mean": -0.005,
+        "null_95": 0.0288,
+        "p": 0.1688,
+        "entity_groups": 139,
+        "intraclass": {
+          "groups": 139,
+          "credits": 607,
+          "similarity": -0.07189557415734105,
+          "loo_r": -0.09332661429388787
+        }
+      },
+      "combined": {
+        "assortativity": 0.0051,
+        "pairs": 3191,
+        "null_mean": -0.0052,
+        "null_95": 0.024,
+        "p": 0.2597,
+        "entity_groups": 534
+      }
+    },
+    "common_unadjusted": {
+      "director": {
+        "assortativity": 0.1619,
+        "pairs": 295,
+        "null_mean": 0.0092,
+        "null_95": 0.1161,
+        "p": 0.011
+      },
+      "actor": {
+        "assortativity": 0.1042,
+        "pairs": 1148,
+        "null_mean": 0.0077,
+        "null_95": 0.0573,
+        "p": 0.002
+      },
+      "producer": {
+        "assortativity": 0.157,
+        "pairs": 1190,
+        "null_mean": 0.0003,
+        "null_95": 0.051,
+        "p": 0.001
+      },
+      "studio": {
+        "assortativity": 0.0977,
+        "pairs": 2984,
+        "null_mean": 0.0001,
+        "null_95": 0.029,
+        "p": 0.001
+      },
+      "combined": {
+        "assortativity": 0.0772,
+        "pairs": 4418,
+        "null_mean": 0.0019,
+        "null_95": 0.026,
+        "p": 0.001
+      }
+    },
+    "usable_money": {
+      "films": 1679
+    },
+    "common_100k": {
+      "films": 319
+    }
+  }
+}

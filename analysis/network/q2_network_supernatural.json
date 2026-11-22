@@ -1,0 +1,186 @@
+{
+  "seed": 2805,
+  "shuffles": 1000,
+  "genre": "Supernatural",
+  "cast_top": 3,
+  "roles": [
+    "director",
+    "actor",
+    "producer",
+    "studio"
+  ],
+  "samples": {
+    "in_common_set": {
+      "films": 0
+    },
+    "in_common_set_adjusted": {
+      "director": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "actor": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "producer": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "studio": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "combined": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      }
+    },
+    "usable_money_adjusted": {
+      "director": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "actor": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "producer": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "studio": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "combined": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      }
+    },
+    "common_100k_adjusted": {
+      "director": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "actor": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "producer": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "studio": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      },
+      "combined": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null,
+        "entity_groups": 0
+      }
+    },
+    "common_unadjusted": {
+      "director": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null
+      },
+      "actor": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null
+      },
+      "producer": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null
+      },
+      "studio": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null
+      },
+      "combined": {
+        "assortativity": null,
+        "pairs": 0,
+        "null_mean": null,
+        "null_95": null,
+        "p": null
+      }
+    },
+    "usable_money": {
+      "films": 0
+    },
+    "common_100k": {
+      "films": 0
+    }
+  }
+}
