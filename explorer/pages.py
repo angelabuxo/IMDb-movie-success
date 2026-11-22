@@ -65,8 +65,8 @@ def home():
     st.markdown("""
 - **Screenplay text**: every step of the word-comparison notebook series, rendered from its saved
   outputs. Tables are sortable and filterable, figures are interactive.
-- **Network**: the four network analyses (return similarity, pair returns, team history, movers), the per-film
-  network features, and a lookup for any film's crew and the films it is linked to.
+- **Network**: the network analyses (including the film-only Q2 assortativity result), per-film network features,
+  and lookups for any film's crew and linked films.
 - **Embedding maps**: every vector space (screenplays, plots, reviews, tags, cast and crew, arcs) in 2D by
   PCA, Isomap, t-SNE and UMAP, coloured by return, genre or year, with a film's nearest films and how well each map
   keeps the space.

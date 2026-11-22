@@ -195,7 +195,7 @@ PAGES = [("pages", "home"), ("pages", "text"), ("pages", "network"), ("pages", "
          ("pages", "calendar"), ("pages", "tags"), ("pages", "tag_followups"), ("pages", "inspector"), ("pages", "checks"),
          ("pages", "tmdb"), ("graph_pages", "whole_graph"), ("graph_pages", "node"), ("graph_pages", "screenplays"),
          ("embedding_page", "embeddings"), ("pipeline_page", "pipeline"), ("map_pages", "maps"), ("map_pages", "checks"),
-         ("genre_page", "genre")]
+         ("genre_page", "genre"), ("graph_pages", "movie_network")]
 
 
 @pytest.mark.parametrize("module,fn", PAGES, ids=[f for _, f in PAGES])
@@ -209,7 +209,7 @@ def test_app_registers_every_page(explorer):
     ok(at)
     from explorer import nav
     assert {"home", "pipeline", "text", "embeddings", "network", "graph", "node", "scripts", "profit", "attribution",
-            "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb", "genre"} <= set(nav.PAGES)
+            "calendar", "tags", "followups", "data", "checks", "maps", "mapchecks", "tmdb", "genre", "movie_network"} <= set(nav.PAGES)
 
 
 @pytest.mark.parametrize("step", range(12))

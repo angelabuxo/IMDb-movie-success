@@ -31,6 +31,8 @@ P = {
     "network": st.Page(logged(pages.network), title="Network results", icon=":material/hub:", url_path="network"),
     "genre": st.Page(logged(genre_page.genre), title="Q1: genre and returns", icon=":material/category:", url_path="genre"),
     "graph": st.Page(logged(graph_pages.whole_graph), title="Whole graph", icon=":material/scatter_plot:", url_path="graph"),
+    "movie_network": st.Page(logged(graph_pages.movie_network), title="Film-only network", icon=":material/hub:",
+                             url_path="movie-network"),
     "node": st.Page(logged(graph_pages.node), title="Node explorer", icon=":material/account_tree:", url_path="node"),
     "scripts": st.Page(logged(graph_pages.screenplays), title="Screenplays", icon=":material/description:", url_path="scripts"),
     "maps": st.Page(logged(map_pages.maps), title="Embedding maps", icon=":material/bubble_chart:", url_path="maps"),
@@ -52,7 +54,7 @@ nav.PAGES.update(P)
 st.navigation({
     "Overview": [P["home"], P["pipeline"]],
     "Notebooks": [P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"], P["genre"]],
-    "Graph and scripts": [P["graph"], P["node"], P["scripts"]],
+    "Graph and scripts": [P["graph"], P["movie_network"], P["node"], P["scripts"]],
     "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
                           P["checks"], P["tmdb"]],
 }).run()

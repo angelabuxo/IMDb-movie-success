@@ -255,6 +255,12 @@ The first takes several minutes and the other two under two. Each writes a JSON 
 
 What it measures and misses: the pair correlation says returns cluster, using every year at once, so it isn't a prediction. Script similarity is the cosine between mean all-MiniLM-L6-v2 passage vectors, which captures shared topic and vocabulary and not quality or structure.
 
+### Q2: a film-only network and return assortativity
+
+[`movie_assortativity.py`](scripts/network/movie_assortativity.py) projects the graph onto films only. It links two clean films when they share a director, a top-billed actor, a producer or a studio, and reports Pearson assortativity of `ln(gross / budget)` at the ends of those film-film edges. It reports the combined graph and each link type separately. The observed value is compared with 1,000 shuffles of the returns across the same films, so the graph, its degree pattern and every shared-credit link stay fixed while the film-to-return assignment is broken. It also reports a version adjusted for budget, release decade and genre.
+
+This assortativity measure was chosen because it directly answers whether connected films have alike numeric returns, while preserving the network structure in the null. A pair correlation would answer a closely related question but gives the same weight to each edge without using the standard network assortativity name; group-level variance or leave-one-group-out correlation would instead treat each person or studio as a cluster and can count overlapping groups multiple times. A regression or predictive train/test split would be valid alternatives for association or forecasting, but they answer a different question and are more sensitive to choices about controls and time. The shuffle is preferable to an independent-edge null here because shared credits create overlapping, uneven groups that should remain intact.
+
 ### Teams that have worked together before
 
 [`team_history.py`](scripts/network/team_history.py) asks whether a film returns more when its key people have shared an earlier film. `repeat_share` is the share of pairs in the team who have, built from earlier years only over all 12,673 films in the graph.
