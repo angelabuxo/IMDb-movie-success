@@ -74,7 +74,7 @@ Nothing moves. Horror goes from +0.203 to +0.196 without its top 10, and every e
 | Crime | -0.197 | -0.205 | -0.192 | -0.138 |
 | History | -0.330 | -0.337 | -0.335 | -0.344 |
 
-All seven genres pass with the 20 most extreme films removed, and with the top and bottom 1 % removed (Holm p < .05). With 5 % removed at each end, Animation, Horror, Drama, Crime and History still pass. Family weakens to p 0.09, and Action's deficit nearly disappears (-0.032). So Action earns less mainly because it has more extreme flops, not because typical Action films do a little worse. Cutting 5 % of films at each end throws away real films, so this is the harshest version of the check. *Obsession* sits in the first cut and changes nothing. Removing an outlier tests whether it drives the result, not whether its figures are right, so the hand check of extreme rows is still worth doing.
+All seven genres pass with the 20 most extreme films removed, and with the top and bottom 1 % removed (Holm p < .05). With 5 % removed at each end, Animation, Horror, Drama, Crime and History still pass. Family weakens to p 0.09, and Action's deficit nearly disappears (-0.032). So Action earns less mainly because it has more extreme flops, not because typical Action films do a little worse. Cutting 5 % of films at each end throws away real films, so this is the harshest version of the check. *Obsession* sits in the first cut and changes nothing. Removing an outlier tests whether it drives the result, not whether its figures are right. *Obsession* was checked by hand against its article and TMDB, and its figures are real (see the README). The other rows in `outliers_removed.csv` haven't been checked by hand yet.
 
 ## 4. Matched pairs (exploratory)
 
