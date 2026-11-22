@@ -1,0 +1,124 @@
+sample,role,split,pairs,assortativity,null_mean,null_95,p,p_holm_within_role
+in_common_set,director,all,2311,0.0904,-0.0005,0.0354,0.001,
+in_common_set,director,same genre,1809,0.0946,-0.0007,0.0382,0.001,
+in_common_set,director,different genre,502,0.0744,-0.0011,0.0722,0.044,
+in_common_set,director,genre: Action,295,0.067,-0.0049,0.0904,0.1159,0.3147
+in_common_set,director,genre: Adventure,223,0.1291,-0.0037,0.1162,0.034,0.136
+in_common_set,director,genre: Comedy,357,0.04,-0.0031,0.0857,0.2138,0.3147
+in_common_set,director,genre: Crime,248,0.0748,-0.0047,0.1112,0.1049,0.3147
+in_common_set,director,genre: Drama,983,0.0949,-0.0017,0.0527,0.003,0.015
+in_common_set,director,same minus different,2311,0.0202,0.0004,0.0858,0.7103,
+in_common_set,actor,all,9958,0.0642,-0.001,0.0163,0.001,
+in_common_set,actor,same genre,7002,0.0683,-0.0008,0.0192,0.001,
+in_common_set,actor,different genre,2956,0.0538,-0.0016,0.0315,0.001,
+in_common_set,actor,genre: Action,1148,0.1032,-0.0033,0.0455,0.003,0.015
+in_common_set,actor,genre: Adventure,500,0.0744,-0.0042,0.0704,0.042,0.084
+in_common_set,actor,genre: Comedy,1463,0.0613,-0.0025,0.0408,0.011,0.033
+in_common_set,actor,genre: Crime,746,0.1,-0.0044,0.0591,0.005,0.02
+in_common_set,actor,genre: Drama,3801,0.0657,-0.0012,0.0235,0.001,0.007
+in_common_set,actor,genre: Romance,298,0.0436,-0.0035,0.0891,0.1948,0.1948
+in_common_set,actor,genre: Thriller,435,0.1576,-0.0036,0.0758,0.001,0.007
+in_common_set,actor,same minus different,9958,0.0146,0.0008,0.0359,0.5245,
+in_common_set,producer,all,6639,0.091,-0.0014,0.02,0.001,
+in_common_set,producer,same genre,5065,0.0957,-0.0015,0.0221,0.001,
+in_common_set,producer,different genre,1574,0.0743,-0.0014,0.0373,0.004,
+in_common_set,producer,genre: Action,1190,0.1405,-0.0047,0.0402,0.001,0.008
+in_common_set,producer,genre: Adventure,454,0.1732,-0.004,0.0776,0.001,0.008
+in_common_set,producer,genre: Comedy,964,0.0512,-0.0032,0.0528,0.0559,0.062
+in_common_set,producer,genre: Crime,427,0.1641,-0.0061,0.0706,0.003,0.012
+in_common_set,producer,genre: Drama,2560,0.0622,-0.0023,0.0314,0.004,0.012
+in_common_set,producer,genre: Horror,207,0.2618,-0.0066,0.1098,0.001,0.008
+in_common_set,producer,genre: Mystery,203,0.1275,-0.008,0.1052,0.031,0.062
+in_common_set,producer,genre: Thriller,354,0.1666,-0.0054,0.0871,0.002,0.01
+in_common_set,producer,same minus different,6639,0.0214,-0.0001,0.0474,0.4446,
+in_common_set,studio,all,20990,0.0478,-0.0015,0.0098,0.001,
+in_common_set,studio,same genre,13513,0.0456,-0.0016,0.0132,0.001,
+in_common_set,studio,different genre,7477,0.0512,-0.0016,0.0168,0.001,
+in_common_set,studio,genre: Action,2984,0.0695,-0.0039,0.0249,0.002,0.024
+in_common_set,studio,genre: Adventure,1831,0.0566,-0.0029,0.0352,0.011,0.099
+in_common_set,studio,genre: Animation,225,0.1595,-0.0136,0.0963,0.013,0.104
+in_common_set,studio,genre: Biography,367,0.0646,-0.009,0.0738,0.0659,0.2636
+in_common_set,studio,genre: Comedy,2448,0.003,-0.0041,0.0285,0.3287,0.6574
+in_common_set,studio,genre: Crime,953,0.0494,-0.0062,0.0483,0.048,0.24
+in_common_set,studio,genre: Drama,6317,0.0263,-0.0022,0.0181,0.02,0.14
+in_common_set,studio,genre: Fantasy,349,0.0267,-0.0087,0.0783,0.2058,0.6174
+in_common_set,studio,genre: Horror,361,0.2806,-0.0065,0.0772,0.001,0.013
+in_common_set,studio,genre: Mystery,311,0.1946,-0.005,0.0886,0.002,0.024
+in_common_set,studio,genre: Romance,470,-0.0379,-0.0051,0.0671,0.7672,0.7672
+in_common_set,studio,genre: Sci-Fi,468,0.0754,-0.0057,0.0682,0.038,0.228
+in_common_set,studio,genre: Thriller,658,0.1064,-0.005,0.0589,0.006,0.06
+in_common_set,studio,same minus different,20990,-0.0056,0.0,0.0229,0.6753,
+usable_money,director,all,16156,0.1163,-0.0003,0.0134,0.001,
+usable_money,director,same genre,13034,0.119,-0.0001,0.0151,0.001,
+usable_money,director,different genre,3122,0.108,-0.0011,0.0288,0.001,
+usable_money,director,genre: Action,2198,0.2199,0.0012,0.0375,0.001,0.013
+usable_money,director,genre: Adventure,1445,0.2524,-0.0001,0.0441,0.001,0.013
+usable_money,director,genre: Animation,385,0.2967,-0.0041,0.0768,0.001,0.013
+usable_money,director,genre: Biography,226,0.0563,0.0025,0.1134,0.2038,0.2667
+usable_money,director,genre: Comedy,4186,0.0841,-0.0009,0.0256,0.001,0.013
+usable_money,director,genre: Crime,1246,0.1274,-0.0021,0.0453,0.001,0.013
+usable_money,director,genre: Drama,5652,0.094,-0.0006,0.0224,0.001,0.013
+usable_money,director,genre: Fantasy,288,0.0771,-0.0018,0.0946,0.0889,0.2667
+usable_money,director,genre: Horror,592,0.1811,-0.0027,0.0638,0.001,0.013
+usable_money,director,genre: Mystery,383,0.2639,-0.0034,0.0816,0.001,0.013
+usable_money,director,genre: Romance,788,0.0382,-0.0041,0.0529,0.1179,0.2667
+usable_money,director,genre: Sci-Fi,264,0.2153,-0.0027,0.1016,0.001,0.013
+usable_money,director,genre: Thriller,763,0.2246,0.0011,0.0667,0.001,0.013
+usable_money,director,same minus different,16156,0.011,0.0009,0.0358,0.6124,
+usable_money,actor,all,92131,0.0419,-0.0001,0.0055,0.001,
+usable_money,actor,same genre,65100,0.0457,-0.0001,0.0068,0.001,
+usable_money,actor,different genre,27031,0.0322,-0.0001,0.0095,0.001,
+usable_money,actor,genre: Action,10732,0.0798,-0.0008,0.0153,0.001,0.014
+usable_money,actor,genre: Adventure,4633,0.0593,-0.0004,0.0247,0.001,0.014
+usable_money,actor,genre: Animation,327,0.1085,-0.0005,0.0909,0.027,0.081
+usable_money,actor,genre: Biography,863,0.0258,-0.0011,0.0574,0.2018,0.2018
+usable_money,actor,genre: Comedy,18945,0.0628,-0.0,0.0114,0.001,0.014
+usable_money,actor,genre: Crime,6576,0.047,-0.0006,0.0189,0.002,0.014
+usable_money,actor,genre: Drama,31145,0.0365,-0.0003,0.009,0.001,0.014
+usable_money,actor,genre: Family,437,0.1016,-0.0029,0.0773,0.018,0.072
+usable_money,actor,genre: Fantasy,695,0.2517,-0.0021,0.0636,0.001,0.014
+usable_money,actor,genre: Horror,804,0.2077,-0.0025,0.0588,0.001,0.014
+usable_money,actor,genre: Mystery,1480,0.0713,-0.0021,0.0443,0.006,0.03
+usable_money,actor,genre: Romance,3676,0.065,-0.0022,0.0256,0.001,0.014
+usable_money,actor,genre: Sci-Fi,788,0.0458,-0.0045,0.0565,0.0859,0.1718
+usable_money,actor,genre: Thriller,3991,0.0731,-0.0015,0.0264,0.001,0.014
+usable_money,actor,same minus different,92131,0.0135,-0.0,0.0116,0.0609,
+usable_money,producer,all,62143,0.1155,-0.0002,0.0065,0.001,
+usable_money,producer,same genre,44506,0.1339,-0.0001,0.0076,0.001,
+usable_money,producer,different genre,17637,0.0609,-0.0003,0.013,0.001,
+usable_money,producer,genre: Action,9492,0.203,-0.0003,0.0191,0.001,0.014
+usable_money,producer,genre: Adventure,4269,0.1989,-0.0006,0.0249,0.001,0.014
+usable_money,producer,genre: Animation,564,0.3169,-0.0043,0.0649,0.001,0.014
+usable_money,producer,genre: Biography,716,0.0596,-0.0026,0.0609,0.0549,0.0549
+usable_money,producer,genre: Comedy,11079,0.0827,-0.0006,0.0155,0.001,0.014
+usable_money,producer,genre: Crime,3563,0.1467,-0.0006,0.0297,0.001,0.014
+usable_money,producer,genre: Drama,17996,0.0742,-0.0004,0.013,0.001,0.014
+usable_money,producer,genre: Family,604,0.1233,-0.0071,0.0613,0.002,0.014
+usable_money,producer,genre: Fantasy,772,0.1386,-0.0024,0.0547,0.002,0.014
+usable_money,producer,genre: Horror,3579,0.1109,-0.0036,0.0203,0.001,0.014
+usable_money,producer,genre: Mystery,2185,0.192,-0.0042,0.0285,0.001,0.014
+usable_money,producer,genre: Romance,2256,0.0755,-0.0012,0.0355,0.001,0.014
+usable_money,producer,genre: Sci-Fi,998,0.0844,-0.0017,0.0512,0.011,0.022
+usable_money,producer,genre: Thriller,3539,0.2951,-0.0017,0.0234,0.001,0.014
+usable_money,producer,same minus different,62143,0.073,0.0002,0.0151,0.001,
+usable_money,studio,all,231646,0.0615,-0.0004,0.0029,0.001,
+usable_money,studio,same genre,146098,0.0704,-0.0004,0.004,0.001,
+usable_money,studio,different genre,85548,0.0456,-0.0005,0.0048,0.001,
+usable_money,studio,genre: Action,28919,0.1276,-0.0008,0.0078,0.001,0.017
+usable_money,studio,genre: Adventure,21606,0.0698,-0.001,0.0094,0.001,0.017
+usable_money,studio,genre: Animation,3290,0.0531,-0.0039,0.0268,0.005,0.03
+usable_money,studio,genre: Biography,1850,0.0003,-0.0045,0.0324,0.3886,0.4276
+usable_money,studio,genre: Comedy,42969,0.0288,-0.001,0.0065,0.001,0.017
+usable_money,studio,genre: Crime,9319,0.095,-0.0017,0.014,0.001,0.017
+usable_money,studio,genre: Drama,52983,0.0416,-0.0007,0.007,0.001,0.017
+usable_money,studio,genre: Family,4234,0.0042,-0.0043,0.0156,0.1978,0.4276
+usable_money,studio,genre: Fantasy,2618,0.0491,-0.0027,0.0291,0.01,0.05
+usable_money,studio,genre: History,279,0.2001,-0.0092,0.0903,0.001,0.017
+usable_money,studio,genre: Horror,5451,0.1874,-0.0032,0.0168,0.001,0.017
+usable_money,studio,genre: Music,267,0.0696,-0.0057,0.0903,0.1069,0.4276
+usable_money,studio,genre: Mystery,3489,0.211,-0.0031,0.0243,0.001,0.017
+usable_money,studio,genre: Romance,6974,0.0126,-0.0021,0.0187,0.1089,0.4276
+usable_money,studio,genre: Sci-Fi,2824,0.0823,-0.0037,0.0284,0.001,0.017
+usable_money,studio,genre: Sport,220,0.2455,-0.0085,0.1029,0.002,0.017
+usable_money,studio,genre: Thriller,7394,0.2245,-0.0011,0.0178,0.001,0.017
+usable_money,studio,same minus different,231646,0.0248,0.0001,0.0074,0.001,

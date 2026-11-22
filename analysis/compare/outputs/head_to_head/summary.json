@@ -1,0 +1,8 @@
+{
+ "films": 1598,
+ "genres": 12,
+ "k_script": 10,
+ "shuffles": 1000,
+ "seed": 2805,
+ "outcome": "ln(gross/budget) net of budget decile x era mean"
+}

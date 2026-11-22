@@ -224,6 +224,22 @@ class Sources:
     def manual_films(self):
         return len(pd.read_csv(ROOT / "scripts-analysis/data_check/sample_films.csv"))
 
+    # ---- head to head and network by genre (analysis/compare/outputs) ----
+    @cached_property
+    def h2h(self):
+        return pd.read_csv(A / "compare/outputs/head_to_head/assortativity.csv").set_index(["network", "links"])
+
+    @cached_property
+    def h2h_sum(self):
+        return self._json("compare/outputs/head_to_head/summary.json")
+
+    @cached_property
+    def nbg(self):
+        return pd.read_csv(A / "compare/outputs/network_by_genre/assortativity_by_genre.csv").set_index(["sample", "role", "split"])
+
+    def nbx(self, sample, role, split, col="assortativity"):
+        return self.nbg.loc[(sample, role, split), col]
+
     def money(self, score):
         return self.rev_rho[("log_gross_over_budget", score)]
 
@@ -307,8 +323,32 @@ CLAIMS = [
      lambda s: [*(lambda r: [r.coef_per_sd, r.lo, r.hi, r.n])(s.br_row("typicality_ols.csv", "+ script-quality controls", "script_typicality")),
                 s.br["typicality"]["shuffle_p"]]),
     ("fig script", r"Grey band: 95\% of @ label shuffles", lambda s: [s.auc("Comedy", "dialogue", "w2v").perms]),
+    # Results: people by genre (analysis/compare/network_by_genre.py)
+    ("nbg across", "between films that share no genre (directors @, producers @, actors @, studios @), and pairs within a genre never differ",
+     lambda s: [s.nbx("in_common_set", r, "different genre") for r in ("director", "producer", "actor", "studio")]
+     if all(s.nbx("in_common_set", r, "different genre", "p") < .05 and s.nbx("in_common_set", r, "same minus different", "p") > .05
+            for r in ("director", "producer", "actor", "studio")) else [None]),
+    ("nbg horror", "films sharing a producer correlate at @ and films sharing a studio at @",
+     lambda s: [s.nbx("in_common_set", "producer", "genre: Horror"), s.nbx("in_common_set", "studio", "genre: Horror")]),
+    ("nbg wide", "On all @ films, producers (@ within a genre against @ across) and studios (@ against @) do earn alike more within a genre",
+     lambda s: [6346, s.nbx("usable_money", "producer", "same genre"), s.nbx("usable_money", "producer", "different genre"),
+                s.nbx("usable_money", "studio", "same genre"), s.nbx("usable_money", "studio", "different genre")]
+     if all(s.nbx("usable_money", r, "same minus different", "p") < .05 for r in ("producer", "studio")) else [None]),
+    # Results: head to head (analysis/compare/head_to_head.py)
+    ("h2h setup", "On the same @ films we built three networks", lambda s: [s.h2h_sum["films"]]),
+    ("h2h k", "each script linked to its @ nearest scripts", lambda s: [s.h2h_sum["k_script"]]),
+    ("h2h shuffles", "against the same @ shuffles within era bins. Shared people", lambda s: [s.h2h_sum["shuffles"]]),
+    ("h2h people", "Shared people give @ (null 95th percentile @), and @ between films of different genres",
+     lambda s: [s.h2h.loc[("people", "all links"), "assortativity"], s.h2h.loc[("people", "all links"), "null_95"],
+                s.h2h.loc[("people", "links with no shared genre"), "assortativity"]]),
+    ("h2h script", r"Similar screenplays give @ (null @), and all of it comes from films of the same genre: @ for those links and $-@$ across genres ($p=@$)",
+     lambda s: [s.h2h.loc[("script", "all links"), "assortativity"], s.h2h.loc[("script", "all links"), "null_95"],
+                s.h2h.loc[("script", "links within a shared genre"), "assortativity"],
+                -s.h2h.loc[("script", "links with no shared genre"), "assortativity"], s.h2h.loc[("script", "links with no shared genre"), "p"]]),
+    ("h2h genre", "Shared genre gives @, which passes its null (@) but links almost every film to every other (mean degree @)",
+     lambda s: [s.h2h.loc[("genre", "all links"), "assortativity"], s.h2h.loc[("genre", "all links"), "null_95"],
+                s.h2h.loc[("genre", "all links"), "mean_degree"]] if s.h2h.loc[("genre", "all links"), "p"] < .05 else [None]),
     # Discussion
-    ("todo common", "a head-to-head of the three on the @ common films", lambda s: [s.genre["sets"]["in_common_set"]["films"]]),
     ("missing flops", r"TMDB has figures for @ films Wikipedia lacks, with a mean return of $-@$ against @, and @\% of them grossed less than their budget against @\%",
      lambda s: [s.tmdb["money"]["films_wikipedia_lacks_with_clean_tmdb_money"], -s.tmdb["money"]["mean_ln_ratio_wikipedia_lacks"],
                 s.tmdb["money"]["mean_ln_ratio_usable"], 100 * s.tmdb["money"]["share_below_budget_wikipedia_lacks"],
