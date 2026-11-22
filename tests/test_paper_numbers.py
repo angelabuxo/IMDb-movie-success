@@ -180,9 +180,11 @@ class Sources:
         d = pd.read_csv(A / "genre/outputs/before_release" / file)
         return d[(d.films == films) & (d.term == term)].iloc[0]
 
-    # ---- Q2 people network (analysis/network/q2_network.json, only on the unmerged branch Q2-Niklas) ----
+    # ---- Q2 people network (analysis/network/q2_network.json, merged from Q2-Niklas in PR 40) ----
     @cached_property
     def q2(self):
+        if (A / "network/q2_network.json").exists():
+            return self._json("network/q2_network.json")
         for ref in ("public/Q2-Niklas", "origin/Q2-Niklas", "Q2-Niklas"):
             r = subprocess.run(["git", "show", f"{ref}:analysis/network/q2_network.json"], cwd=ROOT, capture_output=True, text=True)
             if r.returncode == 0:
