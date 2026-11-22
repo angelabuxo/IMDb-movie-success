@@ -622,6 +622,17 @@ pd.read_csv(CAT / "keyword_categories.csv")"""),
 so they are a different cut of the films rather than the genres again. Read their returns next to the genre result:
 where the keyword horror category and Wikidata's supernatural horror agree with the TMDB-keyword subgenres, three
 differently made measures point the same way."""),
+    ("md", """**How stable is each category?** `q1_category_stability.py` rebuilds the network over the other Louvain seeds,
+different curveball null draws, random subsamples of 80 % of the films and one changed setting at a time, and matches
+each category to its closest community by keyword overlap (Jaccard). First the overlap, then the share of runs in
+which the matched category's return has the same sign and passes the budget-decile shuffle (Holm):"""),
+    ("code", """STAB = SRC / "category_stability"
+ps = pd.read_csv(STAB / "per_category.csv")
+print({k: v for k, v in json.loads((STAB / "summary.json").read_text()).items() if "modularity" in k or k in ("null_draws", "boot")})
+display(ps.pivot_table(index="category", columns="check", values="jaccard_mean", sort=False).round(2))
+ps[ps["check"] != "Louvain seeds"].pivot_table(index="category", columns="check", values="share_same_sign_holm_05", sort=False).round(2)"""),
+    ("md", """Read the second table for the return claims and the first for how fixed each category's keywords are. A category
+whose return passes in nearly every run is a robust result even when the keywords at its edges move."""),
     ("md", """## 19. Inside Horror, in the screenplays
 
 The word test of the Horror-plot section on the screenplays instead of the Wikipedia plots (Q3's preprocessing,
