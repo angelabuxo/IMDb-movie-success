@@ -147,7 +147,9 @@ def keywords(f):
         return (k in META or k in MOODS or k.startswith("based on ") or ", " in k or re.fullmatch(r"\d{4}s?", k) is not None)
     vocab = sorted(k for k, v in c.items() if v >= MIN_KW and not drop(k))
     vi = {k: j for j, k in enumerate(vocab)}
-    rows = [set(vi[k] for k in s if k in vi) for s in kw]
+    # sorted, so each film's keyword ids go in in the same order in every process (string hashing is randomised per
+    # process, and the curveball null depends on set order): without it the backbone changed from run to run
+    rows = [set(vi[k] for k in sorted(s) if k in vi) for s in kw]
     return vocab, rows, {"keywords_in_min_films": sum(v >= MIN_KW for v in c.values()), "kept": len(vocab)}
 
 

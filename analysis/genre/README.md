@@ -102,22 +102,30 @@ Both measures say films that stay in their genre lane beat their budgets, and ne
 
 **Wikidata genres** (property P136, pulled by `scripts/get_data.py wikidata`) are curated by Wikidata editors and much finer: 331 distinct genres on 6,344 of the 6,346 films. Each also counts under its parent genre, so "supernatural horror film" is also "horror film". Wikidata agrees well with IMDb on Horror (kappa 0.84), Biography (0.83) and Action (0.75). It agrees poorly on Animation (0.23) and Family (0.20), because Wikidata mostly records "animated" and "for families" outside its genre property. Of the 112 Wikidata categories with at least 40 films, 22 pass the budget-decile shuffle (Holm). The strongest are supernatural horror film (+0.81), supernatural film (+0.76), ghost film (+0.75), suspense film (+0.59), psychological thriller film (+0.58), slasher film (+0.47), family film (+0.43), romantic comedy film (+0.39), buddy film (+0.37), coming-of-age film (+0.37) and teen film (+0.28). Only drama (-0.07) passes on the losing side, so the curated labels pick out winners more sharply than losers. Inside IMDb Horror, supernatural horror films beat other Horror by +0.74 (Holm p 0.002, median +0.99 against +0.36), while slasher, splatter, comedy horror and sci-fi horror don't differ.
 
-**The keyword network** (course weeks 1, 2 and 4). It uses the 355 TMDB keywords in at least 30 films, after leaving out production facts, places, decades and TMDB's mood words, a rule fixed before any community was looked at. Keywords are linked when films share them more than a curveball null expects (200 samples). That leaves 1,113 backbone links among 346 keywords. Louvain finds 13 categories, and unlike the genre co-occurrence network in `exploratory/`, this structure is real: modularity 0.66 against 0.50 for the same backbone rewired (p 0.02), and 20 seeds agree with NMI 0.87. The categories are recognisable without any labels:
-- relationships and road trips
+**The keyword network** (course weeks 1, 2 and 4). It uses the 355 TMDB keywords in at least 30 films, after leaving out production facts, places, decades and TMDB's mood words, a rule fixed before any community was looked at. Keywords are linked when films share them more than a curveball null expects (200 samples). That leaves 1,119 backbone links among 344 keywords. Louvain finds 14 categories, and unlike the genre co-occurrence network in `exploratory/`, this structure is real: modularity 0.67 against 0.50 for the same backbone rewired (p 0.02), and 20 seeds agree with NMI 0.90. The categories are recognisable without any labels:
+- relationships, marriage and family
 - action, martial arts and gangsters
-- murder and serial killers
 - Halloween, supernatural horror and ghosts
-- high school and coming of age
 - dystopia, aliens and creatures
-- sports, war and biography
+- murder and serial killers
+- drugs, friendship and road trips
 - sword and sorcery
+- sports, war and biography
+- high school and coming of age
 - superheroes and 3D animation
-- drugs and casinos
-- satire and parody
-- Christmas
+- satire, parody and show business
+- Christmas and winter
 - hospitals
+- babies, pregnancy and adoption
 
-Their NMI with IMDb's genres (0.21) and Wikidata's (0.17) is modest, so they're a different cut of the films. With each film weighted by its share of keywords in each category, five pass the budget-decile shuffle. The supernatural horror category beats its budget (+0.35), and so does the superhero and animation category (+0.19). The dystopia and sci-fi category (-0.18), the action and gangster category (-0.13) and the drugs and casino category (-0.22) fall short.
+Their NMI with IMDb's genres (0.22) and Wikidata's (0.17) is modest, so they're a different cut of the films. With each film weighted by its share of keywords in each category, four pass the budget-decile shuffle. The supernatural horror category beats its budget (+0.32), and so does the superhero and animation category (+0.21). The dystopia and sci-fi category (-0.15) and the action and gangster category (-0.14) fall short.
+
+**How stable the categories are.** `q1_category_stability.py` (added after the results, outputs in `outputs/category_stability/`, about 5 min on the HPC) rebuilds the network many ways and matches each category to its closest community by keyword overlap (Jaccard): the 19 other Louvain seeds, 20 backbones from different curveball null draws, 50 random subsamples of 80 % of the films, and one setting changed at a time (keywords in at least 20 or 40 films, Louvain resolution 0.8 or 1.2, backbone Holm alpha 0.01).
+
+- The return results are robust for the four categories that pass, and only for them. Supernatural horror passes (Holm, same sign) in every run of every check, with a median excess of +0.24 to +0.36. Superhero and animation passes in 75 to 100 % of runs (+0.10 to +0.24), action and gangsters in 76 to 100 %, and dystopia in 86 to 100 % except with the 20-film keyword minimum, where it stays negative (-0.11) but doesn't pass. No other category passes in more than 38 % of the null draws or film subsamples. Of the five single-run setting changes, drugs passes once (20-film keyword minimum) and hospitals once (alpha 0.01).
+- Which keywords sit in which category is less stable. Across Louvain seeds the overlap is 0.70 to 1.00 for every category but hospitals (0.40). Across null draws it's 0.38 to 0.93, and across film subsamples 0.27 to 0.78. The big, distinct categories (dystopia, sports, supernatural horror, action) hold together best. The small ones (hospitals, babies, Christmas) and the loose drugs and friendship category shift. So the categories' cores are real, their edges aren't.
+- The modularity test is fair: with the best of 20 Louvain runs for the rewired backbones too, they reach 0.50 on average and 0.51 at most, against 0.67 (p 0.02, the smallest possible with 50 rewirings).
+- A bug found on the way: the first version of `q1_categories.py` built each film's keyword set in an order set by Python's per-process string hashing, and the curveball null depends on that order. So the backbone changed from run to run (1,087 to 1,119 links, 11 to 14 categories). Keywords now go in sorted order and the run is reproducible. The first published run had 13 categories, and its drugs and casino category (-0.22) passed. The closest category now (drugs, friendship and road trips) passes in only 20 % of null draws and 38 % of film subsamples, so that result depended on the draw.
 
 Three differently made measures now point the same way on Horror: TMDB keyword subgenres, Wikidata's curated subgenres and the keyword network's categories. The Horror that beats its budget is supernatural. All three describe films after release, so they say which kinds of film did well, not why. The figure is `outputs/categories/figures/q1_keyword_network.png`.
 
