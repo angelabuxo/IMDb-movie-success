@@ -1,0 +1,15 @@
+{
+ "reference_reproduced": true,
+ "reference_categories": 14,
+ "reference_modularity": 0.6684,
+ "boot": 50,
+ "null_draws": 20,
+ "frac": 0.8,
+ "null": 200,
+ "perms": 2000,
+ "louvain_seeds": 20,
+ "rewired_modularity_best_of_20_mean": 0.5008,
+ "rewired_modularity_best_of_20_max": 0.5135,
+ "modularity_p_best_of_20": 0.0196,
+ "categories_per_subsample_median": 13.0
+}
