@@ -417,6 +417,229 @@ def whole_graph():
                    "connected nodes.")
 
 
+# ---------------------------------------------------------------- film-only Q2 network
+
+@st.cache_data(show_spinner="Building the film-only network…", max_entries=12)
+def movie_network_view(stamp: float, roles: tuple, tiers: tuple, clean_only: bool, years: tuple,
+                       genre: str, max_nodes: int, max_edges: int) -> dict:
+    """Build the film projection for Q2, retaining the displayed graph's centralities."""
+    g = graph_data(stamp)
+    n, e = g["nodes"], g["edges"]
+    films = n[n.type == "movie"].copy()
+    keep = films.tier.isin(tiers) & films.year.between(*years)
+    if clean_only:
+        keep &= films.clean
+    if genre != "any":
+        keep &= films.genres.fillna("").str.split(",").apply(lambda xs: genre in xs)
+    films = films.loc[keep].reset_index(drop=True)
+    if films.empty:
+        return {"ids": [], "r": [], "c": [], "w": [], "xy": np.zeros((0, 2))}
+
+    role_map = {"director": "director", "main actor": "actor", "producer": "producer", "studio": "studio"}
+    selected = e[e.role.isin([role_map[r] for r in roles]) & e.target.isin(set(films.id))].copy()
+    selected = selected[(selected.role != "actor") | (selected.ordering == 1)]
+    selected["entity"] = selected.role + "|" + selected.source
+    selected = selected.drop_duplicates(["target", "entity"])
+    fi = {t: k for k, t in enumerate(films.id)}
+    entities, codes = np.unique(selected.entity, return_inverse=True)
+    B = sp.csr_matrix((np.ones(len(selected), dtype=np.float32),
+                       (selected.target.map(fi).to_numpy(), codes)),
+                      shape=(len(films), len(entities)))
+    A = (B @ B.T).tocsr()
+    A.setdiag(0)
+    A.eliminate_zeros()
+    A = sp.triu(A, k=1).tocoo()
+    if not len(A.data):
+        return {"ids": [], "r": [], "c": [], "w": [], "xy": np.zeros((0, 2))}
+
+    weighted_degree = np.bincount(A.row, A.data, len(films)) + np.bincount(A.col, A.data, len(films))
+    top = np.argsort(-weighted_degree)[:max_nodes]
+    top = top[weighted_degree[top] > 0]
+    pos = -np.ones(len(films), dtype=int)
+    pos[top] = np.arange(len(top))
+    edge_keep = (pos[A.row] >= 0) & (pos[A.col] >= 0)
+    r, c, w = pos[A.row[edge_keep]], pos[A.col[edge_keep]], A.data[edge_keep]
+    if not len(r):
+        return {"ids": [], "r": [], "c": [], "w": [], "xy": np.zeros((0, 2))}
+    order = np.argsort(-w)[:max_edges] if max_edges else np.array([], dtype=int)
+    edges = np.column_stack([r, c])
+    graph = ig.Graph(n=len(top), edges=edges.tolist())
+    xy = _layout(edges, w, len(top))
+    community_methods = {
+        "Louvain": graph.community_multilevel(weights=w.tolist()),
+        "Leiden": graph.community_leiden(objective_function="modularity", weights=w.tolist(),
+                                         resolution=1.0, beta=0.01, n_iterations=10),
+        "Infomap": graph.community_infomap(edge_weights=w.tolist(), trials=10),
+        "Label propagation": graph.community_label_propagation(weights=w.tolist()),
+    }
+    communities = {}
+    method_comparison = []
+    for name, partition in community_methods.items():
+        membership = np.asarray(partition.membership)
+        communities[name] = membership
+        method_comparison.append({
+            "method": name,
+            "communities": int(len(set(membership))),
+            "modularity": round(float(graph.modularity(membership, weights=w.tolist())), 4),
+        })
+    return {
+        "ids": films.id.to_numpy()[top].tolist(),
+        "r": r[order], "c": c[order], "w": w[order], "xy": xy,
+        "degree": np.asarray(graph.degree()), "weighted_degree": np.asarray(graph.strength(weights=w.tolist())),
+        "pagerank": np.asarray(graph.pagerank(weights=w.tolist())),
+        "links": int(len(r)), "isolates": int(len(films) - len(top)),
+        "communities": communities, "community_comparison": method_comparison,
+    }
+
+
+def _community_summary(ids: np.ndarray, by: pd.DataFrame, membership: np.ndarray) -> pd.DataFrame:
+    frame = by.loc[ids, ["label", "log_multiple"]].copy()
+    frame["community"] = membership
+    rows = []
+    for community, group in frame.groupby("community"):
+        values = pd.to_numeric(group["log_multiple"], errors="coerce").dropna()
+        rows.append({
+            "community": int(community) + 1,
+            "films": int(len(group)),
+            "total_ln_multiple": round(float(values.sum()), 3) if len(values) else None,
+            "average": round(float(values.mean()), 3) if len(values) else None,
+            "median": round(float(values.median()), 3) if len(values) else None,
+            "minimum": round(float(values.min()), 3) if len(values) else None,
+            "maximum": round(float(values.max()), 3) if len(values) else None,
+            "range": round(float(values.max() - values.min()), 3) if len(values) else None,
+        })
+    return pd.DataFrame(rows).sort_values(["films", "community"], ascending=[False, True])
+
+
+def _movie_network_detail(tconst: str, centrality: pd.Series) -> None:
+    g = gd()
+    if tconst not in g["by_id"].index:
+        return
+    r = g["by_id"].loc[tconst]
+    e = g["edges"]
+    credits = e[e.target == tconst]
+    labels = g["label"]
+    who = {
+        "Director": _names(credits, labels, "director", 3),
+        "Main actor": _names(credits[credits.ordering == 1], labels, "actor", 3),
+        "Producer": _names(credits, labels, "producer", 3),
+        "Studio": _names(credits, labels, "studio", 3),
+    }
+    st.subheader(f"{r.label} ({int(r.year) if pd.notna(r.year) else 'year unknown'})")
+    st.caption(f"`{tconst}` · {str(r.genres).replace(',', ', ')}")
+    cols = st.columns(7)
+    cols[0].metric("Budget", f"${r.budget_usd / 1e6:,.1f}M" if pd.notna(r.budget_usd) else "—")
+    cols[1].metric("Gross", f"${r.gross_usd / 1e6:,.1f}M" if pd.notna(r.gross_usd) else "—")
+    cols[2].metric("ln(gross/budget)", f"{r.log_multiple:+.3f}" if pd.notna(r.log_multiple) else "—")
+    cols[3].metric("IMDb rating", f"{r.rating:.1f}" if pd.notna(r.rating) else "—")
+    cols[4].metric("Degree", f"{centrality.get('degree', np.nan):,.0f}" if pd.notna(centrality.get("degree")) else "—")
+    cols[5].metric("PageRank", f"{centrality.get('pagerank', np.nan):.4f}" if pd.notna(centrality.get("pagerank")) else "—")
+    cols[6].metric("Community", f"{int(centrality.get('community', 0)) + 1}"
+                   if pd.notna(centrality.get("community")) else "—")
+    st.markdown(" · ".join(f"**{key}:** {value}" for key, value in who.items() if value) or "No requested credits found.")
+    link_buttons(tconst)
+
+
+def movie_network():
+    """Interactive film-only network for Q2: shared director, main actor, producer, or studio."""
+    st.title("Film-only network")
+    if not _need_graph():
+        return
+    g = gd()
+    n = g["nodes"]
+    st.caption("Q2: films are linked when they share a director, top-billed actor, producer, or studio. "
+               "Drag to pan, scroll to zoom, hover for details, and click or lasso films to inspect them.")
+    genres = sorted({x for s in n.loc[n.type == "movie", "genres"].dropna() for x in s.split(",") if x})
+    with st.sidebar:
+        st.subheader("Film network")
+        roles = tuple(st.multiselect("Shared credit types", ["director", "main actor", "producer", "studio"],
+                                     default=["director", "main actor", "producer", "studio"], key="movie_net_roles"))
+        tiers = tuple(st.multiselect("Vote tier", ["100k+", "10k-100k"],
+                                     default=["100k+", "10k-100k"], key="movie_net_tiers"))
+        clean_only = st.toggle("Clean films only", True, key="movie_net_clean")
+        years = st.slider("Release year", 1915, 2026, (1975, 2025), key="movie_net_years")
+        genre = st.selectbox("Genre", ["any"] + genres, key="movie_net_genre")
+        max_nodes = st.slider("Maximum films to draw", 200, 3000, 1200, step=100, key="movie_net_nodes")
+        max_edges = st.slider("Maximum links to draw", 1000, 30000, 10000, step=1000, key="movie_net_edges")
+        community_method = st.selectbox("Community method", ["Louvain", "Leiden", "Infomap", "Label propagation"],
+                                        key="movie_net_community")
+        colour = st.selectbox("Colour by", ["ln(gross/budget)", "release year", "degree", "PageRank", "community"],
+                              key="movie_net_colour")
+    if not roles or not tiers:
+        st.info("Choose at least one credit type and vote tier.")
+        return
+    v = movie_network_view(mtime(NODES) + mtime(EDGES), roles, tiers, clean_only, years, genre, max_nodes, max_edges)
+    if not v["ids"]:
+        st.info("No linked films in this selection. Widen the filters.")
+        return
+    ids = np.asarray(v["ids"])
+    by = g["by_id"].loc[ids]
+    centrality = pd.DataFrame({"degree": v["degree"], "weighted_degree": v["weighted_degree"],
+                               "pagerank": v["pagerank"]}, index=ids)
+    membership = v["communities"][community_method]
+    centrality["community"] = membership
+    st.caption(f"{len(ids):,} films shown, {v['links']:,} links in the filtered network "
+               f"({len(v['r']):,} drawn); {v['isolates']:,} filtered films had no link.")
+    with st.expander("Communities and log gross/budget summaries"):
+        st.caption("Communities use all weighted links inside the displayed 1,200-film cap, not only the strongest "
+                   "10,000 links shown. Infomap optimizes a flow description length rather than modularity; "
+                   "modularity is shown here only as a comparable diagnostic.")
+        st.dataframe(pd.DataFrame(v["community_comparison"]), width="stretch", hide_index=True)
+        st.dataframe(_community_summary(ids, by, membership), width="stretch", hide_index=True)
+
+    fig = go.Figure()
+    if len(v["r"]):
+        fig.add_trace(_edge_trace(v["xy"], v["r"], v["c"], opacity=.2 if len(v["r"]) > 3000 else .35))
+    if colour == "ln(gross/budget)":
+        colours, colourbar = np.clip(by.log_multiple.to_numpy(), -3, 3), dict(title="ln multiple")
+        marker = dict(color=colours, colorscale="RdBu", cmid=0, showscale=True, colorbar=colourbar)
+    elif colour == "release year":
+        marker = dict(color=by.year.to_numpy(), colorscale="Viridis", showscale=True, colorbar=dict(title="year"))
+    elif colour == "degree":
+        marker = dict(color=v["degree"], colorscale="Plasma", showscale=True, colorbar=dict(title="degree"))
+    elif colour == "PageRank":
+        marker = dict(color=v["pagerank"], colorscale="Plasma", showscale=True, colorbar=dict(title="PageRank"))
+    else:
+        unique = np.unique(membership)
+        palette = [QUAL[i % len(QUAL)] for i in range(len(unique))]
+        colour_of = dict(zip(unique, palette))
+        marker = dict(color=[colour_of[x] for x in membership])
+    hover = [
+        f"<b>{html.escape(str(title))}</b><br>{int(year) if pd.notna(year) else 'year unknown'} · {tconst}"
+        f"<br>ln(gross/budget): {lm:+.3f}" if pd.notna(lm) else
+        f"<b>{html.escape(str(title))}</b><br>{int(year) if pd.notna(year) else 'year unknown'} · {tconst}<br>return unavailable"
+        for title, year, tconst, lm in zip(by.label, by.year, ids, by.log_multiple)
+    ]
+    hover = [text + f"<br>degree: {degree} · weighted degree: {weight:.0f}<br>PageRank: {rank:.4f}"
+             f"<br>{community_method} community: {int(community) + 1}"
+             for text, degree, weight, rank, community in zip(
+                 hover, v["degree"], v["weighted_degree"], v["pagerank"], membership)]
+    fig.add_trace(go.Scattergl(x=v["xy"][:, 0], y=v["xy"][:, 1], mode="markers", customdata=ids, text=hover,
+                               hovertemplate="%{text}<extra></extra>",
+                               marker=dict(size=5 + 13 * np.sqrt(v["weighted_degree"] / max(v["weighted_degree"].max(), 1)),
+                                           line=dict(width=.3, color="white"), **marker), showlegend=False))
+    fig.update_layout(clickmode="event+select", template="simple_white", height=780,
+                      margin=dict(l=0, r=0, t=10, b=0), dragmode="select",
+                      xaxis=dict(visible=False), yaxis=dict(visible=False, scaleanchor="x"))
+    event = st.plotly_chart(fig, width="stretch", on_select="rerun",
+                            selection_mode=("points", "box", "lasso"), key="movie_network_plot")
+    selected = _selected_ids(event)
+    choices = sorted(ids, key=lambda x: str(g["label"].get(x, x)).lower())
+    jump = st.selectbox("Or find a film", choices, index=None, placeholder="Type a title or IMDb ID…",
+                        format_func=lambda x: g["label"].get(x, x), key="movie_net_jump")
+    if jump and jump not in selected:
+        selected = [jump] + selected
+    if selected:
+        target = selected[0]
+        _movie_network_detail(target, centrality.loc[target])
+        if len(selected) > 1:
+            st.markdown(f"**{len(selected):,} films selected**")
+            st.dataframe(by.loc[selected, ["label", "year", "genres", "budget_usd", "gross_usd", "log_multiple"]]
+                         .join(centrality).rename(columns={"label": "title"}), width="stretch", hide_index=True)
+    else:
+        st.info("Click a film, or drag a box/lasso around films, to see its credits, money and centralities.")
+
+
 # ---------------------------------------------------------------- node explorer
 
 def _ego(nid: str, hops: int, cap: int):

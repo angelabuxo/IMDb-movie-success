@@ -11,21 +11,46 @@
 set -e
 cd "$(dirname "$0")"
 
+if [ -t 0 ] && [ -t 1 ]; then
+  trap 'printf "\nPress Enter to close this terminal..."; IFS= read -r _ || true' 0
+fi
+
 if [ "$1" != "--data" ]; then
-  if [ ! -x .venv/bin/python ]; then
+  if [ ! -x .venv/bin/python ] && [ ! -x .venv/Scripts/python.exe ]; then
     echo "Creating .venv"
-    python3 -m venv .venv
+    if command -v python3 >/dev/null 2>&1; then
+      python3 -m venv .venv
+    else
+      python -m venv .venv
+    fi
+  fi
+  if [ -x .venv/bin/python ]; then
+    VENV_PYTHON=.venv/bin/python
+  elif [ -x .venv/Scripts/python.exe ]; then
+    VENV_PYTHON=.venv/Scripts/python.exe
+  else
+    echo "Could not find the Python executable in .venv." >&2
+    exit 1
   fi
   if [ ! .venv/.requirements-installed -nt requirements.txt ]; then
     echo "Installing requirements (the first time takes a few minutes)"
-    .venv/bin/pip install -q -r requirements.txt
+    "$VENV_PYTHON" -m pip install -q --upgrade pip setuptools wheel
+    "$VENV_PYTHON" -m pip install -q -r requirements.txt
     touch .venv/.requirements-installed
   fi
 fi
 
-if ! command -v zstd >/dev/null 2>&1; then
-  echo "zstd is missing, so the bundles can't be unpacked. Install it (brew install zstd, or apt install zstd) and run ./setup.sh again." >&2
-  exit 1
+if [ -x .venv/bin/python ]; then
+  VENV_PYTHON=.venv/bin/python
+elif [ -x .venv/Scripts/python.exe ]; then
+  VENV_PYTHON=.venv/Scripts/python.exe
+else
+  VENV_PYTHON=
+fi
+
+if [ -n "$VENV_PYTHON" ] && ! "$VENV_PYTHON" -c "import zstandard" >/dev/null 2>&1; then
+  echo "Installing zstd support"
+  "$VENV_PYTHON" -m pip install -q zstandard
 fi
 
 DATA="${IMDB_DATA_DIR:-data/raw}"
@@ -39,7 +64,24 @@ else
   mkdir -p "$DATA"
   for f in $BUNDLES; do
     echo "  $f"
-    tar --zstd -xf "$f" -C "$DATA"
+    if command -v zstd >/dev/null 2>&1; then
+      tar --zstd -xf "$f" -C "$DATA"
+    elif [ -n "$VENV_PYTHON" ] && "$VENV_PYTHON" -c "import zstandard" >/dev/null 2>&1; then
+      "$VENV_PYTHON" -c '
+import sys
+import tarfile
+import zstandard
+
+source, destination = sys.argv[1:3]
+with open(source, "rb") as compressed:
+    with zstandard.ZstdDecompressor().stream_reader(compressed) as reader:
+        with tarfile.open(fileobj=reader, mode="r|") as archive:
+            archive.extractall(destination, filter="data")
+' "$f" "$DATA"
+    else
+      echo "zstd support is missing and could not be installed." >&2
+      exit 1
+    fi
   done
   echo "$WANT" > "$STAMP"
 fi
