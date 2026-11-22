@@ -1,0 +1,12 @@
+{
+ "shuffles": 1000,
+ "seed": 2805,
+ "min_pairs": 200,
+ "reference_checked": true,
+ "in_common_set": {
+  "films": 1598
+ },
+ "usable_money": {
+  "films": 6346
+ }
+}

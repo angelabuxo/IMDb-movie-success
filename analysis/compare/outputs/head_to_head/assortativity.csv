@@ -1,0 +1,8 @@
+network,links,n_links,mean_degree,assortativity,null_mean,null_95,p,share_links_sharing_genre
+genre,all links,726221,908.9,0.0006,-0.0007,0.0005,0.035,1.0
+people,all links,33685,42.2,0.0456,-0.0012,0.0073,0.001,0.664
+people,links within a shared genre,22377,28.0,0.049,-0.0012,0.0095,0.001,0.664
+people,links with no shared genre,11308,14.2,0.0324,-0.0017,0.0136,0.002,0.664
+script,all links,13692,17.1,0.0212,-0.0016,0.013,0.006,0.805
+script,links within a shared genre,11022,13.8,0.0305,-0.0018,0.0142,0.001,0.805
+script,links with no shared genre,2670,3.3,-0.0156,-0.0022,0.0298,0.7433,0.805

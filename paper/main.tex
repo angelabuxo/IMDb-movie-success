@@ -1,8 +1,10 @@
 \documentclass[9pt,twocolumn,twoside]{pnas-new}
 % DTU 02805 final project. Written into the PNAS Overleaf template the course asks for:
 % https://www.overleaf.com/latex/templates/template-for-preparing-your-research-report-submission-to-pnas-using-overleaf/fzcbzjvpvnxn
-% Figures: paper/make_figures.py. References: paper/references.bib (also listed in docs/overview/literature.pdf).
-% DRAFT 14 Nov 2026. Lines marked TODO need the group.
+% Figures: fig_genre.pdf (analysis/genre, Q1), fig_people.png (analysis/network, Q2),
+% fig_script_vectors.pdf (scripts-analysis/figures, Q3). References: paper/references.bib.
+% Every number is checked against the committed outputs by tests/test_paper_numbers.py.
+% DRAFT 22 Nov 2026. Lines marked TODO need the group.
 
 \articletype{Social Sciences}
 \templatetype{pnasresearcharticle}
@@ -10,7 +12,7 @@
 
 \begin{document}
 
-\title{Who makes a film predicts its return; what its script says does not}
+\title{A film's genre and the people who make it go with its return on budget, but its screenplay adds little}
 
 \author[a]{Gyula K\"{u}rthy}
 \author[a]{\`{A}ngela Bux\'{o}}
@@ -19,16 +21,16 @@
 
 \leadauthor{K\"{u}rthy}
 
-\significancestatement{Studios bet hundreds of millions on films whose returns are famously hard to foresee. We ask which kind of information actually carries signal about a film's return on its budget: the network of people and companies who made it, the text of its screenplay, or how critics and audiences received it. Tested on films released after the model was fitted, the collaboration network carries most of the pre-release signal, while the words and the emotional shape of the screenplay add nothing once budget, genre and era are known.}
+\significancestatement{Studios bet large budgets on films whose returns are famously hard to foresee. We test three kinds of information that exist before a film comes out: its genre, the people who make it and the text of its screenplay. Genre shifts the odds a little, and films made by the same people earn alike, but the words of a screenplay carry almost nothing that simple facts about the film do not already carry.}
 
-\authorcontributions{TODO (the course asks for specific roles; confirm before hand-in). Draft: G.K. built the data pipeline, the movie graph, the profit model, the return-similarity test and the two screenplay text analyses; \`{A}.B. built the review analysis (critics, audiences and money); N.J. built the actor co-appearance network and its interactive explorer. All authors wrote the paper. Hand labelling: TODO.}
+\authorcontributions{TODO (confirm before hand-in). G.K. built the data pipeline, the movie graph and the track-record model, and the genre analysis with the keyword network, the genre-specialist and script-typicality measures. \`{A}.B. built the shared analysis set, the screenplay parsing and preprocessing and the Word2Vec tests, and hand-checked the layer parser (TODO: confirm the annotator). N.J. built the credit network, the return-assortativity test and the interactive explorer. All authors wrote the paper.}
 \authordeclaration{The authors declare no competing interests.}
 \correspondingauthor{\textsuperscript{1}To whom correspondence should be addressed. TODO e-mail.}
 
-\keywords{box office $|$ collaboration networks $|$ screenplays $|$ film critics}
+\keywords{box office $|$ collaboration networks $|$ screenplays $|$ film genre}
 
 \begin{abstract}
-What predicts whether a film earns back its budget, and does earning agree with being liked? We combine IMDb, Wikipedia and Wikidata into one network of 12,673 films and the people and companies behind them, add 1,095 screenplays and audience reviews, and measure return as $\ln(\text{gross}/\text{budget})$. Trained on films to 2010 and tested on 2011--2017, budget, year and genre explain nothing ($R^2=-0.01$), and adding leakage-safe network track records raises $R^2$ to 0.19. Films sharing a producer, writer or studio have more similar returns than shuffles allow (0.09--0.17 against at most 0.02). Screenplay text adds nothing: the words of profitable and unprofitable scripts differ only through franchise films. Critics and audiences agree with money only moderately ($\rho\approx0.3$).
+What goes with a film earning back its budget: its genre, the people who make it, or its screenplay? We link IMDb, Wikipedia, Wikidata and TMDB into a network of 12,673 films and the people and companies behind them, add 1,598 screenplays, and measure return as $\ln(\text{gross}/\text{budget})$. Against films of the same budget, Animation, Family and Horror return more and Drama, Action, Crime, History and War less, but genre adds only 0.03 to the explained variance. Inside Horror, supernatural films stand out, and a keyword network filtered against a null finds them as a category that beats its budget in every stability run. Films sharing a director or producer have more similar returns than shuffles allow (0.09 against at most 0.04), and teams experienced in a film's genre beat their budgets. Screenplay vectors beat a shuffle but not simple metadata, except in Action, and not once popularity is known.
 \end{abstract}
 
 \dates{This manuscript was compiled on \today}
@@ -40,72 +42,80 @@ What predicts whether a film earns back its budget, and does earning agree with 
 
 \Firstpage
 
-\dropcap{F}ilm returns are heavy-tailed and notoriously hard to predict~\cite{devany1999uncertainty}. Three kinds of information are available about a film, and each has its own literature. The first is \emph{who made it}: careers and collaboration networks shape creative success~\cite{uzzi2005collaboration,cattani2008core,ferriani2009relational}, stars raise revenue without raising returns~\cite{ravid1999information,elberse2007power}, and past collaborations predict profitability~\cite{lash2016early,packard2016network}. The second is \emph{what the film says}: script text has been used to green-light films~\cite{eliashberg2007story,eliashberg2014assessing,hunter2016predicting}, and the emotional arc of a story has been linked to success~\cite{reagan2016emotional,delvecchio2021improving,toubia2021quantifying,berger2021engaging}. The third is \emph{how it was received}: critics predict more than they drive revenue~\cite{eliashberg1997critics,basuroy2003critical,reinstein2005influence}, and critical taste and market success can part ways~\cite{holbrook1999popular,holbrook2007taste,holbrook2008art}.
+\dropcap{F}ilm returns are heavy-tailed and hard to predict~\cite{devany1999uncertainty}. Three kinds of information about a film exist before it comes out, and each has its own literature. The first is its \emph{genre}, which box-office models have long used as a control~\cite{ravid1999information,sharda2006predicting}. The second is \emph{who makes it}: careers and collaboration networks shape creative success~\cite{uzzi2005collaboration,cattani2008core,ferriani2009relational}, stars raise revenue without raising returns~\cite{ravid1999information,elberse2007power}, and past collaborations predict profitability~\cite{lash2016early,packard2016network}. The third is \emph{what the film says}: script text has been used to green-light films~\cite{eliashberg2007story,eliashberg2014assessing,hunter2016predicting}.
 
-These strands are rarely tested side by side, on the same films, against the same outcome. Most studies model revenue, which budget largely determines; we model the \emph{multiple}, $\ln(\text{worldwide gross}/\text{budget})$, the return on the reported budget. We ask which strand carries signal about it, and whether that signal survives the checks that rule out the boring explanations: budget, genre and era, franchise membership, and leakage from the future. The short answer is that the network does, the screenplay does not, and reception agrees with money only in part.
+These strands are rarely tested on the same films against the same outcome. Most studies model revenue, which budget largely decides. We model the return on the reported budget, $\ln(\text{worldwide gross}/\text{budget})$, and ask three questions. Do some genres return more than films of the same budget? Do films made by the same people earn alike, and do people do better in a genre they know? Does the screenplay add anything once genre, era and popularity are known, in general or in some genres? Each answer is checked against a shuffle null and, where we could, a second method or a hand-checked sample.
 
 \section*{Results}
 
-\subsection*{The collaboration network carries the pre-release signal}
-We fit ridge regressions on films released up to 2010 and score them on films from 2011 to 2017, so no later film informs a prediction. Budget, year and genre alone explain none of the variance in the multiple out of sample ($R^2=-0.009$; Fig.~\ref{fig:network}A). Adding the track records, experience and centrality of each film's studio, distributor, producers, writers, director and top-billed cast, all computed only from earlier films, raises $R^2$ to 0.192. Release month and a franchise flag add little more (0.234). Critic and audience scores raise it to 0.305, but they are known only after release and are reported as reception, not prediction. The studio's track record goes with the multiple at $\rho=+0.27$, net of budget and year (3,944 films), against $\rho=+0.16$ for the distributor's. A director's next film is a hit (top quarter) 36\% of the time after a hit and 20\% after a non-hit. Shuffling the order of each director's own films leaves about half that gap (0.077 of 0.156), so roughly half reflects lasting differences between directors and the rest momentum or era, in line with hot streaks in creative careers~\cite{liu2018hot,john2017managerial}. PageRank in yearly collaboration networks adds nothing beyond plain experience counts ($\rho=+0.003$).\Endparasplit
+\subsection*{Genre shifts returns a little, and supernatural horror stands out}
+Among the 6,346 films with clean money figures, we compared each IMDb genre's mean return with 10,000 shuffles that swap returns only between films in the same budget decile, so a cheap genre cannot win just by being cheap (Fig.~\ref{fig:genre}). Animation (+0.316), Family (+0.266) and Horror (+0.203) return more than films of the same budget. Drama ($-0.130$), Action ($-0.145$), Crime ($-0.197$), History ($-0.330$) and War ($-0.439$) return less. The effects are concentrated in mid-budget films: between \$5M and \$30M, Animation is +0.66, Family +0.42 and Horror +0.29. Still, genre explains little. Budget decile and era give $R^2=0.063$, and all 18 genres add 0.032. On the 1,598 films with a screenplay, genre adds 0.026.
 
-Returns also cluster by shared personnel (Fig.~\ref{fig:network}B). For every role, films sharing a person or company have more similar residual returns than 1,000 shuffles allow: from 0.09 for the top-three cast to 0.17 for producers, against a 95th null percentile of at most 0.02. The pattern holds without franchise films (0.07--0.13), with ranked returns (0.08--0.16) and from 1980 on (0.09--0.17). Roles overlap, since a director's films often share a studio, so we also shuffled only within each film's main studio: between 42\% and 61\% of each people role's similarity survives.
+Inside Horror the advantage is not spread evenly. Films whose TMDB keywords mark them as supernatural (ghosts, demons or possession, from a keyword list written down before looking) beat other horror films of the same budget and era by +0.60 (231 films; median +0.90 against +0.22, and 70\% beat the median of other horror). Wikidata's curated label agrees: its supernatural horror films beat other Horror by +0.74 (72 films), while slasher, splatter and comedy horror do not differ.
+
+A third, unsupervised view comes from the keywords as a network. We linked two TMDB keywords when films share them more often than a curveball null~\cite{strona2014fast} expects, which keeps every film's number of keywords and every keyword's number of films, and kept the pairs that pass after Holm correction~\cite{holm1979simple}. Louvain~\cite{blondel2008fast} splits the resulting backbone (1,119 links among 344 keywords) into 14 categories with modularity 0.67, against at most 0.51 for the same backbone rewired. Weighted by each film's share of keywords, four categories differ from their budgets: supernatural horror (+0.32) and superheroes with 3D animation (+0.21) above, dystopia ($-0.15$) and action with gangsters ($-0.14$) below. Rebuilt over 20 null draws, 50 subsamples of 80\% of the films and five changed settings, the supernatural horror category passes in every run.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{fig_genre.pdf}
+\caption{Some genres return more than films of the same budget, and some less. Bars: mean $\ln(\text{gross}/\text{budget})$ of the films tagged with each IMDb genre (films in brackets; a film counts in every genre it has), 6,346 films. Grey boxes: the middle 95\% of 10,000 shuffles that swap returns only between films in the same budget decile. Blue and red bars lie above or below that band after Holm correction over the 18 genres. Dotted line: mean of all films.}
+\label{fig:genre}
+\end{figure}
+
+\subsection*{Films by the same people earn alike, and genre specialists do better}
+On the 1,598 films of the common set, we linked two films when they share a director, a top-three billed actor, a producer or a studio, and correlated their returns after removing budget, era and genre (Fig.~\ref{fig:people}). Every role beats 1,000 shuffles of returns within era bins: 0.090 for directors and 0.091 for producers, 0.064 for actors and 0.048 for studios, against null 95th percentiles of at most 0.035. On all 6,346 films the director and producer values rise to 0.116.
+
+The effect does not need a shared genre. On the common set every role still beats the shuffle between films that share no genre (directors 0.074, producers 0.074, actors 0.054, studios 0.051), and pairs within a genre never differ from pairs across genres by more than the shuffles allow. It is strongest inside Horror, where films sharing a producer correlate at 0.262 and films sharing a studio at 0.281. On all 6,346 films, producers (0.134 within a genre against 0.061 across) and studios (0.070 against 0.046) do earn alike more within a genre, and no shuffle reaches those gaps.
+
+Who made a film also predicts later films. Fitted on films up to 2010 and scored on films from 2011 to 2017, budget, year and genre explain none of the variance in return ($R^2=-0.009$), and adding each role's track record, experience and centrality, computed only from earlier films, raises $R^2$ to 0.192. Part of that is genre. When the directors, writers, producers and lead actors of a film have spent more of their earlier careers in its genres, it beats its budget by +0.084 per standard deviation (95\% interval +0.032 to +0.137; 6,316 films, sequels controlled), and by +0.070 with sequels left out. Shuffling that experience within genre $\times$ budget decile gives $p=0.001$. Experience in general does not help ($-0.013$ per standard deviation): the same people do better in a genre they know.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{fig_people.png}
+\caption{Films that share people earn alike. Bars: outcome assortativity, the correlation of residual returns (after $\ln$ budget, era and genre) across pairs of films that share a director, a top-three billed actor, a producer or a studio, on the 1,598 films of the common set. Red marks: 95th percentile of 1,000 shuffles of returns within era bins. Every role lies above it ($p=0.001$, the smallest possible).}
+\label{fig:people}
+\end{figure}
+
+\subsection*{The screenplay adds little beyond metadata, except in Action}
+We split each screenplay into dialogue and scene description, represented each layer as the TF-IDF-weighted mean of Word2Vec vectors~\cite{mikolov2013efficient} trained on all scripts, and asked a cross-validated classifier to tell the top quarter of returns from the bottom quarter within genre and era (Comedy 136 against 136 films, Action 108 against 108). The vectors beat 200 label shuffles in all four tests (Fig.~\ref{fig:script}), with AUC from 0.58 to 0.66. They never beat a baseline of vote tier, era and the film's other genres (0.78 in Comedy, 0.71 in Action). Added to that baseline, they help in Action (+0.063 for dialogue, 95\% interval +0.013 to +0.109; +0.080 for description, +0.035 to +0.125) but not in Comedy. The Action gain disappears once the number of votes is known: among films with 100,000+ votes, a baseline with log votes reaches 0.795 and adding either vector gives 0.781 and 0.789. Votes are partly the outcome, since more viewers means more gross, so the vectors may mark films that many people saw rather than good scripts. An earlier comparison of the words of profitable and unprofitable scripts agrees: its excess of distinctive words~\cite{monroe2008fightin,kessler2017scattertext} drops from $z=2.05$ to $z=0.50$ once likely franchise films are removed.
+
+What does go with return is how well a script fits its genre. A script is typical when its sentence embedding~\cite{reimers2019sentence} sits close to the other scripts of its genres. Typical scripts beat their budgets by +0.106 per standard deviation (95\% interval +0.047 to +0.166; 1,619 films), with length, dialogue share and parsing noise held fixed, and shuffling typicality within genre $\times$ budget decile gives $p=0.001$.
 
 \begin{figure*}
 \centering
-\includegraphics[width=\textwidth]{fig_network.pdf}
-\caption{Who made a film carries signal about its return. (A) Out-of-sample $R^2$ for $\ln(\text{gross}/\text{budget})$ on films from 2011--2017, from ridge models fitted on films to 2010; network features use only films released earlier. *Critic and audience scores are known only after release. (B) Return similarity (an intraclass-correlation-like share of residual variance, after $\ln$ budget, decade and genre) among films sharing each role, 6,414 films. Bars: observed; black ticks: 95th percentile of 1,000 shuffles that keep every group's size; red crosses: the same null when returns are shuffled only within a film's main studio.}
-\label{fig:network}
+\includegraphics[width=0.85\textwidth]{fig_script_vectors.pdf}
+\caption{Screenplay vectors beat chance but not simple metadata. AUC of telling hit from flop screenplays (top against bottom quarter of return within genre and era) for each genre and script layer. Blue: Word2Vec script vector (mean over 5 seeds). Orange: TF-IDF words. Grey band: 95\% of 200 label shuffles of the whole pipeline. Diamond: metadata baseline (vote tier, era and other genres in A; era and other genres in B, where the tier is constant). Cross: log votes alone. (A) All labelled films. (B) Films with 100,000+ votes only.}
+\label{fig:script}
 \end{figure*}
 
-\subsection*{The screenplay adds nothing once budget, genre and era are known}
-We compared the dialogue of the most and least profitable quarter of 1,095 scripts within genre $\times$ decade cells, with a log-odds score~\cite{monroe2008fightin,kessler2017scattertext} fixed before seeing results. The number of distinctive words is only slightly above a stratified shuffle null ($z=2.08$, $p=0.024$; Fig.~\ref{fig:script}). In the franchise check, which uses 200 shuffles per run, the same comparison gives $z=2.05$ with all films and $z=0.50$ without the 93 likely franchise films, while removing the same number of random films never falls that low (0 of 50 draws; median $z=2.94$). The excess goes with the franchise films themselves; we did not test why. A TF-IDF classifier on the words does no better than genre, decade and budget (AUC 0.58 against 0.58).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{fig_script.pdf}
-\caption{The screenplay's words show no robust link to return. Excess of distinctive words between the top and bottom quarter of scripts by return, as $z$ against a genre $\times$ decade shuffle (200 shuffles per run): all 526 labelled films, 50 drops of 93 random films, and the drop of the 93 likely franchise films. Dashed: $z=1.96$.}
-\label{fig:script}
-\end{figure}
-
-\subsection*{Critics and audiences agree with money only in part}
-On films up to 2017, the multiple correlates with the IMDb rating at $\rho=0.27$ (2,095 films), Metacritic at 0.26 (1,834) and Rotten Tomatoes at 0.33 (2,093), all far above a null that shuffles within genre $\times$ decade, which itself sits near 0.1 (Fig.~\ref{fig:reception}). Critics agree with each other far more (Metacritic with Rotten Tomatoes, 0.93) than with money. The tone of audience reviews (VADER~\cite{hutto2014vader}, first 50 Tag Genome reviews~\cite{vig2012tag}) tracks the multiple weakly (0.13). Ranking films by rating minus money separates films ``liked beyond their money'', whose reviews mention auteurs and \emph{noir}, from films that ``earned beyond their liking'', whose reviews mention \emph{scares} and \emph{slashers}: which fits cheap horror earning its budget back without being loved, though we did not test horror's budgets directly. Over the full clean sample there are 158 critically loved flops and 202 panned hits.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{fig_reception.pdf}
-\caption{Being liked and making money agree only in part. Spearman correlation of each reception measure with $\ln(\text{gross}/\text{budget})$ on films up to 2017 (1,834 to 2,095 per measure; dots), against 95\% of a null that shuffles the outcome within genre $\times$ decade cells (grey bars). The null is not centred on zero because genre and era alone align reception and return.}
-\label{fig:reception}
-\end{figure}
+\subsection*{Head to head: people carry the most, screenplays only within a genre}
+On the same 1,598 films we built three networks, linking films that share a genre, share people, or have similar screenplays (each script linked to its 10 nearest scripts by cosine similarity of its embedding). We measured each network's return assortativity on one outcome, the return beyond films of the same budget decile and era, against the same 1,000 shuffles within era bins. Shared people give 0.046 (null 95th percentile 0.007), and 0.032 between films of different genres. Similar screenplays give 0.021 (null 0.013), and all of it comes from films of the same genre: 0.030 for those links and $-0.016$ across genres ($p=0.74$). Shared genre gives 0.0006, which passes its null (0.0005) but links almost every film to every other (mean degree 909), so the budget-matched test above measures genre better.
 
 \section*{Discussion}
-Across three kinds of information, the one that predicts a film's return before release is who made it. Track records carry most of that signal, and network position adds little beyond experience, in line with work that found network effects weaken once budget is known~\cite{packard2016network} and that stars buy revenue, not returns~\cite{ravid1999information,elberse2007power}. The screenplay, by contrast, shows no robust link once budget, genre, era and franchise are handled. The outcome matters: one study of revenue found critics' scores falling as box office rose~\cite{holbrook2007taste}, while against return on budget they rise, which suggests critics favour cheaper films that earn their budgets back.
+The three questions get three different answers. Genre shifts a film's expected return, mostly for mid-budget films, and the clearest case is supernatural horror, which three differently made measures agree on. Films made by the same people earn alike, and part of that is people doing better in a genre they have worked in before. The screenplay's words add little that genre, era and popularity do not already carry. What a script does carry is how closely it follows its genre, which points back to the same pattern: staying in a known lane goes with beating the budget. Measured on the same films with the same statistic, the people network carries the most, and screenplays carry signal only between films of the same genre.
 
-What this does not show. None of these results is causal. Gross over budget is not profit, since marketing and the cinemas' share are missing. The return-similarity test uses all years at once and so describes clustering rather than prediction. The 100k-vote sample under-represents flops, reviews stop in 2017, and the franchise flag is rough. We also ran a pre-registered test of screenplay emotional arcs and dropped it: its result was negative, and its sentiment classifier, trained on movie reviews rather than screenplays, measures the tone of the text rather than what the audience feels and was neither reliable nor validated against hand labels; the code and outputs are kept on the repository's \texttt{archive/scripts-arcs} branch.
+None of this is causal. Gross over budget is not profit, because marketing is missing and cinemas keep part of the gross. Wikipedia also misses flops: TMDB has figures for 677 films Wikipedia lacks, with a mean return of $-0.379$ against 0.573, and 51\% of them grossed less than their budget against 28\%. So every absolute return here is too optimistic, although the genre ranking barely moves when those films are added. The keyword categories describe films after release, and the supernatural pattern did not show up in the screenplays themselves. Script typicality was not checked against popularity the way the vectors were. Finally, earning money and being liked agree only in part: return correlates with critic and audience scores at only $\rho\approx0.3$.
 
 \matmethods{
 \subsection*{Data}
-Movies with at least 10,000 IMDb votes (non-adult) from IMDb's public files, linked to Wikipedia and Wikidata (TODO: collection dates). Budget and gross come from Wikipedia infoboxes; we keep films with both in US dollars and at least \$1,000, no rentals-only, regional or direct-to-video gross (including grosses whose citation says rentals), no streaming distributor and release from 1975 to 2025 (6,414 films; 2,352 with 100,000+ votes). Screenplays are MovieSum~\cite{saxena2024moviesum} (1,095 films with 100,000+ votes, clean under the rule before the 1975 floor, when the screenplay analyses were pre-registered); audience reviews are the MovieLens Tag Genome~\cite{vig2012tag} (2,070 films, none after 2017); critic scores come from Wikipedia and Wikidata. Franchise films are flagged from Wikidata (follows, followed by, part of a series).
+Movies with at least 10,000 IMDb votes (non-adult) from IMDb's public files, linked to Wikipedia, Wikidata and TMDB (TODO: collection dates). Budget and gross come from Wikipedia infoboxes. A film's money is usable when both figures are in US dollars and at least \$1,000, the gross is not rentals-only, regional or direct-to-video, the distributor is not a streaming service, and the film came out between 1975 and 2025 (6,346 films). The common set adds a MovieSum screenplay~\cite{saxena2024moviesum} with at least 500 tokens in both the dialogue and the description layer (1,598 films). Every analysis uses one shared rule for this.
 
-\subsection*{The movie graph and network features}
-An undirected bipartite graph links films to people (actors with billing order, directors, writers, producers, composers, cinematographers, editors) and companies (studios and distributors, merged through Wikidata identifiers). For each film, each role's experience, track record (mean multiple of earlier films) and PageRank in a collaboration network rebuilt per release year use only films released before it. Company communities: Louvain~\cite{blondel2008fast} on the company co-credit projection (1980--2017), ten seeds.
+\subsection*{Genre}
+IMDb genres with at least 100 films (18 genres). A genre's statistic is the mean return of its films, against 10,000 shuffles within budget deciles, two-sided and Holm-corrected. Checks: shuffles within budget decile $\times$ era, without matching and on ranks, a smooth budget curve, dropping each genre's top films, and TMDB's genres and money as a second source (the two returns correlate at 0.951). Horror subgenres compare the return net of budget decile and era with other horror films. The keyword network uses the 355 TMDB keywords in at least 30 films, after removing production facts, places, decades and mood words, with 200 curveball samples and Louvain over 20 seeds.
 
-\subsection*{Prediction and similarity}
-Ridge regressions with blocks added in turn; fitted on films to 2010 and scored on 2011--2017. Return similarity: for each role, the share of residual variance (after $\ln$ budget, decade and genre) explained by group membership among people or companies credited on at least two films; null: 1,000 shuffles of returns across films, keeping group sizes and overlaps; a second null shuffles only within main studio.
+\subsection*{People}
+The credit network links films through shared directors, top-three billed actors, producers and studios. Assortativity is the Pearson correlation of residual returns at the two ends of each link, against 1,000 shuffles within era bins that keep the graph. Assortativity in the head-to-head counts each link in both directions. Track records and experience use only films released before each film. Genre experience is the share of a team's earlier credits on any IMDb film that fall in the film's genres. A first version that counted only films with 10,000+ votes let a noticed past leak into experience, and was replaced.
 
-\subsection*{Screenplay text}
-Dialogue only, character names removed, stopwords kept; terms in at least five scripts; score $\log_{10}$ of smoothed rate ratios with threshold $\log_{10}2$; 1,000 shuffles of the success label within genre $\times$ decade. Classifier: TF-IDF logistic regression, $10\times5$-fold cross-validation, against genre, decade and $\ln$ budget.
+\subsection*{Screenplays}
+Skip-gram Word2Vec (100 dimensions, window 5, five seeds) is trained on all screenplays, with character names specific to fewer than 20 films removed. The classifier is an L2 logistic regression with repeated stratified 5-fold cross-validation, and its settings and hypothesis were fixed before any AUC was computed. Typicality is the cosine of a script's all-MiniLM-L6-v2 embedding to the leave-one-out mean of the other scripts in its genres, minus its cosine to the mean of all scripts.
 
-\subsection*{Reception}
-Spearman correlations against 1,000 shuffles of the outcome within genre $\times$ decade (first-listed genre). Review tone: mean VADER compound score of a film's first 50 reviews; VADER agrees with Stanford polarity labels on 73\% of 1,988 non-neutral reviews. TODO: hand-labelled sample of 50 reviews.
-
-\subsection*{Validation and availability}
-Every analysis is compared with a shuffle null and, where possible, a second method. Code, configuration and numeric outputs are in the group repository (TODO: link); raw data, script and review text are not redistributed, in line with their licences.
+\subsection*{Validation}
+One of us hand-checked 250 elements from 25 screenplays drawn by era and found 3 placed in the wrong layer. The most extreme return in the data was checked by hand against its article and TMDB and is real. The keyword network was rebuilt over Louvain seeds, null draws, film subsamples and changed thresholds, which also found and fixed a bug that made the backbone depend on Python's string hashing.
 }
 
 \showmatmethods{}
 
-\dataavail{Code, configuration files and all numeric outputs are in the group repository (TODO: public link). Raw IMDb files, screenplay text and review text are not redistributed, in line with their terms and licences; scripts to rebuild every input from the public sources are included.}
+\dataavail{Code, configuration files and all numeric outputs are in the group repository, \url{https://github.com/angelabuxo/IMDb-movie-success}. Raw IMDb files, screenplay text, review text and the TMDB file are not redistributed, in line with their terms and licences. Scripts to rebuild every input from the public sources are included.}
 
 \acknow{TODO.}
 \showacknow{}
