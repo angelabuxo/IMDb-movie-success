@@ -16,3 +16,6 @@ analysis/embeddings/private/
 
 # explorer logs (explorer/log.py, explorer/check_pages.py)
 logs/
+
+# Old location of analysis/screenplays/ (moved 23 November 2026). Its private/ holds screenplay text, so keep ignoring it.
+scripts-analysis/

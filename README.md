@@ -6,18 +6,17 @@ This is the final project for DTU 02805 Social Graphs and Interactions, autumn 2
 
 ## What we found
 
-The paper in [`paper/main.tex`](paper/main.tex) asks what goes with a film earning back its budget: its genre, the people who make it, or its screenplay. Return is ln(gross / budget), on 12,673 films with at least 10,000 IMDb votes, linked to Wikipedia, Wikidata and TMDB, plus 1,598 screenplays.
+The paper in [`paper/main.tex`](paper/main.tex) asks what goes with a film earning back its budget: its genre, the people who make it, or its screenplay. We linked the 12,673 films with at least 10,000 IMDb votes to Wikipedia, Wikidata and TMDB, and built a network of them and the people and companies behind them. Return is ln(gross / budget), which needs usable money figures: 6,346 films have them, and 1,598 of those also have a screenplay (the common set).
 
 Against films of the same budget, Animation, Family and Horror return more, and Drama, Action, Crime, History and War return less, but genre adds only 0.03 to the explained variance. Inside Horror, supernatural films stand out, and a keyword network filtered against a null confirms it. Films that share a director or producer have more similar returns than shuffles allow (0.09 against at most 0.04), and teams with experience in a film's genre beat their budgets. The network's communities are production houses, and Blumhouse beats films of the same budget by the most (+1.06). Screenplay vectors beat a shuffle but not simple metadata, except in Action, and not once popularity is known.
 
-Which films count is set in one place: [`analysis/clean_rule.py`](analysis/clean_rule.py) holds the clean rule, and [`docs/analysis-set.md`](docs/analysis-set.md) explains the `usable_money` and `in_common_set` flags every question filters on. `tests/test_paper_numbers.py` checks the paper's numbers against the saved outputs.
+Which films count is set in one place: [`analysis/clean_rule.py`](analysis/clean_rule.py) holds the clean rule, and [`docs/analysis-set.md`](docs/analysis-set.md) explains the `usable_money` and `in_common_set` flags every question filters on. `tests/test_paper_numbers.py` recomputes every number in the paper from the committed outputs and fails when one no longer matches.
 
 ## Known problems
 
-- **Gross over budget isn't profit.** The budget is the production budget only, so marketing and distribution are missing, and cinemas keep part of the gross.
-- **The 100k+ sample favours hits.** On 4 November, only 169 of the 2,446 movies grossed less than their budget, because that cut drops films few people saw. In the 10k to 100k tier, 38.1% did.
-- **Franchises could swamp the result.** 11 of the 12 highest-margin films have a series or franchise link in Wikidata, and the current flag is noisy.
-- **Network leakage.** Success can make actors more central, so a film's cast centrality should only use films released before it.
+None of this is causal. Gross over budget isn't profit: the budget is the production budget only, so marketing and distribution are missing, and cinemas keep part of the gross. Box office also leaves out home video, streaming and television rights, and merchandise. Wikipedia misses flops, so every absolute return is too optimistic. The paper's discussion covers these limits, and "What's still open" in [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md) lists the data problems we know about.
+
+A film's network features use only films released before it, so success can't leak into them. `tests/test_no_leakage.py` checks that on a synthetic graph.
 
 ## Data coverage on 4 November 2026
 
