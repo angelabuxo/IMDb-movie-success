@@ -8,7 +8,7 @@ credited on most of its films (name and number of films). Fast: no null, no shuf
 What this measures: which people and companies hold each community together. The names are the most frequent
 credits, not every film; a single shared studio or producer can pull an unrelated film into a community.
 Outputs: analysis/compare/outputs/communities/community_profiles.csv (names and numbers only).
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_community_profiles
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_community_profiles [--set usable_money]
 """
 from __future__ import annotations
 
@@ -26,18 +26,23 @@ TOP = 3
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--set", default="in_common_set", choices=["in_common_set", "usable_money"])
+    a = ap.parse_args()
+    out = nc.out_dir(a.set)
     films, genres = load()
-    f, keep, M = prepare(films, genres, "in_common_set")
+    f, keep, M = prepare(films, genres, a.set)
     G = nc.weighted_links(f)
     nodes = np.array(sorted(G.nodes()))
     parts, mods = nc.louvain(G, nc.SEEDS)
     best = int(np.argmax(mods))
-    saved = json.loads((nc.OUT / "summary.json").read_text())
+    saved = json.loads((out / "summary.json").read_text())
     assert round(mods[best], 4) == saved["modularity"], "partition differs from network_communities.py's saved run"
     lab = nc.labels(parts[best], list(nodes))
     sizes = Counter(lab)
     big = [c for c, n in sizes.most_common() if n >= nc.MIN_SIZE]
-    ret = pd.read_csv(nc.OUT / "community_returns.csv")
+    ret = pd.read_csv(out / "community_returns.csv")
     assert len(ret) == len(big)
     fi = f.set_index("imdb_id")
     mem = members(set(f["imdb_id"]))
@@ -56,7 +61,7 @@ def main():
             row[f"top_{role}s"] = "; ".join(f"{name.get(e, e)} ({k})" for e, k in cnt.most_common(TOP))
         rows.append(row)
     d = pd.DataFrame(rows)
-    d.to_csv(nc.OUT / "community_profiles.csv", index=False)
+    d.to_csv(out / "community_profiles.csv", index=False)
     with pd.option_context("display.width", 250, "display.max_colwidth", 70):
         print(d.drop(columns=["label"]).to_string(index=False))
 
