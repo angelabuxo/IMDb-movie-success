@@ -207,10 +207,10 @@ class Sources:
         d = self.q2["samples"][sample]
         return max(v["null_95"] for v in d.values() if isinstance(v, dict) and "null_95" in v)
 
-    # ---- Q3 screenplays (scripts-analysis) ----
+    # ---- Q3 screenplays (analysis/screenplays) ----
     @cached_property
     def w2v(self):
-        return pd.read_csv(ROOT / "scripts-analysis/word2vec/results/primary.csv")
+        return pd.read_csv(ROOT / "analysis/screenplays/word2vec/results/primary.csv")
 
     def auc(self, genre, layer, rep):
         d = self.w2v
@@ -218,20 +218,20 @@ class Sources:
 
     @cached_property
     def combo(self):
-        return pd.read_csv(ROOT / "scripts-analysis/word2vec/results/combo_interval.csv").set_index(["genre", "layer"])
+        return pd.read_csv(ROOT / "analysis/screenplays/word2vec/results/combo_interval.csv").set_index(["genre", "layer"])
 
     def votes(self, genre, sset, model, layer):
-        d = pd.read_csv(ROOT / "scripts-analysis/word2vec/results/votes_check.csv")
+        d = pd.read_csv(ROOT / "analysis/screenplays/word2vec/results/votes_check.csv")
         return d[(d.genre == genre) & (d.set == sset) & (d.model == model) & (d.layer == layer)].iloc[0].auc
 
     @cached_property
     def manual(self):
-        d = pd.read_csv(ROOT / "scripts-analysis/data_check/manual_check_summary.csv")
+        d = pd.read_csv(ROOT / "analysis/screenplays/data_check/manual_check_summary.csv")
         return d[d.sheet == "main"]
 
     @cached_property
     def manual_films(self):
-        return len(pd.read_csv(ROOT / "scripts-analysis/data_check/sample_films.csv"))
+        return len(pd.read_csv(ROOT / "analysis/screenplays/data_check/sample_films.csv"))
 
     # ---- head to head and network by genre (analysis/compare/outputs) ----
     @cached_property

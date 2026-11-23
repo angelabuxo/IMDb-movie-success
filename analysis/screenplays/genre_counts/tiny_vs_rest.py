@@ -15,7 +15,7 @@ from genre_cells import ERAS, era  # noqa: E402
 from genre_counts import OUT, ROOT, load_films, tiny_ids  # noqa: E402
 
 tiny = tiny_ids()
-stats = list(csv.DictReader(open(ROOT / "scripts-analysis" / "data_check" / "layer_stats.csv")))
+stats = list(csv.DictReader(open(ROOT / "analysis" / "screenplays" / "data_check" / "layer_stats.csv")))
 
 # 1. era over all 2188 unique ids (year read from the movie_name suffix, e.g. "_1999")
 def year(name):

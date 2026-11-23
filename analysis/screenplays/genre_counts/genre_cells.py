@@ -13,7 +13,7 @@ Treatments of a film with several genres:
       alphabetically first, NOT most important.
   (c) only films with exactly one genre
 
-Run:  python3 -I scripts-analysis/genre_counts/genre_cells.py
+Run:  python3 -I analysis/screenplays/genre_counts/genre_cells.py
 """
 import csv
 import statistics

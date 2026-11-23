@@ -19,10 +19,10 @@ Context unit: each element (one line of dialogue, one description) is its own li
 window never crosses elements. Only the dialogue and description layers are kept; parentheticals, characters and
 stage directions are out of both.
 
-Functions work on strings and lists, so they are testable without the data (tests/test_scripts_analysis_preprocess.py).
+Functions work on strings and lists, so they are testable without the data (tests/test_screenplays_preprocess.py).
 
 Run (numbers and a before/after sample, no corpus written):
-    python3 -I scripts-analysis/preprocess/preprocess.py
+    python3 -I analysis/screenplays/preprocess/preprocess.py
 Writes preprocess_summary.csv (numbers only) here and private/preprocess_sample.csv (gitignored, text of at most
 15 words per row) for a manual look.
 """

@@ -2,7 +2,7 @@
 
 Reads layer_stats.csv (one row per unique id). Writes threshold_table.csv and
 threshold_hist.png. The threshold is NOT changed here.
-Run: python3 -I scripts-analysis/data_check/threshold_check.py
+Run: python3 -I analysis/screenplays/data_check/threshold_check.py
 """
 import csv
 from pathlib import Path

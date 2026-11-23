@@ -9,7 +9,7 @@ Words outside the space's vocabulary (min_count 20) are dropped.
 Also writes the TF-IDF representation itself (tf x idf, rows L2-normalised) over the same vocabulary.
 
 Writes private/vectors_w{W}_s{S}.npz and private/tfidf_{layer}.npz (gitignored).
-Run:  python -I scripts-analysis/word2vec/vectors.py
+Run:  python -I analysis/screenplays/word2vec/vectors.py
 """
 import pickle
 from pathlib import Path

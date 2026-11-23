@@ -17,7 +17,7 @@ Files written
   private/ (gitignored, with script text, at most 15 words per snippet):
      sheet_main.csv, sheet_redflags.csv, sheet_excluded.csv
 
-Run:  python3 -I scripts-analysis/data_check/make_samples.py
+Run:  python3 -I analysis/screenplays/data_check/make_samples.py
 The text is RAW (straight from the tags, no preprocessing).
 """
 import csv

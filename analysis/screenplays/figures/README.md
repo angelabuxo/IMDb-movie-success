@@ -3,7 +3,7 @@
 Three candidate figures. They are drawn by `make_figures.py` from the committed tables in `../word2vec/results/` only; nothing is recomputed. PNG for a quick look, PDF (vector) for the paper.
 
 ```bash
-.venv/bin/python scripts-analysis/figures/make_figures.py   # from the repo root
+.venv/bin/python analysis/screenplays/figures/make_figures.py   # from the repo root
 ```
 
 The question the figures answer: within one genre and era, does the vector of a screenplay tell a hit from a flop, and does it do so differently for dialogue and for scene description?

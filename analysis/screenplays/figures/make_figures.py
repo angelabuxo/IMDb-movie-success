@@ -1,8 +1,8 @@
 """Draw the candidate figures for the screenplay question (Q3) from the committed result tables only.
 
-Nothing is recomputed: every number comes from scripts-analysis/word2vec/results/*.csv.
+Nothing is recomputed: every number comes from analysis/screenplays/word2vec/results/*.csv.
 
-Run from the repo root:  .venv/bin/python scripts-analysis/figures/make_figures.py
+Run from the repo root:  .venv/bin/python analysis/screenplays/figures/make_figures.py
 Writes fig1_signal_vs_null.{png,pdf}, fig2_layer_hypothesis.{png,pdf}, fig3_added_value.{png,pdf} here.
 
 Colours: categorical slots 1 and 2 of the validated default palette (blue, orange); everything that is a

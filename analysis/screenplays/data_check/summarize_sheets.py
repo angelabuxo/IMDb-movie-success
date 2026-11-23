@@ -7,7 +7,7 @@ Error rates are reported per era group and per layer and are NOT pooled (DECISIO
 Wilson interval that treats the points as independent. They are not: 10 points per film, 25 films. So the
 interval is optimistic and should be read as a lower bound on the real uncertainty.
 
-Run:  python3 -I scripts-analysis/data_check/summarize_sheets.py
+Run:  python3 -I analysis/screenplays/data_check/summarize_sheets.py
 """
 import csv
 import io

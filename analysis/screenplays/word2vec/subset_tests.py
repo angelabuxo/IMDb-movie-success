@@ -14,7 +14,7 @@ Outputs (numbers only) in results/:
   null_100k_<genre>_<layer>.csv   the permutation AUCs
   combo_interval.csv              intervals for vector + baseline
 
-Run:  IMDB_DATA_DIR=... python -I scripts-analysis/word2vec/subset_tests.py [--perms 200] [--jobs 9] [--skip-subset]
+Run:  IMDB_DATA_DIR=... python -I analysis/screenplays/word2vec/subset_tests.py [--perms 200] [--jobs 9] [--skip-subset]
 """
 import argparse
 import csv

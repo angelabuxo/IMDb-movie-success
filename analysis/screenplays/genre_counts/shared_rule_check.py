@@ -9,7 +9,7 @@ Universes:  (a) the 100k+ vote tier (movies_features.csv)
 Both need a MovieSum script and are cut by the same layer rule (fewer than 500 tokens in the
 dialogue or in the description layer is excluded; data_check/layer_stats.py).
 
-Run:  python3 -I scripts-analysis/genre_counts/shared_rule_check.py
+Run:  python3 -I analysis/screenplays/genre_counts/shared_rule_check.py
 """
 import csv
 import sys
@@ -17,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+ROOT = HERE.parents[2]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT))                      # repo root, for analysis.clean_rule
 import pandas as pd                                 # noqa: E402

@@ -14,7 +14,7 @@ Outputs (numbers only) in results/:
   robustness.csv  windows 2 and 10, plain mean, 100k+ only (observed AUCs, no shuffle)
   null_<genre>_<layer>.csv  the permutation AUCs
 
-Run:  IMDB_DATA_DIR=... python -I scripts-analysis/word2vec/run_tests.py [--perms 200] [--jobs 8]
+Run:  IMDB_DATA_DIR=... python -I analysis/screenplays/word2vec/run_tests.py [--perms 200] [--jobs 8]
 """
 import argparse
 import csv

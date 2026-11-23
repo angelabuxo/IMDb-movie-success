@@ -3,13 +3,13 @@
 Uses preprocess.film_layers with the same common-label filter as preprocess.main(): a label token in
 NAME_MAX_FILMS or more of the 2188 scripts is a common word and is not removed as a name.
 
-Writes, in scripts-analysis/private/ (gitignored, it holds script text):
+Writes, in analysis/screenplays/private/ (gitignored, it holds script text):
   corpus.txt   one element per line (both layers, films in imdb id order, dialogue then description), tokens
                separated by spaces. A Word2Vec window never crosses a line.
   counts.pkl   {imdb_id: {"dialogue": Counter, "description": Counter}} of the kept tokens.
 Writes corpus_summary.csv (numbers only) next to this file.
 
-Run:  IMDB_DATA_DIR=... python -I scripts-analysis/word2vec/corpus.py
+Run:  IMDB_DATA_DIR=... python -I analysis/screenplays/word2vec/corpus.py
 """
 import csv
 import pickle

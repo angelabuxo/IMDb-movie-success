@@ -9,12 +9,12 @@ gensim 4.4.0 doesn't build on the repo's Python 3.15, so these scripts run in a 
 ```bash
 uv venv -p python3.13 .venv-w2v && uv pip install -p .venv-w2v/bin/python gensim==4.4.0 scikit-learn==1.9.1 pandas numpy
 export IMDB_DATA_DIR=/path/to/data/raw
-.venv-w2v/bin/python -I scripts-analysis/word2vec/corpus.py      # 22 s, writes private/corpus.txt and counts.pkl
-.venv-w2v/bin/python -I scripts-analysis/word2vec/train.py --window 5 --seed 1   # about 12 min per space, workers=1
-.venv-w2v/bin/python -I scripts-analysis/word2vec/vectors.py     # every trained space in private/
-.venv-w2v/bin/python -I scripts-analysis/word2vec/run_tests.py   # about 1.5 h on 9 cores
-.venv-w2v/bin/python -I scripts-analysis/word2vec/subset_tests.py  # 100k+ shuffle and vector+baseline interval, about 50 min on 9 cores
-.venv-w2v/bin/python -I scripts-analysis/word2vec/votes_check.py   # about 1 min
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/corpus.py      # 22 s, writes private/corpus.txt and counts.pkl
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/train.py --window 5 --seed 1   # about 12 min per space, workers=1
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/vectors.py     # every trained space in private/
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/run_tests.py   # about 1.5 h on 9 cores
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/subset_tests.py  # 100k+ shuffle and vector+baseline interval, about 50 min on 9 cores
+.venv-w2v/bin/python -I analysis/screenplays/word2vec/votes_check.py   # about 1 min
 ```
 
 The primary run uses windows 5, 2 and 10, each with seeds 1 to 5, so 15 spaces in all. A rerun of the same seed gives identical vectors, which was checked on a 100,000-line slice. The corpus has 19,484,090 dialogue tokens and 24,756,749 description tokens, the same counts as `preprocess/preprocess_summary.csv`. Everything in `private/` holds script text or is derived from it and is gitignored.

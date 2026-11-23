@@ -10,7 +10,7 @@ That z counts every token as an independent draw, and tokens aren't independent:
 
 ```bash
 export IMDB_DATA_DIR=/path/to/data/raw
-.venv-w2v/bin/python -I scripts-analysis/words/words.py --perms 1000 --kwic   # about 40 s
+.venv-w2v/bin/python -I analysis/screenplays/words/words.py --perms 1000 --kwic   # about 40 s
 ```
 
 `--kwic` writes `private/kwic/<genre>_<layer>.txt`. For every listed word, that file holds one line of at most 15 words from each of 8 films, 4 hits and 4 flops, each word drawing its own random set of films. It contains script text, it's gitignored, and it must never be committed or pasted anywhere.

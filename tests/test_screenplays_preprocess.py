@@ -1,10 +1,10 @@
-"""The preprocessing of scripts-analysis/preprocess/preprocess.py on toy strings (no data, no script text)."""
+"""The preprocessing of analysis/screenplays/preprocess/preprocess.py on toy strings (no data, no script text)."""
 
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts-analysis" / "preprocess"))
+sys.path.insert(0, str(ROOT / "analysis" / "screenplays" / "preprocess"))
 import preprocess as pp  # noqa: E402
 
 

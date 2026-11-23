@@ -30,7 +30,7 @@ Outputs (numbers and single words only, no script text):
 With --kwic, also writes private/kwic/<genre>_<layer>.txt (gitignored): for each listed word, one line of at most
 15 words from each of up to KWIC_FILMS different films, for reading the words in context. Never commit these.
 
-Run:  IMDB_DATA_DIR=... python -I scripts-analysis/words/words.py [--perms 1000] [--kwic]
+Run:  IMDB_DATA_DIR=... python -I analysis/screenplays/words/words.py [--perms 1000] [--kwic]
 """
 import argparse
 import csv

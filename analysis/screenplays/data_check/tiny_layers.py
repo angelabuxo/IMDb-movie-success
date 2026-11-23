@@ -1,7 +1,7 @@
 """Why are 31 films' dialogue or description layers empty or tiny?
 
 Looks only at tags and counts (no script text is printed or saved).
-Output: tiny_layers.csv. Run: python3 -I scripts-analysis/data_check/tiny_layers.py
+Output: tiny_layers.csv. Run: python3 -I analysis/screenplays/data_check/tiny_layers.py
 """
 import csv
 from pathlib import Path

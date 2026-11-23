@@ -11,7 +11,7 @@ Uses only structure (tags, characters), never hit/flop, budget or gross. Writes 
 The two films the manual check called "text seems encrypted" (tt0097368, tt0430912) are shown as a check of the
 measure: if they do not stand out, the measure does not capture what we saw.
 
-Run:  python3 -I scripts-analysis/data_check/prevalence.py
+Run:  python3 -I analysis/screenplays/data_check/prevalence.py
 """
 import csv
 import re

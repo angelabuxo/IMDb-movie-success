@@ -8,7 +8,7 @@ consequence of popularity, which goes with success, so log(votes) is the obvious
   w2v+baseline+votes   the window-5 vector (seeds 1-5) added to that
 Observed AUCs only, no shuffle.
 
-Run:  IMDB_DATA_DIR=... python -I scripts-analysis/word2vec/votes_check.py
+Run:  IMDB_DATA_DIR=... python -I analysis/screenplays/word2vec/votes_check.py
 """
 import csv
 import sys

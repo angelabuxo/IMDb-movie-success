@@ -5,7 +5,7 @@ the list of imdb ids that have a MovieSum script. No script text is read.
 
 A film with several genres is counted once in EACH of its genres.
 
-Run:  python3 scripts-analysis/genre_counts/genre_counts.py
+Run:  python3 analysis/screenplays/genre_counts/genre_counts.py
 Set IMDB_DATA_DIR if the data is not in data/raw.
 """
 import csv
@@ -16,7 +16,7 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = Path(os.environ.get("IMDB_DATA_DIR", ROOT / "data" / "raw"))
 OUT = Path(__file__).resolve().parent
 MIN_GROUP = 50  # decided by the group (D14): groups below this are exploratory or out
@@ -42,7 +42,7 @@ def tiny_ids():
     dialogue layer or in the description layer. It uses only tags and token
     counts, never hit/flop, budget or gross.
     """
-    with open(ROOT / "scripts-analysis" / "data_check" / "layer_stats.csv") as f:
+    with open(ROOT / "analysis" / "screenplays" / "data_check" / "layer_stats.csv") as f:
         return {r["imdb_id"] for r in csv.DictReader(f) if r["tiny_layer"] == "1"}
 
 

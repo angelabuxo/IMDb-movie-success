@@ -450,5 +450,5 @@ These numbers come from the first money rule (any infobox flag, different curren
 
 ## 7. Rules for this folder
 
-- Screenplays are copyrighted (MovieSum is CC BY-NC 4.0). No script text is committed. Anything containing script text goes in `scripts-analysis/private/` (gitignored).
+- Screenplays are copyrighted (MovieSum is CC BY-NC 4.0). No script text is committed. Anything containing script text goes in `analysis/screenplays/private/` (gitignored).
 - Snippets shown in chat are at most 15 words.

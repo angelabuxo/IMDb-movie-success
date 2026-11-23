@@ -4,7 +4,7 @@ Output (numbers only, no script text):
     layer_stats.csv  one row per record (one per imdb id: 2188; duplicated ids keep the longest script)
     outliers.csv     records that are extreme on one statistic (Tukey far fences)
 
-Run:  python3 -I scripts-analysis/data_check/layer_stats.py
+Run:  python3 -I analysis/screenplays/data_check/layer_stats.py
 Set IMDB_DATA_DIR if the data is not in data/raw.
 
 "Token" here = a whitespace-separated word. It is only a counting unit for
@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from parse_layers import one_per_id, parse_script, read_records  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = Path(os.environ.get("IMDB_DATA_DIR", ROOT / "data" / "raw"))
 OUT = Path(__file__).resolve().parent
 

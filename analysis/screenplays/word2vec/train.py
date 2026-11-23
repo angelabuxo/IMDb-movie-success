@@ -1,6 +1,6 @@
 """Train one Word2Vec space (DECISIONS.md: skip-gram, negative sampling, 100 dimensions, min_count 20, workers=1).
 
-Run:  python -I scripts-analysis/word2vec/train.py --window 5 --seed 1
+Run:  python -I analysis/screenplays/word2vec/train.py --window 5 --seed 1
 Writes private/w2v_w{window}_s{seed}.kv (gitignored). --limit N trains on the first N lines only (for the
 reproducibility check) and writes private/check_w{window}_s{seed}_{tag}.kv.
 """
