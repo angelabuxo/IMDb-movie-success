@@ -161,6 +161,31 @@ national industries are set aside, with smaller gaps than with studio links (Blu
 groups that fall short also pass, so losing houses are visible here too. The low seed agreement means individual
 group boundaries, especially for the small groups, shouldn't be read closely.
 
+**4. A track record from IMDb alone** (`analysis/compare/notice_track_imdb.py`). Declared on 23 November 2026,
+before running. Money track records see only films with 10,000+ votes, so a person's unnoticed flops never enter them,
+and no new money source is used. IMDb has votes and a rating for every film, so for the same teams as run 1 this
+builds, over every earlier non-adult IMDb film they worked on, the share that stayed under 1,000 votes (no rating
+counts as under) and the mean rating of the rated ones, averaged over each role's people. Both are tested like the
+money track records (OLS per SD, 1,000 shuffles within first genre x budget decile, 6,346 `usable_money` films), and
+each is correlated (Spearman) with the role's money track record as a second method. Votes and ratings are counted
+today, not at release, and they are not money. Every result is reported.
+
+Result (job run 23 November 2026, 1,000 shuffles). Coefficients are per SD of the measure; the money track records
+reproduce the committed ones exactly.
+
+| Role | Share of earlier films under 1,000 votes | Mean rating of earlier films | Spearman with money track (share / rating) |
+|---|---|---|---|
+| director | +0.025 (p 0.18) | +0.062 (p 0.004) | 0.016 / 0.047 |
+| writer | -0.019 (p 0.36) | +0.036 (p 0.065) | -0.019 / 0.093 |
+| producer | -0.085 (p 0.001) | +0.129 (p 0.001) | -0.123 / 0.185 |
+| lead actors | +0.022 (p 0.32) | +0.025 (p 0.16) | 0.047 / 0.018 |
+
+What it shows: producers leave the clearest trace. A producer whose earlier films went unnoticed, or were rated low,
+does worse with the budget, and well-rated directors do better. The effects are about a third to half the size of the
+money track records (+0.28 for producers), and they barely correlate with them, so the money record isn't just a
+noticed past. Votes and ratings are counted today, so a film revived later counts as noticed. All rows are in
+`analysis/compare/outputs/notice_track_imdb/`.
+
 Leiden and Infomap are removed from the community runs. They aren't course methods, and Louvain's
 agreement across seeds already measures stability.
 
