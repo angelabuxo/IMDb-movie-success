@@ -250,6 +250,10 @@ class Sources:
         return pd.read_csv(A / "compare/outputs/communities/methods.csv").set_index("method")
 
     @cached_property
+    def com_prof(self):
+        return pd.read_csv(A / "compare/outputs/communities/community_profiles.csv")
+
+    @cached_property
     def com_ret(self):
         return pd.read_csv(A / "compare/outputs/communities/community_returns.csv")
 
@@ -361,6 +365,14 @@ CLAIMS = [
     ("community horror", "The three groups that lean towards horror sit above their budgets (+@ to +@) but do not pass",
      lambda s: (lambda h: [h.excess.min(), h.excess.max()] if len(h) == 3 and (h.p_holm >= .05).all() else [None])(
                 s.com_ret[s.com_ret.category.str.contains("Horror")])),
+    ("community art house", r"with Film4 and BBC Film as its most frequent studios (@ films, median budget \$@M)",
+     lambda s: (lambda r: [r.films, r.median_budget_musd] if r.p_holm < .05 and r.top_studios.startswith("Film4")
+                and "BBC Film" in r.top_studios and (s.com_prof.p_holm < .05).sum() == 1 else [None])(
+                s.com_prof[s.com_prof.p_holm < .05].iloc[0])),
+    ("community horror houses", "form around Blumhouse (+@) and around New Line with Wes Craven (+@)",
+     lambda s: (lambda t: [t.iloc[0].excess, t.iloc[1].excess] if t.iloc[0].top_studios.startswith("Blumhouse")
+                and t.iloc[1].top_studios.startswith("New Line") and "Wes Craven" in t.iloc[1].top_directors
+                and (t.iloc[:2].p_holm >= .05).all() else [None])(s.com_prof.sort_values("excess", ascending=False))),
     ("methods communities", "against @ rewirings that keep every film's degree", lambda s: [s.com["rewires"]]),
     # Results: head to head (analysis/compare/head_to_head.py)
     ("h2h setup", "On the same @ films we built three networks", lambda s: [s.h2h_sum["films"]]),
