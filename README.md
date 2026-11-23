@@ -33,7 +33,7 @@ Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 
 After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
 
-Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet. (After the 15 November infobox fixes it's 6,843, with 4,567 since 2000: nine films with non-USD budgets or a Netflix release left and one wrongly excluded film joined; see [TESTING.md](TESTING.md).) The rule now also drops films before 1975, whose grosses are mostly distributor rentals, direct-to-video films and grosses whose citation says rentals. That leaves 6,414 clean movies, 1,798 of them grossing under budget, and 2,352 in the 100k+ tier (one more film since a fix that gives each film one Wikipedia article). The `movie-graph-2026-11-16` and `one-article-per-film-2026-11-16` bundles hold the new flags and tables, so unpacking the bundles is enough.
+Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet. (After the 15 November infobox fixes it's 6,843, with 4,567 since 2000: nine films with non-USD budgets or a Netflix release left and one wrongly excluded film joined; see [TESTING.md](TESTING.md).) The rule now also drops films before 1975, whose grosses are mostly distributor rentals, direct-to-video films and grosses whose citation says rentals. That leaves 6,414 clean movies, 1,798 of them grossing under budget, and 2,352 in the 100k+ tier (one more film since a fix that gives each film one Wikipedia article). The `one-article-per-film-2026-11-16` bundle holds the new flags and tables, so unpacking the bundles is enough.
 
 ## Decisions still open
 
@@ -62,12 +62,10 @@ Everything the code reads lives in `data/raw/`, which git ignores. There are two
 | `moviesum-screenplays-2026-11-11.tar.zst` | 90 MB | The MovieSum screenplays with IMDb IDs |
 | `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay |
 | `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
-| `movie-graph-2026-11-11.tar.zst` | 9 MB | The movie graph: node and edge tables, GraphML, credits, people, the company IDs and the Wikipedia producer matches |
-| `movie-graph-2026-11-15.tar.zst` | 12 MB | The graph and the infobox and movie tables after the 15 November parser fixes (see [TESTING.md](TESTING.md)). It replaces the same files from the two 11 November archives above |
+| `movie-graph-2026-11-15.tar.zst` | 12 MB | The graph and the infobox and movie tables after the 15 November parser fixes (see [TESTING.md](TESTING.md)). It replaces the same files from the 11 November Wikipedia archive above |
 | `extra-tables-2026-11-15.tar.zst` | 0.5 MB | Franchise flags, MovieSum IDs and screenplay statistics, and Tag Genome review counts per film, which no other archive holds |
-| `movie-graph-2026-11-16.tar.zst` | 7 MB | The graph nodes and the infobox and movie tables with the tightened clean rule (pre-1975, direct-to-video and cited rentals dropped: 6,413 clean movies). It replaces those six files from the 15 November archive. The network features in that archive aren't rebuilt; `network-features-2026-11-16` has them |
 | `network-features-2026-11-16.tar.zst` | 0.8 MB | The per-film network features and per-group returns (`film_network_features.csv`, `roi_by_entity.csv`) rebuilt on the 6,414 clean films. It replaces those two files from `movie-graph-2026-11-15`, which were built on 6,843 |
-| `one-article-per-film-2026-11-16.tar.zst` | 7 MB | The infobox and movie tables and the graph nodes with one Wikipedia article per film: *Horizon: An American Saga – Chapter 1* gets its own figures and joins the clean sample (6,414 clean movies). It replaces those six files from `movie-graph-2026-11-16` |
+| `one-article-per-film-2026-11-16.tar.zst` | 7 MB | The infobox and movie tables and the graph nodes with one Wikipedia article per film: *Horizon: An American Saga – Chapter 1* gets its own figures and joins the clean sample (6,414 clean movies). It replaces those six files from `movie-graph-2026-11-15` |
 
 To set everything up, run this from the repo root. It makes `.venv`, installs `requirements.txt` and unpacks every archive into `data/raw/`, oldest first, so a newer archive replaces the files it updates:
 
