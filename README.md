@@ -4,13 +4,24 @@
 
 This is the final project for DTU 02805 Social Graphs and Interactions, autumn 2026, by Log-Log Legends: Gyula Kürthy, Àngela Buxó and Niklas Johansen. Course group repo: <https://github.com/horrrt/02805_social_graphs>
 
-## The plan
+## What we found
 
-Networks: build a network of main actors, linked when they worked on a movie together in a chosen genre and period. Then look at how actors, directors, producers and studios relate to the most profitable movies.
+The paper in [`paper/main.tex`](paper/main.tex) asks what goes with a film earning back its budget: its genre, the people who make it, or its screenplay. Return is ln(gross / budget), on 12,673 films with at least 10,000 IMDb votes, linked to Wikipedia, Wikidata and TMDB, plus 1,598 screenplays.
 
-Language: compare the sentiment of what's written about each movie with its profit. Does a huge profit mean people liked the film, or can the two disagree? That leads to the question of what success means here: money, popularity or positive reviews.
+Against films of the same budget, Animation, Family and Horror return more, and Drama, Action, Crime, History and War return less, but genre adds only 0.03 to the explained variance. Inside Horror, supernatural films stand out, and a keyword network filtered against a null confirms it. Films that share a director or producer have more similar returns than shuffles allow (0.09 against at most 0.04), and teams with experience in a film's genre beat their budgets. The network's communities are production houses, and Blumhouse beats films of the same budget by the most (+1.06). Screenplay vectors beat a shuffle but not simple metadata, except in Action, and not once popularity is known.
 
-## Where the data stands (4 November 2026)
+Which films count is set in one place: [`analysis/clean_rule.py`](analysis/clean_rule.py) holds the clean rule, and [`docs/analysis-set.md`](docs/analysis-set.md) explains the `usable_money` and `in_common_set` flags every question filters on. `tests/test_paper_numbers.py` checks the paper's numbers against the saved outputs.
+
+## Known problems
+
+- **Gross over budget isn't profit.** The budget is the production budget only, so marketing and distribution are missing, and cinemas keep part of the gross.
+- **The 100k+ sample favours hits.** On 4 November, only 169 of the 2,446 movies grossed less than their budget, because that cut drops films few people saw. In the 10k to 100k tier, 38.1% did.
+- **Franchises could swamp the result.** 11 of the 12 highest-margin films have a series or franchise link in Wikidata, and the current flag is noisy.
+- **Network leakage.** Success can make actors more central, so a film's cast centrality should only use films released before it.
+
+## Data coverage on 4 November 2026
+
+This is how the data looked when we chose the question. The counts have moved since, and the paragraph under the table follows the clean sample through each fix.
 
 Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 
@@ -34,19 +45,6 @@ Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
 After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
 
 Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet. (After the 15 November infobox fixes it's 6,843, with 4,567 since 2000: nine films with non-USD budgets or a Netflix release left and one wrongly excluded film joined; see [TESTING.md](TESTING.md).) The rule now also drops films before 1975, whose grosses are mostly distributor rentals, direct-to-video films and grosses whose citation says rentals. That leaves 6,414 clean movies, 1,798 of them grossing under budget, and 2,352 in the 100k+ tier (one more film since a fix that gives each film one Wikipedia article). The `one-article-per-film-2026-11-16` bundle holds the new flags and tables, so unpacking the bundles is enough.
-
-## Decisions still open
-
-- **Profit measure.** Neither option is real profit, because budgets leave out marketing and cinemas keep part of the gross. Gross ÷ budget is less affected by inflation and blockbuster size but favours micro-budget horror. Gross minus budget mostly rewards blockbusters.
-- **Genre and dates.** See the genre table in [the data structure doc](docs/imdb-data-structure.md).
-- **Which text carries the sentiment half.** MovieLens Tag Genome has audience reviews for 5,842 of the 6,851 clean movies, but none after 2017. Wikipedia's critic text covers later films too. Using both would let us compare critics with audiences, and would limit the audience half to 2017 or earlier.
-- **Which sample to use.** The 100k+ tier is cleaner, and the 10k+ tier has far more flops.
-
-## Known problems
-
-- **The 100k+ sample favours hits.** Only 169 of the 2,446 movies grossed less than their budget, because that cut drops films few people saw. In the 10k to 100k tier, 38.1% did.
-- **Franchises could swamp the result.** 11 of the 12 highest-margin films have a series or franchise link in Wikidata, and the current flag is noisy.
-- **Network leakage.** Success can make actors more central, so a film's cast centrality should only use films released before it.
 
 ## Get the data
 
@@ -142,17 +140,24 @@ We also ran a pre-registered test of whether a screenplay's emotional arc (Disti
 
 ## In this repo
 
+- [`paper/`](paper/): the paper, its figures and [`make_figures.py`](paper/make_figures.py).
+- [`analysis/`](analysis/): one folder per question, each with its saved outputs (numbers only):
+  - [`genre/`](analysis/genre/): genre and return (Q1), with its checks in `CHECKS.md` and side analyses in `exploratory/`.
+  - [`compare/`](analysis/compare/): the three questions head to head on the common set, assortativity by genre and the network communities.
+  - [`screenplays/`](analysis/screenplays/): Word2Vec on the screenplays (Q3), with every decision in [`DECISIONS.md`](analysis/screenplays/DECISIONS.md).
+  - [`scripts_text/`](analysis/scripts_text/): the Scattertext word comparison of hit and flop screenplays ([`docs/scripts-text.md`](docs/scripts-text.md)).
+  - [`network/`](analysis/network/): saved results of `scripts/network/`.
+  - [`checks/`](analysis/checks/): the TMDB comparison and a hand-checked flop sample.
+  - [`clean_rule.py`](analysis/clean_rule.py): the shared clean rule.
+- [`scripts/`](scripts/): data collection and feature building. [`get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json) are the downloader and its list of files. [`imdb/`](scripts/imdb/) parses Wikipedia and builds the analysis set, [`network/`](scripts/network/) builds the movie graph, and [`screenplays/`](scripts/screenplays/) and [`reviews/`](scripts/reviews/) build text features.
+- [`notebooks/`](notebooks/): analysis notebooks, mostly written by the `build_notebook.py` scripts next to each analysis.
+- [`explorer/`](explorer/): the local Streamlit app ([`explorer/README.md`](explorer/README.md)).
+- [`site/scripts/`](site/scripts/): a static page of the Scattertext analysis.
+- [`tests/`](tests/) and [`TESTING.md`](TESTING.md): the tests and what they cover. [`setup.sh`](setup.sh) and [`run_all.sh`](run_all.sh) set up and check everything.
+- [`data/`](data/): the data bundles ([`data/bundles/README.md`](data/bundles/README.md)), IMDb, Wikipedia and Wikidata links for 12,673 movies ([`movie_links.csv`](data/movie_links.csv)), and the CPI table.
+- [`docs/`](docs/): [`overview/overview.pdf`](docs/overview/overview.pdf) has the whole project on one page, with [`project-details.pdf`](docs/overview/project-details.pdf) and [`literature.pdf`](docs/overview/literature.pdf) next to it (rebuild with `tectonic -X compile overview.tex`). [`data-sources.md`](docs/data-sources.md) lists every dataset with its licence, [`imdb-data-structure.md`](docs/imdb-data-structure.md) shows how the data fits together, and [`project-context.md`](docs/project-context.md) summarises the course brief.
+- [`archive/`](archive/): early analyses that don't feed the paper: the profit attribution, the text embeddings and their maps, and the Tag Genome tags ([`archive/README.md`](archive/README.md)).
 - [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
-- [`scripts/get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json): the downloader and its list of files.
-- [`docs/overview/overview.pdf`](docs/overview/overview.pdf): the whole project on one page, with [`project-details.pdf`](docs/overview/project-details.pdf) for a bit more on each part and [`literature.pdf`](docs/overview/literature.pdf) comparing our methods and findings with published research. LaTeX sources are next to them; rebuild with `tectonic -X compile overview.tex`.
-- [`docs/data-sources.md`](docs/data-sources.md): where each dataset comes from, with links and licences.
-- [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md): how the data fits together, with coverage and checks.
-- [`docs/project-context.md`](docs/project-context.md): summary of the course's project brief.
-- [`data/movie_links.csv`](data/movie_links.csv): IMDb, Wikipedia and Wikidata links for 12,673 movies.
-- [`scripts/imdb/`](scripts/imdb/): the code behind the numbers.
-- [`scripts/screenplays/`](scripts/screenplays/) and [`scripts/reviews/`](scripts/reviews/): screenplay and review features for the notebook.
-- [`notebooks/`](notebooks/): analysis notebooks.
-- [`archive/`](archive/): early analyses that don't feed the paper (see [`archive/README.md`](archive/README.md)).
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
 
