@@ -250,6 +250,22 @@ class Sources:
         return pd.read_csv(A / "compare/outputs/communities/methods.csv").set_index("method")
 
     @cached_property
+    def comA(self):
+        return self._json("compare/outputs/communities_usable_money/summary.json")
+
+    @cached_property
+    def comA_methods(self):
+        return pd.read_csv(A / "compare/outputs/communities_usable_money/methods.csv").set_index("method")
+
+    @cached_property
+    def comA_prof(self):
+        return pd.read_csv(A / "compare/outputs/communities_usable_money/community_profiles.csv")
+
+    def comA_house(self, studio):
+        d = self.comA_prof
+        return d[d.top_studios.str.startswith(studio)].iloc[0]
+
+    @cached_property
     def com_prof(self):
         return pd.read_csv(A / "compare/outputs/communities/community_profiles.csv")
 
@@ -351,30 +367,35 @@ CLAIMS = [
      lambda s: [6346, s.nbx("usable_money", "producer", "same genre"), s.nbx("usable_money", "producer", "different genre"),
                 s.nbx("usable_money", "studio", "same genre"), s.nbx("usable_money", "studio", "different genre")]
      if all(s.nbx("usable_money", r, "same minus different", "p") < .05 for r in ("producer", "studio")) else [None]),
+    ("communities all", "Here we use all @ films, since the people network needs no screenplay", lambda s: [s.comA["films"]]),
     ("communities", "finds @ groups among the @ linked films, with modularity @ against at most @ for the network rewired with every film's degree kept, and @ seeds agree with NMI @",
-     lambda s: [s.com["communities"], s.com["films_in_network"], s.com["modularity"], s.com["rewired_modularity_max"],
-                s.com["seeds"], s.com["mean_nmi_best_vs_other_seeds"]] if s.com["modularity_p"] < .05 else [None]),
-    ("community methods", "Leiden (NMI @ with Louvain) and Infomap (@) find much the same split",
-     lambda s: [s.com_methods.loc["Leiden", "nmi_with_louvain"], s.com_methods.loc["Infomap", "nmi_with_louvain"]]),
+     lambda s: [s.comA["communities"], s.comA["films_in_network"], s.comA["modularity"], s.comA["rewired_modularity_max"],
+                s.comA["seeds"], s.comA["mean_nmi_best_vs_other_seeds"]] if s.comA["modularity_p"] < .05 else [None]),
+    ("community methods", "Leiden (NMI @ with Louvain) and Infomap (@) find a similar split",
+     lambda s: [s.comA_methods.loc["Leiden", "nmi_with_louvain"], s.comA_methods.loc["Infomap", "nmi_with_louvain"]]),
     ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
-     lambda s: [s.com["nmi_with_rarest_genre"], s.com["nmi_genre_null_95"]] if s.com["nmi_genre_p"] < .05 else [None]),
-    ("community returns", r"only one of the @ communities with at least @ films differs from films of the same budget, a group with twice the usual share of biographies ($-@$)",
-     lambda s: [s.com["communities_min_size"], s.com["min_size"],
-                -s.com_ret[s.com_ret.p_holm < .05].iloc[0].excess] if (s.com_ret.p_holm < .05).sum() == 1
-                and "Biography" in s.com_ret[s.com_ret.p_holm < .05].iloc[0].category else [None]),
-    ("community horror", "The three groups that lean towards horror sit above their budgets (+@ to +@) but do not pass",
-     lambda s: (lambda h: [h.excess.min(), h.excess.max()] if len(h) == 3 and (h.p_holm >= .05).all() else [None])(
-                s.com_ret[s.com_ret.category.str.contains("Horror")])),
-    ("community art house", r"with Film4 and BBC Film as its most frequent studios (@ films, median budget \$@M)",
-     lambda s: (lambda r: [r.films, r.median_budget_musd] if r.p_holm < .05 and r.top_studios.startswith("Film4")
-                and "BBC Film" in r.top_studios and (s.com_prof.p_holm < .05).sum() == 1 else [None])(
-                s.com_prof[s.com_prof.p_holm < .05].iloc[0])),
-    ("community horror houses", r"the later \emph{Halloween} films; median budget \$@M, +@). The other forms around New Line Cinema, home of Wes Craven's \emph{A Nightmare on Elm Street} and \emph{Scream}, of \emph{The Conjuring}, \emph{Annabelle} and \emph{It}, and also of Peter Jackson's Middle-earth films (+@)",
-     lambda s: (lambda t: [t.iloc[0].median_budget_musd, t.iloc[0].excess, t.iloc[1].excess] if t.iloc[0].top_studios.startswith("Blumhouse")
-                and "Jason Blum" in t.iloc[0].top_producers and "Peter Jackson" in t.iloc[1].top_directors
-                and t.iloc[1].top_studios.startswith("New Line") and "Wes Craven" in t.iloc[1].top_directors
-                and (t.iloc[:2].p_holm >= .05).all() else [None])(s.com_prof.sort_values("excess", ascending=False))),
-    ("methods communities", "against @ rewirings that keep every film's degree", lambda s: [s.com["rewires"]]),
+     lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),
+    ("community count", "Tested like the genres, @ of the @ communities with at least @ films differ from films of the same budget",
+     lambda s: [(s.comA_prof.p_holm < .05).sum(), s.comA["communities_min_size"], s.comA["min_size"]]),
+    ("blumhouse", r"By far the largest gap is Blumhouse's: @ films, @ of them made by Jason Blum's company",
+     lambda s: (lambda r: [r.films, int(re.search(r"Blumhouse Productions \((\d+)\)", r.top_studios).group(1))]
+                if r.excess == s.comA_prof.excess.max() and r.p_holm < .05 and "Jason Blum" in r.top_producers else [None])(s.comA_house("Blumhouse"))),
+    ("blumhouse money", r"with a median budget of \$@M, a median gross of @ times the budget and a return of +@ beyond films of the same budget",
+     lambda s: (lambda r: [r.median_budget_musd, r.median_multiple, r.excess])(s.comA_house("Blumhouse"))),
+    ("houses above", "Disney's animation studio (+@), a Paramount group (+@) and a group around Spielberg's Amblin and DreamWorks (+@) also beat their budgets",
+     lambda s: [r.excess if r.p_holm < .05 else None for r in (s.comA_house("Walt Disney Animation"), s.comA_house("Paramount"), s.comA_house("Amblin"))]),
+    ("houses below", r"British and independent art house (Film4 and BBC Film; @ films, $-@$), a group around Woody Allen's and Nicolas Cage's films ($-@$) and a large mid-budget group around Screen Gems, MGM and Lakeshore ($-@$) fall short",
+     lambda s: (lambda a, w, g: [a.films, -a.excess, -w.excess, -g.excess] if max(a.p_holm, w.p_holm, g.p_holm) < .05
+                and "BBC Film" in a.top_studios and "Woody Allen" in w.top_directors and "Nicolas Cage" in w.top_actors
+                and "Metro-Goldwyn-Mayer" in g.top_studios and "Lakeshore" in g.top_studios else [None])(
+                s.comA_house("Film4"), s.comA_prof[s.comA_prof.top_directors.str.startswith("Woody Allen")].iloc[0], s.comA_house("Screen Gems"))),
+    ("new line", r"the New Line group, with \emph{A Nightmare on Elm Street}, \emph{The Conjuring} and \emph{It}, earns like any other ($-@$)",
+     lambda s: (lambda r: [-r.excess] if r.p_holm >= .05 else [None])(s.comA_house("New Line"))),
+    ("common communities", r"On the @ films with a screenplay the houses are a quarter of the size, and only the art-house group passes ($-@$), with Blumhouse's group at +@ on @ films",
+     lambda s: (lambda a, b: [s.com["films"], -a.excess, b.excess, b.films] if (s.com_prof.p_holm < .05).sum() == 1 and a.p_holm < .05 and b.p_holm >= .05 else [None])(
+                s.com_prof[s.com_prof.top_studios.str.startswith("Film4")].iloc[0], s.com_prof[s.com_prof.top_studios.str.startswith("Blumhouse")].iloc[0])),
+    ("methods communities", "Communities use the same kind of links on all @ films, weighted by the number of shared people and studios, against @ rewirings that keep every film's degree",
+     lambda s: [s.comA["films"], s.comA["rewires"]]),
     # Results: head to head (analysis/compare/head_to_head.py)
     ("h2h setup", "On the same @ films we built three networks", lambda s: [s.h2h_sum["films"]]),
     ("h2h k", "each script linked to its @ nearest scripts", lambda s: [s.h2h_sum["k_script"]]),

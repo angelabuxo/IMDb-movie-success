@@ -19,7 +19,10 @@ communities and modularity, week 2 nulls).
 What this measures: whether shared credits split the films into groups that are tighter than chance, how much those
 groups are genres, and whether any group earns differently from films of the same budget. Communities describe
 the network; they don't explain why a group earns more.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_communities
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_communities [--set usable_money] [--procs 8]
+      --set usable_money runs the same analysis on all 6,346 films with clean money (no script needed), written to
+      outputs/communities_usable_money/. With --procs > 1 the rewirings run in parallel, each with its own seed, so
+      the null differs from a --procs 1 run in its random draws (the saved common-set run used --procs 1).
 """
 from __future__ import annotations
 
@@ -43,6 +46,20 @@ OUT = Path(__file__).resolve().parent / "outputs" / "communities"
 SEEDS = 10
 REWIRES = 50
 MIN_SIZE = 30
+
+
+def out_dir(flag):
+    return OUT if flag == "in_common_set" else OUT.parent / f"communities_{flag}"
+
+
+def _rewired_modularity(args):
+    edges, w, seed = args
+    R = nx.Graph()
+    R.add_edges_from(edges)
+    nx.double_edge_swap(R, nswap=5 * R.number_of_edges(), max_tries=10 ** 8, seed=seed)
+    for (u, v), x in zip(R.edges(), np.random.default_rng(seed).permutation(w)):
+        R[u][v]["weight"] = float(x)
+    return max(louvain(R, SEEDS)[1])
 
 
 def weighted_links(f):
@@ -71,9 +88,12 @@ def labels(part, nodes):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--perms", type=int, default=10000)
+    ap.add_argument("--set", default="in_common_set", choices=["in_common_set", "usable_money"])
+    ap.add_argument("--procs", type=int, default=1)
     a = ap.parse_args()
+    out = out_dir(a.set)
     films, genres = load()
-    f, keep, M = prepare(films, genres, "in_common_set")
+    f, keep, M = prepare(films, genres, a.set)
     G = weighted_links(f)
     nodes = sorted(G.nodes())
     rng = np.random.default_rng(SEED)
@@ -101,12 +121,18 @@ def main():
     # null: degree-preserving rewiring, weights shuffled, same Louvain seeds
     w = np.array(W)
     null_mod = []
-    for s in range(REWIRES):
-        R = nx.Graph(G)
-        nx.double_edge_swap(R, nswap=5 * R.number_of_edges(), max_tries=10 ** 7, seed=SEED + s)
-        for (u, v), x in zip(R.edges(), rng.permutation(w)):
-            R[u][v]["weight"] = float(x)
-        null_mod.append(max(louvain(R, SEEDS)[1]))
+    if a.procs == 1:
+        for s in range(REWIRES):
+            R = nx.Graph(G)
+            nx.double_edge_swap(R, nswap=5 * R.number_of_edges(), max_tries=10 ** 7, seed=SEED + s)
+            for (u, v), x in zip(R.edges(), rng.permutation(w)):
+                R[u][v]["weight"] = float(x)
+            null_mod.append(max(louvain(R, SEEDS)[1]))
+    else:
+        from multiprocessing import Pool
+        edges = list(G.edges())
+        with Pool(a.procs) as pool:
+            null_mod = pool.map(_rewired_modularity, [(edges, w, SEED + 1000 + s) for s in range(REWIRES)])
     null_mod = np.array(null_mod)
 
     # genre: NMI with each film's rarest IMDb genre, against shuffled genres
@@ -133,10 +159,10 @@ def main():
         names.append(f"{j + 1}: {keep[k]} {share[k]:.0%} (all films {base[k]:.0%}), {sizes[big[j]]} films")
     tests = shuffle_test(f, f["ln_gross_over_budget"].to_numpy(), Wc, names, a.perms, SEED + 77, "people-network community")
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(methods).to_csv(OUT / "methods.csv", index=False)
-    pd.DataFrame(tests).to_csv(OUT / "community_returns.csv", index=False)
-    summary = {"films": len(f), "films_in_network": len(nodes), "links": G.number_of_edges(), "seeds": SEEDS,
+    out.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(methods).to_csv(out / "methods.csv", index=False)
+    pd.DataFrame(tests).to_csv(out / "community_returns.csv", index=False)
+    summary = {"set": a.set, "films": len(f), "films_in_network": len(nodes), "links": G.number_of_edges(), "seeds": SEEDS,
                "communities": len(set(lab)), "communities_min_size": len(big), "min_size": MIN_SIZE,
                "films_in_big_communities": int(sum(sizes[c] for c in big)),
                "modularity": round(mods[best], 4), "mean_nmi_best_vs_other_seeds": round(seed_nmi, 3),
@@ -145,7 +171,7 @@ def main():
                "modularity_p": round(float((1 + (null_mod >= mods[best]).sum()) / (1 + REWIRES)), 4),
                "nmi_with_rarest_genre": round(g_nmi, 3), "nmi_genre_null_95": round(float(np.quantile(g_null, .95)), 3),
                "nmi_genre_p": round(float((1 + (g_null >= g_nmi).sum()) / 1001), 4), "perms": a.perms}
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=1))
+    (out / "summary.json").write_text(json.dumps(summary, indent=1))
     print(json.dumps(summary, indent=1))
     print(pd.DataFrame(methods).to_string(index=False))
     print(pd.DataFrame(tests).sort_values("excess").to_string(index=False))

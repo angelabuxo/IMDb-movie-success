@@ -1,0 +1,17 @@
+run,category,films,mean,excess,z,p_holm
+people-network community,"1: Horror 19% (all films 13%), 1026 films",1026.0,0.389,-0.1553,-3.78,0.0036
+people-network community,"2: War 3% (all films 2%), 896 films",896.0,0.3094,-0.3,-6.28,0.0016
+people-network community,"3: Family 17% (all films 6%), 628 films",628.0,0.5939,0.0581,1.14,1.0
+people-network community,"4: Sci-Fi 11% (all films 8%), 580 films",580.0,0.5993,0.0366,0.72,1.0
+people-network community,"5: Animation 10% (all films 6%), 542 films",542.0,0.7606,0.2176,3.97,0.0026
+people-network community,"6: Fantasy 12% (all films 9%), 539 films",539.0,0.539,-0.053,-1.01,1.0
+people-network community,"7: Sport 4% (all films 3%), 408 films",408.0,0.6616,0.1013,1.89,0.48075
+people-network community,"8: Horror 21% (all films 13%), 361 films",361.0,0.5333,-0.0108,-0.15,1.0
+people-network community,"9: Music 4% (all films 3%), 358 films",358.0,0.7295,0.1719,2.7,0.05669
+people-network community,"10: Sci-Fi 19% (all films 8%), 196 films",196.0,0.8984,0.2803,3.13,0.02
+people-network community,"11: Animation 27% (all films 6%), 191 films",191.0,0.1476,-0.4715,-4.62,0.0016
+people-network community,"12: Music 8% (all films 3%), 171 films",171.0,0.64,0.127,1.2,1.0
+people-network community,"13: Horror 69% (all films 13%), 108 films",108.0,1.6809,1.0629,6.61,0.0016
+people-network community,"14: Sci-Fi 17% (all films 8%), 94 films",94.0,0.7488,0.0702,0.48,1.0
+people-network community,"15: Horror 51% (all films 13%), 79 films",79.0,0.5142,-0.0378,-0.23,1.0
+people-network community,"16: Animation 81% (all films 6%), 73 films",73.0,1.1194,0.4871,3.36,0.0077
