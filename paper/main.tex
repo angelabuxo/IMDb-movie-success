@@ -40,8 +40,6 @@ What goes with a film earning back its budget: its genre, the people who make it
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
 
-\Firstpage
-
 \dropcap{F}ilm returns are heavy-tailed and hard to predict~\cite{devany1999uncertainty}. Three kinds of information about a film exist before it comes out, and each has its own literature. The first is its \emph{genre}, which box-office models have long used as a control~\cite{ravid1999information,sharda2006predicting}. The second is \emph{who makes it}: careers and collaboration networks shape creative success~\cite{uzzi2005collaboration,cattani2008core,ferriani2009relational}, stars raise revenue without raising returns~\cite{ravid1999information,elberse2007power}, and past collaborations predict profitability~\cite{lash2016early,packard2016network}. The third is \emph{what the film says}: script text has been used to green-light films~\cite{eliashberg2007story,eliashberg2014assessing,hunter2016predicting}.
 
 These strands are rarely tested on the same films against the same outcome. Most studies model revenue, which budget largely decides. We model the return on the reported budget, $\ln(\text{worldwide gross}/\text{budget})$, and ask three questions. Do some genres return more than films of the same budget? Do films made by the same people earn alike, and do people do better in a genre they know? Does the screenplay add anything once genre, era and popularity are known, in general or in some genres? Each answer is checked against a shuffle null and, where we could, a second method or a hand-checked sample.
