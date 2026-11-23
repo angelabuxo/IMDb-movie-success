@@ -303,6 +303,18 @@ class Sources:
     def comH_house(self):
         return pd.read_csv(A / "compare/outputs/communities_hollywood/houses_10k.csv")
 
+    @cached_property
+    def cov(self):
+        return self._json("compare/outputs/imdb_full_coverage/summary.json")
+
+    @cached_property
+    def cov_tier(self):
+        return pd.read_csv(A / "compare/outputs/imdb_full_coverage/principal_credits_by_tier.csv").set_index("vote_tier")
+
+    @cached_property
+    def cov_crew(self):
+        return pd.read_csv(A / "compare/outputs/imdb_full_coverage/crew_vs_principals.csv").set_index(["role", "vote_tier"])
+
     def comH_sub(self, studio):
         d = self.comH_prof
         return d[d.top_studios.str.startswith(studio)].iloc[0]
@@ -453,6 +465,14 @@ CLAIMS = [
     ("hollywood losers", r"the largest one around Emmett/Furla and Tribeca by $-@$",
      lambda s: (lambda d: [-d.iloc[0].excess] if d.iloc[0].top_studios.startswith("Emmett/Furla") else [None])(
          s.comH_prof[(s.comH_prof.p_holm < .05) & (s.comH_prof.excess < 0)].sort_values("usable_films", ascending=False))),
+    ("coverage careers", r"only @\% of the credits of our films' teams are on films with 10,000+ votes",
+     lambda s: [100 * s.cov["careers"]["share_on_10k_vote_films"]]),
+    ("coverage thin", r"with a producer on @\% and an actor on @\% of them against @\% and @\% of films with 10,000+ votes, and @\% of the teams' credits have no year",
+     lambda s: (lambda u, k, c: [100 * u.with_producer, 100 * u.with_actor, 100 * k.with_producer, 100 * k.with_actor,
+                                 100 * c["credits_without_year"] / c["credits"]])(
+         s.cov_tier.loc["no rating"], s.cov_tier.loc["10,000+"], s.cov["careers"])),
+    ("coverage crew", r"@\% of the directors in IMDb's separate crew list appear among them",
+     lambda s: [100 * s.cov_crew.loc[("director", "all"), "share_in_principals"]]),
     ("robustness methods", r"their returns are tested on the @ films only", lambda s: [s.comF["usable_films"]]),
     ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
      lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),
