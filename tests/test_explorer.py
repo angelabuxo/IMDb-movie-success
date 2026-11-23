@@ -93,7 +93,7 @@ def data_dir(tmp_path_factory):
     months.iloc[:20].to_csv(feat / "wiki_infobox.csv", index=False)
     months.iloc[15:].to_csv(feat / "wiki_infobox_10k.csv", index=False)
 
-    # tag relevance for the first 30 films over 12 tags, 4 of them genre tags (scripts/reviews/tag_shares.py)
+    # tag relevance for the first 30 films over 12 tags, 4 of them genre tags (archive/scripts/reviews/tag_shares.py)
     tag_names = ["drama", "comedy", "horror", "action", "time travel", "heist", "original", "boring",
                  "space", "true", "none", "nan"]
     rel = rng.uniform(0, 1, (30, len(tag_names))).astype(np.float32)
@@ -106,7 +106,7 @@ def data_dir(tmp_path_factory):
     for j, g in enumerate(["Drama", "Comedy", "Horror", "Action"]):
         gs["rel_" + g] = rel[:, j]
     gs.iloc[::-1].to_csv(feat / "genre_shares.csv", index=False)   # another row order than the matrix
-    # plot-predicted tags for every film, including the ten the Tag Genome doesn't cover (scripts/reviews/plot_tags.py)
+    # plot-predicted tags for every film, including the ten the Tag Genome doesn't cover (archive/scripts/reviews/plot_tags.py)
     prel = rng.uniform(0, 0.7, (40, len(tag_names))).astype(np.float32)
     np.save(feat / "plot_tag_relevance.npy", prel)
     pd.DataFrame({"tconst": films, "out_of_fold": [1] * 30 + [0] * 10}).to_csv(feat / "plot_tag_relevance_ids.csv", index=False)
@@ -459,7 +459,7 @@ def test_embedding_maps_without_the_file(explorer, monkeypatch, tmp_path):
     monkeypatch.setattr("explorer.map_pages.MAPS", tmp_path / "none.csv")
     at = page("map_pages", "maps")
     ok(at)
-    assert any("notebooks/embedding_maps.ipynb" in i.value for i in at.info)
+    assert any("archive/notebooks/embedding_maps.ipynb" in i.value for i in at.info)
     assert not at.get("plotly_chart")
 
 
@@ -562,7 +562,7 @@ def test_tags_page_without_the_files(explorer, monkeypatch):
     monkeypatch.setattr(pages, "TAG_FILES", ("not_built.npy",))
     at = page("pages", "tags")
     ok(at)
-    assert any("scripts/reviews/tag_shares.py" in w.value for w in at.warning)
+    assert any("archive/scripts/reviews/tag_shares.py" in w.value for w in at.warning)
 
 
 def test_tags_profit_view_controls(explorer):
@@ -712,7 +712,7 @@ def test_embedding_maps_fall_back_to_committed_scores(explorer, monkeypatch, tmp
 
 
 def test_embedding_map_checks_page(explorer):
-    """Every tab of the checks page renders from the committed numbers in analysis/embedding_maps/."""
+    """Every tab of the checks page renders from the committed numbers in archive/analysis/embedding_maps/."""
     at = page("map_pages", "checks")
     ok(at)
     assert len(at.tabs) == 6 and len(at.get("plotly_chart")) == 4

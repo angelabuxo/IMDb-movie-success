@@ -20,8 +20,8 @@ from .common import FEATURES, REPO, missing, mtime, table
 GRAPH = FEATURES / "graph"
 MOVIE_TABLE = FEATURES / "movies_features_10k.csv"
 OUT = {"text": REPO / "analysis" / "scripts_text" / "outputs",
-       "emb": REPO / "analysis" / "embeddings" / "outputs",
-       "attr": REPO / "analysis" / "attribution" / "outputs"}
+       "emb": REPO / "archive" / "analysis" / "embeddings" / "outputs",
+       "attr": REPO / "archive" / "analysis" / "attribution" / "outputs"}
 BLUE, ORANGE = "#0072B2", "#D55E00"
 
 

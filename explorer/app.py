@@ -53,8 +53,9 @@ nav.PAGES.update(P)
 
 st.navigation({
     "Overview": [P["home"], P["pipeline"]],
-    "Notebooks": [P["text"], P["embeddings"], P["maps"], P["mapchecks"], P["network"], P["genre"]],
+    "Notebooks": [P["text"], P["network"], P["genre"]],
     "Graph and scripts": [P["graph"], P["movie_network"], P["node"], P["scripts"]],
-    "Explore and check": [P["profit"], P["attribution"], P["calendar"], P["tags"], P["followups"], P["data"],
-                          P["checks"], P["tmdb"]],
+    "Explore and check": [P["profit"], P["calendar"], P["data"], P["checks"], P["tmdb"]],
+    # Early analyses that don't feed the paper; their code is in archive/ (archive/README.md).
+    "Archive": [P["embeddings"], P["maps"], P["mapchecks"], P["attribution"], P["tags"], P["followups"]],
 }).run()

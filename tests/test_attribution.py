@@ -1,4 +1,4 @@
-"""Profit attribution (analysis/attribution): the model on made-up films, where the right answer is known.
+"""Profit attribution (archive/analysis/attribution): the model on made-up films, where the right answer is known.
 
 Nothing here reads data/raw. The explorer page is tested on the committed outputs.
 """
@@ -220,7 +220,7 @@ def test_committed_cpi_covers_the_sample_years():
 
 # ---------------------------------------------------------------- saved outputs and the explorer page
 
-OUT = ROOT / "analysis" / "attribution" / "outputs"
+OUT = ROOT / "archive" / "analysis" / "attribution" / "outputs"
 saved = pytest.mark.skipif(not (OUT / "summary.json").exists(), reason="attribution outputs not built")
 
 

@@ -396,9 +396,9 @@ t[["hit", "hit z", "flop", "flop z"]]"""),
 from how its story is told afterwards. They do say what kind of Horror beats its budget."""),
     ("md", """## 15. The genre distribution through the same analyses
 
-`notebooks/tag_shares.ipynb` turned each film's Tag Genome genre scores into shares that add up to 1. Here every
+`archive/notebooks/tag_shares.ipynb` turned each film's Tag Genome genre scores into shares that add up to 1. Here every
 follow-up above is rerun with those shares as weights, next to the 0/1 tags on the same films (the films with
-Tag Genome scores, which stop in 2014). `notebooks/tag_profit.ipynb` found that tag scores carry audience size, so
+Tag Genome scores, which stop in 2014). `archive/notebooks/tag_profit.ipynb` found that tag scores carry audience size, so
 the first question is whether the shares do too."""),
     ("code", """lk = pd.read_csv(SF / "leak.csv")
 print(f"{SFS['films']:,} films with Tag Genome shares")
