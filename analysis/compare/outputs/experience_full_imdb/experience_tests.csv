@@ -1,0 +1,17 @@
+measure,n,coef_per_sd,lo,hi,p,shuffle_p
+"director_experience, full IMDb",6346,-0.0336,-0.0695,0.0023,0.0669,0.042
+"director_experience, 10k-vote films",6346,-0.0231,-0.0577,0.0115,0.191,0.1129
+"writer_experience, full IMDb",6332,-0.0144,-0.0489,0.0202,0.415,0.4076
+"writer_experience, 10k-vote films",6332,0.0069,-0.0278,0.0416,0.698,0.7093
+"producer_experience, full IMDb",6342,0.015,-0.0205,0.0504,0.408,0.4166
+"producer_experience, 10k-vote films",6342,0.0799,0.0448,0.1151,8.18e-06,0.001
+"cast_experience, full IMDb",6299,-0.0682,-0.1068,-0.0295,0.000541,0.001
+"cast_experience, 10k-vote films",6299,-0.0667,-0.1044,-0.0291,0.000517,0.001
+"studio_experience, 10k-vote films (unchanged: not in IMDb)",6012,0.136,0.1008,0.1713,4.18e-14,0.001
+"distributor_experience, 10k-vote films (unchanged: not in IMDb)",6329,0.2381,0.1985,0.2777,4.69e-32,0.001
+"director_track, 10k-vote films (unchanged: needs money)",3853,0.1905,0.1433,0.2376,2.36e-15,0.001
+"writer_track, 10k-vote films (unchanged: needs money)",3813,0.2071,0.1579,0.2563,1.65e-16,0.001
+"producer_track, 10k-vote films (unchanged: needs money)",4804,0.2802,0.2373,0.3231,1.89e-37,0.001
+"cast_track, 10k-vote films (unchanged: needs money)",5113,0.1575,0.1208,0.1942,4.09e-17,0.001
+"studio_track, 10k-vote films (unchanged: needs money)",4747,0.2991,0.2563,0.3419,1.16e-42,0.001
+"distributor_track, 10k-vote films (unchanged: needs money)",5814,0.2208,0.1769,0.2647,6.85e-23,0.001

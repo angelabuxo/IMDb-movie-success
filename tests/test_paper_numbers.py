@@ -180,6 +180,15 @@ class Sources:
         d = pd.read_csv(A / "genre/outputs/before_release" / file)
         return d[(d.films == films) & (d.term == term)].iloc[0]
 
+    # ---- experience from full IMDb careers (analysis/compare/experience_full_imdb.py) ----
+    @cached_property
+    def xp(self):
+        return pd.read_csv(A / "compare/outputs/experience_full_imdb/experience_tests.csv").set_index("measure")
+
+    @cached_property
+    def xp_sum(self):
+        return self._json("compare/outputs/experience_full_imdb/summary.json")
+
     # ---- Q2 people network (analysis/network/q2_network.json, merged from Q2-Niklas in PR 40) ----
     @cached_property
     def q2(self):
@@ -326,8 +335,14 @@ CLAIMS = [
     ("q2 wide", "On all @ films the director and producer values rise to @",
      lambda s: [s.q2["samples"]["usable_money"]["films"], s.q2r("usable_money_adjusted", "director")]
      if round(s.q2r("usable_money_adjusted", "director"), 3) == round(s.q2r("usable_money_adjusted", "producer"), 3) else [None]),
-    ("R2", r"explain none of the variance in return ($R^2=@$), and adding each role's track record, experience and centrality, computed only from earlier films, raises $R^2$ to @",
-     lambda s: s.nb_find(r"ridge R2: base (-?[\d.]+); base \+ network ([\d.]+)")),
+    ("track records", r"from +@ per standard deviation for the lead actors to +@ for studios, and none of @ shuffles within genre",
+     lambda s: (lambda t: [t.coef_per_sd.min(), t.coef_per_sd.max(), s.xp_sum["perms"]]
+                if t.coef_per_sd.idxmin().startswith("cast") and t.coef_per_sd.idxmax().startswith("studio")
+                and (t.shuffle_p == round(1 / (1 + s.xp_sum["perms"]), 4)).all() else [None])(s.xp[s.xp.index.str.contains("_track")])),
+    ("experience full imdb", r"producers' experience goes with +@ per standard deviation; counting every earlier film IMDb credits them on, with +@ ($p=@$). Lead actors with more earlier films do slightly worse either way ($-@$ and $-@$)",
+     lambda s: [s.xp.loc["producer_experience, 10k-vote films", "coef_per_sd"], s.xp.loc["producer_experience, full IMDb", "coef_per_sd"],
+                s.xp.loc["producer_experience, full IMDb", "shuffle_p"], -s.xp.loc["cast_experience, 10k-vote films", "coef_per_sd"],
+                -s.xp.loc["cast_experience, full IMDb", "coef_per_sd"]]),
     ("specialists", r"it beats its budget by +@ per standard deviation (95\% interval +@ to +@; @ films, sequels controlled), and by +@ with sequels left out. Shuffling that experience within genre $\times$ budget decile gives $p=@$. Experience in general does not help ($-@$ per standard deviation)",
      lambda s: [*(lambda r: [r.coef_per_sd, r.lo, r.hi, r.n])(s.br_row("specialists_ols.csv", "history: all earlier IMDb movies, sequel flag controlled", "genre_experience")),
                 s.br_row("specialists_ols.csv", "history: all earlier IMDb movies, sequels left out", "genre_experience").coef_per_sd,
@@ -518,15 +533,11 @@ def test_every_number_is_accounted_for(body):
 
 
 def test_figure_inputs_match_outputs():
-    """paper/make_figures.py hard-codes the R2 ladder (Fig. 1A) and the reception rows (Fig. 3)."""
+    """paper/make_figures.py hard-codes the reception rows (Fig. 3)."""
     import importlib.util
     spec = importlib.util.spec_from_file_location("make_figures", ROOT / "paper" / "make_figures.py")
     mf = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mf)
-    ladder = [v for _, v in mf.LADDER]
-    want = S.nb_find(r"ridge R2: base (-?[\d.]+); base \+ network ([\d.]+); all pre-release ([\d.]+); "
-                     r"everything incl\. reviews ([\d.]+)")
-    assert ladder == want, f"Fig. 1A ladder {ladder} != notebook {want}"
     try:
         rows = {k: (rho, m, sd) for k, rho, m, sd in mf.RECEPTION}
         for label, key in (("IMDb rating", "imdb_rating"), ("Metacritic", "metacritic"), ("Rotten Tomatoes", "rotten_tomatoes")):
