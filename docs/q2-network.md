@@ -121,6 +121,17 @@ every such community is reported. To separate dropping studios from adding unnot
 6,346-film network is also rerun without studio links (`--links no_studio`). Together these answer whether
 people alone, without the studio, form the "production houses".
 
+**3. Communities inside the full network's Hollywood community**
+(`analysis/compare/network_communities_hollywood.py`). Declared on 23 November 2026 after run 2 showed one
+community holding 136,577 films and 5,821 of the 6,346 money films, and before running. Modularity has a resolution
+limit: in a network of 656,445 films, a group the size of Blumhouse's (108 money films in the 6,346-film run) can be
+too small for Louvain to split off, so its absence in run 2 doesn't show it isn't there. The run takes that largest
+community's films and links as they are in run 2 and repeats run 2's methods on them alone: Louvain over 10 seeds,
+50 degree-preserving rewirings with the same seeds, NMI with the rarest genre against 1,000 shuffles, and the
+budget-decile shuffle (10,000 shuffles, Holm) for every sub-community with at least 30 money films, all reported.
+It also reports where the films of each 10,000-vote community fall (the share in its most common sub-community),
+Blumhouse's first.
+
 Leiden and Infomap are removed from the community runs. They aren't course methods, and Louvain's
 agreement across seeds already measures stability.
 
