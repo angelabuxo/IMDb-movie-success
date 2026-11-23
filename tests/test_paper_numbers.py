@@ -270,6 +270,27 @@ class Sources:
     def comA_prof(self):
         return pd.read_csv(A / "compare/outputs/communities_usable_money/community_profiles.csv")
 
+    # ---- post-hoc robustness runs: no studio links, and the network from all of IMDb ----
+    @cached_property
+    def comN(self):
+        return self._json("compare/outputs/communities_usable_money_no_studio/summary.json")
+
+    @cached_property
+    def comN_prof(self):
+        return pd.read_csv(A / "compare/outputs/communities_usable_money_no_studio/community_profiles.csv")
+
+    def comN_house(self, studio):
+        d = self.comN_prof
+        return d[d.top_studios.str.startswith(studio)].iloc[0]
+
+    @cached_property
+    def comF(self):
+        return self._json("compare/outputs/communities_full_imdb/summary.json")
+
+    @cached_property
+    def comF_prof(self):
+        return pd.read_csv(A / "compare/outputs/communities_full_imdb/community_profiles.csv")
+
     def comA_house(self, studio):
         d = self.comA_prof
         return d[d.top_studios.str.startswith(studio)].iloc[0]
@@ -388,8 +409,24 @@ CLAIMS = [
     ("communities", "finds @ groups among the @ linked films, with modularity @ against at most @ for the network rewired with every film's degree kept, and @ seeds agree with NMI @",
      lambda s: [s.comA["communities"], s.comA["films_in_network"], s.comA["modularity"], s.comA["rewired_modularity_max"],
                 s.comA["seeds"], s.comA["mean_nmi_best_vs_other_seeds"]] if s.comA["modularity_p"] < .05 else [None]),
-    ("community methods", "Leiden (NMI @ with Louvain) and Infomap (@) find a similar split",
-     lambda s: [s.comA_methods.loc["Leiden", "nmi_with_louvain"], s.comA_methods.loc["Infomap", "nmi_with_louvain"]]),
+    ("no studio split", r"Louvain still splits the @ linked films into groups (modularity @ against at most @ rewired; @ seeds agree with NMI @)",
+     lambda s: [s.comN["films_in_network"], s.comN["modularity"], s.comN["rewired_modularity_max"], s.comN["seeds"],
+                s.comN["mean_nmi_best_vs_other_seeds"]]),
+    ("no studio houses", r"Three of the @ groups with at least @ films beat films of the same budget, and none falls short: Blumhouse's (+@), now @ films",
+     lambda s: (lambda d, b: [len(d), s.comN["min_size"], b.excess, b.films]
+                if ((d.p_holm < .05) & (d.excess > 0)).sum() == 3 and not ((d.p_holm < .05) & (d.excess < 0)).any() and b.p_holm < .05
+                else [None])(s.comN_prof, s.comN_house("Blumhouse"))),
+    ("no studio others", r"around Happy Madison and the Farrelly brothers (+@); and Amblin with Imagine (+@)",
+     lambda s: [s.comN_house("Columbia Pictures (49); Happy Madison").excess, s.comN_house("Amblin").excess]),
+    ("no studio high end", r"which doubles its gap, so +@ is the high end",
+     lambda s: [s.comA_house("Blumhouse").excess] if s.comA_house("Blumhouse").excess >= 1.5 * s.comN_house("Blumhouse").excess else [None]),
+    ("full imdb split", r"Built from all @ linked films in IMDb",
+     lambda s: [s.comF["films_in_network"]]),
+    ("full imdb modularity", r"(modularity @ against at most @ rewired; seeds agree with NMI @). Of the @ films, @ fall in one Hollywood community of @ films, which earns like films of the same budget ($-@$)",
+     lambda s: [s.comF["modularity"], s.comF["rewired_modularity_max"], s.comF["mean_nmi_best_vs_other_seeds"], s.comF["usable_films"],
+                s.comF_prof.iloc[0].usable_films, s.comF["largest_community_films"], -s.comF_prof.iloc[0].excess]
+     if s.comF_prof.iloc[0].films_in_network == s.comF["largest_community_films"] else [None]),
+    ("robustness methods", r"their returns are tested on the @ films only", lambda s: [s.comF["usable_films"]]),
     ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
      lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),
     ("community count", "Tested like the genres, @ of the @ communities with at least @ films differ from films of the same budget",

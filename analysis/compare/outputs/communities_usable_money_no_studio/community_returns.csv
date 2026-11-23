@@ -1,0 +1,27 @@
+run,category,films,mean,excess,z,p_holm
+people-network community,"1: Comedy 58% (all films 39%), 499 films",499.0,0.4924,-0.0996,-1.61,1.0
+people-network community,"2: Crime 31% (all films 20%), 466 films",466.0,0.4067,-0.1493,-2.46,0.31287
+people-network community,"3: Action 43% (all films 27%), 422 films",422.0,0.4496,-0.1033,-1.6,1.0
+people-network community,"4: Family 10% (all films 6%), 394 films",394.0,0.8123,0.2489,4.13,0.005
+people-network community,"5: Sci-Fi 14% (all films 8%), 318 films",318.0,0.4504,-0.2159,-2.7,0.16498
+people-network community,"6: Animation 9% (all films 6%), 301 films",301.0,0.6474,0.1156,1.5,1.0
+people-network community,"7: Action 40% (all films 27%), 294 films",294.0,0.3879,-0.1529,-1.82,1.0
+people-network community,"8: Family 8% (all films 6%), 276 films",276.0,0.5009,-0.0582,-0.72,1.0
+people-network community,"9: War 4% (all films 2%), 269 films",269.0,0.3867,-0.132,-1.51,1.0
+people-network community,"10: Biography 13% (all films 7%), 268 films",268.0,0.5033,-0.0914,-1.19,1.0
+people-network community,"11: Sport 8% (all films 3%), 244 films",244.0,0.4946,-0.0633,-0.72,1.0
+people-network community,"12: Action 43% (all films 27%), 232 films",232.0,0.5381,-0.0563,-0.7,1.0
+people-network community,"13: Sport 6% (all films 3%), 215 films",215.0,0.5518,0.0183,0.2,1.0
+people-network community,"14: Action 43% (all films 27%), 214 films",214.0,0.767,0.1973,2.26,0.45195
+people-network community,"15: Animation 14% (all films 6%), 198 films",198.0,0.6656,0.0824,0.85,1.0
+people-network community,"16: Animation 12% (all films 6%), 197 films",197.0,0.81,0.2907,3.22,0.0216
+people-network community,"17: Music 8% (all films 3%), 187 films",187.0,0.6618,0.143,1.42,1.0
+people-network community,"18: Horror 64% (all films 13%), 181 films",181.0,1.1294,0.5309,4.7,0.0026
+people-network community,"19: Horror 39% (all films 13%), 175 films",175.0,0.5164,-0.089,-0.82,1.0
+people-network community,"20: Family 27% (all films 6%), 159 films",159.0,0.7914,0.1753,1.72,1.0
+people-network community,"21: Horror 21% (all films 13%), 134 films",134.0,0.201,-0.3483,-2.66,0.15868
+people-network community,"22: Sci-Fi 18% (all films 8%), 133 films",133.0,0.5268,-0.0564,-0.48,1.0
+people-network community,"23: Family 14% (all films 6%), 127 films",127.0,0.5568,0.0097,0.08,1.0
+people-network community,"24: Family 9% (all films 6%), 122 films",122.0,0.5185,-0.034,-0.28,1.0
+people-network community,"25: Romance 41% (all films 16%), 90 films",90.0,0.3987,-0.1214,-0.78,1.0
+people-network community,"26: Action 49% (all films 27%), 57 films",57.0,0.5437,0.0141,0.08,1.0

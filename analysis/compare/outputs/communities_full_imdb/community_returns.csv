@@ -1,0 +1,8 @@
+run,category,films,mean,excess,z,p_holm
+full-IMDb people community,"1: Sport 3% (all films 3%), 5821 usable films",5821.0,0.556,-0.0111,-1.84,0.39296
+full-IMDb people community,"2: Music 5% (all films 3%), 207 usable films",207.0,0.5146,-0.0518,-0.48,1.0
+full-IMDb people community,"3: Animation 53% (all films 6%), 53 usable films",53.0,1.14,0.5451,2.47,0.08539
+full-IMDb people community,"4: Thriller 31% (all films 17%), 35 usable films",35.0,0.8587,0.1802,0.61,1.0
+full-IMDb people community,"5: Action 44% (all films 26%), 34 usable films",34.0,1.1214,0.4853,1.67,0.49045
+full-IMDb people community,"6: Action 88% (all films 26%), 33 usable films",33.0,0.7331,0.1788,0.83,1.0
+full-IMDb people community,"7: Drama 77% (all films 51%), 31 usable films",31.0,0.1789,-0.5395,-1.63,0.49045

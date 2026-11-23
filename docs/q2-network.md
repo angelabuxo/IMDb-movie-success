@@ -109,7 +109,8 @@ not a course method.
 
 **2. Communities of the people network built from full IMDb**
 (`analysis/compare/network_communities.py --links full_imdb`). Films: every non-adult film in
-`title.principals` (723,734 films with a link). Links: two films share a director, one of the first three
+`title.principals` with at least one link (656,445 in the run; the 723,734 first written here, from a sizing
+run, counted adult films and films with no link). Links: two films share a director, one of the first three
 billed actors or actresses, or a producer, weighted by the number of shared people. No studio links,
 because IMDb doesn't record studios. Methods as in the 6,346-film run: Louvain over 10 seeds (best
 modularity kept, mean NMI to the other seeds), a null of 50 degree-preserving rewirings with shuffled

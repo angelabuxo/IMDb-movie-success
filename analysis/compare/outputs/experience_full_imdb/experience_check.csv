@@ -1,5 +1,5 @@
 group,films,spearman_10k_vs_full,median_earlier_films_10k,median_earlier_films_full
-director,6346,0.811,4.0,6.0
-writer,6332,0.812,2.0,3.5
-producer,6342,0.82,4.5,7.5
-cast,6299,0.843,7.67,15.33
+director,6346,0.805,4.0,6.0
+writer,6332,0.81,2.0,3.33
+producer,6342,0.814,4.5,7.5
+cast,6299,0.838,7.67,15.0

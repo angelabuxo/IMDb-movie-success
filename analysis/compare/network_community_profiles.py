@@ -8,7 +8,7 @@ credited on most of its films (name and number of films). Fast: no null, no shuf
 What this measures: which people and companies hold each community together. The names are the most frequent
 credits, not every film; a single shared studio or producer can pull an unrelated film into a community.
 Outputs: analysis/compare/outputs/communities/community_profiles.csv (names and numbers only).
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_community_profiles [--set usable_money]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_community_profiles [--set usable_money] [--links no_studio]
 """
 from __future__ import annotations
 
@@ -29,11 +29,12 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--set", default="in_common_set", choices=["in_common_set", "usable_money"])
+    ap.add_argument("--links", default="credits", choices=list(nc.LINKS))
     a = ap.parse_args()
-    out = nc.out_dir(a.set)
+    out = nc.out_dir(a.set, a.links)
     films, genres = load()
     f, keep, M = prepare(films, genres, a.set)
-    G = nc.weighted_links(f)
+    G = nc.weighted_links(f, a.links)
     nodes = np.array(sorted(G.nodes()))
     parts, mods = nc.louvain(G, nc.SEEDS)
     best = int(np.argmax(mods))

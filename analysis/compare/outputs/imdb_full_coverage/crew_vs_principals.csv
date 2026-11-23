@@ -1,0 +1,15 @@
+role,vote_tier,crew_credits,share_in_principals
+director,"1,000-9,999",41155,0.959
+director,1-9 votes,21840,0.966
+director,"10,000+",14035,0.967
+director,10-99,202330,0.957
+director,100-999,110973,0.956
+director,no rating,366115,0.968
+director,all,756448,0.963
+writer,"1,000-9,999",79123,0.913
+writer,1-9 votes,22473,0.964
+writer,"10,000+",31319,0.884
+writer,10-99,263236,0.948
+writer,100-999,185209,0.931
+writer,no rating,390942,0.968
+writer,all,972302,0.948
