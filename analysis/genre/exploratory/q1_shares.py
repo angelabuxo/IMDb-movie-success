@@ -3,9 +3,9 @@
 IMDb gives a film up to three genres, unweighted and in alphabetical order. Two other ways to say what genre a
 film is, both already in data/raw/features:
   Tag Genome shares   genre_shares.csv: the MovieLens Tag Genome's genre tag scores, turned into shares that add up
-                      to 1 per film (scripts/reviews/tag_shares.py). Built from what users tagged after release.
+                      to 1 per film (archive/scripts/reviews/tag_shares.py). Built from what users tagged after release.
   Plot shares         plot_genre_shares.csv: the same shares predicted from the Wikipedia plot's embedding
-                      (scripts/reviews/plot_tags.py). Available for almost every film, written after release too.
+                      (archive/scripts/reviews/plot_tags.py). Available for almost every film, written after release too.
   Plot clusters       k-means on the plot embeddings (features/plot_vectors.npy, all-MiniLM-L6-v2), with as many
                       clusters as kept IMDb genres: a genre made from text alone, with no labels (week 7: one vector
                       per text, then different ways to split the same corpus).

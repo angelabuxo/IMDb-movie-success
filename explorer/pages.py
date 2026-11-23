@@ -302,12 +302,12 @@ def profit():
 # ---------------------------------------------------------------- tags
 
 TAG_FILES = ("tag_relevance.npy", "tag_relevance_ids.csv", "tag_relevance_tags.csv", "genre_shares.csv")
-TAG_CHECKS = REPO / "analysis" / "tags" / "tag_shares.json"
+TAG_CHECKS = REPO / "archive" / "analysis" / "tags" / "tag_shares.json"
 GENOME, PLOT = "Tag Genome (films to 2014)", "Plot summaries (all years)"
 # source -> (matrix, its row ids, the per-film genre table); the tag names are shared
 SOURCE_FILES = {GENOME: ("tag_relevance.npy", "tag_relevance_ids.csv", "genre_shares.csv"),
                 PLOT: ("plot_tag_relevance.npy", "plot_tag_relevance_ids.csv", "plot_genre_shares.csv")}
-PLOT_RECOVERY = REPO / "analysis" / "tags" / "plot_tags_tags.csv"
+PLOT_RECOVERY = REPO / "archive" / "analysis" / "tags" / "plot_tags_tags.csv"
 
 
 def source_ready(source: str) -> bool:
@@ -356,13 +356,13 @@ def tags():
     st.caption(md("How much each film is each tag. Relevance runs from 0 (doesn't apply) to 1 (applies strongly), for "
                   "1,084 tags, from the MovieLens Tag Genome. A genre share is a film's relevance for one genre, raised "
                   "to a power and divided by its total over the genres, so a film's shares add up to 100%. "
-                  "`notebooks/tag_shares.ipynb` has the checks in full."))
+                  "`archive/notebooks/tag_shares.ipynb` has the checks in full."))
     missing = [n for n in TAG_FILES if not (FEATURES / n).exists()]
     if missing:
         st.warning("Needs the tag files in data/raw/features (" + ", ".join(missing) + "). They come in "
                    "`data/bundles/tag-features-2026-11-16.tar.zst`: run `./setup.sh --data`. Or build them with "
                    "`python3 scripts/get_data.py genome`, then from `data/raw`: "
-                   "`../../.venv/bin/python ../../scripts/reviews/tag_shares.py`.")
+                   "`../../.venv/bin/python ../../archive/scripts/reviews/tag_shares.py`.")
         return
     sources = [GENOME] + ([PLOT] if source_ready(PLOT) else [])
     views = ["One film", "One tag", "Genre mix", "Profit", "Checks"]
@@ -384,7 +384,7 @@ def tags():
         source = st.radio("Scores from", sources, key="tag_source",
                           help="Tag Genome: predicted by MovieLens from user tags, ratings and IMDb reviews, so they carry the "
                                "size of a film's audience; films to 2014. Plot summaries: the same 1,084 tags predicted from "
-                               "the film's Wikipedia plot alone (scripts/reviews/plot_tags.py); every year, rougher per film.")
+                               "the film's Wikipedia plot alone (archive/scripts/reviews/plot_tags.py); every year, rougher per film.")
         if PLOT not in sources:
             st.caption("Plot-based scores need `plot_tag_relevance.npy`: run `./setup.sh --data` (plot-tags bundle).")
     fixed = st.session_state["tag_view"] in ("Profit", "Checks")     # these views report the Tag Genome analysis
@@ -542,11 +542,11 @@ def tags():
 
     else:
         if not TAG_CHECKS.exists():
-            missing("No saved checks (analysis/tags/tag_shares.json). Run scripts/reviews/tag_shares.py.")
+            missing("No saved checks (archive/analysis/tags/tag_shares.json). Run archive/scripts/reviews/tag_shares.py.")
             return
         res = json.loads(TAG_CHECKS.read_text())
         il, sv, tm = res["imdb_labels"], res["survey"], res["two_methods"]
-        st.caption(md(f"From `analysis/tags/tag_shares.json`, computed at power {res['power']}. Source: {res['source']}."))
+        st.caption(md(f"From `archive/analysis/tags/tag_shares.json`, computed at power {res['power']}. Source: {res['source']}."))
         c = st.columns(4)
         c[0].metric("Mean AUC against IMDb genres", f"{il['auc_mean']:.3f}", help="0.5 is a coin flip, 1 is perfect.")
         c[1].metric("Top genre is an IMDb genre", f"{il['fit']['top_genre_in_imdb']:.1%}",
@@ -763,11 +763,11 @@ def tag_followups():
     st.title("Tags: follow-ups")
     st.caption(md("What came after finding that the Tag Genome scores carry audience size: tags predicted from plot summaries, "
                   "the usual genre mix of directors and studios, seen and liked against earned, critics against audience, and "
-                  "franchise and release month as controls. Everything here is read from `analysis/tags/`; "
-                  "`notebooks/tag_followups.ipynb` has the full account. Gross over budget isn't profit."))
+                  "franchise and release month as controls. Everything here is read from `archive/analysis/tags/`; "
+                  "`archive/notebooks/tag_followups.ipynb` has the full account. Gross over budget isn't profit."))
     pj, fj = TAG_PROFIT / "plot_tags.json", TAG_PROFIT / "tag_followups.json"
     if not pj.exists() or not fj.exists():
-        missing("Needs analysis/tags/plot_tags.json and tag_followups.json (scripts/reviews/plot_tags.py and tag_followups.py).")
+        missing("Needs archive/analysis/tags/plot_tags.json and tag_followups.json (archive/scripts/reviews/plot_tags.py and tag_followups.py).")
         return
     plot, fol = json.loads(pj.read_text()), json.loads(fj.read_text())
     if st.session_state.get("fu_view") not in FOLLOW_VIEWS:
@@ -914,16 +914,16 @@ def tag_followups():
                       f"The 'sequel' tag goes from {tg['commercial']['sequel']['before']:+.2f} to {tg['commercial']['sequel']['after']:+.2f}."))
 
 
-TAG_PROFIT = REPO / "analysis" / "tags"
+TAG_PROFIT = REPO / "archive" / "analysis" / "tags"
 OUTCOMES = {"adjusted": "Return, budget and decade held fixed", "adjusted_votes": "Return, budget, decade and IMDb votes held fixed",
             "multiple": "ln(gross ÷ budget)", "gross": "ln(gross), the revenue", "budget": "ln(budget)"}
 
 
 def _tag_profit(rel, tag_names, films, genres, g_rel, card, row_of):
-    """Tags and genre mixes against revenue and return: the saved results of scripts/reviews/tag_profit.py,
+    """Tags and genre mixes against revenue and return: the saved results of archive/scripts/reviews/tag_profit.py,
     and the same sample drawn live for one tag or one pair of genres."""
     if not (TAG_PROFIT / "tag_profit.json").exists() or not (GRAPH / "nodes.csv").exists():
-        missing("Needs analysis/tags/tag_profit.json (run scripts/reviews/tag_profit.py) and the movie graph.")
+        missing("Needs archive/analysis/tags/tag_profit.json (run archive/scripts/reviews/tag_profit.py) and the movie graph.")
         return
     res = json.loads((TAG_PROFIT / "tag_profit.json").read_text())
     per_tag = table(TAG_PROFIT / "tag_profit_tags.csv")

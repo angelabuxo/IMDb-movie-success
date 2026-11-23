@@ -1,12 +1,12 @@
 """Q1's follow-up analyses rerun with the Tag Genome genre shares (features/genre_shares.csv, from
-notebooks/tag_shares.ipynb) in place of IMDb's 0/1 tags. Added after the main results; nothing here changes them.
+archive/notebooks/tag_shares.ipynb) in place of IMDb's 0/1 tags. Added after the main results; nothing here changes them.
 
 Films: the usable-money films with Tag Genome scores. A film counts in each genre by its share (the kept genres'
 shares, renormalised to add up to 1). Every analysis is also run with the 0/1 tags on the same films, so the two
 can be compared on equal footing.
 
   1 leak       the Tag Genome is built from user tags, ratings and reviews, so it carries audience size
-               (notebooks/tag_profit.ipynb). 5-fold CV R2 of ln(IMDb votes) on budget decile + era, adding the tags
+               (archive/notebooks/tag_profit.ipynb). 5-fold CV R2 of ln(IMDb votes) on budget decile + era, adding the tags
                or the shares; and the CV R2 of ln(gross / budget) with ln(votes) in the base model. Votes are partly
                the outcome, so the second is a sensitivity check, not a correction.
   2 checks     the tier heatmap, the smooth budget curve and the hit / below-budget shares of q1_checks.py, with

@@ -1,4 +1,4 @@
-"""The cleaning rules of analysis/embeddings, on made-up text."""
+"""The cleaning rules of archive/analysis/embeddings, on made-up text."""
 import re
 
 import numpy as np

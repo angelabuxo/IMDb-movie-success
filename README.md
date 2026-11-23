@@ -138,19 +138,9 @@ We also ran a pre-registered test of whether a screenplay's emotional arc (Disti
 - [`archive/scripts-arcs`](https://github.com/angelabuxo/IMDb-movie-success/tree/archive/scripts-arcs) (branch) and `archive/scripts-arcs-final` (tag) both point to `main` as it was just before the removal. They hold the arcs pipeline and its saved outputs (`analysis/arcs/`, with its `LOG.md`, `config.yaml` and HPC scripts), the step notebooks (`notebooks/arcs/`), the static page (`site/arcs/`), the run guide (`docs/scripts-arcs.md`), the tests (`tests/test_arcs.py`), the explorer's arc pages and the paper text with the arc results.
 - To look at it: `git switch archive/scripts-arcs`. The tag stays even if the branch is deleted.
 
-## Profit attribution (optional)
+## Archive
 
-[`notebooks/profit_attribution.ipynb`](notebooks/profit_attribution.ipynb) splits each film's return between its budget, year, genre and franchise, every person and company on it, and what's left, and compares three ways of measuring profit. It's an extra that nothing else depends on, so we can decide later whether the paper uses it. Cross-validated R² goes from 0.115 with budget, year and genre to 0.299 with franchise, people and companies. Franchise, distributor and studio carry most of that gain, individual directors and actors very little, and 71.0% of the variance stays unexplained. [`docs/profit-attribution.md`](docs/profit-attribution.md) has the method, the checks and the limits. To rerun it from the repo root (about 17 minutes, then a few seconds for the notebook):
-
-```bash
-python -m analysis.attribution.run
-```
-
-```bash
-python -m analysis.attribution.build_notebook
-```
-
-The explorer's Profit attribution page shows the same outputs, with any film as a dollar waterfall.
+[`archive/`](archive/) holds early analyses (11 to 16 November) that don't feed the paper: the profit attribution, the text embeddings, the embedding maps and the Tag Genome tags. They still run, and the explorer lists their pages under "Archive". [`archive/README.md`](archive/README.md) says what each one is and how to rerun it.
 
 ## In this repo
 
@@ -164,7 +154,7 @@ The explorer's Profit attribution page shows the same outputs, with any film as 
 - [`scripts/imdb/`](scripts/imdb/): the code behind the numbers.
 - [`scripts/screenplays/`](scripts/screenplays/) and [`scripts/reviews/`](scripts/reviews/): screenplay and review features for the notebook.
 - [`notebooks/`](notebooks/): analysis notebooks.
-- [`analysis/attribution/`](analysis/attribution/) and [`docs/profit-attribution.md`](docs/profit-attribution.md): the optional profit attribution.
+- [`archive/`](archive/): early analyses that don't feed the paper (see [`archive/README.md`](archive/README.md)).
 
 Raw data, article text and screenplays aren't in this repo. Please don't commit them.
 
