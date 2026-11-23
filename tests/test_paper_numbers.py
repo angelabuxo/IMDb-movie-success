@@ -288,6 +288,8 @@ CLAIMS = [
     ("abs genre R2", "genre adds only @ to the explained variance", lambda s: [s.genre["sets"]["usable_money"]["r2_added_by_genre"]]),
     ("abs assort", "shuffles allow (@ against at most @)",
      lambda s: [s.q2r("in_common_set_adjusted", "director"), s.q2_null95_max("in_common_set_adjusted")]),
+    ("abs blumhouse", "of which Blumhouse beats films of the same budget by the most (+@)",
+     lambda s: (lambda r: [r.excess] if r.excess == s.comA_prof.excess.max() and r.p_holm < .05 else [None])(s.comA_house("Blumhouse"))),
     # Results: genre
     ("genre films", "Among the @ films with clean money figures, we compared each IMDb genre's mean return with @ shuffles",
      lambda s: [s.genre["sets"]["usable_money"]["films"], s.genre["perms"]]),
