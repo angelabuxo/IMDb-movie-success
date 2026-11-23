@@ -225,6 +225,13 @@ class Sources:
         return d[(d.genre == genre) & (d.set == sset) & (d.model == model) & (d.layer == layer)].iloc[0].auc
 
     @cached_property
+    def allg(self):
+        return pd.read_csv(ROOT / "analysis/screenplays/word2vec/results/all_genres.csv").set_index(["check", "genre", "layer"])
+
+    def horror(self, name):
+        return pd.read_csv(ROOT / f"analysis/screenplays/word2vec/results/{name}.csv")
+
+    @cached_property
     def manual(self):
         d = pd.read_csv(ROOT / "analysis/screenplays/data_check/manual_check_summary.csv")
         return d[d.sheet == "main"]
@@ -426,6 +433,21 @@ CLAIMS = [
                 s.votes("Action", "100k+", "w2v+baseline+votes", "description")]),
     ("franchise", "drops from $z=@$ to $z=@$ once likely franchise films are removed",
      lambda s: [s.t10_runs.loc["primary", "z"], s.t10_runs.loc["without likely franchise films", "z"]]),
+    # Results: every genre, cosine separation (analysis/screenplays/word2vec/all_genres.py, horror_check.py)
+    ("allg setup", r"Across @ genres and both layers, we compared the mean cosine similarity within and between the two groups against @ shuffles of the labels within era, with Holm correction over the @ tests. Three pass: Action dialogue and both Horror layers",
+     lambda s: [s.allg.loc["primary"].index.get_level_values(0).nunique(), 2000, len(s.allg.loc["primary"])]
+     if sorted(s.allg.loc["primary"].query("p_holm < 0.05").index) == [("Action", "dialogue"), ("Horror", "description"), ("Horror", "dialogue")] else [None]),
+    ("allg action tier", r"once they keep each film's vote tier ($p=@$)", lambda s: [s.allg.loc[("era_x_tier", "Action", "dialogue"), "p"]]),
+    ("allg horror", r"Horror's is not ($z=@$ and $@$; @ hits against @ flops), and Horror is the only genre",
+     lambda s: [s.allg.loc[("era_x_tier", "Horror", "dialogue"), "z"], s.allg.loc[("era_x_tier", "Horror", "description"), "z"],
+                s.allg.loc[("primary", "Horror", "dialogue"), "hits"], s.allg.loc[("primary", "Horror", "dialogue"), "flops"]]),
+    ("allg horror subgenres", r"more often supernatural (@\% against @\%) and slasher films (@\% against @\%)",
+     lambda s: (lambda c: [100 * c.loc["hit", "share_supernatural"], 100 * c.loc["flop", "share_supernatural"],
+                           100 * c.loc["hit", "share_slasher"], 100 * c.loc["flop", "share_slasher"]])(s.horror("horror_composition").set_index("group"))),
+    ("allg horror strata", r"far above the null ($z\geq@$)", lambda s: [s.horror("horror_check").z.min()]),
+    ("allg horror franchise", r"it holds for description (Holm $p=@$) but not for dialogue",
+     lambda s: [s.allg.loc[("no_franchise", "Horror", "description"), "p_holm"]]
+     if s.allg.loc[("no_franchise", "Horror", "dialogue"), "p_holm"] > .05 else [None]),
     ("typicality", r"Typical scripts beat their budgets by +@ per standard deviation (95\% interval +@ to +@; @ films), with length, dialogue share and parsing noise held fixed, and shuffling typicality within genre $\times$ budget decile gives $p=@$",
      lambda s: [*(lambda r: [r.coef_per_sd, r.lo, r.hi, r.n])(s.br_row("typicality_ols.csv", "+ script-quality controls", "script_typicality")),
                 s.br["typicality"]["shuffle_p"]]),
