@@ -97,43 +97,43 @@ The AUC says the vector holds something that differs between hits and flops of t
 The four tests above cover Comedy and Action, with Drama as a check. `all_genres.py` asks the same hit versus flop question in every genre with at least 20 hits and 20 flops, so the screenplay result can sit next to the genre result (Q1). It uses the same labels (top and bottom quarter of ln(gross/budget) within genre x era, D11 to D13) and the same script vectors, but no classifier: only cosine similarity and a label shuffle, which are course methods.
 
 ```bash
-IMDB_DATA_DIR=/path/to/data/raw python -I analysis/screenplays/word2vec/all_genres.py   # about 1 min, numpy only
+IMDB_DATA_DIR=/path/to/data/raw python -I analysis/screenplays/word2vec/all_genres.py   # about 1 min per seed, numpy only
 ```
 
-It reads one space, window 5 and seed 1 (`features/script_w2v/vectors_w5_s1.npz`), not the mean over five seeds. Vectors are centred on the mean of all 2188 scripts first, because without that every pair of scripts has a cosine near 0.9. The statistic is the separation: mean cosine within hits and within flops, minus mean cosine between a hit and a flop. It's above 0 when hit scripts resemble each other, and flop scripts each other, more than they resemble scripts in the other group. The null shuffles the hit and flop labels 2000 times inside each era cell, so the smallest possible p is 0.0005. The last column runs the same statistic for "films of this genre" against the rest of the 1598 films, to show how much genre the vectors carry on the same scale.
+It reads every window-5 space in `features/script_w2v/` (`vectors_w5_s1.npz` to `vectors_w5_s5.npz`, the five seeds of the primary tests, or another folder set with `W2V_VECTOR_DIR`) and averages the cosine over seeds. The separation is linear in the cosine, so that is the mean of the five per-seed separations, with every seed seeing the same label shuffles. Vectors are centred on the mean of all 2188 scripts first, because without that every pair of scripts has a cosine near 0.9. The statistic is the separation: mean cosine within hits and within flops, minus mean cosine between a hit and a flop. It's above 0 when hit scripts resemble each other, and flop scripts each other, more than they resemble scripts in the other group. The null shuffles the hit and flop labels 2000 times inside each era cell, so the smallest possible p is 0.0005. The last column runs the same statistic for "films of this genre" against the rest of the 1598 films, to show how much genre the vectors carry on the same scale.
 
 | Genre (hits/flops) | Dialogue | p | Description | p | Genre vs rest, dialogue / description |
 |---|---|---|---|---|---|
-| Drama (223/223) | +0.003 | 0.056 | +0.000 | 0.32 | +0.040 / +0.075 |
-| Comedy (136/136) | +0.008 | 0.0080 | +0.004 | 0.058 | +0.064 / +0.074 |
-| Action (108/108) | +0.019 | 0.0005 | +0.009 | 0.0085 | +0.095 / +0.127 |
-| Crime (85/85) | -0.004 | 0.91 | +0.006 | 0.068 | +0.032 / +0.023 |
-| Adventure (84/84) | +0.002 | 0.25 | +0.001 | 0.30 | +0.075 / +0.076 |
-| Thriller (74/74) | +0.002 | 0.25 | +0.005 | 0.11 | +0.013 / +0.009 |
-| Romance (59/59) | -0.001 | 0.49 | -0.005 | 0.79 | +0.020 / +0.048 |
-| Horror (52/52) | +0.049 | 0.0005 | +0.058 | 0.0005 | +0.022 / +0.027 |
-| Mystery (50/50) | +0.016 | 0.025 | +0.026 | 0.0050 | +0.011 / +0.010 |
-| Sci-Fi (41/41) | -0.006 | 0.82 | +0.007 | 0.15 | +0.053 / +0.028 |
-| Biography (40/40) | -0.009 | 0.87 | -0.004 | 0.68 | +0.020 / +0.032 |
-| Fantasy (35/35) | +0.016 | 0.093 | +0.018 | 0.090 | +0.035 / +0.018 |
+| Drama (223/223) | +0.003 | 0.049 | +0.001 | 0.29 | +0.040 / +0.075 |
+| Comedy (136/136) | +0.008 | 0.0065 | +0.004 | 0.061 | +0.064 / +0.074 |
+| Action (108/108) | +0.018 | 0.0010 | +0.010 | 0.0085 | +0.095 / +0.127 |
+| Crime (85/85) | -0.005 | 0.91 | +0.006 | 0.076 | +0.032 / +0.023 |
+| Adventure (84/84) | +0.002 | 0.24 | +0.001 | 0.30 | +0.074 / +0.076 |
+| Thriller (74/74) | +0.002 | 0.24 | +0.005 | 0.11 | +0.013 / +0.009 |
+| Romance (59/59) | -0.001 | 0.44 | -0.005 | 0.83 | +0.020 / +0.048 |
+| Horror (52/52) | +0.049 | 0.0005 | +0.059 | 0.0005 | +0.022 / +0.028 |
+| Mystery (50/50) | +0.016 | 0.025 | +0.025 | 0.0060 | +0.012 / +0.010 |
+| Sci-Fi (41/41) | -0.006 | 0.84 | +0.006 | 0.16 | +0.052 / +0.028 |
+| Biography (40/40) | -0.009 | 0.85 | -0.004 | 0.68 | +0.020 / +0.032 |
+| Fantasy (35/35) | +0.015 | 0.10 | +0.017 | 0.095 | +0.035 / +0.018 |
 
-That is 24 tests. After a Holm correction over them, three pass at 0.05: Action dialogue and both Horror layers (`p_holm` in `results/all_genres.csv`). Groups under 50 are below D14's size for a main result and are marked `small`.
+The numbers are averaged over the five seeds. A run on seed 1 alone gave the same picture: no separation moved by more than 0.0012, and the same three tests pass the correction. That is 24 tests. After a Holm correction over them, three pass at 0.05: Action dialogue and both Horror layers (`p_holm` in `results/all_genres.csv`). Groups under 50 are below D14's size for a main result and are marked `small`.
 
-The genre signal is much larger than the hit versus flop signal. In every genre but Horror and Mystery, the vectors separate the genre from the rest more than they separate its hits from its flops, in most layers by five times or more (Thriller description and Fantasy are the closest). Every genre-versus-rest test is far beyond its shuffle (z from 6.9 to 176, `results/all_genres_genre.csv`). So the script vector mostly knows what kind of film it is, which is the variable Q1 already measures, and much less whether the film paid off.
+The genre signal is much larger than the hit versus flop signal. In every genre but Horror and Mystery, the vectors separate the genre from the rest more than they separate its hits from its flops, in most layers by five times or more (Thriller description and Fantasy are the closest). Every genre-versus-rest test is far beyond its shuffle (z from 7.1 to 176, `results/all_genres_genre.csv`). So the script vector mostly knows what kind of film it is, which is the variable Q1 already measures, and much less whether the film paid off.
 
 Two checks on the four genres with a signal. "Era x tier" shuffles within era x vote tier, so the null keeps the tier mix of hits and flops (D10). "No franchise" drops films with a Wikidata "follows" or "franchise" statement, the flag of `scripts_text/s10_franchise.py` (D26).
 
 | Genre | Layer | p, primary | p, era x tier | Hits/flops without franchise | p, without franchise |
 |---|---|---|---|---|---|
-| Comedy | dialogue | 0.0080 | 0.0060 | 105/129 | 0.19 |
-| Comedy | description | 0.058 | 0.029 | 105/129 | 0.12 |
-| Action | dialogue | 0.0005 | 0.11 | 51/94 | 0.16 |
-| Action | description | 0.0085 | 0.080 | 51/94 | 0.72 |
-| Horror | dialogue | 0.0005 | 0.0010 | 37/45 | 0.019 |
+| Comedy | dialogue | 0.0065 | 0.0050 | 105/129 | 0.17 |
+| Comedy | description | 0.061 | 0.031 | 105/129 | 0.12 |
+| Action | dialogue | 0.0010 | 0.11 | 51/94 | 0.16 |
+| Action | description | 0.0085 | 0.079 | 51/94 | 0.72 |
+| Horror | dialogue | 0.0005 | 0.0010 | 37/45 | 0.021 |
 | Horror | description | 0.0005 | 0.0005 | 37/45 | 0.0020 |
-| Mystery | dialogue | 0.025 | 0.041 | 45/47 | 0.081 |
-| Mystery | description | 0.0050 | 0.029 | 45/47 | 0.0040 |
+| Mystery | dialogue | 0.025 | 0.038 | 45/47 | 0.077 |
+| Mystery | description | 0.0060 | 0.033 | 45/47 | 0.0040 |
 
 Action doesn't survive either check. Inside a tier the shuffle already gives a separation of about half the observed one, so most of the Action signal is the vote tier, as the 100k+ section above found for the classifier. Comedy survives the tier check but not the franchise check. Horror survives both, and it's the only genre where hits and flops separate more than Horror separates from other genres. The most similar pairs among the 104 Horror scripts are sequels of one another (Insidious and its Chapter 2, two Scream films) and creature films that are all flops (Alien, Deep Rising, Below, The Thing). Reading the title lists, the hits are mostly slasher and haunted-house films and the flops mostly creature and sci-fi horror. That's a look at the titles, not a measurement, but it matches the Horror subgenre and Blumhouse results of Q1: the script picks up the kind of Horror film, and the cheap kind paid off.
 
-This measures whether hit scripts resemble each other more than they resemble flops, in a space trained on all 2188 scripts. It misses anything a mean vector loses: structure, plot and order. It can't tell a script that causes success from one that marks a subgenre, a budget level or a franchise, and the checks above show those carry most of what it finds. It uses one seed, where the primary tests average five.
+This measures whether hit scripts resemble each other more than they resemble flops, in a space trained on all 2188 scripts. It misses anything a mean vector loses: structure, plot and order. It can't tell a script that causes success from one that marks a subgenre, a budget level or a franchise, and the checks above show those carry most of what it finds.

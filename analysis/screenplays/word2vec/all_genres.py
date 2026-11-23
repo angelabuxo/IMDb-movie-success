@@ -5,7 +5,9 @@ logistic regression. This script asks the same question for every genre, so the 
 the genre result (Q1). It uses cosine similarity between script vectors and a label shuffle, nothing else.
 
 Inputs
-  the script vectors from vectors.py (window 5, seed 1, TF-IDF-weighted mean), one per film and layer
+  the script vectors from vectors.py (window 5, TF-IDF-weighted mean), one per film, layer and seed.
+  Every vectors_w5_s*.npz in W2V_VECTOR_DIR is used and the cosine is averaged over seeds, as run_tests.py
+  averages its AUC over seeds 1 to 5.
   the hit / flop labels of genre_cells.label: top and bottom quarter of ln(gross/budget) within genre x era,
   middle half dropped, cells under 8 films dropped (DECISIONS.md D11 to D13)
 
@@ -47,7 +49,8 @@ from genre_counts import DATA  # noqa: E402
 
 OUT = HERE / "results"
 LAYERS = ("dialogue", "description")
-VECTORS = Path(os.environ.get("W2V_VECTORS", DATA / "features" / "script_w2v" / "vectors_w5_s1.npz"))
+VECTOR_DIR = Path(os.environ.get("W2V_VECTOR_DIR", DATA / "features" / "script_w2v"))
+VECTORS = sorted(VECTOR_DIR.glob("vectors_w5_s*.npz"))   # every window-5 seed found
 MIN_GROUP = 20   # smallest hit or flop group reported; under D14's 50 a row is marked small
 SEED = 2805
 
@@ -63,15 +66,21 @@ def likely_franchise():
 
 
 def load_vectors():
-    z = np.load(VECTORS)
-    ids = [str(i) for i in z["ids"]]
-    out = {}
-    for layer in LAYERS:
-        X = z[f"{layer}_tfidf_mean"].astype(float)
-        X = X - np.nanmean(X, axis=0)
-        X = X / np.linalg.norm(X, axis=1, keepdims=True)
-        out[layer] = X
-    return {i: k for k, i in enumerate(ids)}, out
+    """Per layer an array (seeds, films, 100) of centred, unit-length vectors, one slice per window-5 seed."""
+    if not VECTORS:
+        raise SystemExit(f"no vectors_w5_s*.npz in {VECTOR_DIR}")
+    ids, out = None, {layer: [] for layer in LAYERS}
+    for path in VECTORS:
+        z = np.load(path)
+        these = [str(i) for i in z["ids"]]
+        if ids is not None and these != ids:
+            raise SystemExit(f"{path.name}: film order differs from {VECTORS[0].name}")
+        ids = these
+        for layer in LAYERS:
+            X = z[f"{layer}_tfidf_mean"].astype(float)
+            X = X - np.nanmean(X, axis=0)
+            out[layer].append(X / np.linalg.norm(X, axis=1, keepdims=True))
+    return {i: k for k, i in enumerate(ids)}, {layer: np.stack(v) for layer, v in out.items()}
 
 
 def separation(S, y):
@@ -85,8 +94,12 @@ def separation(S, y):
 
 
 def centroid_distance(X, y):
-    ca, cb = X[y == 1].mean(axis=0), X[y == 0].mean(axis=0)
-    return 1.0 - ca @ cb / (np.linalg.norm(ca) * np.linalg.norm(cb))
+    """Mean over seeds of the cosine distance between the hit and the flop centroid."""
+    out = []
+    for Xs in X:
+        ca, cb = Xs[y == 1].mean(axis=0), Xs[y == 0].mean(axis=0)
+        out.append(1.0 - ca @ cb / (np.linalg.norm(ca) * np.linalg.norm(cb)))
+    return float(np.mean(out))
 
 
 def shuffle_within(y, strata, rng):
@@ -97,7 +110,9 @@ def shuffle_within(y, strata, rng):
 
 
 def test(X, y, strata, perms, rng):
-    S = X @ X.T
+    # Cosine averaged over seeds. The separation is linear in S, so this equals the mean of the per-seed
+    # separations, with every seed seeing the same label shuffles.
+    S = np.einsum("sik,sjk->ij", X, X) / X.shape[0]
     np.fill_diagonal(S, 0.0)
     obs = separation(S, y)
     null = np.array([separation(S, shuffle_within(y, strata, rng)) for _ in range(perms)])
@@ -125,7 +140,7 @@ def main():
 
     index, vecs = load_vectors()
     films = [fl for fl in final_films() if fl["id"] in index]
-    print(f"final set with a vector: {len(films)} films; vectors from {VECTORS.name}")
+    print(f"final set with a vector: {len(films)} films; seeds: {", ".join(p.stem for p in VECTORS)}")
     labelled, _ = label(pairs_for(films, "a"))
 
     franchise = likely_franchise()
@@ -153,7 +168,7 @@ def main():
                 cells[stratum(t)].append(k)
             strata = [np.array(v) for v in cells.values()]
             for layer in LAYERS:
-                obs, cdist, null, p, z = test(vecs[layer][rows_idx], y, strata, args.perms, rng)
+                obs, cdist, null, p, z = test(vecs[layer][:, rows_idx], y, strata, args.perms, rng)
                 rows.append({"check": check, "genre": g, "layer": layer, "hits": n_hit, "flops": n_flop,
                              "small": min(n_hit, n_flop) < 50,
                              "separation": obs, "null_mean": null.mean(), "null_sd": null.std(),
@@ -178,7 +193,7 @@ def main():
     for g in genres:
         y = np.array([1 if g in fl["genres"] else 0 for fl in films])
         for layer in LAYERS:
-            obs, cdist, null, p, z = test(vecs[layer][ids], y, strata, max(200, args.perms // 10), rng)
+            obs, cdist, null, p, z = test(vecs[layer][:, ids], y, strata, max(200, args.perms // 10), rng)
             genre_rows.append({"genre": g, "layer": layer, "in_genre": int(y.sum()), "rest": int(len(y) - y.sum()),
                                "separation": obs, "null_mean": null.mean(), "null_sd": null.std(), "z": z,
                                "p": p, "centroid_distance": cdist})
