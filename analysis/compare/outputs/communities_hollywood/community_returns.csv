@@ -1,0 +1,26 @@
+run,category,films,mean,excess,z,p_holm
+Hollywood sub-community,"1: Animation 7% (Hollywood films 5%), 1795 usable films",1795.0,0.514,-0.0657,-2.48,0.24158
+Hollywood sub-community,"2: Family 8% (Hollywood films 6%), 841 usable films",841.0,0.6105,0.0823,1.84,0.74243
+Hollywood sub-community,"3: Biography 15% (Hollywood films 7%), 407 usable films",407.0,0.4713,-0.0807,-1.19,1.0
+Hollywood sub-community,"4: Crime 35% (Hollywood films 20%), 308 usable films",308.0,0.2055,-0.3179,-4.37,0.0025
+Hollywood sub-community,"5: Horror 53% (Hollywood films 13%), 299 usable films",299.0,1.0128,0.4311,5.28,0.0025
+Hollywood sub-community,"6: History 4% (Hollywood films 3%), 232 usable films",232.0,0.9123,0.3513,4.65,0.0025
+Hollywood sub-community,"7: Action 39% (Hollywood films 26%), 229 usable films",229.0,0.7207,0.1524,1.93,0.64074
+Hollywood sub-community,"8: Action 48% (Hollywood films 26%), 201 usable films",201.0,0.4804,-0.0461,-0.54,1.0
+Hollywood sub-community,"9: Comedy 65% (Hollywood films 40%), 182 usable films",182.0,0.7353,0.2081,2.07,0.53895
+Hollywood sub-community,"10: Action 44% (Hollywood films 26%), 176 usable films",176.0,0.5559,-0.0154,-0.17,1.0
+Hollywood sub-community,"11: Action 48% (Hollywood films 26%), 141 usable films",141.0,0.1752,-0.3957,-3.69,0.0126
+Hollywood sub-community,"12: Biography 12% (Hollywood films 7%), 101 usable films",101.0,0.5519,0.01,0.09,1.0
+Hollywood sub-community,"13: Biography 16% (Hollywood films 7%), 86 usable films",86.0,0.1302,-0.4722,-2.95,0.05939
+Hollywood sub-community,"14: Family 28% (Hollywood films 6%), 83 usable films",83.0,0.8,0.2312,1.67,0.86841
+Hollywood sub-community,"15: Horror 31% (Hollywood films 13%), 81 usable films",81.0,0.1257,-0.4024,-2.53,0.18358
+Hollywood sub-community,"16: Family 12% (Hollywood films 6%), 80 usable films",80.0,0.5543,0.0084,0.05,1.0
+Hollywood sub-community,"17: Action 33% (Hollywood films 26%), 55 usable films",55.0,-0.2645,-0.8415,-4.11,0.0025
+Hollywood sub-community,"18: Horror 43% (Hollywood films 13%), 51 usable films",51.0,0.2514,-0.4201,-1.82,0.74243
+Hollywood sub-community,"19: Horror 45% (Hollywood films 13%), 49 usable films",49.0,0.6244,0.0713,0.31,1.0
+Hollywood sub-community,"20: Horror 43% (Hollywood films 13%), 46 usable films",46.0,0.2418,-0.5835,-2.22,0.43496
+Hollywood sub-community,"21: Horror 25% (Hollywood films 13%), 40 usable films",40.0,1.6142,0.8841,3.25,0.026
+Hollywood sub-community,"22: Family 28% (Hollywood films 6%), 36 usable films",36.0,0.9149,0.3573,1.41,1.0
+Hollywood sub-community,"23: Adventure 29% (Hollywood films 21%), 35 usable films",35.0,1.1118,0.4971,2.07,0.53895
+Hollywood sub-community,"24: Comedy 45% (Hollywood films 40%), 31 usable films",31.0,1.6923,0.9714,3.13,0.0266
+Hollywood sub-community,"25: Drama 43% (Hollywood films 50%), 30 usable films",30.0,0.6101,0.0009,0.0,1.0

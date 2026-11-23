@@ -1,0 +1,43 @@
+{
+ "size": {
+  "non_adult_movies": 752495,
+  "with_year": 639712,
+  "dated_after_2026": 1803,
+  "genre_missing": 77630,
+  "documentary": 152394
+ },
+ "principals": {
+  "rows_on_movies": 8682383,
+  "cap_ordering": 56,
+  "categories": {
+   "actor": 2643631,
+   "actress": 1469079,
+   "writer": 924810,
+   "producer": 782485,
+   "director": 730326,
+   "cinematographer": 574889,
+   "editor": 519947,
+   "composer": 415346,
+   "self": 343561,
+   "production_designer": 143507,
+   "casting_director": 103385,
+   "archive_footage": 30970,
+   "archive_sound": 447
+  }
+ },
+ "careers": {
+  "team_people": 19354,
+  "people_with_credits": 18978,
+  "credits": 310823,
+  "credits_without_year": 37170,
+  "share_of_credits_by_vote_tier": {
+   "no rating": 0.166,
+   "1-9 votes": 0.004,
+   "10-99": 0.103,
+   "100-999": 0.211,
+   "1,000-9,999": 0.223,
+   "10,000+": 0.293
+  },
+  "share_on_10k_vote_films": 0.293
+ }
+}

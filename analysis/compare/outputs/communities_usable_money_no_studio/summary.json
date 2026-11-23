@@ -1,0 +1,22 @@
+{
+ "set": "usable_money",
+ "link_types": "no_studio",
+ "films": 6346,
+ "films_in_network": 6240,
+ "links": 159937,
+ "seeds": 10,
+ "communities": 40,
+ "communities_min_size": 26,
+ "min_size": 30,
+ "films_in_big_communities": 6172,
+ "modularity": 0.4513,
+ "mean_nmi_best_vs_other_seeds": 0.631,
+ "rewires": 50,
+ "rewired_modularity_mean": 0.1214,
+ "rewired_modularity_max": 0.1245,
+ "modularity_p": 0.0196,
+ "nmi_with_rarest_genre": 0.05,
+ "nmi_genre_null_95": 0.017,
+ "nmi_genre_p": 0.001,
+ "perms": 10000
+}

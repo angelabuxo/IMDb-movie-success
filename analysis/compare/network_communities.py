@@ -9,7 +9,8 @@ communities and modularity, week 2 nulls).
   Links     two films are linked when they share a director, one of the first three billed actors, a producer or a
             studio (network_by_genre.members, as in Q2); weight = the number of people and studios they share.
   Methods   Louvain over SEEDS seeds (the best modularity is kept; mean NMI to the other seeds = stability). Leiden
-            (modularity) and Infomap as second methods, compared with Louvain by NMI.
+            and Infomap were dropped as second methods: they aren't course methods, and the seeds already measure
+            stability.
   Null      the same network rewired with every film's degree kept (double edge swaps) and the weights shuffled,
             REWIRES times, Louvain with the same SEEDS on each; p = share of rewirings reaching the observed modularity.
   Genre     NMI of the Louvain communities with each film's rarest IMDb genre (as q1_categories does), against the
@@ -19,7 +20,9 @@ communities and modularity, week 2 nulls).
 What this measures: whether shared credits split the films into groups that are tighter than chance, how much those
 groups are genres, and whether any group earns differently from films of the same budget. Communities describe
 the network; they don't explain why a group earns more.
-Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_communities [--set usable_money] [--procs 8]
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_communities [--set usable_money] [--links no_studio] [--procs 8]
+      --links no_studio drops the studio links (people only), written to outputs/communities_<set>_no_studio/: a
+      post-hoc check declared in docs/q2-network.md, next to network_communities_full.py (people from full IMDb).
       --set usable_money runs the same analysis on all 6,346 films with clean money (no script needed), written to
       outputs/communities_usable_money/. With --procs > 1 the rewirings run in parallel, each with its own seed, so
       the null differs from a --procs 1 run in its random draws (the saved common-set run used --procs 1).
@@ -32,7 +35,6 @@ from collections import Counter, defaultdict
 from itertools import combinations
 from pathlib import Path
 
-import igraph as ig
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -48,8 +50,12 @@ REWIRES = 50
 MIN_SIZE = 30
 
 
-def out_dir(flag):
-    return OUT if flag == "in_common_set" else OUT.parent / f"communities_{flag}"
+LINKS = {"credits": ("director", "actor", "producer", "studio"), "no_studio": ("director", "actor", "producer")}
+
+
+def out_dir(flag, links="credits"):
+    d = OUT if flag == "in_common_set" else OUT.parent / f"communities_{flag}"
+    return d if links == "credits" else d.parent / f"{d.name}_{links}"
 
 
 def _rewired_modularity(args):
@@ -62,10 +68,12 @@ def _rewired_modularity(args):
     return max(louvain(R, SEEDS)[1])
 
 
-def weighted_links(f):
+def weighted_links(f, links="credits"):
     ids = set(f["imdb_id"])
     w = defaultdict(int)
     for role, mem in members(ids).items():
+        if role not in LINKS[links]:
+            continue
         for films in mem.values():
             for a, b in combinations(sorted(films & ids), 2):
                 w[(a, b)] += 1
@@ -90,11 +98,12 @@ def main():
     ap.add_argument("--perms", type=int, default=10000)
     ap.add_argument("--set", default="in_common_set", choices=["in_common_set", "usable_money"])
     ap.add_argument("--procs", type=int, default=1)
+    ap.add_argument("--links", default="credits", choices=list(LINKS))
     a = ap.parse_args()
-    out = out_dir(a.set)
+    out = out_dir(a.set, a.links)
     films, genres = load()
     f, keep, M = prepare(films, genres, a.set)
-    G = weighted_links(f)
+    G = weighted_links(f, a.links)
     nodes = sorted(G.nodes())
     rng = np.random.default_rng(SEED)
 
@@ -104,19 +113,9 @@ def main():
     lab = labels(parts[best], nodes)
     seed_nmi = float(np.mean([nmi(lab, labels(p, nodes)) for i, p in enumerate(parts) if i != best]))
 
-    # second methods (igraph), same graph and weights
-    idx = {n: i for i, n in enumerate(nodes)}
-    E = [(idx[u], idx[v]) for u, v in G.edges()]
     W = [d["weight"] for *_, d in G.edges(data=True)]
-    H = ig.Graph(n=len(nodes), edges=E)
-    ig.set_random_number_generator(__import__("random").Random(SEED))
-    leiden = H.community_leiden(objective_function="modularity", weights=W, n_iterations=-1)
-    infomap = H.community_infomap(edge_weights=W, trials=10)
-    methods = [{"method": "Louvain (best of seeds)", "communities": len(set(lab)), "modularity": round(mods[best], 4), "nmi_with_louvain": 1.0}]
-    for name, part in (("Leiden", leiden), ("Infomap", infomap)):
-        m = np.array(part.membership)
-        methods.append({"method": name, "communities": len(set(m)), "modularity": round(H.modularity(m, weights=W), 4),
-                        "nmi_with_louvain": round(float(nmi(lab, m)), 3)})
+    methods = [{"method": "Louvain (best of seeds)", "communities": len(set(lab)), "modularity": round(mods[best], 4),
+                "mean_nmi_with_other_seeds": round(seed_nmi, 3)}]
 
     # null: degree-preserving rewiring, weights shuffled, same Louvain seeds
     w = np.array(W)
@@ -162,7 +161,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(methods).to_csv(out / "methods.csv", index=False)
     pd.DataFrame(tests).to_csv(out / "community_returns.csv", index=False)
-    summary = {"set": a.set, "films": len(f), "films_in_network": len(nodes), "links": G.number_of_edges(), "seeds": SEEDS,
+    summary = {"set": a.set, "link_types": a.links, "films": len(f), "films_in_network": len(nodes), "links": G.number_of_edges(), "seeds": SEEDS,
                "communities": len(set(lab)), "communities_min_size": len(big), "min_size": MIN_SIZE,
                "films_in_big_communities": int(sum(sizes[c] for c in big)),
                "modularity": round(mods[best], 4), "mean_nmi_best_vs_other_seeds": round(seed_nmi, 3),

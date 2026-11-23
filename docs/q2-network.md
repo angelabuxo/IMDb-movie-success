@@ -109,7 +109,8 @@ not a course method.
 
 **2. Communities of the people network built from full IMDb**
 (`analysis/compare/network_communities.py --links full_imdb`). Films: every non-adult film in
-`title.principals` (723,734 films with a link). Links: two films share a director, one of the first three
+`title.principals` with at least one link (656,445 in the run; the 723,734 first written here, from a sizing
+run, counted adult films and films with no link). Links: two films share a director, one of the first three
 billed actors or actresses, or a producer, weighted by the number of shared people. No studio links,
 because IMDb doesn't record studios. Methods as in the 6,346-film run: Louvain over 10 seeds (best
 modularity kept, mean NMI to the other seeds), a null of 50 degree-preserving rewirings with shuffled
@@ -120,6 +121,45 @@ every community with at least 30 of them, against the budget-decile shuffle (10,
 every such community is reported. To separate dropping studios from adding unnoticed films, the
 6,346-film network is also rerun without studio links (`--links no_studio`). Together these answer whether
 people alone, without the studio, form the "production houses".
+
+**3. Communities inside the full network's Hollywood community**
+(`analysis/compare/network_communities_hollywood.py`). Declared on 23 November 2026 after run 2 showed one
+community holding 136,577 films and 5,821 of the 6,346 money films, and before running. Modularity has a resolution
+limit: in a network of 656,445 films, a group the size of Blumhouse's (108 money films in the 6,346-film run) can be
+too small for Louvain to split off, so its absence in run 2 doesn't show it isn't there. The run takes that largest
+community's films and links as they are in run 2 and repeats run 2's methods on them alone: Louvain over 10 seeds,
+50 degree-preserving rewirings with the same seeds, NMI with the rarest genre against 1,000 shuffles, and the
+budget-decile shuffle (10,000 shuffles, Holm) for every sub-community with at least 30 money films, all reported.
+It also reports where the films of each 10,000-vote community fall (the share in its most common sub-community),
+Blumhouse's first.
+
+Result (job run 23 November 2026, 10 seeds, 50 rewirings, 10,000 shuffles). The Hollywood community's 136,577 films
+and 2,394,367 links split into 55 sub-communities with modularity 0.595, against a rewired mean of 0.126 and maximum
+of 0.126 (p = 0.0196, the smallest 50 rewirings allow). The split is less stable than run 2's: the best seed agrees
+with the other nine at NMI 0.505. NMI with the rarest genre is 0.016 against a null 95th percentile of 0.001.
+25 sub-communities hold at least 30 money films (5,615 of the 5,821 inside), and 7 differ from films of the same
+budget after Holm:
+
+| Sub-community (top studios) | Money films | Excess | Holm p |
+|---|---|---|---|
+| Blumhouse; Di Bonaventura; Vertigo | 299 | +0.431 | 0.0025 |
+| Imagine; Amblin; Malpaso | 232 | +0.351 | 0.0025 |
+| Kingdom Story; TriStar; Sherwood (faith films) | 40 | +0.884 | 0.026 |
+| Dog Eat Dog; Broken Lizard (Michael Moore, Jackass) | 31 | +0.971 | 0.027 |
+| Emmett/Furla/Oasis; Tribeca | 308 | -0.318 | 0.0025 |
+| Thunder Road; Constantin | 141 | -0.396 | 0.013 |
+| Columbia; Point Grey; Hydraulx | 55 | -0.842 | 0.0025 |
+
+Of the 10,000-vote network's 16 communities, Blumhouse's stays together: 76% of its 105 films here fall in one
+sub-community. Marvel's 60 films do too (68%), but inside the largest sub-community. The others spread out, with
+23% to 52% in their most common sub-community. NMI with the 10,000-vote communities on 5,796 shared money films is
+0.143, against 0.092 for run 2 as a whole. All rows are in
+`analysis/compare/outputs/communities_hollywood/` (`community_profiles.csv`, `houses_10k.csv`).
+
+What it shows: the houses that earn most, Blumhouse and the Imagine/Amblin group, come back from people alone once the
+national industries are set aside, with smaller gaps than with studio links (Blumhouse +1.06 there). Unlike run 1,
+groups that fall short also pass, so losing houses are visible here too. The low seed agreement means individual
+group boundaries, especially for the small groups, shouldn't be read closely.
 
 Leiden and Infomap are removed from the community runs. They aren't course methods, and Louvain's
 agreement across seeds already measures stability.

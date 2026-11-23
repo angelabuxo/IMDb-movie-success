@@ -1,7 +1,7 @@
 {
  "films": 6346,
  "people_in_teams": 19354,
- "people_found_in_imdb": 18978,
+ "people_found_in_imdb": 18954,
  "imdb_movies_non_adult": 752495,
  "perms": 1000,
  "shuffle": "measure permuted within first genre x budget decile, same OLS refitted"

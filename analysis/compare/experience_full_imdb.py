@@ -4,7 +4,8 @@ scripts/network/film_features.py counts a person's earlier films only among the 
 films that later got 10,000+ IMDb votes. A person with many earlier credits there is partly a person with a
 noticed past. This rebuild keeps the same teams (the graph's directors, writers, producers and first three billed
 actors of each film) and counts every earlier non-adult film (titleType movie) they are credited on in IMDb's
-full title.principals, in any category. Studios and distributors aren't in IMDb, and track records (mean
+full title.principals, in any working role: appearances as themselves ("self") and archive footage or sound don't
+count, since they aren't work on the film (imdb_full_coverage.py found 343,561 "self" rows on movies). Studios and distributors aren't in IMDb, and track records (mean
 ln(gross/budget) of earlier films) need money, which only graph films have: both stay as they are and are tested
 unchanged, for comparison.
 
@@ -16,8 +17,9 @@ unchanged, for comparison.
             the model refitted every time. One measure per model, on the films where it exists.
   Check     Spearman correlation of the two versions of each count, and their medians.
 What this measures: whether a team's earlier output goes with beating the budget once unnoticed films count too.
-What it misses: title.principals lists only each title's principal credits (about ten per film), so long crew
-lists are cut; a person's career is in it only as far as IMDb records it.
+What it misses: title.principals lists each title's principal credits only (a median of 21 rows on 10,000-vote
+films, 7 on unrated ones), and unrated films often have no producer or actor listed, so careers on obscure films
+are undercounted; credits on films with no year can't be dated and are left out (imdb_full_coverage.py).
 Outputs in analysis/compare/outputs/experience_full_imdb/. Numbers only.
 Run (needs IMDb's title.principals.tsv.gz and title.basics.tsv.gz in IMDB_DIR, default DATA/imdb):
   IMDB_DATA_DIR=/path/to/data/raw IMDB_DIR=/path/to/imdb .venv/bin/python -m analysis.compare.experience_full_imdb [--perms 1000]
@@ -42,6 +44,7 @@ OUT = Path(__file__).resolve().parent / "outputs" / "experience_full_imdb"
 PEOPLE = ("director", "writer", "producer", "cast")
 COMPANIES = ("studio", "distributor")
 TOP_CAST = 3
+NOT_WORK = ("self", "archive_footage", "archive_sound")   # appearing as oneself or in old footage isn't work on a film
 
 
 def teams(ids):
@@ -64,9 +67,9 @@ def careers(people, imdb):
     tb = tb[(tb["titleType"] == "movie") & (tb["isAdult"] != "1")]
     year = dict(zip(tb["tconst"], pd.to_numeric(tb["startYear"], errors="coerce")))
     hist = defaultdict(set)
-    for ch in pd.read_csv(imdb / "title.principals.tsv.gz", sep="\t", usecols=["tconst", "nconst"], dtype=str,
+    for ch in pd.read_csv(imdb / "title.principals.tsv.gz", sep="\t", usecols=["tconst", "nconst", "category"], dtype=str,
                           chunksize=5_000_000, quoting=3):
-        ch = ch[ch["nconst"].isin(people) & ch["tconst"].isin(year.keys())]
+        ch = ch[ch["nconst"].isin(people) & ch["tconst"].isin(year.keys()) & ~ch["category"].isin(NOT_WORK)]
         for p, t in zip(ch["nconst"], ch["tconst"]):
             hist[p].add(t)
     return {p: sorted(year[t] for t in ts if year[t] == year[t]) for p, ts in hist.items()}, len(year)
