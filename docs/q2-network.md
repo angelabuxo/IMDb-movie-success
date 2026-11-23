@@ -87,6 +87,43 @@ Each community table reports film count, sum, mean, median, minimum, maximum and
 community partitions use the untruncated weighted graph among displayed films; the edge
 slider only limits which links are drawn.
 
+## Post-hoc robustness runs on full IMDb careers
+
+Declared on 23 November 2026, before either run. Both are post-hoc: they were chosen after seeing the
+main results, to check whether counting careers only through films with 10,000+ IMDb votes changes them.
+Every result below is reported, whichever way it falls.
+
+**1. Experience counted from full careers** (`analysis/compare/experience_full_imdb.py`).
+`film_network_features.csv` counts a person's earlier films only among films with 10,000+ votes. The
+rebuild counts every earlier non-adult film (`titleType` movie) the person is credited on in IMDb's full
+`title.principals` and `title.basics`. Teams are the same people as before: directors, writers, producers
+and the first three billed actors. Studios and distributors aren't in IMDb, so their experience stays as it
+was. Track records (mean ln(gross/budget) of earlier films) need money, which only the 10,000-vote films
+have, so they stay as they were. The test is the one used for the genre specialists
+(`q1_before_release.py`): on the 6,346 `usable_money` films, the OLS coefficient per SD of each measure on
+ln(gross/budget) net of budget decile x era, with genre dummies and the sequel flag, and a p-value from
+1,000 shuffles of the measure within first genre x budget decile, the model refitted every time. Both
+versions of each experience count are tested, plus the unchanged track records for comparison. The
+out-of-time ridge R² (−0.009 → 0.192) is dropped from the paper rather than recomputed, because ridge is
+not a course method.
+
+**2. Communities of the people network built from full IMDb**
+(`analysis/compare/network_communities.py --links full_imdb`). Films: every non-adult film in
+`title.principals` (723,734 films with a link). Links: two films share a director, one of the first three
+billed actors or actresses, or a producer, weighted by the number of shared people. No studio links,
+because IMDb doesn't record studios. Methods as in the 6,346-film run: Louvain over 10 seeds (best
+modularity kept, mean NMI to the other seeds), a null of 50 degree-preserving rewirings with shuffled
+weights and the same 10 seeds each, and NMI with each film's rarest IMDb genre against 1,000 genre shuffles.
+Louvain runs in igraph (`community_multilevel`), the same algorithm as networkx's, because networkx takes
+about 85 minutes per run on 23 million links. Returns are tested only on the 6,346 `usable_money` films:
+every community with at least 30 of them, against the budget-decile shuffle (10,000 shuffles, Holm), and
+every such community is reported. To separate dropping studios from adding unnoticed films, the
+6,346-film network is also rerun without studio links (`--links no_studio`). Together these answer whether
+people alone, without the studio, form the "production houses".
+
+Leiden and Infomap are removed from the community runs. They aren't course methods, and Louvain's
+agreement across seeds already measures stability.
+
 ## How to verify
 
 Re-run the script from the repo root:

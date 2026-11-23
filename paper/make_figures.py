@@ -19,10 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
 
-# Hard-coded inputs. tests/test_paper_numbers.py checks both against their sources, so a rerun that moves them fails.
-# Fig. 1A: out-of-time R2 (train <= 2010, test 2011-2017), ridge; notebooks/what_predicts_profit.ipynb summary.
-LADDER = [("Budget,\nyear,\ngenre", -0.009), ("+ net-\nwork", 0.192), ("+ month,\nfran-\nchise", 0.234),
-          ("+ critics,\naudi-\nence*", 0.305)]
+# Hard-coded input. tests/test_paper_numbers.py checks it against its source, so a rerun that moves it fails.
+# (The out-of-time ridge R2 ladder that was Fig. 1A is gone: ridge isn't a course method.)
 # Fig. 3: analysis/reviews/outputs/spearman_correlations.csv (branch reviews-exploration): Spearman rho with
 # ln(gross/budget) on films to 2017, and the mean and SD of a null that shuffles within genre x decade.
 RECEPTION = [("IMDb rating", 0.266, 0.099, 0.018), ("Metacritic", 0.261, 0.089, 0.020),
@@ -42,21 +40,11 @@ def panel(ax, letter):
 
 
 def fig_network():
-    ladder = LADDER
-    # B: return similarity by role, adjusted for ln budget, decade and genre (analysis/network/roi_similarity.json).
+    # Return similarity by role, adjusted for ln budget, decade and genre (analysis/network/roi_similarity.json).
     r = json.loads((ROOT / "analysis/network/roi_similarity.json").read_text())["results"]
     adj, ws = r["adjusted"]["roles"], r["adjusted_within_studio"]["roles"]
     roles = sorted(adj, key=lambda k: adj[k]["similarity"])
-    fig, (a, b) = plt.subplots(1, 2, figsize=(7.0, 2.3), gridspec_kw={"width_ratios": [1, 1.35], "wspace": 0.45})
-    x = np.arange(len(ladder))
-    a.bar(x, [v for _, v in ladder], color=[GREY, ACCENT, ACCENT, LIGHT], edgecolor=INK, linewidth=0.4, width=0.65)
-    for i, (_, v) in enumerate(ladder):
-        a.text(i, v + 0.008 if v > 0 else 0.008, f"{v:.2f}", ha="center", fontsize=6.5)
-    a.axhline(0, color=INK, lw=0.5)
-    a.set_xticks(x, [k for k, _ in ladder])
-    a.set_ylabel("Out-of-sample $R^2$, ln(gross/budget)")
-    a.set_title("Films 2011–2017, model fitted on films to 2010")
-    panel(a, "A")
+    fig, b = plt.subplots(figsize=(4.0, 2.3))
     y = np.arange(len(roles))
     b.barh(y, [adj[k]["similarity"] for k in roles], color=ACCENT, height=0.6, label="Observed")
     b.scatter([adj[k]["similarity_null_95"] for k in roles], y, marker="|", s=60, color=INK, zorder=3,
@@ -68,7 +56,6 @@ def fig_network():
     b.set_xlabel("Return similarity of films sharing the role (ICC-like)")
     b.set_title("Films sharing a person or company have similar returns")
     b.legend(frameon=False, fontsize=6, loc="upper center", bbox_to_anchor=(0.45, -0.22), ncol=3)
-    panel(b, "B")
     fig.savefig(OUT / "fig_network.pdf", bbox_inches="tight")
 
 
