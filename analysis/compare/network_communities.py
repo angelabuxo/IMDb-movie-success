@@ -1,0 +1,155 @@
+"""Communities in the people network (Q2): are they real, do they follow genre, and do any beat their budgets?
+
+The reproducible version of the community comparison on the film-network explorer page (explorer/graph_pages.py,
+movie_network): the same four kinds of shared credit, but on the fixed film set and links of Q2's test
+(scripts/network/q2_network.py), so it describes the network in the paper's Fig. 2. Course methods only (week 4
+communities and modularity, week 2 nulls).
+
+  Films     in_common_set (1,598), Q2's primary set. Films with no link are left out of the communities.
+  Links     two films are linked when they share a director, one of the first three billed actors, a producer or a
+            studio (network_by_genre.members, as in Q2); weight = the number of people and studios they share.
+  Methods   Louvain over SEEDS seeds (the best modularity is kept; mean NMI to the other seeds = stability). Leiden
+            (modularity) and Infomap as second methods, compared with Louvain by NMI.
+  Null      the same network rewired with every film's degree kept (double edge swaps) and the weights shuffled,
+            REWIRES times, Louvain with the same SEEDS on each; p = share of rewirings reaching the observed modularity.
+  Genre     NMI of the Louvain communities with each film's rarest IMDb genre (as q1_categories does), against the
+            same NMI after shuffling genres between films PERMS times.
+  Returns   each community with at least MIN_SIZE films: mean ln(gross / budget) against the budget-decile shuffle of
+            q1_genre (PERMS shuffles), Holm over the communities, as Q1 tests genres.
+What this measures: whether shared credits split the films into groups that are tighter than chance, how much those
+groups are genres, and whether any group earns differently from films of the same budget. Communities describe
+the network; they don't explain why a group earns more.
+Run:  IMDB_DATA_DIR=/path/to/data/raw .venv/bin/python -m analysis.compare.network_communities
+"""
+from __future__ import annotations
+
+import argparse
+import json
+from collections import Counter, defaultdict
+from itertools import combinations
+from pathlib import Path
+
+import igraph as ig
+import networkx as nx
+import numpy as np
+import pandas as pd
+from sklearn.metrics import normalized_mutual_info_score as nmi
+
+from analysis.compare.network_by_genre import members
+from analysis.genre.q1_categories import shuffle_test
+from analysis.genre.q1_genre import SEED, load, prepare
+
+OUT = Path(__file__).resolve().parent / "outputs" / "communities"
+SEEDS = 10
+REWIRES = 50
+MIN_SIZE = 30
+
+
+def weighted_links(f):
+    ids = set(f["imdb_id"])
+    w = defaultdict(int)
+    for role, mem in members(ids).items():
+        for films in mem.values():
+            for a, b in combinations(sorted(films & ids), 2):
+                w[(a, b)] += 1
+    G = nx.Graph()
+    G.add_weighted_edges_from((a, b, float(x)) for (a, b), x in w.items())
+    return G
+
+
+def louvain(G, seeds):
+    parts = [nx.community.louvain_communities(G, weight="weight", seed=s) for s in range(seeds)]
+    mods = [nx.community.modularity(G, p, weight="weight") for p in parts]
+    return parts, mods
+
+
+def labels(part, nodes):
+    lab = {n: k for k, c in enumerate(part) for n in c}
+    return np.array([lab[n] for n in nodes])
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--perms", type=int, default=10000)
+    a = ap.parse_args()
+    films, genres = load()
+    f, keep, M = prepare(films, genres, "in_common_set")
+    G = weighted_links(f)
+    nodes = sorted(G.nodes())
+    rng = np.random.default_rng(SEED)
+
+    # Louvain, stability over seeds
+    parts, mods = louvain(G, SEEDS)
+    best = int(np.argmax(mods))
+    lab = labels(parts[best], nodes)
+    seed_nmi = float(np.mean([nmi(lab, labels(p, nodes)) for i, p in enumerate(parts) if i != best]))
+
+    # second methods (igraph), same graph and weights
+    idx = {n: i for i, n in enumerate(nodes)}
+    E = [(idx[u], idx[v]) for u, v in G.edges()]
+    W = [d["weight"] for *_, d in G.edges(data=True)]
+    H = ig.Graph(n=len(nodes), edges=E)
+    ig.set_random_number_generator(__import__("random").Random(SEED))
+    leiden = H.community_leiden(objective_function="modularity", weights=W, n_iterations=-1)
+    infomap = H.community_infomap(edge_weights=W, trials=10)
+    methods = [{"method": "Louvain (best of seeds)", "communities": len(set(lab)), "modularity": round(mods[best], 4), "nmi_with_louvain": 1.0}]
+    for name, part in (("Leiden", leiden), ("Infomap", infomap)):
+        m = np.array(part.membership)
+        methods.append({"method": name, "communities": len(set(m)), "modularity": round(H.modularity(m, weights=W), 4),
+                        "nmi_with_louvain": round(float(nmi(lab, m)), 3)})
+
+    # null: degree-preserving rewiring, weights shuffled, same Louvain seeds
+    w = np.array(W)
+    null_mod = []
+    for s in range(REWIRES):
+        R = nx.Graph(G)
+        nx.double_edge_swap(R, nswap=5 * R.number_of_edges(), max_tries=10 ** 7, seed=SEED + s)
+        for (u, v), x in zip(R.edges(), rng.permutation(w)):
+            R[u][v]["weight"] = float(x)
+        null_mod.append(max(louvain(R, SEEDS)[1]))
+    null_mod = np.array(null_mod)
+
+    # genre: NMI with each film's rarest IMDb genre, against shuffled genres
+    pos = {t: i for i, t in enumerate(f["imdb_id"])}
+    rows_f = np.array([pos[n] for n in nodes])
+    Mg = M[rows_f]
+    rar = M.sum(0)
+    rare = np.array([np.argmin(np.where(m > 0, rar, np.inf)) for m in Mg])
+    g_nmi = float(nmi(lab, rare))
+    g_null = np.array([nmi(lab, rng.permutation(rare)) for _ in range(1000)])
+
+    # returns per community, against the budget-decile shuffle on all common-set films
+    sizes = Counter(lab)
+    big = [c for c, n in sizes.most_common() if n >= MIN_SIZE]
+    Wc = np.zeros((len(f), len(big)))
+    for j, c in enumerate(big):
+        Wc[rows_f[lab == c], j] = 1
+    names = []                         # label: the genre most over-represented in the community (lift), with its share
+    base = Mg.mean(0)
+    for j, c in enumerate(big):
+        share = Mg[lab == c].mean(0)
+        lift = np.where(Mg[lab == c].sum(0) >= 10, share / base, 0)
+        k = int(np.argmax(lift))
+        names.append(f"{j + 1}: {keep[k]} {share[k]:.0%} (all films {base[k]:.0%}), {sizes[big[j]]} films")
+    tests = shuffle_test(f, f["ln_gross_over_budget"].to_numpy(), Wc, names, a.perms, SEED + 77, "people-network community")
+
+    OUT.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(methods).to_csv(OUT / "methods.csv", index=False)
+    pd.DataFrame(tests).to_csv(OUT / "community_returns.csv", index=False)
+    summary = {"films": len(f), "films_in_network": len(nodes), "links": G.number_of_edges(), "seeds": SEEDS,
+               "communities": len(set(lab)), "communities_min_size": len(big), "min_size": MIN_SIZE,
+               "films_in_big_communities": int(sum(sizes[c] for c in big)),
+               "modularity": round(mods[best], 4), "mean_nmi_best_vs_other_seeds": round(seed_nmi, 3),
+               "rewires": REWIRES, "rewired_modularity_mean": round(float(null_mod.mean()), 4),
+               "rewired_modularity_max": round(float(null_mod.max()), 4),
+               "modularity_p": round(float((1 + (null_mod >= mods[best]).sum()) / (1 + REWIRES)), 4),
+               "nmi_with_rarest_genre": round(g_nmi, 3), "nmi_genre_null_95": round(float(np.quantile(g_null, .95)), 3),
+               "nmi_genre_p": round(float((1 + (g_null >= g_nmi).sum()) / 1001), 4), "perms": a.perms}
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=1))
+    print(json.dumps(summary, indent=1))
+    print(pd.DataFrame(methods).to_string(index=False))
+    print(pd.DataFrame(tests).sort_values("excess").to_string(index=False))
+
+
+if __name__ == "__main__":
+    main()

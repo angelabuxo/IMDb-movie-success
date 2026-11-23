@@ -240,6 +240,19 @@ class Sources:
     def nbx(self, sample, role, split, col="assortativity"):
         return self.nbg.loc[(sample, role, split), col]
 
+    # ---- communities of the people network (analysis/compare/network_communities.py) ----
+    @cached_property
+    def com(self):
+        return self._json("compare/outputs/communities/summary.json")
+
+    @cached_property
+    def com_methods(self):
+        return pd.read_csv(A / "compare/outputs/communities/methods.csv").set_index("method")
+
+    @cached_property
+    def com_ret(self):
+        return pd.read_csv(A / "compare/outputs/communities/community_returns.csv")
+
     def money(self, score):
         return self.rev_rho[("log_gross_over_budget", score)]
 
@@ -334,6 +347,21 @@ CLAIMS = [
      lambda s: [6346, s.nbx("usable_money", "producer", "same genre"), s.nbx("usable_money", "producer", "different genre"),
                 s.nbx("usable_money", "studio", "same genre"), s.nbx("usable_money", "studio", "different genre")]
      if all(s.nbx("usable_money", r, "same minus different", "p") < .05 for r in ("producer", "studio")) else [None]),
+    ("communities", "finds @ groups among the @ linked films, with modularity @ against at most @ for the network rewired with every film's degree kept, and @ seeds agree with NMI @",
+     lambda s: [s.com["communities"], s.com["films_in_network"], s.com["modularity"], s.com["rewired_modularity_max"],
+                s.com["seeds"], s.com["mean_nmi_best_vs_other_seeds"]] if s.com["modularity_p"] < .05 else [None]),
+    ("community methods", "Leiden (NMI @ with Louvain) and Infomap (@) find much the same split",
+     lambda s: [s.com_methods.loc["Leiden", "nmi_with_louvain"], s.com_methods.loc["Infomap", "nmi_with_louvain"]]),
+    ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
+     lambda s: [s.com["nmi_with_rarest_genre"], s.com["nmi_genre_null_95"]] if s.com["nmi_genre_p"] < .05 else [None]),
+    ("community returns", r"only one of the @ communities with at least @ films differs from films of the same budget, a group with twice the usual share of biographies ($-@$)",
+     lambda s: [s.com["communities_min_size"], s.com["min_size"],
+                -s.com_ret[s.com_ret.p_holm < .05].iloc[0].excess] if (s.com_ret.p_holm < .05).sum() == 1
+                and "Biography" in s.com_ret[s.com_ret.p_holm < .05].iloc[0].category else [None]),
+    ("community horror", "The three groups that lean towards horror sit above their budgets (+@ to +@) but do not pass",
+     lambda s: (lambda h: [h.excess.min(), h.excess.max()] if len(h) == 3 and (h.p_holm >= .05).all() else [None])(
+                s.com_ret[s.com_ret.category.str.contains("Horror")])),
+    ("methods communities", "against @ rewirings that keep every film's degree", lambda s: [s.com["rewires"]]),
     # Results: head to head (analysis/compare/head_to_head.py)
     ("h2h setup", "On the same @ films we built three networks", lambda s: [s.h2h_sum["films"]]),
     ("h2h k", "each script linked to its @ nearest scripts", lambda s: [s.h2h_sum["k_script"]]),

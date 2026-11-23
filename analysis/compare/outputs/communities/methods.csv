@@ -1,0 +1,4 @@
+method,communities,modularity,nmi_with_louvain
+Louvain (best of seeds),17,0.4827,1.0
+Leiden,15,0.4875,0.735
+Infomap,81,0.4563,0.682
