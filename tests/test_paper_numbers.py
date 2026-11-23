@@ -315,6 +315,14 @@ class Sources:
     def cov_crew(self):
         return pd.read_csv(A / "compare/outputs/imdb_full_coverage/crew_vs_principals.csv").set_index(["role", "vote_tier"])
 
+    @cached_property
+    def notice(self):
+        return pd.read_csv(A / "compare/outputs/notice_track_imdb/notice_tests.csv").set_index("measure")
+
+    @cached_property
+    def notice_chk(self):
+        return pd.read_csv(A / "compare/outputs/notice_track_imdb/notice_check.csv")
+
     def comH_sub(self, studio):
         d = self.comH_prof
         return d[d.top_studios.str.startswith(studio)].iloc[0]
@@ -473,6 +481,13 @@ CLAIMS = [
          s.cov_tier.loc["no rating"], s.cov_tier.loc["10,000+"], s.cov["careers"])),
     ("coverage crew", r"@\% of the directors in IMDb's separate crew list appear among them",
      lambda s: [100 * s.cov_crew.loc[("director", "all"), "share_in_principals"]]),
+    ("notice track", r"stayed under 1,000 votes do worse ($-@$ per standard deviation, $p=@$), and producers and directors whose earlier films are rated higher do better (+@ and +@, $p=@$ and $p=@$)",
+     lambda s: (lambda n: [-n.loc["producer_unnoticed", "coef_per_sd"], n.loc["producer_unnoticed", "shuffle_p"],
+                           n.loc["producer_rating", "coef_per_sd"], n.loc["director_rating", "coef_per_sd"],
+                           n.loc["producer_rating", "shuffle_p"], n.loc["director_rating", "shuffle_p"]]
+                if all(n.loc[f"{g}_{k}", "shuffle_p"] > .05 for g in ("writer", "cast") for k in ("unnoticed", "rating")) else [None])(s.notice)),
+    ("notice vs money", r"These traces barely follow the money records (Spearman at most @)",
+     lambda s: [s.notice_chk.spearman_with_money_track.abs().max()]),
     ("robustness methods", r"their returns are tested on the @ films only", lambda s: [s.comF["usable_films"]]),
     ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
      lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),

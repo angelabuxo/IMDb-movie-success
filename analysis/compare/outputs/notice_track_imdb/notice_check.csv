@@ -1,0 +1,9 @@
+group,measure,films_with_both,spearman_with_money_track
+director,unnoticed,3849,0.016
+director,rating,3849,0.047
+writer,unnoticed,3809,-0.019
+writer,rating,3808,0.093
+producer,unnoticed,4802,-0.123
+producer,rating,4802,0.185
+cast,unnoticed,5113,0.047
+cast,rating,5113,0.018

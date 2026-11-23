@@ -1,0 +1,9 @@
+{
+ "films": 6346,
+ "people_in_teams": 19354,
+ "people_found_in_imdb": 18856,
+ "imdb_movies_dated_non_adult": 639712,
+ "unnoticed_votes_below": 1000,
+ "perms": 1000,
+ "shuffle": "measure permuted within first genre x budget decile, same OLS refitted"
+}
