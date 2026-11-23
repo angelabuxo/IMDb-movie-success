@@ -1,0 +1,17 @@
+run,category,films,mean,excess,z,p_holm
+people-network community,"1: Fantasy 15% (all films 9%), 175 films",175.0,0.9777,0.0082,0.12,1.0
+people-network community,"2: Drama 76% (all films 55%), 171 films",171.0,0.9531,-0.0851,-0.97,1.0
+people-network community,"3: Biography 21% (all films 10%), 146 films",146.0,0.735,-0.3166,-3.2,0.0272
+people-network community,"4: Romance 21% (all films 14%), 121 films",121.0,0.9426,0.0241,0.28,1.0
+people-network community,"5: Crime 28% (all films 21%), 114 films",114.0,0.8251,-0.1508,-1.45,1.0
+people-network community,"6: Fantasy 16% (all films 9%), 108 films",108.0,0.9046,-0.0433,-0.46,1.0
+people-network community,"7: Adventure 36% (all films 21%), 107 films",107.0,1.1884,0.2009,2.12,0.49555
+people-network community,"8: Sci-Fi 26% (all films 10%), 102 films",102.0,1.0011,0.0512,0.53,1.0
+people-network community,"9: Biography 15% (all films 10%), 89 films",89.0,0.9038,-0.08,-0.67,1.0
+people-network community,"10: Horror 20% (all films 12%), 88 films",88.0,1.1302,0.1348,1.11,1.0
+people-network community,"11: Horror 28% (all films 12%), 88 films",88.0,1.3266,0.2911,2.38,0.26397
+people-network community,"12: Sci-Fi 21% (all films 10%), 81 films",81.0,1.2814,0.2454,2.07,0.49555
+people-network community,"13: Crime 35% (all films 21%), 55 films",55.0,0.8128,-0.1954,-1.32,1.0
+people-network community,"14: Horror 40% (all films 12%), 50 films",50.0,1.4162,0.2981,1.63,1.0
+people-network community,"15: Action 50% (all films 27%), 48 films",48.0,0.9461,-0.0316,-0.21,1.0
+people-network community,"16: Action 53% (all films 27%), 34 films",34.0,1.1241,-0.0445,-0.24,1.0
