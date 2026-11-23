@@ -369,8 +369,9 @@ CLAIMS = [
      lambda s: (lambda r: [r.films, r.median_budget_musd] if r.p_holm < .05 and r.top_studios.startswith("Film4")
                 and "BBC Film" in r.top_studios and (s.com_prof.p_holm < .05).sum() == 1 else [None])(
                 s.com_prof[s.com_prof.p_holm < .05].iloc[0])),
-    ("community horror houses", "form around Blumhouse (+@) and around New Line with Wes Craven (+@)",
-     lambda s: (lambda t: [t.iloc[0].excess, t.iloc[1].excess] if t.iloc[0].top_studios.startswith("Blumhouse")
+    ("community horror houses", r"the later \emph{Halloween} films; median budget \$@M, +@). The other forms around New Line Cinema, home of Wes Craven's \emph{A Nightmare on Elm Street} and \emph{Scream}, of \emph{The Conjuring}, \emph{Annabelle} and \emph{It}, and also of Peter Jackson's Middle-earth films (+@)",
+     lambda s: (lambda t: [t.iloc[0].median_budget_musd, t.iloc[0].excess, t.iloc[1].excess] if t.iloc[0].top_studios.startswith("Blumhouse")
+                and "Jason Blum" in t.iloc[0].top_producers and "Peter Jackson" in t.iloc[1].top_directors
                 and t.iloc[1].top_studios.startswith("New Line") and "Wes Craven" in t.iloc[1].top_directors
                 and (t.iloc[:2].p_holm >= .05).all() else [None])(s.com_prof.sort_values("excess", ascending=False))),
     ("methods communities", "against @ rewirings that keep every film's degree", lambda s: [s.com["rewires"]]),
