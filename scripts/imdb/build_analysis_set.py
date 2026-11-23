@@ -173,7 +173,6 @@ def dictionary(rows):
     ft = Counter(r["tier"] for r in final)
     ng = sum(1 for r in team if r["net_gross_flag"])
     bf = sum(1 for r in team if r["budget_flag"] and not r["net_gross_flag"])
-    mixed = sum(1 for r in rows if r["clean_team_rule"] and r["usable_money"] is False)
     by_tier = {t: sum(1 for r in team if r["tier"] == t) for t in tier}
     nd = sum(1 for r in team_not_usable if r["tier"] == "100k+")
     ratio = [r for r in rows if r["usable_ratio_same_currency"]]

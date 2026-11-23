@@ -16,9 +16,7 @@ words and counts only) and outputs/s04_summary.json.
 """
 from __future__ import annotations
 
-import io
 import json
-import zipfile
 from collections import Counter
 
 import numpy as np
@@ -26,7 +24,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer
 
 from . import clean as C
-from .paths import GENOME, OUTPUTS, PRIVATE, cfg
+from .paths import OUTPUTS, PRIVATE, cfg
 
 TOP = 50
 PROPER_SHARE = 0.8

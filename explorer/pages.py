@@ -1087,10 +1087,10 @@ def inspector():
         col = st.selectbox("Column", df.columns)
         s = df[col]
         if pd.api.types.is_numeric_dtype(s):
-            log = st.toggle("Log scale (positive values)", False)
-            v = np.log10(s[s > 0]) if log else s
+            log_scale = st.toggle("Log scale (positive values)", False)
+            v = np.log10(s[s > 0]) if log_scale else s
             st.plotly_chart(px.histogram(v.dropna(), nbins=80, template="simple_white", height=380,
-                                         title=f"{'log10 ' if log else ''}{col}"), width="stretch")
+                                         title=f"{'log10 ' if log_scale else ''}{col}"), width="stretch")
             st.dataframe(s.describe().to_frame().T, width="stretch")
         vc = s.astype(str).value_counts(dropna=False).head(50).rename_axis("value").reset_index()
         st.markdown("**Most common values**")

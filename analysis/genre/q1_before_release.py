@@ -21,7 +21,7 @@ version (q1_scripts_network.py, now gone; its numbers are in git history), which
   B typicality    Cosine of a script's embedding (all-MiniLM-L6-v2, character labels removed) to the leave-one-out mean
                   of the other scripts in each of its genres, averaged, minus its cosine to the mean of all scripts.
                   Same outcome and controls, plus script-quality controls from Q3's data check
-                  (scripts-analysis/data_check): log tokens, dialogue share, unparsed share, scene headings inside
+                  (analysis/screenplays/data_check): log tokens, dialogue share, unparsed share, scene headings inside
                   dialogue, upper-case and punctuation shares of the description, a tiny-layer flag, and on the final
                   1,598 films the symbol-noise share. If typicality only measured clean script files, the quality
                   controls would take its coefficient away.
@@ -40,17 +40,13 @@ import numpy as np
 import pandas as pd
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, ROOT, SEED, load, prepare
+from analysis.genre.q1_tmdb import net_return
 
 OUT = MAIN_OUT / "before_release"
 ROLES = ("director", "writer", "producer")
 ACTOR = ("actor", "actress")
 TOP_ACTORS = 3
-CHECK = ROOT / "scripts-analysis" / "data_check"
-
-
-def net_return(f):
-    cell = f["budget_bin"].astype(str) + "|" + f["era_bin"].astype(str)
-    return (f["ln_gross_over_budget"] - f.groupby(cell)["ln_gross_over_budget"].transform("mean")).to_numpy()
+CHECK = ROOT / "analysis" / "screenplays" / "data_check"
 
 
 def sequel_flag(f):
@@ -110,7 +106,7 @@ def imdb_tables(f, keep):
     mg = {t: [gi[g] for g in str(gs).split(",") if g in gi] for t, gs in zip(movies["tconst"], movies["genres"])}
     myear = dict(zip(movies["tconst"], movies["year"]))
     usable = set(f["imdb_id"])
-    team_rows, chunks = [], []
+    chunks = []
     for ch in pd.read_csv(base / "title.principals.tsv.gz", sep="\t", usecols=["tconst", "ordering", "nconst", "category"],
                           dtype={"tconst": str, "nconst": str, "category": str}, chunksize=5_000_000, quoting=3):
         ch = ch[ch["category"].isin(ROLES + ACTOR) & ch["tconst"].isin(myear.keys())]
@@ -189,7 +185,7 @@ def specialists(films, genres, f, keep, M, perms):
 
 
 def quality(ids):
-    """Script-quality measures from scripts-analysis/data_check, by IMDb id."""
+    """Script-quality measures from analysis/screenplays/data_check, by IMDb id."""
     ls = pd.read_csv(CHECK / "layer_stats.csv").drop_duplicates("imdb_id").set_index("imdb_id")
     elements = ls[[c for c in ls.columns if c.endswith("_elements")]].sum(axis=1)
     q = pd.DataFrame({

@@ -28,7 +28,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from analysis.compare.experience_full_imdb import PEOPLE, teams
+from analysis.compare.experience_full_imdb import teams
 from analysis.genre.q1_genre import DATA, SEED, load, prepare
 
 OUT = Path(__file__).resolve().parent / "outputs" / "imdb_full_coverage"

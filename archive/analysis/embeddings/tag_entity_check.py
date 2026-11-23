@@ -19,16 +19,12 @@ Writes outputs/tag_entity_check.csv (tag names and numbers only).
 """
 from __future__ import annotations
 
-import io
-import json
 import re
-import zipfile
 from collections import Counter
 
 import pandas as pd
 
-from . import clean as C
-from .paths import GENOME, OUTPUTS, PRIVATE, REPO
+from .paths import OUTPUTS, PRIVATE, REPO
 
 TAGS = REPO / "archive" / "analysis" / "tags" / "tag_profit_tags.csv"
 FEW_FILMS = 30

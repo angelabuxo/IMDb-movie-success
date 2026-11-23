@@ -11,7 +11,6 @@ import json
 import re
 from collections import Counter
 from itertools import combinations
-from pathlib import Path
 
 import igraph as ig
 import numpy as np
@@ -21,7 +20,7 @@ import scipy.sparse as sp
 import streamlit as st
 
 from . import nav
-from .common import DATA, FEATURES, OUTPUT_DIRS, REPO, md, missing, mtime, show_df, table
+from .common import DATA, FEATURES, OUTPUT_DIRS, REPO, md, mtime, show_df, table
 
 GRAPH = FEATURES / "graph"
 NODES, EDGES = GRAPH / "nodes.csv", GRAPH / "edges.csv"

@@ -13,7 +13,7 @@ import importlib
 import sys
 
 import nbformat as nbf
-from nbconvert.preprocessors import ClearOutputPreprocessor, ExecutePreprocessor, TagRemovePreprocessor
+from nbconvert.preprocessors import ExecutePreprocessor, TagRemovePreprocessor
 
 from .paths import REPO
 from .report import Fig, Md, Private, Reading, Run, Table, nb_md, takeaway_text

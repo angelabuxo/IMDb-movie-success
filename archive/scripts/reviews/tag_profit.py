@@ -60,7 +60,6 @@ tag_profit_pairs.csv in the repo: numbers only.
 import csv
 import itertools
 import json
-import math
 import re
 from pathlib import Path
 

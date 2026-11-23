@@ -37,7 +37,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, holm, load, permuted_means, prepare, strata
+from analysis.genre.q1_genre import DATA, SEED, holm, load, permuted_means, prepare, strata
 from analysis.genre.exploratory import EXP_OUT
 from analysis.genre.exploratory.q1_shares import cv_r2
 

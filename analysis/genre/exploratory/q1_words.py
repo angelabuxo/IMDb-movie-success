@@ -10,7 +10,7 @@ don't? (Course week 6, comparing groups of documents.) Added after the main resu
             word is dropped when more than half of its uses across all usable-money plots are capitalised in the
             middle of a sentence. A word must appear in at least MIN_DF labelled films.
   Statistic the log-odds ratio with an informative Dirichlet prior (Monroe, Colaresi and Quinn 2008; the one
-            Scattertext calls LogOddsRatioInformativeDirichletPrior, as in Q3's scripts-analysis/words/words.py),
+            Scattertext calls LogOddsRatioInformativeDirichletPrior, as in Q3's analysis/screenplays/words/words.py),
             prior = the word's count over all usable-money plots, reported as a z-score.
   Null      hit/flop labels shuffled 1000 times among the labelled films within budget deciles; words ranked by the
             shuffle-calibrated z, a family-wise check on the largest |z|, and a list-level test of the k-th largest.
@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
-from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, load, prepare
+from analysis.genre.q1_genre import DATA, SEED, load, prepare
 from analysis.genre.exploratory import EXP_OUT
 
 OUT = EXP_OUT / "words"

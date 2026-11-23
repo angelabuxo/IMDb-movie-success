@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from .paths import OUTPUTS, PRIVATE, VECTORS, film_table
+from .paths import OUTPUTS, VECTORS, film_table
 
 LOW, HIGH, NEUTRAL, ACCENT = "#D55E00", "#0072B2", "#999999", "#009E73"
 FONT = dict(family="Inter, Helvetica, Arial, sans-serif", size=13)

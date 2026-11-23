@@ -1,6 +1,6 @@
 """Fetch current English Wikipedia wikitext for movies with 100k+ IMDb votes.
 Resumable: titles already in the output are skipped. Run from build/imdb."""
-import csv,json,os,sys,time,urllib.error,urllib.parse as U,urllib.request as R
+import csv,json,os,time,urllib.error,urllib.parse as U,urllib.request as R
 UA='DTU-02805-course-project (https://github.com/horrrt/02805_social_graphs)'
 OUT='wiki/articles_10k.jsonl'
 mov={r['tconst']:r for r in csv.DictReader(open('wiki/movies_10k.csv'))}

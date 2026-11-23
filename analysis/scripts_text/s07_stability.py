@@ -11,7 +11,7 @@ from . import s04_controls, s05_scatter, s06_null
 from . import textstats as ts
 from .config import cfg, log_run
 from .paths import OUTPUTS
-from .report import ACCENT, HIGH, HIGH_SYMBOL, LOW, LOW_SYMBOL, Fig, Md, Reading, Run, Table, style
+from .report import HIGH, HIGH_SYMBOL, LOW, LOW_SYMBOL, Fig, Md, Reading, Run, Table, style
 
 SURVIVAL = OUTPUTS / "s07_survival.csv"
 MATCHED = OUTPUTS / "s07_matched.csv"

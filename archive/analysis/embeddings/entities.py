@@ -18,7 +18,6 @@ from collections import Counter
 
 import pandas as pd
 
-from . import clean as C
 
 COARSE = {"PERSON": "person", "ORG": "org", "WORK_OF_ART": "work", "PRODUCT": "work", "LAW": "work",
           "GPE": "place", "LOC": "place", "FAC": "place", "NORP": "group", "LANGUAGE": "group",

@@ -10,7 +10,7 @@ import pandas as pd
 import streamlit as st
 
 from analysis.embeddings import report as R
-from analysis.embeddings.paths import OUTPUTS, PRIVATE, VECTORS, film_table
+from analysis.embeddings.paths import OUTPUTS, VECTORS, film_table
 
 from .common import md, missing, mtime, show_df
 
