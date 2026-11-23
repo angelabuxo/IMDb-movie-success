@@ -15,7 +15,6 @@ Run:  python3 -I scripts-analysis/data_check/prevalence.py
 """
 import csv
 import re
-import statistics
 import sys
 from pathlib import Path
 

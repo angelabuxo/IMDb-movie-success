@@ -13,7 +13,7 @@ Run:  python3 -I scripts-analysis/genre_counts/shared_rule_check.py
 """
 import csv
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -116,7 +116,7 @@ def analyse(name, rows, scripts, tiny, tiers=None):
         small = {k: n for k, n in cells.items() if n < MIN_CELL}
         small_main = {k: n for k, n in small.items() if k[0] in MAIN}
         print(f"\n-- era bins: {binname}")
-        print(f"   films per era bin (distinct films): " + ", ".join(f"{e} {sum(1 for f in films if era_fn(f) == e)}" for e in eras))
+        print("   films per era bin (distinct films): " + ", ".join(f"{e} {sum(1 for f in films if era_fn(f) == e)}" for e in eras))
         print(f"   genre x era cells: {len(cells)} in total, {len(small)} below {MIN_CELL} films ({sum(small.values())} film-genre pairs removed)")
         print(f"   main-genre cells: {sum(1 for k in cells if k[0] in MAIN)}, below {MIN_CELL}: {len(small_main)}  -> "
               + ", ".join(f"{g} {e} ({n})" for (g, e), n in sorted(small_main.items())) if small_main else

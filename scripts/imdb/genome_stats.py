@@ -1,5 +1,5 @@
 """Count Tag Genome reviews per movie by IMDb ID without printing review text. Run from build/imdb."""
-import collections as C,csv,io,json,re,statistics as S,sys,zipfile
+import collections as C,csv,io,json,statistics as S,sys,zipfile
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]))  # repo root, for the shared clean rule
 from analysis.clean_rule import is_clean

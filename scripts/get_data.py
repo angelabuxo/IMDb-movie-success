@@ -11,7 +11,7 @@
 
 Files already present are skipped. Partial downloads never use the final name.
 """
-import argparse, csv, gzip, json, os, shutil, subprocess, sys, time
+import argparse, csv, gzip, json, shutil, subprocess, sys, time
 import urllib.parse, urllib.request
 from pathlib import Path
 

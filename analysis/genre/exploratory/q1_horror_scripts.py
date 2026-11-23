@@ -19,14 +19,9 @@ import pandas as pd
 from analysis.genre.exploratory import EXP_OUT
 from analysis.genre.exploratory.q1_words import SUPERNATURAL, log_odds_z
 from analysis.genre.q1_genre import DATA, SEED, load, prepare
+from analysis.genre.q1_tmdb import net_return
 
 OUT = EXP_OUT / "horror_scripts"
-
-
-def net_return(f):
-    cell = f["budget_bin"].astype(str) + "|" + f["era_bin"].astype(str)
-    return (f["ln_gross_over_budget"] - f.groupby(cell)["ln_gross_over_budget"].transform("mean")).to_numpy()
-
 
 
 def horror_scripts(f, keep, M, perms):

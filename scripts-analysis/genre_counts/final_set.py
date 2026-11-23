@@ -6,7 +6,6 @@ money rule (analysis.clean_rule, no net_gross flag, no flag on the budget) and a
 the dialogue and the description layer. shared_rule_check.py rebuilds the same set independently as a cross-check.
 """
 import csv
-import math
 import sys
 from pathlib import Path
 

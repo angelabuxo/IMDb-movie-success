@@ -40,17 +40,13 @@ import numpy as np
 import pandas as pd
 
 from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, ROOT, SEED, load, prepare
+from analysis.genre.q1_tmdb import net_return
 
 OUT = MAIN_OUT / "before_release"
 ROLES = ("director", "writer", "producer")
 ACTOR = ("actor", "actress")
 TOP_ACTORS = 3
 CHECK = ROOT / "scripts-analysis" / "data_check"
-
-
-def net_return(f):
-    cell = f["budget_bin"].astype(str) + "|" + f["era_bin"].astype(str)
-    return (f["ln_gross_over_budget"] - f.groupby(cell)["ln_gross_over_budget"].transform("mean")).to_numpy()
 
 
 def sequel_flag(f):
@@ -110,7 +106,7 @@ def imdb_tables(f, keep):
     mg = {t: [gi[g] for g in str(gs).split(",") if g in gi] for t, gs in zip(movies["tconst"], movies["genres"])}
     myear = dict(zip(movies["tconst"], movies["year"]))
     usable = set(f["imdb_id"])
-    team_rows, chunks = [], []
+    chunks = []
     for ch in pd.read_csv(base / "title.principals.tsv.gz", sep="\t", usecols=["tconst", "ordering", "nconst", "category"],
                           dtype={"tconst": str, "nconst": str, "category": str}, chunksize=5_000_000, quoting=3):
         ch = ch[ch["category"].isin(ROLES + ACTOR) & ch["tconst"].isin(myear.keys())]

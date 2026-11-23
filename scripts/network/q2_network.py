@@ -36,7 +36,6 @@ def residualize(frame):
     """ln(gross/budget) minus OLS effects of ln(budget), era and genres."""
     genres = sorted({g for value in frame["genres"].fillna("") for g in value.split(",") if g})
     eras = [era for era in ERA_ORDER if era in set(frame["era_bin"].dropna())]
-    baseline_era = eras[0]
     x = np.column_stack([
         np.ones(len(frame)),
         np.log(frame["budget"].astype(float).to_numpy()),
@@ -265,7 +264,6 @@ def main():
     analysis = pd.read_csv(ANALYSIS)
     with EDGES.open(newline="", encoding="utf8") as f:
         edges = list(csv.DictReader(f))
-    members = role_members(edges, set(analysis["imdb_id"]))
 
     common = analysis[analysis["in_common_set"]].copy()
     usable = analysis[analysis["usable_money"]].copy()

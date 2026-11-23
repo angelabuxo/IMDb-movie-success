@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
-from analysis.genre.q1_genre import DATA, OUT as MAIN_OUT, SEED, load, prepare
+from analysis.genre.q1_genre import DATA, SEED, load, prepare
 from analysis.genre.exploratory import EXP_OUT
 
 OUT = EXP_OUT / "words"

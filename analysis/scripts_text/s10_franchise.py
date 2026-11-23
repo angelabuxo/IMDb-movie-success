@@ -7,11 +7,11 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from . import s01_groups, s02_layers, s05_scatter, s06_null
+from . import s01_groups, s02_layers, s05_scatter
 from . import textstats as ts
 from .config import cfg, log_run
 from .paths import FEATURES, OUTPUTS
-from .report import HIGH, HIGH_SYMBOL, LOW, LOW_SYMBOL, Fig, Md, Reading, Run, Table, style
+from .report import HIGH, HIGH_SYMBOL, LOW, Fig, Md, Reading, Run, Table, style
 
 FLAGS = OUTPUTS / "s10_flags.csv"
 RESULTS = OUTPUTS / "s10_results.csv"

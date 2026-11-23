@@ -6,7 +6,6 @@ import pandas as pd
 
 from . import (s01_groups, s02_layers, s03_clean, s04_controls, s05_scatter, s06_null, s07_stability, s08_kwic,
                s09_logreg, s10_franchise, s11_validation)
-from .config import cfg
 from .report import Md, Reading, Table
 
 
@@ -51,7 +50,6 @@ def _captures(r) -> pd.DataFrame:
 
 def _limitations(r) -> pd.DataFrame:
     s1 = r["s01_groups"]["summary"]
-    sc = r["s01_groups"]["scripts"]
     allc = r["s01_groups"]["clean"]
     lim = []
     if allc is not None:

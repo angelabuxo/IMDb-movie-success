@@ -11,7 +11,7 @@ from . import s01_groups
 from . import textstats as ts
 from .config import cfg, log_run
 from .paths import OUTPUTS
-from .report import ACCENT, HIGH, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
+from .report import ACCENT, LOW, NEUTRAL, Fig, Md, Reading, Run, Table, style
 
 NULL_COUNTS = OUTPUTS / "s06_null_counts.csv"
 TERM_NULL = OUTPUTS / "s06_term_null.csv"
