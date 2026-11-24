@@ -434,8 +434,8 @@ CLAIMS = [
     ("franchise", "drops from $z=@$ to $z=@$ once likely franchise films are removed",
      lambda s: [s.t10_runs.loc["primary", "z"], s.t10_runs.loc["without likely franchise films", "z"]]),
     # Results: every genre, cosine separation (analysis/screenplays/word2vec/all_genres.py, horror_check.py)
-    ("allg setup", r"Across @ genres and both layers, we compared the mean cosine similarity within and between the two groups against @ shuffles of the labels within era, with Holm correction over the @ tests. Three pass: Action dialogue and both Horror layers",
-     lambda s: [s.allg.loc["primary"].index.get_level_values(0).nunique(), 2000, len(s.allg.loc["primary"])]
+    ("allg setup", r"Across the @ genres with at least @ hits and @ flops, and both layers, we compared the mean cosine similarity within and between the two groups against @ shuffles of the labels within era, with Holm correction over the @ tests. Three pass: Action dialogue and both Horror layers",
+     lambda s: (lambda d: [d.index.get_level_values(0).nunique(), int(d[["hits", "flops"]].min().min() >= 50) * 50, 50, 2000, len(d)])(s.allg.loc["primary"].query("not small"))
      if sorted(s.allg.loc["primary"].query("p_holm < 0.05").index) == [("Action", "dialogue"), ("Horror", "description"), ("Horror", "dialogue")] else [None]),
     ("allg action tier", r"once they keep each film's vote tier ($p=@$)", lambda s: [s.allg.loc[("era_x_tier", "Action", "dialogue"), "p"]]),
     ("allg horror", r"Horror's is not ($z=@$ and $@$; @ hits against @ flops), and Horror is the only genre",

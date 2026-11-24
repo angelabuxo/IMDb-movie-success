@@ -94,7 +94,7 @@ The AUC says the vector holds something that differs between hits and flops of t
 
 ## Every genre, with cosine similarity and a shuffle (post hoc, exploratory)
 
-The four tests above cover Comedy and Action, with Drama as a check. `all_genres.py` asks the same hit versus flop question in every genre with at least 20 hits and 20 flops, so the screenplay result can sit next to the genre result (Q1). It uses the same labels (top and bottom quarter of ln(gross/budget) within genre x era, D11 to D13) and the same script vectors, but no classifier: only cosine similarity and a label shuffle, which are course methods.
+The four tests above cover Comedy and Action, with Drama as a check. `all_genres.py` asks the same hit versus flop question in every genre with at least 50 hits and 50 flops, the group's size rule for a result (D14), so the screenplay result can sit next to the genre result (Q1). It uses the same labels (top and bottom quarter of ln(gross/budget) within genre x era, D11 to D13) and the same script vectors, but no classifier: only cosine similarity and a label shuffle, which are course methods.
 
 ```bash
 IMDB_DATA_DIR=/path/to/data/raw python -I analysis/screenplays/word2vec/all_genres.py   # about 1 min per seed, numpy only
@@ -113,11 +113,11 @@ It reads every window-5 space in `features/script_w2v/` (`vectors_w5_s1.npz` to 
 | Romance (59/59) | -0.001 | 0.44 | -0.005 | 0.83 | +0.020 / +0.048 |
 | Horror (52/52) | +0.049 | 0.0005 | +0.059 | 0.0005 | +0.022 / +0.028 |
 | Mystery (50/50) | +0.016 | 0.025 | +0.025 | 0.0060 | +0.012 / +0.010 |
-| Sci-Fi (41/41) | -0.006 | 0.84 | +0.006 | 0.16 | +0.052 / +0.028 |
-| Biography (40/40) | -0.009 | 0.85 | -0.004 | 0.68 | +0.020 / +0.032 |
-| Fantasy (35/35) | +0.015 | 0.10 | +0.017 | 0.095 | +0.035 / +0.018 |
+| Sci-Fi (41/41), below D14 | -0.006 | 0.84 | +0.006 | 0.16 | +0.052 / +0.028 |
+| Biography (40/40), below D14 | -0.009 | 0.85 | -0.004 | 0.68 | +0.020 / +0.032 |
+| Fantasy (35/35), below D14 | +0.015 | 0.10 | +0.017 | 0.095 | +0.035 / +0.018 |
 
-The numbers are averaged over the five seeds. A run on seed 1 alone gave the same picture: no separation moved by more than 0.0012, and the same three tests pass the correction. That is 24 tests. After a Holm correction over them, three pass at 0.05: Action dialogue and both Horror layers (`p_holm` in `results/all_genres.csv`). Groups under 50 are below D14's size for a main result and are marked `small`.
+The numbers are averaged over the five seeds. A run on seed 1 alone gave the same picture: no separation moved by more than 0.0012, and the same three tests pass the correction. Nine genres meet D14, which makes 18 tests. After a Holm correction over them, three pass at 0.05: Action dialogue and both Horror layers (`p_holm` in `results/all_genres.csv`). Sci-Fi, Biography and Fantasy have 35 to 41 films per group. They're computed and shown, marked `small`, but they aren't tests and aren't in the correction. Their shuffle null is about 3 to 5 times wider than Comedy's, so a Comedy-sized difference would be invisible there and their null results can't be read either way. The script also computes nothing under 20 per group, which is a floor for showing a row and not a group decision.
 
 The genre signal is much larger than the hit versus flop signal. In every genre but Horror and Mystery, the vectors separate the genre from the rest more than they separate its hits from its flops, in most layers by five times or more (Thriller description and Fantasy are the closest). Every genre-versus-rest test is far beyond its shuffle (z from 7.1 to 176, `results/all_genres_genre.csv`). So the script vector mostly knows what kind of film it is, which is the variable Q1 already measures, and much less whether the film paid off.
 
@@ -134,7 +134,7 @@ Two checks on the four genres with a signal. "Era x tier" shuffles within era x 
 | Mystery | dialogue | 0.025 | 0.038 | 45/47 | 0.077 |
 | Mystery | description | 0.0060 | 0.033 | 45/47 | 0.0040 |
 
-Action doesn't survive either check. Inside a tier the shuffle already gives a separation of about half the observed one, so most of the Action signal is the vote tier, as the 100k+ section above found for the classifier. Comedy survives the tier check but not the franchise check. Horror survives the tier check, and it's the only genre where hits and flops separate more than Horror separates from other genres. Without franchise films its description layer still passes the Holm correction (0.048), but its dialogue layer doesn't (p 0.021, Holm 0.47), so about half of the dialogue separation goes with the sequels.
+Action doesn't survive either check. Inside a tier the shuffle already gives a separation of about half the observed one, so most of the Action signal is the vote tier, as the 100k+ section above found for the classifier. Comedy survives the tier check but not the franchise check. Horror survives the tier check, and it's the only genre where hits and flops separate more than Horror separates from other genres. Without franchise films its description layer still passes the Holm correction (0.036), but its dialogue layer doesn't (p 0.021, Holm 0.34), so about half of the dialogue separation goes with the sequels.
 
 `horror_check.py` asks what the Horror split is made of, with the TMDB keyword subgenres of `analysis/genre/q1_tmdb.py`, whose keyword lists were fixed there before looking. The hits are more often supernatural (37 % of the 52 hits against 15 % of the 52 flops) and slasher (38 % against 12 %), and less often creature films (27 % against 40 %). The median budget is $10.4M for hits and $15.0M for flops, which partly follows from defining hits on gross over budget. But none of these explains the separation. Shuffling within era x each subgenre flag, or within era x the Horror budget median, still leaves it far above the null (z from 4.1 to 10.2, every p at most 0.0035, `results/horror_check.csv`). The largest null comes from the slasher flag, at a sixth of the observed separation in dialogue. So Horror hit scripts resemble each other in a way the subgenre labels and the budget don't capture, and this test can't say what it is. Stratifying on all flags at once would leave mostly single-film strata, where the shuffle can't move anything, so it isn't done.
 

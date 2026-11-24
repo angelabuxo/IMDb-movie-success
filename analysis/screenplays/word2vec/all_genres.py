@@ -21,7 +21,9 @@ Statistics, per genre and layer
   centroid     cosine distance between the hit centroid and the flop centroid.
   null         2000 shuffles of the hit / flop labels inside each era cell, so every shuffle keeps the era mix.
                p = (1 + shuffles at or above the observed value) / (1 + shuffles).
-  holm         Holm correction over every genre x layer test of this script.
+  holm         Holm correction over the genre x layer tests of the genres with at least 50 hits and 50 flops,
+               the group's size rule for a result (D14). Genres with 20 to 49 are computed and marked small,
+               but they are not tests: at that size a null result cannot be read either way.
 
 Genre check: the same separation statistic for "films of genre X" against "films of the final set without X",
 with a shuffle of the genre label. That says how much genre the vector carries, on the same scale.
@@ -44,14 +46,15 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "genre_counts"))
 from final_set import final_films  # noqa: E402
-from genre_cells import era, label, pairs_for  # noqa: E402
+from genre_cells import MIN_GROUP, era, label, pairs_for  # noqa: E402
 from genre_counts import DATA  # noqa: E402
 
 OUT = HERE / "results"
 LAYERS = ("dialogue", "description")
 VECTOR_DIR = Path(os.environ.get("W2V_VECTOR_DIR", DATA / "features" / "script_w2v"))
 VECTORS = sorted(VECTOR_DIR.glob("vectors_w5_s*.npz"))   # every window-5 seed found
-MIN_GROUP = 20   # smallest hit or flop group reported; under D14's 50 a row is marked small
+MIN_SHOWN = 20   # smallest hit or flop group computed at all. Not a group decision: rows under D14's 50 are
+                 # marked small, kept out of the Holm correction and shown only so nothing is hidden.
 SEED = 2805
 
 
@@ -149,7 +152,9 @@ def main():
         if lab != "middle":
             by_genre[g].append((fl["id"], e, fl["tier"], 1 if lab == "hit" else 0))
     genres = [g for g, items in sorted(by_genre.items(), key=lambda kv: -len(kv[1]))
-              if min(sum(t[3] for t in items), sum(1 - t[3] for t in items)) >= MIN_GROUP]
+              if min(sum(t[3] for t in items), sum(1 - t[3] for t in items)) >= MIN_SHOWN]
+    # D14, on the full hit and flop groups: a genre below it is not a test in any check.
+    small = {g for g in genres if min(sum(t[3] for t in by_genre[g]), sum(1 - t[3] for t in by_genre[g])) < MIN_GROUP}
 
     # primary: shuffle within era cells. era_x_tier: shuffle within era x vote tier, so the null keeps the tier
     # mix of hits and flops (D10). no_franchise: the primary test without sequels and named-franchise films (D26).
@@ -170,13 +175,16 @@ def main():
             for layer in LAYERS:
                 obs, cdist, null, p, z = test(vecs[layer][:, rows_idx], y, strata, args.perms, rng)
                 rows.append({"check": check, "genre": g, "layer": layer, "hits": n_hit, "flops": n_flop,
-                             "small": min(n_hit, n_flop) < 50,
+                             "small": g in small,
                              "separation": obs, "null_mean": null.mean(), "null_sd": null.std(),
                              "z": z, "p": p, "centroid_distance": cdist})
                 print(f"{check:<13}{g:<10}{layer:<12}{n_hit:>4}/{n_flop:<4} sep {obs:+.4f}"
                       f"  null {null.mean():+.4f} ± {null.std():.4f}  z {z:+.2f}  p {p:.4f}")
         sel = [r for r in rows if r["check"] == check]
-        for r, a in zip(sel, holm(np.array([r["p"] for r in sel]))):
+        for r in sel:
+            r["p_holm"] = ""
+        fam = [r for r in sel if not r["small"]]
+        for r, a in zip(fam, holm(np.array([r["p"] for r in fam]))):
             r["p_holm"] = a
     OUT.mkdir(exist_ok=True)
     with open(OUT / "all_genres.csv", "w", newline="") as f:
