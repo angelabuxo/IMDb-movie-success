@@ -106,3 +106,14 @@ For a slide, "an Animation film is a hit 36 % of the time" is easier to say than
 - **New:** "earns more" means different things. Animation and Horror get more hits, while Family avoids flops.
 - Sci-Fi is borderline. It passes in 3 of the 5 checks but not in the main test, so leave it out of claims.
 - These checks were chosen after seeing the main results, so they test its robustness. They aren't separate findings.
+
+## Worst case for films without money (declared on 25 November 2026, before running; post hoc)
+
+`q1_worst_case.py`. The main test sees the 6,346 films with comparable money. The other films with 10,000+ votes from 1975 to 2025 have none, and if one genre's missing films did worse than another's, the ranking would be off. This is a stress test, not an estimate: an unpriced film isn't a flop. It may be foreign, made for streaming, or never reported.
+
+- **Fill.** Every unpriced film gets one bad return: the mean of the worst quarter of the 6,346 returns. Two versions: all unpriced films, and only those with no budget or gross parsed.
+- **Test.** The same statistic as the main test (mean return per genre, the same 18 genres, 10,000 shuffles, two-sided, Holm over 18). Unpriced films mostly have no budget, so shuffles are within era only. The priced films alone with the same era-only shuffle are the reference, so any change comes from the fill and not from dropping the budget match.
+- **Budget-matched version.** Films with an unflagged US-dollar budget of at least $1,000 but no comparable gross get the same fill and the main test's budget deciles. This is the closest to the main test and covers fewer films.
+- **Tipping point.** The fill value at which a genre's excess over its era-only null is zero, with all unpriced films filled.
+- **How it is read, fixed in advance.** The eight genres of the main test are judged. A genre *holds* if it keeps its sign at Holm p < 0.05 with all unpriced films filled, *weakens* if it keeps its sign but not the test, and *flips* if the sign changes. All eight are reported. The share of each genre's films that is unpriced is reported, because with one fill value that share drives the result.
+- **What it misses.** Films under 10,000 votes, and any pattern in the true missing returns.
