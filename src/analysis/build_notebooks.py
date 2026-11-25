@@ -117,6 +117,19 @@ p[["films", "median_budget_musd", "median_multiple", "excess", "p_holm", "top_st
 ("md", "Without studio links, the same test."),
 ("code", """p = pd.read_csv(A / "compare/outputs/communities_usable_money_no_studio/community_profiles.csv")
 p[p.p_holm < .05][["films", "median_budget_musd", "excess", "p_holm", "top_studios"]].round(3)"""),
+("md", "## Without the vote cut: all of IMDb, and Hollywood inside it\n\nThe network rebuilt from every non-adult IMDb film (people only, since IMDb records no studios), then Louvain again inside its largest group, Hollywood. Returns are still known only for the films with usable money, so only groups with at least 30 of them are tested. `differ` counts the groups that differ from films of the same budget after Holm correction."),
+("code", """rows = []
+for name, d in [("main", "communities_usable_money"), ("no studios", "communities_usable_money_no_studio"),
+                ("all of IMDb", "communities_full_imdb"), ("Hollywood", "communities_hollywood")]:
+    k = json.loads((A / f"compare/outputs/{d}/summary.json").read_text())
+    pr = pd.read_csv(A / f"compare/outputs/{d}/community_profiles.csv")
+    rows.append({"network": name, "films": k.get("films_in_network", k["films"]) if "films" in k else k["films_in_network"],
+                 "groups": k["communities"], "modularity": k["modularity"], "rewired max": k["rewired_modularity_max"],
+                 "NMI of seeds": k["mean_nmi_best_vs_other_seeds"], "tested": len(pr), "differ": int((pr.p_holm < .05).sum())})
+pd.DataFrame(rows).round(3)"""),
+("md", "The groups inside Hollywood that differ. This split is less stable, so the edges of single groups shouldn't be read closely."),
+("code", """h = pd.read_csv(A / "compare/outputs/communities_hollywood/community_profiles.csv")
+h[h.p_holm < .05][["usable_films", "median_budget_musd", "excess", "p_holm", "top_studios"]].sort_values("excess", ascending=False)"""),
 ("md", "## Do people do better in a genre they know?\n\nCoefficients per standard deviation, with experience counted over every earlier IMDb film."),
 ("code", """e = pd.read_csv(A / "genre/outputs/before_release/specialists_ols.csv")
 e[e.films.str.contains("all earlier IMDb")].round(4)"""),
