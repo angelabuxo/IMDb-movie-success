@@ -39,7 +39,7 @@ def write(name, rows):
     with open(OUT / f"prerelease_{name}.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
-        w.writerows({k: f"{v:.4f}" if isinstance(v, float) else v for k, v in r.items()} for r in rows)
+        w.writerows({k: f"{v:.6g}" if isinstance(v, float) else v for k, v in r.items()} for r in rows)
     for r in rows:
         print(name, *[f"{v:.3f}" if isinstance(v, float) else v for v in r.values()], flush=True)
 

@@ -1,22 +1,22 @@
 genre,layer,model,n,seeds,auc,gain,lo,hi
-Comedy,-,tier+era+genres,272,0,0.7817,,,
-Comedy,-,era+genres,272,0,0.5521,,,
-Comedy,-,era+genres+budget,272,0,0.5422,,,
-Comedy,dialogue,vector,272,5,0.6131,,,
-Comedy,dialogue,era+genres+budget + vector,272,5,0.5720,0.0298,-0.0341,0.0899
-Comedy,description,vector,272,5,0.5835,,,
-Comedy,description,era+genres+budget + vector,272,5,0.5604,0.0182,-0.0364,0.0705
-Action,-,tier+era+genres,216,0,0.7059,,,
-Action,-,era+genres,216,0,0.5317,,,
-Action,-,era+genres+budget,216,0,0.5373,,,
-Action,dialogue,vector,216,5,0.6398,,,
-Action,dialogue,era+genres+budget + vector,216,5,0.6218,0.0845,0.0296,0.1375
-Action,description,vector,216,5,0.6636,,,
-Action,description,era+genres+budget + vector,216,5,0.6254,0.0881,0.0354,0.1403
-Drama,-,tier+era+genres,446,0,0.7864,,,
-Drama,-,era+genres,446,0,0.5168,,,
-Drama,-,era+genres+budget,446,0,0.5488,,,
-Drama,dialogue,vector,446,5,0.5631,,,
-Drama,dialogue,era+genres+budget + vector,446,5,0.5783,0.0295,-0.0093,0.0688
-Drama,description,vector,446,5,0.5586,,,
-Drama,description,era+genres+budget + vector,446,5,0.5849,0.0361,-0.0073,0.0781
+Comedy,-,tier+era+genres,272,0,0.781726,,,
+Comedy,-,era+genres,272,0,0.552087,,,
+Comedy,-,era+genres+budget,272,0,0.542215,,,
+Comedy,dialogue,vector,272,5,0.613116,,,
+Comedy,dialogue,era+genres+budget + vector,272,5,0.571979,0.0297643,-0.0340828,0.0898847
+Comedy,description,vector,272,5,0.583473,,,
+Comedy,description,era+genres+budget + vector,272,5,0.560368,0.0181531,-0.0363501,0.0704986
+Action,-,tier+era+genres,216,0,0.70589,,,
+Action,-,era+genres,216,0,0.531704,,,
+Action,-,era+genres+budget,216,0,0.537286,,,
+Action,dialogue,vector,216,5,0.639774,,,
+Action,dialogue,era+genres+budget + vector,216,5,0.621776,0.0844907,0.0296188,0.13746
+Action,description,vector,216,5,0.663604,,,
+Action,description,era+genres+budget + vector,216,5,0.625377,0.0880916,0.0353561,0.140348
+Drama,-,tier+era+genres,446,0,0.786445,,,
+Drama,-,era+genres,446,0,0.516789,,,
+Drama,-,era+genres+budget,446,0,0.548803,,,
+Drama,dialogue,vector,446,5,0.563148,,,
+Drama,dialogue,era+genres+budget + vector,446,5,0.578336,0.0295337,-0.00929331,0.0688243
+Drama,description,vector,446,5,0.558551,,,
+Drama,description,era+genres+budget + vector,446,5,0.584912,0.0361093,-0.00732352,0.0780664

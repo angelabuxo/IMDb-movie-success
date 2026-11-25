@@ -228,6 +228,44 @@ class Sources:
     def allg(self):
         return pd.read_csv(ROOT / "analysis/screenplays/word2vec/results/all_genres.csv").set_index(["check", "genre", "layer"])
 
+    @staticmethod
+    def _wv(name):
+        return pd.read_csv(ROOT / f"analysis/screenplays/word2vec/results/{name}.csv")
+
+    @cached_property
+    def bm(self):
+        return self._wv("budget_matched").set_index(["shuffle_within", "genre", "layer"])
+
+    @cached_property
+    def bmc(self):
+        return self._wv("budget_matched_checks").set_index(["check", "layer"])
+
+    @cached_property
+    def bmw(self):
+        return self._wv("budget_matched_words")
+
+    @cached_property
+    def bm_sum(self):
+        return self._wv("budget_matched_summary").iloc[0]
+
+    @cached_property
+    def pre(self):
+        d = self._wv("prerelease_auc")
+        return d[d.model == "era+genres+budget + vector"].set_index(["genre", "layer"])
+
+    def script_cov(self, tier, lab):
+        d = self._wv("prerelease_coverage")
+        return d[(d.group == "all film-genre pairs") & (d.tier == tier) & (d.label == lab)].coverage.iloc[0]
+
+    @cached_property
+    def coverage_total(self):
+        d = self._wv("prerelease_coverage")
+        return int(d[d.group == "all films"].films.sum())
+
+    @cached_property
+    def cov_gap(self):
+        return self._wv("prerelease_coverage_gap").set_index(["group", "tier"])
+
     def horror(self, name):
         return pd.read_csv(ROOT / f"analysis/screenplays/word2vec/results/{name}.csv")
 
@@ -354,6 +392,8 @@ S = Sources()
 G = "log_gross_over_budget"
 
 # (id, snippet of main.tex with @ for each number, function returning the source values in the same order)
+BM3 = "era x budget terciles"
+
 CLAIMS = [
     # Abstract
     ("abs graph", "into a network of @ films", lambda s: [s.links.imdb_id.nunique()]),
@@ -364,14 +404,6 @@ CLAIMS = [
     ("abs blumhouse", "of which Blumhouse beats films of the same budget by the most (+@)",
      lambda s: (lambda r: [r.excess] if r.excess == s.comA_prof.excess.max() and r.p_holm < .05 else [None])(s.comA_house("Blumhouse"))),
     # Results: genre
-    ("genre films", "Among the @ films with clean money figures, we compared each IMDb genre's mean return with @ shuffles",
-     lambda s: [s.genre["sets"]["usable_money"]["films"], s.genre["perms"]]),
-    ("genre above", "Animation (+@), Family (+@) and Horror (+@) return more",
-     lambda s: [s.gsh.loc[g, "excess"] for g in ("Animation", "Family", "Horror")]),
-    ("genre below", r"Drama ($-@$), Action ($-@$), Crime ($-@$), History ($-@$) and War ($-@$) return less",
-     lambda s: [-s.gsh.loc[g, "excess"] for g in ("Drama", "Action", "Crime", "History", "War")]),
-    ("genre tiers", r"between \$5M and \$30M, Animation is +@, Family +@ and Horror +@",
-     lambda s: [s.tiers.loc[("$5-30M", g), "excess"] for g in ("Animation", "Family", "Horror")]),
     ("genre R2", r"Budget decile and era give $R^2=@$, and all @ genres add @. On the @ films with a screenplay, genre adds @.",
      lambda s: [s.genre["sets"]["usable_money"]["r2_budget_era"], len(s.genre["sets"]["usable_money"]["genres_kept"]),
                 s.genre["sets"]["usable_money"]["r2_added_by_genre"], s.genre["sets"]["in_common_set"]["films"],
@@ -381,13 +413,6 @@ CLAIMS = [
                 s.hsub.loc["supernatural", "median_other_horror"], 100 * s.hsub.loc["supernatural", "share_beating_other_horror_median"]]),
     ("supernatural wikidata", "its supernatural horror films beat other Horror by +@ (@ films)",
      lambda s: [s.wdh.loc["supernatural horror film", "excess"], s.wdh.loc["supernatural horror film", "films"]]),
-    ("keyword network", "(@ links among @ keywords) into @ categories with modularity @, against at most @ for the same backbone rewired",
-     lambda s: [s.kwn["backbone_links"], s.kwn["nodes_in_backbone"], s.kwn["categories"], s.kwn["modularity"],
-                s.stab["rewired_modularity_best_of_20_max"]]),
-    ("keyword categories", r"supernatural horror (+@) and superheroes with 3D animation (+@) above, dystopia ($-@$) and action with gangsters ($-@$) below",
-     lambda s: [s.kw_excess("supernatural horror"), s.kw_excess("villain"), -s.kw_excess("dystopia"), -s.kw_excess("action hero")]),
-    ("keyword stability", r"Rebuilt over @ null draws, @ subsamples of @\% of the films and five changed settings, the supernatural horror category passes in every run",
-     lambda s: [s.stab["null_draws"], s.stab["boot"], 100 * s.stab["frac"]] if s.stab_always("supernatural horror") else []),
     ("fig genre films", r"a film counts in every genre it has), @ films. Grey boxes: the middle 95\% of @ shuffles",
      lambda s: [s.genre["sets"]["usable_money"]["films"], s.genre["perms"]]),
     ("fig genre holm", "Holm correction over the @ genres", lambda s: [len(s.genre["sets"]["usable_money"]["genres_kept"])]),
@@ -399,14 +424,6 @@ CLAIMS = [
     ("q2 wide", "On all @ films the director and producer values rise to @",
      lambda s: [s.q2["samples"]["usable_money"]["films"], s.q2r("usable_money_adjusted", "director")]
      if round(s.q2r("usable_money_adjusted", "director"), 3) == round(s.q2r("usable_money_adjusted", "producer"), 3) else [None]),
-    ("track records", r"from +@ per standard deviation for the lead actors to +@ for studios, and none of @ shuffles within genre",
-     lambda s: (lambda t: [t.coef_per_sd.min(), t.coef_per_sd.max(), s.xp_sum["perms"]]
-                if t.coef_per_sd.idxmin().startswith("cast") and t.coef_per_sd.idxmax().startswith("studio")
-                and (t.shuffle_p == round(1 / (1 + s.xp_sum["perms"]), 4)).all() else [None])(s.xp[s.xp.index.str.contains("_track")])),
-    ("experience full imdb", r"producers' experience goes with +@ per standard deviation; counting every earlier film IMDb credits them on, with +@ ($p=@$). Lead actors with more earlier films do slightly worse either way ($-@$ and $-@$)",
-     lambda s: [s.xp.loc["producer_experience, 10k-vote films", "coef_per_sd"], s.xp.loc["producer_experience, full IMDb", "coef_per_sd"],
-                s.xp.loc["producer_experience, full IMDb", "shuffle_p"], -s.xp.loc["cast_experience, 10k-vote films", "coef_per_sd"],
-                -s.xp.loc["cast_experience, full IMDb", "coef_per_sd"]]),
     ("specialists", r"it beats its budget by +@ per standard deviation (95\% interval +@ to +@; @ films, sequels controlled), and by +@ with sequels left out. Shuffling that experience within genre $\times$ budget decile gives $p=@$. Experience in general does not help ($-@$ per standard deviation)",
      lambda s: [*(lambda r: [r.coef_per_sd, r.lo, r.hi, r.n])(s.br_row("specialists_ols.csv", "history: all earlier IMDb movies, sequel flag controlled", "genre_experience")),
                 s.br_row("specialists_ols.csv", "history: all earlier IMDb movies, sequels left out", "genre_experience").coef_per_sd,
@@ -416,42 +433,6 @@ CLAIMS = [
      lambda s: [s.q2["samples"]["in_common_set"]["films"], s.q2["shuffles"],
                 max(s.q2r("in_common_set_adjusted", r, "p") for r in ("director", "actor", "producer", "studio"))]),
     # Results: screenplays
-    ("q3 groups", "(Comedy @ against @ films, Action @ against @)",
-     lambda s: [s.auc("Comedy", "dialogue", "w2v").n_hit, s.auc("Comedy", "dialogue", "w2v").n_flop,
-                s.auc("Action", "dialogue", "w2v").n_hit, s.auc("Action", "dialogue", "w2v").n_flop]),
-    ("q3 auc", r"The vectors beat @ label shuffles in all four tests (Fig.~\ref{fig:script}), with AUC from @ to @",
-     lambda s: [s.auc("Comedy", "dialogue", "w2v").perms,
-                *(lambda v: [min(v), max(v)])([s.auc(g, l, "w2v").auc for g in ("Comedy", "Action") for l in ("dialogue", "description")])]
-     if all(s.auc(g, l, "w2v").shuffle_p < .05 for g in ("Comedy", "Action") for l in ("dialogue", "description")) else [None]),
-    ("q3 baseline", "baseline of vote tier, era and the film's other genres (@ in Comedy, @ in Action)",
-     lambda s: [s.auc("Comedy", "-", "baseline").auc, s.auc("Action", "-", "baseline").auc]),
-    ("q3 action gain", r"they help in Action (+@ for dialogue, 95\% interval +@ to +@; +@ for description, +@ to +@) but not in Comedy",
-     lambda s: [v for l in ("dialogue", "description") for v in s.combo.loc[("Action", l), ["difference", "diff_ci95_lo", "diff_ci95_hi"]]]
-     if all(s.combo.loc[("Comedy", l), "diff_ci95_lo"] < 0 < s.combo.loc[("Comedy", l), "diff_ci95_hi"] for l in ("dialogue", "description")) else [None]),
-    ("q3 votes", "a baseline with log votes reaches @ and adding either vector gives @ and @",
-     lambda s: [s.votes("Action", "100k+", "baseline+votes", "-"), s.votes("Action", "100k+", "w2v+baseline+votes", "dialogue"),
-                s.votes("Action", "100k+", "w2v+baseline+votes", "description")]),
-    ("franchise", "drops from $z=@$ to $z=@$ once likely franchise films are removed",
-     lambda s: [s.t10_runs.loc["primary", "z"], s.t10_runs.loc["without likely franchise films", "z"]]),
-    # Results: every genre, cosine separation (analysis/screenplays/word2vec/all_genres.py, horror_check.py)
-    ("allg setup", r"Across the @ genres with at least @ hits and @ flops, and both layers, we compared the mean cosine similarity within and between the two groups against @ shuffles of the labels within era, with Holm correction over the @ tests. Three pass: Action dialogue and both Horror layers",
-     lambda s: (lambda d: [d.index.get_level_values(0).nunique(), int(d[["hits", "flops"]].min().min() >= 50) * 50, 50, 2000, len(d)])(s.allg.loc["primary"].query("not small"))
-     if sorted(s.allg.loc["primary"].query("p_holm < 0.05").index) == [("Action", "dialogue"), ("Horror", "description"), ("Horror", "dialogue")] else [None]),
-    ("allg action tier", r"once they keep each film's vote tier ($p=@$)", lambda s: [s.allg.loc[("era_x_tier", "Action", "dialogue"), "p"]]),
-    ("allg horror", r"Horror's is not ($z=@$ and $@$; @ hits against @ flops), and Horror is the only genre",
-     lambda s: [s.allg.loc[("era_x_tier", "Horror", "dialogue"), "z"], s.allg.loc[("era_x_tier", "Horror", "description"), "z"],
-                s.allg.loc[("primary", "Horror", "dialogue"), "hits"], s.allg.loc[("primary", "Horror", "dialogue"), "flops"]]),
-    ("allg horror subgenres", r"more often supernatural (@\% against @\%) and slasher films (@\% against @\%)",
-     lambda s: (lambda c: [100 * c.loc["hit", "share_supernatural"], 100 * c.loc["flop", "share_supernatural"],
-                           100 * c.loc["hit", "share_slasher"], 100 * c.loc["flop", "share_slasher"]])(s.horror("horror_composition").set_index("group"))),
-    ("allg horror strata", r"far above the null ($z\geq@$)", lambda s: [s.horror("horror_check").z.min()]),
-    ("allg horror franchise", r"it holds for description (Holm $p=@$) but not for dialogue",
-     lambda s: [s.allg.loc[("no_franchise", "Horror", "description"), "p_holm"]]
-     if s.allg.loc[("no_franchise", "Horror", "dialogue"), "p_holm"] > .05 else [None]),
-    ("typicality", r"Typical scripts beat their budgets by +@ per standard deviation (95\% interval +@ to +@; @ films), with length, dialogue share and parsing noise held fixed, and shuffling typicality within genre $\times$ budget decile gives $p=@$",
-     lambda s: [*(lambda r: [r.coef_per_sd, r.lo, r.hi, r.n])(s.br_row("typicality_ols.csv", "+ script-quality controls", "script_typicality")),
-                s.br["typicality"]["shuffle_p"]]),
-    ("fig script", r"Grey band: 95\% of @ label shuffles", lambda s: [s.auc("Comedy", "dialogue", "w2v").perms]),
     # Results: people by genre (analysis/compare/network_by_genre.py)
     ("nbg across", "between films that share no genre (directors @, producers @, actors @, studios @), and pairs within a genre never differ",
      lambda s: [s.nbx("in_common_set", r, "different genre") for r in ("director", "producer", "actor", "studio")]
@@ -463,53 +444,13 @@ CLAIMS = [
      lambda s: [6346, s.nbx("usable_money", "producer", "same genre"), s.nbx("usable_money", "producer", "different genre"),
                 s.nbx("usable_money", "studio", "same genre"), s.nbx("usable_money", "studio", "different genre")]
      if all(s.nbx("usable_money", r, "same minus different", "p") < .05 for r in ("producer", "studio")) else [None]),
-    ("communities all", "Here we use all @ films, since the people network needs no screenplay", lambda s: [s.comA["films"]]),
     ("communities", "finds @ groups among the @ linked films, with modularity @ against at most @ for the network rewired with every film's degree kept, and @ seeds agree with NMI @",
      lambda s: [s.comA["communities"], s.comA["films_in_network"], s.comA["modularity"], s.comA["rewired_modularity_max"],
                 s.comA["seeds"], s.comA["mean_nmi_best_vs_other_seeds"]] if s.comA["modularity_p"] < .05 else [None]),
-    ("no studio split", r"Louvain still splits the @ linked films into groups (modularity @ against at most @ rewired; @ seeds agree with NMI @)",
-     lambda s: [s.comN["films_in_network"], s.comN["modularity"], s.comN["rewired_modularity_max"], s.comN["seeds"],
-                s.comN["mean_nmi_best_vs_other_seeds"]]),
-    ("no studio houses", r"Three of the @ groups with at least @ films beat films of the same budget, and none falls short: Blumhouse's (+@), now @ films",
-     lambda s: (lambda d, b: [len(d), s.comN["min_size"], b.excess, b.films]
-                if ((d.p_holm < .05) & (d.excess > 0)).sum() == 3 and not ((d.p_holm < .05) & (d.excess < 0)).any() and b.p_holm < .05
-                else [None])(s.comN_prof, s.comN_house("Blumhouse"))),
-    ("no studio others", r"around Happy Madison and the Farrelly brothers (+@); and Amblin with Imagine (+@)",
-     lambda s: [s.comN_house("Columbia Pictures (49); Happy Madison").excess, s.comN_house("Amblin").excess]),
-    ("no studio high end", r"which doubles its gap, so +@ is the high end",
-     lambda s: [s.comA_house("Blumhouse").excess] if s.comA_house("Blumhouse").excess >= 1.5 * s.comN_house("Blumhouse").excess else [None]),
-    ("full imdb split", r"Built from all @ linked films in IMDb",
-     lambda s: [s.comF["films_in_network"]]),
-    ("full imdb modularity", r"(modularity @ against at most @ rewired; seeds agree with NMI @). Of the @ films, @ fall in one Hollywood community of @ films, which earns like films of the same budget ($-@$)",
-     lambda s: [s.comF["modularity"], s.comF["rewired_modularity_max"], s.comF["mean_nmi_best_vs_other_seeds"], s.comF["usable_films"],
-                s.comF_prof.iloc[0].usable_films, s.comF["largest_community_films"], -s.comF_prof.iloc[0].excess]
-     if s.comF_prof.iloc[0].films_in_network == s.comF["largest_community_films"] else [None]),
-    ("hollywood split", r"inside the Hollywood community alone (modularity @ against at most @ rewired), though less stably: @ seeds agree with NMI @. Seven of its @ groups with at least @ films differ",
-     lambda s: [s.comH["modularity"], s.comH["rewired_modularity_max"], s.comH["seeds"], s.comH["mean_nmi_best_vs_other_seeds"],
-                s.comH["communities_min_size"], s.comH["min_size"]]
-     if s.comH["modularity_p"] < .05 and (s.comH_prof.p_holm < .05).sum() == 7 and s.comH["films"] == s.comF["largest_community_films"] else [None]),
-    ("hollywood houses", r"@\% of Blumhouse's films land in one group, which beats its budget by +@, and a group around Imagine, Amblin and Clint Eastwood's Malpaso does by +@",
-     lambda s: (lambda h, b, a: [round(100 * h.share_in_main_sub_community), b.excess, a.excess]
-                if str(h.main_sub_community) == str(b.community) and b.p_holm < .05 and a.p_holm < .05 else [None])(
-         s.comH_house[s.comH_house.top_studios_10k.str.startswith("Blumhouse")].iloc[0], s.comH_sub("Blumhouse"), s.comH_sub("Imagine"))),
-    ("hollywood losers", r"the largest one around Emmett/Furla and Tribeca by $-@$",
-     lambda s: (lambda d: [-d.iloc[0].excess] if d.iloc[0].top_studios.startswith("Emmett/Furla") else [None])(
-         s.comH_prof[(s.comH_prof.p_holm < .05) & (s.comH_prof.excess < 0)].sort_values("usable_films", ascending=False))),
     ("coverage careers", r"only @\% of the credits of our films' teams are on films with 10,000+ votes",
      lambda s: [100 * s.cov["careers"]["share_on_10k_vote_films"]]),
-    ("coverage thin", r"with a producer on @\% and an actor on @\% of them against @\% and @\% of films with 10,000+ votes, and @\% of the teams' credits have no year",
-     lambda s: (lambda u, k, c: [100 * u.with_producer, 100 * u.with_actor, 100 * k.with_producer, 100 * k.with_actor,
-                                 100 * c["credits_without_year"] / c["credits"]])(
-         s.cov_tier.loc["no rating"], s.cov_tier.loc["10,000+"], s.cov["careers"])),
     ("coverage crew", r"@\% of the directors in IMDb's separate crew list appear among them",
      lambda s: [100 * s.cov_crew.loc[("director", "all"), "share_in_principals"]]),
-    ("notice track", r"stayed under 1,000 votes do worse ($-@$ per standard deviation, $p=@$), and producers and directors whose earlier films are rated higher do better (+@ and +@, $p=@$ and $p=@$)",
-     lambda s: (lambda n: [-n.loc["producer_unnoticed", "coef_per_sd"], n.loc["producer_unnoticed", "shuffle_p"],
-                           n.loc["producer_rating", "coef_per_sd"], n.loc["director_rating", "coef_per_sd"],
-                           n.loc["producer_rating", "shuffle_p"], n.loc["director_rating", "shuffle_p"]]
-                if all(n.loc[f"{g}_{k}", "shuffle_p"] > .05 for g in ("writer", "cast") for k in ("unnoticed", "rating")) else [None])(s.notice)),
-    ("notice vs money", r"These traces barely follow the money records (Spearman at most @)",
-     lambda s: [s.notice_chk.spearman_with_money_track.abs().max()]),
     ("robustness methods", r"their returns are tested on the @ films only", lambda s: [s.comF["usable_films"]]),
     ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
      lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),
@@ -518,27 +459,15 @@ CLAIMS = [
     ("blumhouse", r"By far the largest gap is Blumhouse's: @ films, @ of them made by Jason Blum's company",
      lambda s: (lambda r: [r.films, int(re.search(r"Blumhouse Productions \((\d+)\)", r.top_studios).group(1))]
                 if r.excess == s.comA_prof.excess.max() and r.p_holm < .05 and "Jason Blum" in r.top_producers else [None])(s.comA_house("Blumhouse"))),
-    ("blumhouse money", r"with a median budget of \$@M, a median gross of @ times the budget and a return of +@ beyond films of the same budget",
-     lambda s: (lambda r: [r.median_budget_musd, r.median_multiple, r.excess])(s.comA_house("Blumhouse"))),
-    ("houses above", "Disney's animation studio (+@), a Paramount group (+@) and a group around Spielberg's Amblin and DreamWorks (+@) also beat their budgets",
-     lambda s: [r.excess if r.p_holm < .05 else None for r in (s.comA_house("Walt Disney Animation"), s.comA_house("Paramount"), s.comA_house("Amblin"))]),
-    ("houses below", r"British and independent art house (Film4 and BBC Film; @ films, $-@$), a group around Woody Allen's and Nicolas Cage's films ($-@$) and a large mid-budget group around Screen Gems, MGM and Lakeshore ($-@$) fall short",
-     lambda s: (lambda a, w, g: [a.films, -a.excess, -w.excess, -g.excess] if max(a.p_holm, w.p_holm, g.p_holm) < .05
-                and "BBC Film" in a.top_studios and "Woody Allen" in w.top_directors and "Nicolas Cage" in w.top_actors
-                and "Metro-Goldwyn-Mayer" in g.top_studios and "Lakeshore" in g.top_studios else [None])(
-                s.comA_house("Film4"), s.comA_prof[s.comA_prof.top_directors.str.startswith("Woody Allen")].iloc[0], s.comA_house("Screen Gems"))),
     ("new line", r"the New Line group, with \emph{A Nightmare on Elm Street}, \emph{The Conjuring} and \emph{It}, earns like any other ($-@$)",
      lambda s: (lambda r: [-r.excess] if r.p_holm >= .05 else [None])(s.comA_house("New Line"))),
-    ("common communities", r"On the @ films with a screenplay the houses are a quarter of the size, and only the art-house group passes ($-@$), with Blumhouse's group at +@ on @ films",
-     lambda s: (lambda a, b: [s.com["films"], -a.excess, b.excess, b.films] if (s.com_prof.p_holm < .05).sum() == 1 and a.p_holm < .05 and b.p_holm >= .05 else [None])(
-                s.com_prof[s.com_prof.top_studios.str.startswith("Film4")].iloc[0], s.com_prof[s.com_prof.top_studios.str.startswith("Blumhouse")].iloc[0])),
     ("methods communities", "Communities use the same kind of links on all @ films, weighted by the number of shared people and studios, against @ rewirings that keep every film's degree",
      lambda s: [s.comA["films"], s.comA["rewires"]]),
     # Results: head to head (analysis/compare/head_to_head.py)
     ("h2h setup", "On the same @ films we built three networks", lambda s: [s.h2h_sum["films"]]),
     ("h2h k", "each script linked to its @ nearest scripts", lambda s: [s.h2h_sum["k_script"]]),
     ("h2h shuffles", "against the same @ shuffles within era bins. Shared people", lambda s: [s.h2h_sum["shuffles"]]),
-    ("h2h people", "Shared people give @ (null 95th percentile @), and @ between films of different genres",
+    ("h2h people", r"Shared people give @ (null 95th percentile @; Fig.~\ref{fig:h2h}), and @ between films of different genres",
      lambda s: [s.h2h.loc[("people", "all links"), "assortativity"], s.h2h.loc[("people", "all links"), "null_95"],
                 s.h2h.loc[("people", "links with no shared genre"), "assortativity"]]),
     ("h2h script", r"Similar screenplays give @ (null @), and all of it comes from films of the same genre: @ for those links and $-@$ across genres ($p=@$)",
@@ -567,6 +496,63 @@ CLAIMS = [
     ("methods q2", "against @ shuffles within era bins that keep the graph", lambda s: [s.q2["shuffles"]]),
     ("manual check", "hand-checked @ elements from @ screenplays drawn by era and found @ placed in the wrong layer",
      lambda s: [s.manual.n.sum(), s.manual_films, s.manual.k.sum()]),
+    # Table 1 and the shortened text
+    ("table sets", r"budget and gross known} & @ \\ \quad Genre returns (Fig.~\ref{fig:genre}), communities & @ \\ \quad Horror subgenres (Horror films only) & @ \\ \quad Genre experience (earlier credits needed) & @ \\ \emph{Common set: usable money and a screenplay} & @ \\",
+     lambda s: [s.genre["sets"]["usable_money"]["films"], s.comA["films"], s.gsh.loc["Horror", "n_films"], s.br["specialists"]["films"],
+                s.genre["sets"]["in_common_set"]["films"]]),
+    ("keyword short", r"of the @ categories Louvain~ finds in that network (modularity @, against at most @ rewired), supernatural horror beats its budget by +@ and passes in every rerun",
+     lambda s: [s.kwn["categories"], s.kwn["modularity"], s.stab["rewired_modularity_best_of_20_max"], s.kw_excess("supernatural horror")]
+     if s.stab_always("supernatural horror") else []),
+    ("methods keyword runs", r"its backbone has @ links among @ keywords. We reran it over @ null draws, @ subsamples of @\% of the films",
+     lambda s: [s.kwn["backbone_links"], s.kwn["nodes_in_backbone"], s.stab["null_draws"], s.stab["boot"], 100 * s.stab["frac"]]),
+    ("blumhouse money", r"with a median budget of \$@M, a median gross of @ times the budget and a return of +@ beyond films of the same budget",
+     lambda s: (lambda r: [r.median_budget_musd, r.median_multiple, r.excess])(s.comA_house("Blumhouse"))),
+    ("no studio blumhouse", r"Without the studio links, Blumhouse's group is @ films at +@, so +@ is the upper end",
+     lambda s: (lambda b: [b.films, b.excess, s.comA_house("Blumhouse").excess] if b.p_holm < .05 else [None])(s.comN_house("Blumhouse"))),
+    ("hollywood short", r"(@ seeds agree with NMI @), and the group holding @\% of Blumhouse's films beats its budget by +@. On the @ films with a screenplay, Blumhouse's group (@ films, +@) does not pass",
+     lambda s: (lambda h, b, c: [s.comH["seeds"], s.comH["mean_nmi_best_vs_other_seeds"], round(100 * h.share_in_main_sub_community), b.excess,
+                                 s.com["films"], c.films, c.excess]
+                if str(h.main_sub_community) == str(b.community) and b.p_holm < .05 and c.p_holm >= .05 else [None])(
+         s.comH_house[s.comH_house.top_studios_10k.str.startswith("Blumhouse")].iloc[0], s.comH_sub("Blumhouse"),
+         s.com_prof[s.com_prof.top_studios.str.startswith("Blumhouse")].iloc[0])),
+    ("fig h2h", r"on the same @ films and the same outcome", lambda s: [s.h2h_sum["films"]]),
+    # Results: screenplays, budget-matched similarity (analysis/screenplays/word2vec/budget_matched.py, prerelease.py)
+    ("genre films", "Of the @ films with 10,000+ IMDb votes, @ have a budget and gross we can compare",
+     lambda s: [s.links.imdb_id.nunique(), s.genre["sets"]["usable_money"]["films"]] if s.coverage_total == s.genre["sets"]["usable_money"]["films"] else [None, None]),
+    ("bm design", r"hit and flop labels @ times, only between films of the same genre, era and budget third", lambda s: [s.bm_sum.perms]),
+    ("bm genres", "We tested the @ genres with at least 50 hits and 50 flops, in both layers, and corrected for the @ tests",
+     lambda s: [s.bm_sum.genres, len(s.bm.loc[BM3])]),
+    ("bm horror", r"Only Horror passes (@ hits, @ flops; Fig.~\ref{fig:script}). In scene description, two scripts with the same outcome are more alike than a hit and a flop by @, while 95\% of shuffles stay below @ (Holm $p=@$)",
+     lambda s: (lambda r: [r.hits, r.flops, r.separation, r.null_q95, r.p_holm])(s.bm.loc[(BM3, "Horror", "description")])
+     if sorted(s.bm.loc[BM3].query("p_holm < .05").index) == [("Horror", "description"), ("Horror", "dialogue")]
+     and all(s.bm.loc[(f"era x budget {k}", "Horror", "description"), "p_holm"] < .05 for k in ("halves", "quarters")) else [None]),
+    ("bm horror checks", r"without franchise films ($p=@$), and among the Horror films with 100,000+ votes (@ hits, @ flops; $p=@$)",
+     lambda s: (lambda f, v: [f.p, v.hits, v.flops, v.p])(s.bmc.loc[("no franchise", "description")], s.bmc.loc[("100k+ only", "description")])),
+    ("bm dialogue", r"In dialogue the gap is @ against @ (Holm $p=@$), but it misses with budget quarters (Holm $p=@$) and among films with 100,000+ votes ($p=@$)",
+     lambda s: (lambda r: [r.separation, r.null_q95, r.p_holm, s.bm.loc[("era x budget quarters", "Horror", "dialogue"), "p_holm"],
+                           s.bmc.loc[("100k+ only", "dialogue"), "p"]])(s.bm.loc[(BM3, "Horror", "dialogue")])),
+    ("bm words", r"Of @ words compared by log-odds~\cite{monroe2008fightin}, only \emph{closet} (in @ hits and @ flops) differs",
+     lambda s: (lambda d: [d.words_tested, d.hit_films, d.flop_films])(s.bmw[s.bmw.word == "closet"].iloc[0])
+     if list(s.bmw[s.bmw.family_p < .05].word) == ["closet"] else [None]),
+    ("bm coverage", r"@\% of hits have one against @\% of flops. Among films with 100,000+ votes, a sign of popularity known only after release, it is @\% against @\%, a gap shuffled labels also produce ($p=@$)",
+     lambda s: [100 * s.script_cov(t, l) for t in ("all", "100k+") for l in ("hit", "flop")] + [s.cov_gap.loc[("all film-genre pairs", "100k+"), "p_two_sided"]]),
+    ("fig script", r"mean over @ Word2Vec runs). Red marks: 95\% of @ shuffles of the labels within genre, era and budget third lie below. Dark blue: above the shuffles after Holm correction over the @ tests",
+     lambda s: [s.bm_sum.seeds, s.bm_sum.perms, len(s.bm.loc[BM3])]),
+    ("bm tier", r"above and below 100,000 votes ($p=@$ for dialogue, $@$ for description, with @\% of films in groups that can move)",
+     lambda s: [s.bmc.loc[("terciles x vote tier", l), "p"] for l in ("dialogue", "description")] + [100 * s.bmc.loc[("terciles x vote tier", "description"), "share_movable"]]),
+    ("q3 planned", "(AUC @ to @, above its shuffles)",
+     lambda s: (lambda v: [min(v), max(v)])([s.auc(g, l, "w2v").auc for g in ("Comedy", "Action") for l in ("dialogue", "description")])
+     if all(s.auc(g, l, "w2v").shuffle_p < .05 for g in ("Comedy", "Action") for l in ("dialogue", "description")) else [None]),
+    ("q3 votes baseline", "whether a film has 100,000+ votes (@ and @)", lambda s: [s.auc(g, "-", "baseline").auc for g in ("Comedy", "Action")]),
+    ("q3 prerelease", r"still add to that model in Action (+@ for dialogue, 95\% interval +@ to +@; +@ for description, +@ to +@) but not in Comedy",
+     lambda s: [v for l in ("dialogue", "description") for v in s.pre.loc[("Action", l), ["gain", "lo", "hi"]]]
+     if all(s.pre.loc[("Comedy", l), "lo"] < 0 < s.pre.loc[("Comedy", l), "hi"] for l in ("dialogue", "description")) else [None]),
+    ("bm action", r"The similarity test does not support Action ($p=@$ and $@$)", lambda s: [s.bm.loc[(BM3, "Action", l), "p"] for l in ("dialogue", "description")]),
+    ("horror words", r"Whether a Horror script uses supernatural words does not go with its return (@ films, $p=@$)",
+     lambda s: (lambda d: [d["films_with_script"], d["supernatural_in_script"]["p"]])(s._json("genre/exploratory/outputs/horror_scripts/summary.json"))),
+    ("table common", r"head to head (Fig.~\ref{fig:h2h}) & @ \\ \quad Hit and flop scripts (Fig.~\ref{fig:script}), @ genres & @",
+     lambda s: [s.h2h_sum["films"], s.bm_sum.genres, s.bm_sum.films]),
+    ("communities all", "Here we use all @ films, since screenplays aren't needed for the movie network", lambda s: [s.comA["films"]]),
 ]
 
 # Numbers that are design choices, not results. Each is allowed anywhere in the text.
@@ -578,6 +564,8 @@ CONSTANTS = {
     "95": "confidence level and null percentile",
     "100": "the 100k-vote tier",
     "500": "minimum tokens per screenplay layer",
+    "50": "minimum hits and flops per genre (D14)",
+    "30": "upper edge of the $5-30M budget tier",
     "20": "character-name threshold (films) in the Word2Vec preprocessing",
 }
 
