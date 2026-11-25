@@ -33,3 +33,12 @@ The network-reach scripts (`scripts/network/pair_returns.py`, `team_history.py`,
 The sentiment-arc analysis was removed earlier and lives on the `archive/scripts-arcs` branch (see the main README).
 
 The saved notebooks weren't rerun after the move. Their code cells now find the repo root two folders up, but their outputs are the ones from 16 November.
+
+## Added in the cleanup of 25 November 2026
+
+The repo moved to `data/`, `notebooks/`, `src/`, `paper/` and `archive/`. These came here because the paper no longer uses them:
+
+- `analysis/scripts_text/` and `notebooks/scripts_text/`: the Scattertext word comparison.
+- `notebooks/`: the long notebooks `q1_genre`, `movie_graph`, `network_reach`, `scripts_and_reviews`, `tmdb_second_source` and `what_predicts_profit`. `what_predicts_profit` still feeds a test.
+- `docs/`: the course brief summary, the gap list, the overview PDFs and the README from before the cleanup.
+- `site/`: the static Scattertext page.

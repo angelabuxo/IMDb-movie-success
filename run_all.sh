@@ -13,12 +13,13 @@
 #   3. python -m explorer.check_pages: open every explorer page headless and list crashes, errors and every
 #      input file a page couldn't find; report in logs/check_pages.log
 #   4. python -m pytest: the test suite on synthetic data (about 35 s here; --full adds the slow tests)
-#   5. ./explorer/run.sh: Streamlit on http://localhost:8501, logging to logs/explorer.log and logs/streamlit.log
+#   5. ./src/explorer/run.sh: Streamlit on http://localhost:8501, logging to logs/explorer.log and logs/streamlit.log
 #
 # A failing check doesn't stop the explorer from starting; read the summary above the Streamlit banner.
 # Extra arguments after the flags go to Streamlit, e.g. ./run_all.sh --server.port 8502
 set -e
 cd "$(dirname "$0")"
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 
 CHECK=1 LAUNCH=1 FULL=0
 while [ $# -gt 0 ]; do
@@ -59,4 +60,4 @@ if [ "$LAUNCH" = 0 ]; then
   exit "$STATUS"
 fi
 echo "== 5/5 explorer on http://localhost:8501 (Ctrl+C to stop)"
-exec ./explorer/run.sh "$@"
+exec ./src/explorer/run.sh "$@"

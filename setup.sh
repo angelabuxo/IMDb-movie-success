@@ -86,4 +86,4 @@ with open(source, "rb") as compressed:
   echo "$WANT" > "$STAMP"
 fi
 
-echo "Done. Start the explorer with ./explorer/run.sh, or run the tests with .venv/bin/python -m pytest"
+echo "Done. Start the explorer with ./src/explorer/run.sh, or run the tests with .venv/bin/python -m pytest"

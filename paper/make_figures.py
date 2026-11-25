@@ -41,7 +41,7 @@ def panel(ax, letter):
 
 def fig_network():
     # Return similarity by role, adjusted for ln budget, decade and genre (analysis/network/roi_similarity.json).
-    r = json.loads((ROOT / "analysis/network/roi_similarity.json").read_text())["results"]
+    r = json.loads((ROOT / "src/analysis/network/roi_similarity.json").read_text())["results"]
     adj, ws = r["adjusted"]["roles"], r["adjusted_within_studio"]["roles"]
     roles = sorted(adj, key=lambda k: adj[k]["similarity"])
     fig, b = plt.subplots(figsize=(4.0, 2.3))
@@ -60,8 +60,8 @@ def fig_network():
 
 
 def fig_script():
-    s10 = pd.read_csv(ROOT / "analysis/scripts_text/outputs/s10_results.csv").set_index("run")
-    drops = pd.read_csv(ROOT / "analysis/scripts_text/outputs/s10_random_drop.csv")
+    s10 = pd.read_csv(ROOT / "archive/analysis/scripts_text/outputs/s10_results.csv").set_index("run")
+    drops = pd.read_csv(ROOT / "archive/analysis/scripts_text/outputs/s10_random_drop.csv")
     fig, a = plt.subplots(figsize=(3.45, 2.2))
     a.scatter(np.random.default_rng(1).uniform(-0.12, 0.12, len(drops)) + 1, drops.z, s=5, color=GREY,
               label="50 random drops")
@@ -90,7 +90,7 @@ def fig_reception():
 
 def fig_head_to_head():
     # Return assortativity of the three networks on the common set (analysis/compare/head_to_head.py).
-    d = pd.read_csv(ROOT / "analysis/compare/outputs/head_to_head/assortativity.csv").set_index(["network", "links"])
+    d = pd.read_csv(ROOT / "src/analysis/compare/outputs/head_to_head/assortativity.csv").set_index(["network", "links"])
     rows = [("people", "all links", "Shared people: all links"), ("people", "links within a shared genre", "same genre"),
             ("people", "links with no shared genre", "different genres"),
             ("script", "all links", "Similar screenplays: all links"), ("script", "links within a shared genre", "same genre"),

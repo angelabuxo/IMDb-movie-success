@@ -6,7 +6,7 @@ sources we upload to it.
 
 - `main.tex`: the paper. Lines marked TODO need the group (author contributions, dates, hand-label results, repo link).
 - `references.bib`: every reference. The `checked` field says whether the full text (`read`) or only the
-  abstract was checked. BibTeX ignores it. `docs/overview/literature.pdf` lists the same entries grouped by strand.
+  abstract was checked. BibTeX ignores it. `archive/docs/overview/literature.pdf` lists the same entries grouped by strand.
 - `figures/`: drawn by `make_figures.py` from committed outputs only. Rebuild from the repo root:
 
 ```bash
