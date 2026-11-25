@@ -309,6 +309,14 @@ class Sources:
     def tb_row(self, measure, subset):
         return self.tb[(self.tb.measure == measure) & self.tb.films_subset.str.startswith(subset)].iloc[0]
 
+    @cached_property
+    def wc(self):
+        return pd.read_csv(A / "genre/outputs/worst_case/verdict.csv").set_index("genre")
+
+    @cached_property
+    def wc_sum(self):
+        return self._json("genre/outputs/worst_case/summary.json")
+
     # ---- communities of the people network (analysis/compare/network_communities.py) ----
     @cached_property
     def com(self):
@@ -547,6 +555,14 @@ CLAIMS = [
                 for v in [films, k["modularity"], k["rewired_modularity_max"], k["mean_nmi_best_vs_other_seeds"], (pr.p_holm < .05).sum(), len(pr)]
                 + ([bl] if bl is not None else [])]),
     ("table networks caption", "Rewired: the highest modularity of @ rewirings", lambda s: [s.comA["rewires"]] if s.comH["rewires"] == s.comF["rewires"] == s.comA["rewires"] else [None]),
+    # Results: genre, worst case for films without money (analysis/genre/q1_worst_case.py)
+    ("worst case set", "Of the @ films from 1975 to 2025 with 10,000+ votes, @ have no budget and gross we can compare", lambda s: [s.wc_sum["films_1975_2025"], s.wc_sum["unpriced"]]),
+    ("worst case fill", r"the mean return of the worst quarter of our films ($-@$) and shuffled within era only", lambda s: [-s.wc_sum["fill_value"]]),
+    ("worst case action", r"Seven of the eight genres keep their direction after Holm correction. Action does not: its gap goes from $-@$ among films with money, under the same shuffle, to +@.",
+     lambda s: [-s.wc.loc["Action", "priced_era_excess"], s.wc.loc["Action", "filled_excess"]]
+     if len(s.wc) == 8 and list(s.wc[s.wc.verdict != "holds"].index) == ["Action"] else [None]),
+    ("worst case horror", r"shrinks from +@ to +@, and it does not pass when we fill only the films with a known budget but no gross and match on budget (+@, Holm $p=@$)",
+     lambda s: [s.wc.loc["Horror", c] for c in ("priced_era_excess", "filled_excess", "budget_filled_excess", "budget_filled_p_holm")]),
     # Results: track records and the stress test (analysis/compare/track_record_bounds.py)
     ("track coverage", r"only @\% (lead actors) to @\% (producers) of their earlier IMDb films count",
      lambda s: (lambda d: [100 * d.median_coverage["cast"], 100 * d.median_coverage["producer"]] if d.median_coverage.idxmin() == "cast" and d.median_coverage.idxmax() == "producer" else [None])(s.tb_check)),

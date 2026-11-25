@@ -79,6 +79,8 @@ x.assign(run=x.outcome + " / " + x.null).pivot(index="genre", columns="run", val
 ("md", "## How much does genre explain?"),
 ("code", """s = json.loads((A / "genre/outputs/summary.json").read_text())["sets"]
 {k: {a: b for a, b in v.items() if not isinstance(b, (dict, list))} for k, v in s.items()}"""),
+("md", "## Worst case: what if every film without money had done badly?\n\nA stress test with criteria written before running (`src/analysis/genre/CHECKS.md`). Films without comparable money get the mean of the worst quarter of returns, and the shuffle is within era. It isn't an estimate of what they earned."),
+("code", """pd.read_csv(A / "genre/outputs/worst_case/verdict.csv").round(3)"""),
 ("md", "## Inside Horror: two labels made in different ways\n\nTMDB keywords (list fixed before looking) and Wikidata's genres, against other Horror films of the same budget and era."),
 ("code", """pd.read_csv(A / "genre/outputs/tmdb/horror_subgenres.csv").round(3)"""),
 ("code", """pd.read_csv(A / "genre/outputs/categories/wikidata_horror_subgenres.csv").round(3)"""),
