@@ -294,6 +294,21 @@ class Sources:
     def nbx(self, sample, role, split, col="assortativity"):
         return self.nbg.loc[(sample, role, split), col]
 
+    @cached_property
+    def tb(self):
+        return pd.read_csv(A / "compare/outputs/track_record_bounds/track_bounds.csv")
+
+    @cached_property
+    def tb_sum(self):
+        return self._json("compare/outputs/track_record_bounds/summary.json")
+
+    @cached_property
+    def tb_check(self):
+        return pd.read_csv(A / "compare/outputs/track_record_bounds/track_check.csv").set_index("group")
+
+    def tb_row(self, measure, subset):
+        return self.tb[(self.tb.measure == measure) & self.tb.films_subset.str.startswith(subset)].iloc[0]
+
     # ---- communities of the people network (analysis/compare/network_communities.py) ----
     @cached_property
     def com(self):
@@ -452,7 +467,7 @@ CLAIMS = [
     ("coverage crew", r"@\% of the directors in IMDb's separate crew list appear among them",
      lambda s: [100 * s.cov_crew.loc[("director", "all"), "share_in_principals"]]),
     ("robustness methods", r"their returns are tested on the @ films only", lambda s: [s.comF["usable_films"]]),
-    ("community genre", "their NMI with each film's genre is @, above shuffled genres (@) but small",
+    ("community genre", "their NMI with each film's genre is @, which is greater than shuffled genres (@) but small",
      lambda s: [s.comA["nmi_with_rarest_genre"], s.comA["nmi_genre_null_95"]] if s.comA["nmi_genre_p"] < .05 else [None]),
     ("community count", "Tested like the genres, @ of the @ communities with at least @ films differ from films of the same budget",
      lambda s: [(s.comA_prof.p_holm < .05).sum(), s.comA["communities_min_size"], s.comA["min_size"]]),
@@ -509,12 +524,38 @@ CLAIMS = [
      lambda s: (lambda r: [r.median_budget_musd, r.median_multiple, r.excess])(s.comA_house("Blumhouse"))),
     ("no studio blumhouse", r"Without the studio links, Blumhouse's group is @ films at +@, so +@ is the upper end",
      lambda s: (lambda b: [b.films, b.excess, s.comA_house("Blumhouse").excess] if b.p_holm < .05 else [None])(s.comN_house("Blumhouse"))),
-    ("hollywood short", r"(@ seeds agree with NMI @), and the group holding @\% of Blumhouse's films beats its budget by +@. On the @ films with a screenplay, Blumhouse's group (@ films, +@) does not pass",
-     lambda s: (lambda h, b, c: [s.comH["seeds"], s.comH["mean_nmi_best_vs_other_seeds"], round(100 * h.share_in_main_sub_community), b.excess,
-                                 s.com["films"], c.films, c.excess]
-                if str(h.main_sub_community) == str(b.community) and b.p_holm < .05 and c.p_holm >= .05 else [None])(
-         s.comH_house[s.comH_house.top_studios_10k.str.startswith("Blumhouse")].iloc[0], s.comH_sub("Blumhouse"),
+    ("common set blumhouse", r"On the @ films with a screenplay, Blumhouse's group (@ films, +@) does not pass",
+     lambda s: (lambda c: [s.com["films"], c.films, c.excess] if c.p_holm >= .05 else [None])(
          s.com_prof[s.com_prof.top_studios.str.startswith("Blumhouse")].iloc[0])),
+    # Results: communities without the vote cut (communities_full_imdb, communities_hollywood) and Table 2
+    ("full imdb", r"These @ linked films split into national industries, such as France, Japan, Spain and Korea (modularity @ against at most @ rewired; seeds agree with NMI @), and none of the @ groups with at least @ films of known return differs from films of the same budget. One group, Hollywood, holds @ films and @ of our @.",
+     lambda s: [s.comF["films_in_network"], s.comF["modularity"], s.comF["rewired_modularity_max"], s.comF["mean_nmi_best_vs_other_seeds"],
+                s.comF["communities_min_size"], s.comF["min_size"], s.comF["largest_community_films"], s.comF_prof.usable_films.max(), s.comF["usable_films"]]
+     if (s.comF_prof.p_holm >= .05).all() else [None]),
+    ("hollywood", r"It finds @ groups (modularity @ against at most @ rewired), and @ of the @ with at least @ films of known return differ",
+     lambda s: [s.comH["communities"], s.comH["modularity"], s.comH["rewired_modularity_max"], (s.comH_prof.p_holm < .05).sum(), s.comH["communities_min_size"], s.comH["min_size"]]),
+    ("hollywood houses", r"@\% of its films there fall in one group, which beats its budget by +@, and a group around Imagine, Amblin and Malpaso does by +@. Some groups fall short, the largest one around Emmett/Furla and Tribeca by $-@$. This split is less stable (NMI @)",
+     lambda s: (lambda h, b, i, e: [100 * h.share_in_main_sub_community, b.excess, i.excess, -e.excess, s.comH["mean_nmi_best_vs_other_seeds"]]
+                if str(h.main_sub_community) == str(b.community) and max(b.p_holm, i.p_holm, e.p_holm) < .05 else [None])(
+         s.comH_house[s.comH_house.top_studios_10k.str.startswith("Blumhouse")].iloc[0], s.comH_sub("Blumhouse"), s.comH_sub("Imagine"), s.comH_sub("Emmett"))),
+    ("networks returns", "returns are known only for the @ films", lambda s: [s.comF["usable_films"]]),
+    ("table networks", r"Main & @ & @ & @ & @ & @ of @ & +@ \\ No studios & @ & @ & @ & @ & @ of @ & +@ \\ All of IMDb & @ & @ & @ & @ & @ of @ & \\ Hollywood & @ & @ & @ & @ & @ of @ & +@",
+     lambda s: [v for k, pr, films, bl in ((s.comA, s.comA_prof, s.comA["films_in_network"], s.comA_house("Blumhouse").excess),
+                                           (s.comN, s.comN_prof, s.comN["films_in_network"], s.comN_house("Blumhouse").excess),
+                                           (s.comF, s.comF_prof, s.comF["films_in_network"], None),
+                                           (s.comH, s.comH_prof, s.comH["films"], s.comH_sub("Blumhouse").excess))
+                for v in [films, k["modularity"], k["rewired_modularity_max"], k["mean_nmi_best_vs_other_seeds"], (pr.p_holm < .05).sum(), len(pr)]
+                + ([bl] if bl is not None else [])]),
+    ("table networks caption", "Rewired: the highest modularity of @ rewirings", lambda s: [s.comA["rewires"]] if s.comH["rewires"] == s.comF["rewires"] == s.comA["rewires"] else [None]),
+    # Results: track records and the stress test (analysis/compare/track_record_bounds.py)
+    ("track coverage", r"only @\% (lead actors) to @\% (producers) of their earlier IMDb films count",
+     lambda s: (lambda d: [100 * d.median_coverage["cast"], 100 * d.median_coverage["producer"]] if d.median_coverage.idxmin() == "cast" and d.median_coverage.idxmax() == "producer" else [None])(s.tb_check)),
+    ("track rebuilt", r"from +@ per standard deviation for lead actors to +@ for producers, above all @ shuffles within genre $\times$ budget decile ($p=@$)",
+     lambda s: (lambda b: [b.coef_per_sd.min(), b.coef_per_sd.max(), s.tb_sum["perms"], b.shuffle_p.max()])(s.tb[(s.tb.measure.str.endswith("rebuilt")) & (s.tb.films_subset == "all")])),
+    ("track bound", r"worst quarter of our films ($-@$). Track records still go with beating the budget, from +@ for lead actors to +@ for producers ($p=@$ for each)",
+     lambda s: (lambda b: [-s.tb_sum["v_bottom_quarter_mean"], b.coef_per_sd.min(), b.coef_per_sd.max(), b.shuffle_p.max()])(s.tb[s.tb.measure.str.contains("bottom-quarter")])),
+    ("track split", r"where fewer of their earlier films have money (+@ against +@)",
+     lambda s: [s.tb_row("producer_track, rebuilt", k).coef_per_sd for k in ("coverage < median", "coverage >= median")]),
     ("fig h2h", r"on the same @ films and the same outcome", lambda s: [s.h2h_sum["films"]]),
     # Results: screenplays, budget-matched similarity (analysis/screenplays/word2vec/budget_matched.py, prerelease.py)
     ("genre films", "Of the @ films with 10,000+ IMDb votes, @ have a budget and gross we can compare",
@@ -536,7 +577,7 @@ CLAIMS = [
      if list(s.bmw[s.bmw.family_p < .05].word) == ["closet"] else [None]),
     ("bm coverage", r"@\% of hits have one against @\% of flops. Among films with 100,000+ votes, a sign of popularity known only after release, it is @\% against @\%, a gap shuffled labels also produce ($p=@$)",
      lambda s: [100 * s.script_cov(t, l) for t in ("all", "100k+") for l in ("hit", "flop")] + [s.cov_gap.loc[("all film-genre pairs", "100k+"), "p_two_sided"]]),
-    ("fig script", r"mean over @ Word2Vec runs). Red marks: 95\% of @ shuffles of the labels within genre, era and budget third lie below. Dark blue: above the shuffles after Holm correction over the @ tests",
+    ("fig script", r"mean over @ Word2Vec runs). Red marks: 95\% of @ shuffles of the labels within genre, era and budget third lie below. A bar above its red mark means more than the shuffles allow. Dark blue: above the shuffles after Holm correction over the @ tests",
      lambda s: [s.bm_sum.seeds, s.bm_sum.perms, len(s.bm.loc[BM3])]),
     ("bm tier", r"above and below 100,000 votes ($p=@$ for dialogue, $@$ for description, with @\% of films in groups that can move)",
      lambda s: [s.bmc.loc[("terciles x vote tier", l), "p"] for l in ("dialogue", "description")] + [100 * s.bmc.loc[("terciles x vote tier", "description"), "share_movable"]]),
