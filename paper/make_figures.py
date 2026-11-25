@@ -88,7 +88,33 @@ def fig_reception():
     fig.savefig(OUT / "fig_reception.pdf", bbox_inches="tight")
 
 
+def fig_head_to_head():
+    # Return assortativity of the three networks on the common set (analysis/compare/head_to_head.py).
+    d = pd.read_csv(ROOT / "analysis/compare/outputs/head_to_head/assortativity.csv").set_index(["network", "links"])
+    rows = [("people", "all links", "Shared people: all links"), ("people", "links within a shared genre", "same genre"),
+            ("people", "links with no shared genre", "different genres"),
+            ("script", "all links", "Similar screenplays: all links"), ("script", "links within a shared genre", "same genre"),
+            ("script", "links with no shared genre", "different genres"), ("genre", "all links", "Shared genre: all links")]
+    y = np.array([0, 1, 2, 3.5, 4.5, 5.5, 7.0])
+    fig, ax = plt.subplots(figsize=(3.45, 2.1))
+    v = [d.loc[r[:2], "assortativity"] for r in rows]
+    ax.barh(y, v, height=0.7, color=[ACCENT if r[1] == "all links" else "#9CC3D1" for r in rows])
+    ax.scatter([d.loc[r[:2], "null_95"] for r in rows], y, marker="|", s=70, color="#B5482F", zorder=3,
+               label="95th percentile of 1,000 shuffles")
+    for yi, x, r in zip(y, v, rows):
+        n95 = d.loc[r[:2], "null_95"]
+        ax.text(0.0015 if x < 0 else max(x, n95) + 0.0015, yi, f"{x:.4f}" if abs(x) < 0.001 else f"{x:.3f}", va="center", fontsize=6)
+    ax.axvline(0, color=INK, lw=0.5)
+    ax.set_yticks(y, [r[2] for r in rows])
+    ax.invert_yaxis()
+    ax.set_xlim(-0.02, 0.06)
+    ax.set_xlabel("Return assortativity")
+    ax.legend(frameon=False, fontsize=6, loc="lower right", handletextpad=0.1)
+    fig.savefig(OUT / "fig_head_to_head.pdf", bbox_inches="tight")
+
+
 if __name__ == "__main__":
+    fig_head_to_head()
     fig_network()
     fig_script()
     fig_reception()
