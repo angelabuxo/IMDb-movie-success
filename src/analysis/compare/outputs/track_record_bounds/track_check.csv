@@ -1,0 +1,5 @@
+group,films_with_track,corr_with_film_features_track,median_coverage,q25_coverage,q75_coverage
+director,3416,0.9803,0.571,0.375,0.75
+writer,3613,0.9853,0.538,0.333,0.75
+producer,4734,0.9913,0.588,0.372,0.75
+cast,5090,0.992,0.353,0.217,0.5

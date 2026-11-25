@@ -186,6 +186,31 @@ money track records (+0.28 for producers), and they barely correlate with them, 
 noticed past. Votes and ratings are counted today, so a film revived later counts as noticed. All rows are in
 `analysis/compare/outputs/notice_track_imdb/`.
 
+**5. How far missing flops could inflate track records** (`analysis/compare/track_record_bounds.py`).
+Declared on 23 November 2026, after run 1 and before running this one. Track records average the returns of
+a person's earlier films, but we have money only for the 12,673 graph films, so their unnoticed earlier films,
+mostly flops, never enter. Two checks, with the same OLS and shuffle as run 1, on the directors, writers,
+producers and first three billed actors (studios and distributors aren't in IMDb):
+(a) a pessimistic bound: every earlier IMDb film of the team with no money figure is given a bad return, once
+the mean return of the films Wikipedia lacks that TMDB has money for (−0.379, `analysis/genre/outputs/tmdb`)
+and once the mean of the bottom quarter of all clean returns. If track records still pass, missing flops
+can't be what drives them. (b) a coverage split: track records tested separately on films whose team's earlier
+IMDb films mostly have money and on films where they mostly don't. If missing flops inflate track records,
+the effect should be larger where coverage is low. Every result is reported.
+
+(Declared as run 3 on the branch `g/10k-vote-cut-followups-ab454f`, commit 97b957d, and brought here on 25 November 2026. It is numbered 5 here because runs 3 and 4 were taken.)
+
+Result (job run 23 November 2026, 1,000 shuffles, commit 366cbc7). Coefficients are per SD; every shuffle p is 0.001.
+
+| Role | Rebuilt | Missing films at -0.379 | Missing films at -1.249 | Coverage at or above median | Coverage below median |
+|---|---|---|---|---|---|
+| director | +0.192 | +0.169 | +0.155 | +0.180 | +0.204 |
+| writer | +0.212 | +0.201 | +0.179 | +0.202 | +0.229 |
+| producer | +0.273 | +0.266 | +0.252 | +0.131 | +0.349 |
+| lead actors | +0.154 | +0.140 | +0.117 | +0.169 | +0.159 |
+
+What it shows: track records survive a pessimistic guess about the films without money. Producers' records are much stronger where fewer of their earlier films have money, so part of theirs may be what is missing. It is a stress test: the true returns of those films are unknown, and one value for all of them also mixes in how many films a person made.
+
 Leiden and Infomap are removed from the community runs. They aren't course methods, and Louvain's
 agreement across seeds already measures stability.
 

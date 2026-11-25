@@ -1,0 +1,21 @@
+measure,films_subset,n,coef_per_sd,lo,hi,p,shuffle_p
+"director_track, rebuilt",all,3416,0.1922,0.1453,0.239,8.66e-16,0.001
+"director_track, films without money at -0.379 (TMDB gap mean)",all,3416,0.1688,0.121,0.2166,4.35e-12,0.001
+"director_track, films without money at -1.249 (bottom-quarter mean)",all,3416,0.1545,0.108,0.2009,7.09e-11,0.001
+"writer_track, rebuilt",all,3613,0.2115,0.1646,0.2583,9.21e-19,0.001
+"writer_track, films without money at -0.379 (TMDB gap mean)",all,3613,0.2012,0.1578,0.2446,9.7e-20,0.001
+"writer_track, films without money at -1.249 (bottom-quarter mean)",all,3613,0.1791,0.137,0.2212,7.94e-17,0.001
+"producer_track, rebuilt",all,4734,0.2733,0.2318,0.3148,3.82e-38,0.001
+"producer_track, films without money at -0.379 (TMDB gap mean)",all,4734,0.2661,0.2273,0.3049,3.85e-41,0.001
+"producer_track, films without money at -1.249 (bottom-quarter mean)",all,4734,0.2524,0.2132,0.2915,1.3e-36,0.001
+"cast_track, rebuilt",all,5090,0.154,0.117,0.191,3.5e-16,0.001
+"cast_track, films without money at -0.379 (TMDB gap mean)",all,5090,0.1403,0.1082,0.1724,9.7e-18,0.001
+"cast_track, films without money at -1.249 (bottom-quarter mean)",all,5090,0.1168,0.0837,0.1498,4.27e-12,0.001
+"director_track, rebuilt",coverage >= median (0.57),1727,0.1797,0.1128,0.2466,1.39e-07,0.001
+"director_track, rebuilt",coverage < median (0.57),1689,0.2037,0.1373,0.27,1.76e-09,0.001
+"writer_track, rebuilt",coverage >= median (0.54),1813,0.2024,0.1404,0.2644,1.61e-10,0.001
+"writer_track, rebuilt",coverage < median (0.54),1800,0.2286,0.1586,0.2986,1.55e-10,0.001
+"producer_track, rebuilt",coverage >= median (0.59),2368,0.1306,0.0852,0.176,1.73e-08,0.001
+"producer_track, rebuilt",coverage < median (0.59),2366,0.3487,0.2863,0.4111,6.19e-28,0.001
+"cast_track, rebuilt",coverage >= median (0.35),2570,0.1689,0.1242,0.2135,1.24e-13,0.001
+"cast_track, rebuilt",coverage < median (0.35),2520,0.1592,0.1048,0.2137,9.99e-09,0.001
