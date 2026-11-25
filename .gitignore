@@ -4,8 +4,11 @@ __pycache__/
 build/
 .DS_Store
 # Screenplay text analysis: anything that holds script text (layers, token caches, KWIC lines,
-# Scattertext explorers, validation previews) stays local. See docs/scripts-text.md.
+# Scattertext explorers, validation previews) stays local. See archive/docs/scripts-text.md.
+archive/analysis/scripts_text/private/
+src/analysis/screenplays/private/
 analysis/scripts_text/private/
+analysis/screenplays/private/
 
 # Screenplay arcs (removed from main, kept on the archive/scripts-arcs branch): local script text stays ignored.
 analysis/arcs/private/

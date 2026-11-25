@@ -1,283 +1,49 @@
-# What makes a movie highly profitable?
+# What goes with a film earning back its budget?
 
-**Working question:** what is the best predictor of a movie being highly profitable, and does profit agree with whether people liked the film?
+Final project for DTU 02805 Social Graphs and Interactions, autumn 2026, by Log-Log Legends: Gyula Kürthy, Àngela Buxó and Niklas Johansen.
 
-This is the final project for DTU 02805 Social Graphs and Interactions, autumn 2026, by Log-Log Legends: Gyula Kürthy, Àngela Buxó and Niklas Johansen. Course group repo: <https://github.com/horrrt/02805_social_graphs>
+The paper is [`paper/main.tex`](paper/main.tex). It asks which of three things known before release goes with a film's return on budget, ln(gross / budget): its genre, the people who make it, or its screenplay.
 
-## What we found
+- **Genre.** Against films of the same budget, Animation, Family and Horror return more, and Drama, Action, Crime, History and War return less. Genre adds only 0.03 to the explained variance.
+- **People.** Films that share a director or producer have more similar returns than shuffles allow (0.09 against at most 0.04). The network's communities are production houses.
+- **Screenplay.** Among films of the same genre, era and budget, hit and flop scripts differ more than shuffles allow only in Horror's scene descriptions. That test is exploratory.
 
-The paper in [`paper/main.tex`](paper/main.tex) asks what goes with a film earning back its budget: its genre, the people who make it, or its screenplay. We linked the 12,673 films with at least 10,000 IMDb votes to Wikipedia, Wikidata and TMDB, and built a network of them and the people and companies behind them. Return is ln(gross / budget), which needs usable money figures: 6,346 films have them, and 1,598 of those also have a screenplay (the common set).
+None of this is causal. Gross over budget isn't profit, and every film here has at least 10,000 IMDb votes, so films nobody noticed are missing.
 
-Against films of the same budget, Animation, Family and Horror return more, and Drama, Action, Crime, History and War return less, but genre adds only 0.03 to the explained variance. Inside Horror, supernatural films stand out, and a keyword network filtered against a null confirms it. Films that share a director or producer have more similar returns than shuffles allow (0.09 against at most 0.04), and teams with experience in a film's genre beat their budgets. The network's communities are production houses, and Blumhouse beats films of the same budget by the most (+1.06). Screenplay vectors beat a shuffle but not simple metadata, except in Action, and not once popularity is known.
+## Where things are
 
-Which films count is set in one place: [`analysis/clean_rule.py`](analysis/clean_rule.py) holds the clean rule, and [`docs/analysis-set.md`](docs/analysis-set.md) explains the `usable_money` and `in_common_set` flags every question filters on. `tests/test_paper_numbers.py` recomputes every number in the paper from the committed outputs and fails when one no longer matches.
+| Folder | What's in it |
+|---|---|
+| [`notebooks/`](notebooks/) | What we did, one notebook per part of the paper. They read committed results, so they run without the raw data |
+| [`src/`](src/) | The code: [`analysis/`](src/analysis/) (the tests and their outputs), [`scripts/`](src/scripts/) (getting and parsing the data), [`explorer/`](src/explorer/) (a local app) and [`tests/`](src/tests/) |
+| [`data/`](data/) | Compressed data in `bundles/`, small tables, [where everything comes from](data/SOURCES.md) and [which films count](data/ANALYSIS_SET.md) |
+| [`paper/`](paper/) | The paper, its references and figures |
+| [`archive/`](archive/) | Analyses and notes the paper doesn't use. Some of it is still read by the explorer |
 
-## Known problems
+Which films count is set in one place, [`src/analysis/clean_rule.py`](src/analysis/clean_rule.py). [`src/tests/test_paper_numbers.py`](src/tests/test_paper_numbers.py) compares the numbers in the paper with the committed results and fails when one no longer matches.
 
-None of this is causal. Gross over budget isn't profit: the budget is the production budget only, so marketing and distribution are missing, and cinemas keep part of the gross. Box office also leaves out home video, streaming and television rights, and merchandise. Wikipedia misses flops, so every absolute return is too optimistic. The paper's discussion covers these limits, and "What's still open" in [`docs/imdb-data-structure.md`](docs/imdb-data-structure.md) lists the data problems we know about.
+Choices made before looking at results are written down in [`DECISIONS.md`](src/analysis/screenplays/DECISIONS.md) (screenplays) and [`Q2_NETWORK.md`](src/analysis/network/Q2_NETWORK.md) (people).
 
-A film's network features use only films released before it, so success can't leak into them. `tests/test_no_leakage.py` checks that on a synthetic graph.
-
-## Data coverage on 4 November 2026
-
-This is how the data looked when we chose the question. The counts have moved since, and the paragraph under the table follows the clean sample through each fix.
-
-Counts are for the 2,764 non-adult movies with at least 100,000 IMDb votes.
-
-| We need | Status | Count | Source |
-|---|---|---:|---|
-| Ratings | Have | 2,764 | IMDb |
-| Main actors | Have | 3,084 actors in the top 3 billed, 5,709 in the top 5 | IMDb |
-| Directors | Have | 2,762 | IMDb |
-| Producers | Have | 2,624 | Wikipedia |
-| Studios | Have | 2,661 | Wikipedia |
-| Budget and gross in USD | Have | 2,567 with both | Wikipedia |
-| Critic scores | Have | Metacritic 2,431, Rotten Tomatoes 2,740 | Wikipedia and Wikidata |
-| Critic text | Have | 2,443 | Wikipedia |
-| Screenplays | Have | 1,181 | MovieSum |
-| Release month | Parsed, not validated | 2,762 | Wikipedia |
-| Franchise flag | Rough only | 464 by the "follows" link | Wikidata |
-| True profit | Not available | | Not published |
-| Reviews linked to movies | Have, nothing after 2017 | 2,070 clean movies | MovieLens Tag Genome |
-| Prior awards | Have | 1,479 of the 6,851 clean movies below appear | DLu/oscar_data |
-
-After removing streaming films, rentals-only or regional grosses, non-USD figures and 2026 releases, 2,446 movies are left: 1,843 since 2000 and 1,093 since 2010. 1,095 of them have a usable screenplay.
-
-Adding movies with 10,000 to 99,999 votes brings the clean sample to 6,851, with 4,570 since 2000. That tier's parsing isn't hand-checked yet. (After the 15 November infobox fixes it's 6,843, with 4,567 since 2000: nine films with non-USD budgets or a Netflix release left and one wrongly excluded film joined; see [TESTING.md](TESTING.md).) The rule now also drops films before 1975, whose grosses are mostly distributor rentals, direct-to-video films and grosses whose citation says rentals. That leaves 6,414 clean movies, 1,798 of them grossing under budget, and 2,352 in the 100k+ tier (one more film since a fix that gives each film one Wikipedia article). The `one-article-per-film-2026-11-16` bundle holds the new flags and tables, so unpacking the bundles is enough.
-
-## Get the data
-
-Everything the code reads lives in `data/raw/`, which git ignores. There are two ways to fill it.
-
-### Data bundles (in the repo)
-
-[`data/bundles/`](data/bundles/) holds compressed archives that come with every clone, so most of the data needs no download:
-
-| Archive | Size | What it is |
-|---|---:|---|
-| `wikipedia-wikidata-2026-11-11.tar.zst` | 97 MB | Wikipedia article text for the 10,000+ vote movies (the hour-long pull), IMDb-to-Wikipedia links, Wikidata tables and the parsed infoboxes (budget, gross, studios, scores) |
-| `moviesum-screenplays-2026-11-11.tar.zst` | 90 MB | The MovieSum screenplays with IMDb IDs |
-| `screenplay-words-2026-11-11.tar.zst` | 10 MB | Dialogue word counts per screenplay |
-| `text-features-2026-11-11.tar.zst` | 15 MB | Screenplay and review features and embeddings (numbers only) |
-| `movie-graph-2026-11-15.tar.zst` | 12 MB | The graph and the infobox and movie tables after the 15 November parser fixes (see [TESTING.md](TESTING.md)). It replaces the same files from the 11 November Wikipedia archive above |
-| `extra-tables-2026-11-15.tar.zst` | 0.5 MB | Franchise flags, MovieSum IDs and screenplay statistics, and Tag Genome review counts per film, which no other archive holds |
-| `network-features-2026-11-16.tar.zst` | 0.8 MB | The per-film network features and per-group returns (`film_network_features.csv`, `roi_by_entity.csv`) rebuilt on the 6,414 clean films. It replaces those two files from `movie-graph-2026-11-15`, which were built on 6,843 |
-| `one-article-per-film-2026-11-16.tar.zst` | 7 MB | The infobox and movie tables and the graph nodes with one Wikipedia article per film: *Horizon: An American Saga – Chapter 1* gets its own figures and joins the clean sample (6,414 clean movies). It replaces those six files from `movie-graph-2026-11-15` |
-
-To set everything up, run this from the repo root. It makes `.venv`, installs `requirements.txt` and unpacks every archive into `data/raw/`, oldest first, so a newer archive replaces the files it updates:
+## Run it
 
 ```bash
 ./setup.sh
 ```
 
-Run it again after a pull: it reinstalls packages only when `requirements.txt` changes, and unpacks again only when an archive was added. `./setup.sh --data` only unpacks. It needs Python 3 and `zstd` (`brew install zstd` on a Mac).
-
-[`data/bundles/README.md`](data/bundles/README.md) lists each archive's licence: Wikipedia text is CC BY-SA, and MovieSum and the Tag Genome are non-commercial. The same archives are also on the [data-2026-11-11 release](https://github.com/angelabuxo/IMDb-movie-success/releases/tag/data-2026-11-11).
-
-### Everything else (download)
-
-IMDb's raw files and the Tag Genome reviews aren't bundled: the IMDb files are 1.9 GB, and so are the reviews, over GitHub's file limit. The movie graph built from IMDb's files is bundled; rebuild it after downloading them only if you change the graph scripts (see [The movie graph](#the-movie-graph)). If you use a coding agent, ask it to set up the data, and it'll follow [AGENTS.md](AGENTS.md). To do it yourself:
+This makes `.venv`, installs the packages and unpacks the bundles into `data/raw/`. It needs `zstd`.
 
 ```bash
-python3 scripts/get_data.py --list
+.venv/bin/python -m pytest
 ```
 
 ```bash
-python3 scripts/get_data.py imdb genome
+./src/explorer/run.sh
 ```
 
-`--all` fetches every dataset (about 4.5 GB), and `python3 scripts/get_data.py wikipedia` redoes the Wikipedia pull (about an hour) if you need fresher articles than the bundle's.
+The first runs the tests, the second starts the explorer on <http://localhost:8501>. It only listens on your machine, because `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. `./run_all.sh` does the setup, checks every explorer page, runs the tests and starts it.
 
-## Explore and check everything locally
+Commands in the code's own notes, such as `python -m analysis.genre.q1_genre`, are meant to be run from `src/`.
 
-The explorer is a local app with every notebook step, the network results, the whole graph and every node in it, the screenplays scene by scene, a profit playground, an inspector for every data and output file, and automatic checks. To run it, clone the repo and start it with one command:
+The larger data isn't in git. [`data/SOURCES.md`](data/SOURCES.md) and [`AGENTS.md`](AGENTS.md) say how to get it and under which terms.
 
-```bash
-git clone https://github.com/angelabuxo/IMDb-movie-success.git && cd IMDb-movie-success && ./explorer/run.sh
-```
-
-Then open <http://localhost:8501>. The first run takes a few minutes: it creates `.venv`, installs `requirements.txt` and unpacks `data/bundles/` into `data/raw/`, so nothing needs downloading. Later runs start in seconds. You need a recent Python 3 (we use 3.14) and `zstd` for the unpacking (`brew install zstd` on a Mac).
-
-If you already have a clone, pull and run:
-
-```bash
-git pull && ./explorer/run.sh
-```
-
-The script runs `./setup.sh` first, so it reinstalls the packages when `requirements.txt` changes and unpacks the bundles again when a pull adds one. The app only listens on your own machine: `data/raw/` holds licensed data and copyrighted script text, so don't deploy it. [explorer/README.md](explorer/README.md) describes every page.
-
-To set up, check and start everything in one go, run `./run_all.sh` instead. It runs `./setup.sh`, opens every explorer page headless and lists any crash, error or input file a page couldn't find, runs the quick tests, and then starts the explorer. A failed check doesn't stop the app from starting, so read the summary above the Streamlit banner. The first run with a new `.venv` can pause for several minutes at "loading libraries" while the Mac loads the newly installed libraries for the first time. Later runs skip that. `./run_all.sh --check` does the checks without starting the app and exits with 1 if something broke. `--full` also opens every notebook step and runs the slow tests.
-
-While the app runs, crashes (with their traceback), errors, warnings and missing input files go to `logs/explorer.log`, tagged with the page they came from. Streamlit's own output goes to `logs/streamlit.log`. If a page looks wrong, send that file along with the page name. `logs/` is gitignored.
-
-`python -m pytest` runs the tests; [TESTING.md](TESTING.md) covers what they test.
-
-## Scripts and reviews
-
-[`notebooks/scripts_and_reviews.ipynb`](notebooks/scripts_and_reviews.ipynb) works through the group's notes on screenplays and reviews: hits against flops on character networks and text measures, sentiment arcs, distinctive words, script and review embeddings against profit, and how review sentiment lines up with ratings and money. Two scripts build its inputs. Run them from the data folder after downloading the data:
-
-```bash
-cd data/raw && ../../.venv/bin/python ../../scripts/screenplays/screenplay_features.py
-```
-
-```bash
-cd data/raw && ../../.venv/bin/python ../../scripts/reviews/review_features.py
-```
-
-The first reads MovieSum and the second the Tag Genome reviews. Both write only numbers to `data/raw/features/`. The notebook also reads the screenplay embeddings in `features/embeddings_hpc/`.
-
-### Archived: screenplay emotional arcs
-
-We also ran a pre-registered test of whether a screenplay's emotional arc (DistilBERT SST-2 sentiment per scene, turned into a 100-point curve) goes with return, and dropped it on 17 November 2026. The result was negative, the sentiment model was trained on movie reviews rather than screenplays and was never validated by hand, and the word comparison in `analysis/scripts_text/` already makes the same point. It isn't on `main` any more, but nothing was deleted:
-
-- [`archive/scripts-arcs`](https://github.com/angelabuxo/IMDb-movie-success/tree/archive/scripts-arcs) (branch) and `archive/scripts-arcs-final` (tag) both point to `main` as it was just before the removal. They hold the arcs pipeline and its saved outputs (`analysis/arcs/`, with its `LOG.md`, `config.yaml` and HPC scripts), the step notebooks (`notebooks/arcs/`), the static page (`site/arcs/`), the run guide (`docs/scripts-arcs.md`), the tests (`tests/test_arcs.py`), the explorer's arc pages and the paper text with the arc results.
-- To look at it: `git switch archive/scripts-arcs`. The tag stays even if the branch is deleted.
-
-## Archive
-
-[`archive/`](archive/) holds early analyses (11 to 16 November) that don't feed the paper: the profit attribution, the text embeddings, the embedding maps and the Tag Genome tags. They still run, and the explorer lists their pages under "Archive". [`archive/README.md`](archive/README.md) says what each one is and how to rerun it.
-
-## In this repo
-
-- [`paper/`](paper/): the paper, its figures and [`make_figures.py`](paper/make_figures.py).
-- [`analysis/`](analysis/): one folder per question, each with its saved outputs (numbers only):
-  - [`genre/`](analysis/genre/): genre and return (Q1), with its checks in `CHECKS.md` and side analyses in `exploratory/`.
-  - [`compare/`](analysis/compare/): the three questions head to head on the common set, assortativity by genre and the network communities.
-  - [`screenplays/`](analysis/screenplays/): Word2Vec on the screenplays (Q3), with every decision in [`DECISIONS.md`](analysis/screenplays/DECISIONS.md).
-  - [`scripts_text/`](analysis/scripts_text/): the Scattertext word comparison of hit and flop screenplays ([`docs/scripts-text.md`](docs/scripts-text.md)).
-  - [`network/`](analysis/network/): saved results of `scripts/network/`.
-  - [`checks/`](analysis/checks/): the TMDB comparison and a hand-checked flop sample.
-  - [`clean_rule.py`](analysis/clean_rule.py): the shared clean rule.
-- [`scripts/`](scripts/): data collection and feature building. [`get_data.py`](scripts/get_data.py) and [`data/datasets.json`](data/datasets.json) are the downloader and its list of files. [`imdb/`](scripts/imdb/) parses Wikipedia and builds the analysis set, [`network/`](scripts/network/) builds the movie graph, and [`screenplays/`](scripts/screenplays/) and [`reviews/`](scripts/reviews/) build text features.
-- [`notebooks/`](notebooks/): analysis notebooks, mostly written by the `build_notebook.py` scripts next to each analysis.
-- [`explorer/`](explorer/): the local Streamlit app ([`explorer/README.md`](explorer/README.md)).
-- [`site/scripts/`](site/scripts/): a static page of the Scattertext analysis.
-- [`tests/`](tests/) and [`TESTING.md`](TESTING.md): the tests and what they cover. [`setup.sh`](setup.sh) and [`run_all.sh`](run_all.sh) set up and check everything.
-- [`data/`](data/): the data bundles ([`data/bundles/README.md`](data/bundles/README.md)), IMDb, Wikipedia and Wikidata links for 12,673 movies ([`movie_links.csv`](data/movie_links.csv)), and the CPI table.
-- [`docs/`](docs/): [`overview/overview.pdf`](docs/overview/overview.pdf) has the whole project on one page, with [`project-details.pdf`](docs/overview/project-details.pdf) and [`literature.pdf`](docs/overview/literature.pdf) next to it (rebuild with `tectonic -X compile overview.tex`). [`data-sources.md`](docs/data-sources.md) lists every dataset with its licence, [`imdb-data-structure.md`](docs/imdb-data-structure.md) shows how the data fits together, and [`project-context.md`](docs/project-context.md) summarises the course brief.
-- [`archive/`](archive/): early analyses that don't feed the paper: the profit attribution, the text embeddings and their maps, and the Tag Genome tags ([`archive/README.md`](archive/README.md)).
-- [`AGENTS.md`](AGENTS.md): setup steps and rules for coding agents.
-
-Raw data, article text and screenplays aren't in this repo. Please don't commit them.
-
-## The movie graph
-
-One network of the 12,673 movies with 10,000+ votes, the people who made them (actors with billing order, directors, writers, producers, composers, cinematographers, editors) and the companies that produced and distributed them. Build it from the data folder after downloading the IMDb files and parsing the infoboxes:
-
-```bash
-cd data/raw && mkdir -p features/graph && duckdb < ../../scripts/network/graph_tables.sql
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/resolve_companies.py
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/wiki_producers.py
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/build_graph.py
-```
-
-`resolve_companies.py` gives each studio and distributor name a Wikidata ID, so "Miramax Films" and "Miramax" become one company while a label such as Magnet Releasing stays apart from its parent. It needs the Wikipedia and Wikidata APIs the first time (about five minutes) and caches the answers. Every name, the ID it got and why are in [`data/company_ids.csv`](data/company_ids.csv), so a merge can be checked or overridden. The other two steps take about 15 seconds and writes `nodes.csv`, `edges.csv` and `movie_graph.graphml` to `data/raw/features/graph/`. The docstring of [`scripts/network/build_graph.py`](scripts/network/build_graph.py) lists every field and its coverage. [`notebooks/movie_graph.ipynb`](notebooks/movie_graph.ipynb) loads it and shows projections, centrality, a collaborator network and a cast measure that uses only earlier films. The infobox parser used to run unlinked names together ("Madras TalkiesLyca Productions") and to drop unlinked names in lists; since 15 November 2026 it reads every list item and every `<br>`-separated name (see [TESTING.md](TESTING.md)). `resolve_companies.py` still splits any run-together name left over, but only when every piece is a Wikipedia article. `wiki_producers.py` adds the producers the Wikipedia infobox names and IMDb's principals file lacks (about 3,900 credits), matched to IMDb IDs only when the match is unambiguous; each edge's `origin` column says whether it came from IMDb or Wikipedia.
-
-## What predicts profit
-
-[`notebooks/what_predicts_profit.ipynb`](notebooks/what_predicts_profit.ipynb) puts every predictor side by side: budget, year and genre; release month; franchise; network measures; critic scores; audience ratings and review sentiment. It trains on films up to 2010 and tests on 2011 to 2017. It also asks why a studio's track record predicts profit, whether network centrality adds to plain experience, whether alliances of companies differ in profit, and which films critics loved but lost money (and the reverse). Two more scripts build its inputs, after the graph:
-
-```bash
-../../.venv/bin/python ../../scripts/network/franchise_flag.py
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/film_features.py
-```
-
-`franchise_flag.py` flags films in a series or franchise from Wikidata (follows, followed by, or part of a film series), which takes about 15 minutes the first time and is cached. `film_features.py` builds every network measure from films released before the one it describes, including PageRank in a collaboration network rebuilt for each release year, in about 10 seconds.
-
-## Do films that share people have similar returns?
-
-[`scripts/network/roi_similarity.py`](scripts/network/roi_similarity.py) asks whether films with the same director, writer, producer, top-three cast member, composer, cinematographer, editor, studio or distributor have more similar returns than chance. Run it from the data folder after the graph and `franchise_flag.py`. It takes about 15 seconds:
-
-```bash
-../../.venv/bin/python ../../scripts/network/roi_similarity.py
-```
-
-It uses the 6,414 clean movies in the graph, with return as ln(gross / budget). For each role it takes every person or company credited on at least two of those films and measures how much of the variance in return group membership accounts for (`similarity`, like an intraclass correlation, 0 for random films). As a second measure it correlates each film's return with the mean of the group's other films (`loo_r`). The null shuffles returns across films 1,000 times, which keeps every group's size and every overlap between groups. Results are in [`analysis/network/roi_similarity.json`](analysis/network/roi_similarity.json).
-
-Every role clusters. After adjusting for ln(budget), release decade and genre, similarity runs from 0.09 for the top-three cast to 0.17 for producers, against a null whose 95th percentile is at most 0.02, and no shuffle reached the observed value for any role. The result holds when we drop franchise films (0.07 to 0.13), rank-transform returns so no single film dominates (0.08 to 0.16), keep only films from 1980 on (0.09 to 0.17) or keep only the 100k+ vote tier (0.04 to 0.13). The one role that weakens is distributor in the 100k+ tier, at 0.04 against 0.13 in the full sample, so distributors cluster mostly through the smaller films. Many of those had a limited or video-on-demand release and a tiny theatrical gross.
-
-The roles overlap, since a director's films often share a studio, a composer and a cast. To see how much survives the studio, the `adjusted_within_studio` variant shuffles returns only among films of the same main studio. Directors then score 0.13 against a null of 0.06, and the other people roles look similar: roughly half their similarity is beyond what their studios share. We can't rank the roles against each other from this test.
-
-What it doesn't show:
-- It's descriptive. It uses every film at once, so it says returns cluster by group, not that a group's past predicts its next film. The `*_track` features in `film_features.py` test that with earlier films only.
-- A shared data quirk clusters too. The highest returns include 1970s Hong Kong films listed with $100,000 budgets and $100 million grosses (Fist of Fury, The Way of the Dragon), and old Disney films whose gross includes decades of re-releases, so part of the top of the list is how those grosses were reported.
-- Gross over budget isn't profit. Marketing is missing and cinemas keep part of the gross.
-
-`features/roi_by_entity.csv` (local, not committed) lists each group's films, its mean return, and the mean shrunk towards zero by empirical Bayes, so a director with two lucky films doesn't top the list. Use it to look for patterns, then test any pattern you find the same way.
-
-## How far the similarity reaches, and whether a record travels
-
-Three scripts follow up on the shared-people result. They use the same 6,414 clean movies and the same adjusted return (ln(gross / budget) net of ln(budget), decade and genre). Run them from the data folder after the graph and `franchise_flag.py`:
-
-```bash
-../../.venv/bin/python ../../scripts/network/pair_returns.py
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/team_history.py
-```
-
-```bash
-../../.venv/bin/python ../../scripts/network/movers.py
-```
-
-The first takes several minutes and the other two under two. Each writes a JSON file next to [`roi_similarity.json`](analysis/network/roi_similarity.json), and `python scripts/network/network_figures.py` (from the repo root) draws [`analysis/network/figures/network_reach.pdf`](analysis/network/figures/network_reach.pdf) from them. [`notebooks/network_reach.ipynb`](notebooks/network_reach.ipynb) walks through all three with tables and plots. It reads only those JSON files, and `python scripts/network/build_notebook.py` rebuilds it. Every number below is without franchise films unless it says otherwise, and every null is 1,000 shuffles of returns.
-
-### Film pairs: distance, shared people and scripts
-
-[`pair_returns.py`](scripts/network/pair_returns.py) links two films when they share a key person (director, writer, producer, top-three cast, composer, cinematographer or editor) and measures the return correlation of film pairs, mean(z_i × z_j), which is 0 for random pairs.
-
-- **Only direct links count.** Films one step apart correlate at +0.033 (+0.041 with franchise films), against a shuffle null whose 95th percentile is +0.004. Two steps apart it's +0.001, and further out it's zero or slightly negative. The small negatives are arithmetic: standardised returns sum to zero, so if linked pairs sit above zero the rest must sit a little below.
-- **The more people two films share, the more alike their returns.** One shared person gives +0.025, two +0.081, three or four +0.150 and five or more +0.327 (620 pairs). With franchise films the top group reaches +0.439. Each step stays above a null that shuffles only within the film's main studio (95th percentiles +0.016, +0.046, +0.063 and +0.157), though the top group is small and the franchise flag is rough, so some of it is still sequels.
-- **Companies and people both carry it.** Linked pairs with no studio or distributor in common still correlate at +0.020, and unlinked pairs that share a company at +0.031.
-- **Similar scripts don't.** On the 1,629 films with a screenplay embedding (1,134 without franchise films), pairs that share a person correlate at +0.039. The same number of unlinked pairs with the most similar scripts correlate at +0.001, inside the null (95th percentile +0.011). Across deciles of script similarity, unlinked pairs stay between -0.011 and +0.008, and they don't rise with similarity.
-- **People do make somewhat similar films.** Within the same first genre, linked films' scripts have a cosine similarity of 0.664 against 0.648 for unlinked ones. That gap of 0.016 is about a sixth of the spread across all pairs (SD 0.093), and above a null that shuffles scripts within genre.
-
-What it measures and misses: the pair correlation says returns cluster, using every year at once, so it isn't a prediction. Script similarity is the cosine between mean all-MiniLM-L6-v2 passage vectors, which captures shared topic and vocabulary and not quality or structure.
-
-### Q2: a film-only network and return assortativity
-
-[`movie_assortativity.py`](scripts/network/movie_assortativity.py) projects the graph onto films only. It links two clean films when they share a director, a top-billed actor, a producer or a studio, and reports Pearson assortativity of `ln(gross / budget)` at the ends of those film-film edges. It reports the combined graph and each link type separately. The observed value is compared with 1,000 shuffles of the returns across the same films, so the graph, its degree pattern and every shared-credit link stay fixed while the film-to-return assignment is broken. It also reports a version adjusted for budget, release decade and genre.
-
-This assortativity measure was chosen because it directly answers whether connected films have alike numeric returns, while preserving the network structure in the null. A pair correlation would answer a closely related question but gives the same weight to each edge without using the standard network assortativity name; group-level variance or leave-one-group-out correlation would instead treat each person or studio as a cluster and can count overlapping groups multiple times. A regression or predictive train/test split would be valid alternatives for association or forecasting, but they answer a different question and are more sensitive to choices about controls and time. The shuffle is preferable to an independent-edge null here because shared credits create overlapping, uneven groups that should remain intact.
-
-### Teams that have worked together before
-
-[`team_history.py`](scripts/network/team_history.py) asks whether a film returns more when its key people have shared an earlier film. `repeat_share` is the share of pairs in the team who have, built from earlier years only over all 12,673 films in the graph.
-
-- With franchise films, `repeat_share` goes with the adjusted return at ρ = +0.127, and adds 0.017 to out-of-time R² (fitted to 2010, tested on 2011 to 2017) over the team's own track record, experience and size.
-- Most of that is sequels. Without franchise films it's ρ = +0.081 (within-year shuffle null: -0.016 to +0.029). Net of track record, experience and team size it's +0.029 (p = 0.048, just under the 5% line, where it was 0.11 on the older 6,843-film sample), and the out-of-time gain is 0.002.
-- What's left sits after 2005: ρ = +0.126 (95% interval 0.090 to 0.164) for films from 2005 on, against +0.006 for 1990 to 2004 and -0.012 before 1990. We haven't tested why, and unflagged sequels are one candidate.
-
-What it misses: "earlier film" means one with 10,000+ IMDb votes, and IMDb's principals file lists about ten people a title, so teams are partial.
-
-### Movers: does a track record travel?
-
-[`movers.py`](scripts/network/movers.py) takes every director, writer, producer and top-three cast credit where the person has at least two earlier clean films and the film's studios have at least five that the person didn't work on. A credit is a mover when none of the film's studios appears on any of the person's earlier films. It then regresses the film's adjusted return on the person's earlier record and the studio's, both standardised, with intervals that resample people.
-
-| | Person's record | Studio's record |
-|---|---:|---:|
-| Movers (6,318 credits) | +0.042 (0.015 to 0.068) | +0.234 (0.201 to 0.268) |
-| Stayers (6,623 credits) | +0.153 (0.116 to 0.194) | +0.191 (0.157 to 0.230) |
-
-- **A person's record mostly stays behind.** At a studio that's new to them it predicts about a quarter of what it predicts for stayers, while the new studio's own record predicts at least as much as it does for stayers.
-- **Directors keep the most.** Their record still gives +0.101 (0.024 to 0.175) after a move, and writers' +0.068 (0.010 to 0.130). Cast's (+0.030, -0.002 to 0.061) and producers' (+0.020) can't be told from zero.
-- **It isn't just noise in short records.** A person's record rests on a median of 5 films and a studio's on 21, which pulls the person's coefficient down. With both built from exactly three films, movers still give +0.059 for the person and +0.142 for the studio, and stayers +0.161 and +0.095.
-
-What it doesn't show: moves aren't random. A studio hires someone for a project it has already chosen, so this isn't what would happen if people were reassigned. "Studio" is the production company in the Wikipedia infobox, and a film with several studios counts as a stay if any of them is familiar.
-
-## Collection rules
-
-We collect only through official APIs, bulk downloads, or the JSON endpoints a public page itself uses, and only where the terms do not prohibit it. Collection is gentle and recorded with its date. Sources whose terms forbid automated collection are listed as excluded and not used.
+The README from before the November 2026 cleanup, with the full notes on every bundle and branch, is [`archive/docs/README-before-cleanup.md`](archive/docs/README-before-cleanup.md).
