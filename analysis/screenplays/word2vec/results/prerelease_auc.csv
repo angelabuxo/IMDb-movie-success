@@ -1,0 +1,22 @@
+genre,layer,model,n,seeds,auc,gain,lo,hi
+Comedy,-,tier+era+genres,272,0,0.7817,,,
+Comedy,-,era+genres,272,0,0.5521,,,
+Comedy,-,era+genres+budget,272,0,0.5422,,,
+Comedy,dialogue,vector,272,5,0.6131,,,
+Comedy,dialogue,era+genres+budget + vector,272,5,0.5720,0.0298,-0.0341,0.0899
+Comedy,description,vector,272,5,0.5835,,,
+Comedy,description,era+genres+budget + vector,272,5,0.5604,0.0182,-0.0364,0.0705
+Action,-,tier+era+genres,216,0,0.7059,,,
+Action,-,era+genres,216,0,0.5317,,,
+Action,-,era+genres+budget,216,0,0.5373,,,
+Action,dialogue,vector,216,5,0.6398,,,
+Action,dialogue,era+genres+budget + vector,216,5,0.6218,0.0845,0.0296,0.1375
+Action,description,vector,216,5,0.6636,,,
+Action,description,era+genres+budget + vector,216,5,0.6254,0.0881,0.0354,0.1403
+Drama,-,tier+era+genres,446,0,0.7864,,,
+Drama,-,era+genres,446,0,0.5168,,,
+Drama,-,era+genres+budget,446,0,0.5488,,,
+Drama,dialogue,vector,446,5,0.5631,,,
+Drama,dialogue,era+genres+budget + vector,446,5,0.5783,0.0295,-0.0093,0.0688
+Drama,description,vector,446,5,0.5586,,,
+Drama,description,era+genres+budget + vector,446,5,0.5849,0.0361,-0.0073,0.0781

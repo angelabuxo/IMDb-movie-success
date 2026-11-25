@@ -68,6 +68,7 @@ Each script becomes two vectors, one for the dialogue and one for the scene desc
 | D26 | Franchises | Robustness check only, with the raw flag |
 | D27 | Manual check | 25 films, stratified by era, error rates per era and layer, never pooled |
 | D28 | Follow-ups | 100k+ shuffle, vote check, word lists: post hoc and exploratory |
+| D29 | Budget-matched similarity test | Post hoc: cosine and label shuffle within genre x era x budget, criteria fixed before the five-seed run |
 
 ## 2. Decisions
 
@@ -226,6 +227,18 @@ Requested after the four primary tests had been seen, so they are exploratory:
 - **Interval for vector + baseline** (same script): paired film bootstrap, 2000 resamples of the out-of-fold scores, for the AUC and the gain over the baseline. No refit inside the bootstrap.
 - **log(votes) check** (`word2vec/votes_check.py`): votes still vary more than tenfold inside 100k+, so the tier split leaves popularity in. Observed AUCs only, no shuffle. Votes are partly the outcome (more viewers, more gross), so this measures how much of the separation popularity can carry; it is not a confounder to adjust away.
 - **Word lists** (`words/words.py`): the log-odds ratio with an informative Dirichlet prior (the statistic behind Scattertext's `LogOddsRatioInformativeDirichletPrior`, hand-written because Scattertext does not install on Python 3.13), prior = counts over the 1598 films, minimum 10 labelled films per word, 1000 label permutations within genre x era cells. Fixed before looking at any list. **Changed after looking:** the lists are ranked by the shuffle-calibrated z, because the plain z ranking was led by single letters from a few garbled scripts and by names the 20-film filter keeps. The plain ranking is still in the CSVs.
+
+#### D29. Budget-matched similarity test **(post hoc)**
+Chosen on 2026-11-25, after the planned test (D24, D25) and after a one-seed run of this test had been seen. It is exploratory, and D24 stays in the paper. This section was written before the five-seed results and the Horror checks were run.
+
+- **Question.** Do hit scripts resemble each other, and flop scripts each other, more than hits resemble flops, among films of the same genre, era and budget group?
+- **Why change the test.** The paper asks what facts known before release go with return. The D24 baseline uses the vote tier, which is known only after release. The genre and people questions already hold budget fixed. Cosine similarity and a label shuffle are course methods.
+- **Main test.** Vectors, labels and statistic as in `all_genres.py`, window 5, seeds 1 to 5. Labels are shuffled 2000 times within genre x era x budget tercile (terciles of all films of the genre x era cell). Nine genres (D14) x two layers = 18 tests, Holm-corrected. A test passes at Holm p < 0.05. All 18 are reported.
+- **Check of the main test.** The same test with budget halves and quarters, and a check that the era-only run reproduces `all_genres.csv`.
+- **Checks for any genre that passes.** Holm is not applied to them (they are checks on a passed test, p < 0.05): (1) without the Wikidata franchise flag, (2) 100k+ films only, (3) shuffled within era x budget tercile x vote tier, and (4) each genre's separation is read against the share of films in strata the shuffle can move.
+- **How it will be read, fixed in advance.** A genre is reported as a finding only if it passes the main test and the halves and quarters. If it fails the franchise check in a layer, that layer is reported as tied to franchises. If the 100k+ check has fewer than 20 hits or flops, it is reported as too small to read. Everything that fails is "no signal found with these vectors", never "scripts do not matter".
+- **Words.** For a passing genre, log-odds words (`words.py` statistic) with labels shuffled within era x budget tercile. If no word beats the family-wise shuffle threshold, the paper says the test cannot say what differs.
+- **Votes.** Only in check (2), (3) and in the coverage tables, as a check.
 
 ## 3. Limitations
 
