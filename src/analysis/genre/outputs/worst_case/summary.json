@@ -1,0 +1,28 @@
+{
+ "fill_value": -1.2458,
+ "perms": 10000,
+ "films_1975_2025": 11372,
+ "unpriced": 5026,
+ "versions": {
+  "priced only, era null": {
+   "films": 6346,
+   "filled": 0
+  },
+  "all unpriced filled, era null": {
+   "films": 11372,
+   "filled": 5026
+  },
+  "unparsed only filled, era null": {
+   "films": 10023,
+   "filled": 3677
+  },
+  "priced only, budget null": {
+   "films": 6346,
+   "filled": 0
+  },
+  "budget known but no gross filled, budget null": {
+   "films": 6657,
+   "filled": 311
+  }
+ }
+}

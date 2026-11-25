@@ -117,3 +117,18 @@ For a slide, "an Animation film is a hit 36 % of the time" is easier to say than
 - **Tipping point.** The fill value at which a genre's excess over its era-only null is zero, with all unpriced films filled.
 - **How it is read, fixed in advance.** The eight genres of the main test are judged. A genre *holds* if it keeps its sign at Holm p < 0.05 with all unpriced films filled, *weakens* if it keeps its sign but not the test, and *flips* if the sign changes. All eight are reported. The share of each genre's films that is unpriced is reported, because with one fill value that share drives the result.
 - **What it misses.** Films under 10,000 votes, and any pattern in the true missing returns.
+
+**Result** (10,000 shuffles, 4 s on a laptop). Excess, with Holm p in brackets.
+
+| Genre | Unpriced | Main test | Priced only, era null | All unpriced filled | Unparsed only filled | Budget known, no gross, filled (budget null) | Verdict |
+|---|---|---|---|---|---|---|---|
+| Animation | 36% | +0.316 | +0.431 | +0.450 (0.002) | +0.444 (0.002) | +0.341 (0.002) | holds |
+| Family | 26% | +0.266 | +0.247 | +0.442 (0.002) | +0.454 (0.002) | +0.279 (0.002) | holds |
+| Horror | 46% | +0.203 | +0.244 | +0.117 (0.004) | +0.095 (0.051) | +0.108 (0.182) | holds |
+| Drama | 49% | -0.130 | -0.138 | -0.159 (0.002) | -0.151 (0.002) | -0.118 (0.002) | holds |
+| Action | 42% | -0.145 | -0.106 | +0.007 (0.768) | +0.046 (0.453) | -0.166 (0.002) | flips |
+| Crime | 47% | -0.197 | -0.241 | -0.193 (0.002) | -0.209 (0.002) | -0.195 (0.002) | holds |
+| History | 54% | -0.330 | -0.378 | -0.295 (0.002) | -0.304 (0.002) | -0.337 (0.004) | holds |
+| War | 52% | -0.439 | -0.602 | -0.464 (0.002) | -0.502 (0.002) | -0.452 (0.011) | holds |
+
+Seven of eight hold and Action flips. Horror holds by the rule written above, but it misses two of the other versions (Holm p 0.051 and 0.18), so it's weaker than the verdict alone says. The fill also makes Adventure and other genres look better or worse than before, which only reflects their share of unpriced films. The fill value, -1.246, is the worst quarter of these 6,346 films. The tipping points are in `outputs/worst_case/verdict.csv`. They are far outside the observed returns for most genres, and for Horror the tipping point has no meaning because its share of unpriced films is close to average.
