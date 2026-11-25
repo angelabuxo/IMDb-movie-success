@@ -8,24 +8,29 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
-rows = [r for r in csv.DictReader(open(ROOT / "word2vec/results/budget_matched.csv"))
-        if r["shuffle_within"] == "era x budget terciles"]
+allrows = list(csv.DictReader(open(ROOT / "word2vec/results/budget_matched.csv")))
+BUDGET = {"era x budget halves", "era x budget terciles", "era x budget quarters"}
+rows = [r for r in allrows if r["shuffle_within"] == "era x budget terciles"]
 order = sorted({r["genre"] for r in rows}, key=lambda g: max(float(r["separation"]) for r in rows if r["genre"] == g))
 fig, axes = plt.subplots(1, 2, figsize=(3.5, 2.6), sharey=True, sharex=True)
 for ax, layer in zip(axes, ("dialogue", "description")):
     for k, g in enumerate(order):
         r = next(r for r in rows if r["genre"] == g and r["layer"] == layer)
-        ok = float(r["p_holm"]) < .05
-        ax.barh(k, float(r["separation"]), color="#1f6fb2" if ok else "#b5b5b5", height=.62)
+        # D29: a finding passes with budget thirds, halves and quarters
+        ok = [float(x["p_holm"]) < .05 for x in allrows if x["genre"] == g and x["layer"] == layer
+              and x["shuffle_within"] in BUDGET]
+        main = float(r["p_holm"]) < .05
+        ax.barh(k, float(r["separation"]), height=.62,
+                color="#1f6fb2" if main and all(ok) else "#a9cbe8" if main else "#c4c4c4")
         ax.plot([float(r["null_q95"])] * 2, [k - .4, k + .4], color="#c0392b", lw=1.4)
     ax.axvline(0, color="k", lw=.6)
-    ax.set_title(layer.capitalize(), fontsize=8)
+    ax.set_title({"description": "Scene description"}.get(layer, layer.capitalize()), fontsize=8)
     ax.tick_params(labelsize=6.5)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
 axes[0].set_yticks(range(len(order)), [f"{g} ({next(r for r in rows if r['genre'] == g)['hits']}/"
                                        f"{next(r for r in rows if r['genre'] == g)['flops']})" for g in order])
-fig.supxlabel("Extra similarity within hits and within flops", fontsize=7)
+fig.supxlabel("How much more alike two scripts with the same outcome are", fontsize=7)
 fig.tight_layout(pad=.5)
 for ext in ("pdf", "png"):
     fig.savefig(Path(__file__).parent / f"fig_script_similarity.{ext}", dpi=200)

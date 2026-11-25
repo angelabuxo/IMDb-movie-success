@@ -9,7 +9,8 @@ budget group. Misses: plot and order (mean vectors), films without a script, fil
 differences inside a group. Strata with only hits or only flops cannot move (share_movable says how many can).
 
 Run:  IMDB_DATA_DIR=... W2V_VECTOR_DIR=... python -I analysis/screenplays/word2vec/budget_matched.py [--perms 2000]
-Writes results/budget_matched.csv (main, halves, quarters, era only), results/budget_matched_checks.csv, and
+Writes results/budget_matched.csv (main, halves, quarters, era only), budget_matched_summary.csv,
+budget_matched_checks.csv, and
 results/budget_matched_words.csv if a counts file is found (numbers and single words only).
 """
 import argparse
@@ -110,6 +111,8 @@ def main():
     a = ap.parse_args()
     index, vecs, by = load()
     print("seeds:", [p.stem for p in ag.VECTORS], "genres:", len(by))
+    write("budget_matched_summary.csv", [{"films": len({t["id"] for v in by.values() for t in v}), "genres": len(by),
+                                          "perms": a.perms, "seeds": len(ag.VECTORS)}])
     rows = []
     for name, k in GROUPINGS.items():
         fam = [{"shuffle_within": name, "genre": g, **run(by[g], lambda t: (t["era"], t["bud"][k]), layer, index, vecs,
