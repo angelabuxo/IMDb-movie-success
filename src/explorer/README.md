@@ -14,7 +14,7 @@ From a clone you already have:
 git pull && ./explorer/run.sh
 ```
 
-Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs `requirements.txt` (again only when it changes), unpacks `data/bundles/` into `data/raw/` (again when a pull adds a bundle) through [`../setup.sh`](../setup.sh), and starts Streamlit on localhost only. Arguments go to Streamlit, so `./explorer/run.sh --server.port 8502` picks another port. The first run takes a few minutes and needs `zstd` (`brew install zstd` on a Mac). On Windows, run it from WSL or Git Bash rather than PowerShell directly; in WSL install it with `sudo apt install zstd`, then rerun the launcher. The launcher supports both Unix `.venv/bin` and Windows `.venv/Scripts` virtual-environment layouts.
+Then open <http://localhost:8501>. [`run.sh`](run.sh) creates `.venv`, installs `requirements.txt` (again only when it changes), unpacks `data/bundles/` into `data/raw/` (again when a pull adds a bundle) through [`../setup.sh`](../../setup.sh), and starts Streamlit on localhost only. Arguments go to Streamlit, so `./explorer/run.sh --server.port 8502` picks another port. The first run takes a few minutes and needs `zstd` (`brew install zstd` on a Mac). On Windows, run it from WSL or Git Bash rather than PowerShell directly; in WSL install it with `sudo apt install zstd`, then rerun the launcher. The launcher supports both Unix `.venv/bin` and Windows `.venv/Scripts` virtual-environment layouts.
 
 The app reads `data/raw` (or `$IMDB_DATA_DIR`) and the committed outputs in `analysis/*/outputs` and `analysis/network`. It writes nothing.
 
@@ -33,7 +33,7 @@ It runs each page headless on your data folder and lists crashes, errors, warnin
 
 ## Pages
 
-Text embeddings, Embedding maps, Embedding map checks, Profit attribution, Tags and genres and Tags: follow-ups are listed under "Archive" in the sidebar: they show early analyses that don't feed the paper, and their code is in [`archive/`](../archive/README.md).
+Text embeddings, Embedding maps, Embedding map checks, Profit attribution, Tags and genres and Tags: follow-ups are listed under "Archive" in the sidebar: they show early analyses that don't feed the paper, and their code is in [`archive/`](../../archive/README.md).
 
 | Page | What it shows | Where it comes from |
 |---|---|---|

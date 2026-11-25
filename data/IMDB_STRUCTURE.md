@@ -117,7 +117,7 @@ Screenplays were written before release, so a film's success can't have shaped t
 
 ## TMDB as a second money source
 
-`scripts/imdb/tmdb_compare.py` compares the infobox budget and gross with TMDB's `budget` and `revenue` (Kaggle snapshot of 2026-11-15) for the 6,414 clean movies in `movies_features_10k.csv`. Every one has a TMDB row. The saved numbers are in `analysis/checks/tmdb_compare.json`. [`notebooks/tmdb_second_source.ipynb`](../notebooks/tmdb_second_source.ipynb) and the explorer's "Second money source" page both read that file.
+`scripts/imdb/tmdb_compare.py` compares the infobox budget and gross with TMDB's `budget` and `revenue` (Kaggle snapshot of 2026-11-15) for the 6,414 clean movies in `movies_features_10k.csv`. Every one has a TMDB row. The saved numbers are in `analysis/checks/tmdb_compare.json`. [`notebooks/tmdb_second_source.ipynb`](../archive/notebooks/tmdb_second_source.ipynb) and the explorer's "Second money source" page both read that file.
 
 | | Movies with a TMDB figure | Exactly equal | Within 10% | Within 25% | Off by 2x or more | Spearman (logs) |
 |---|---:|---:|---:|---:|---:|---:|
