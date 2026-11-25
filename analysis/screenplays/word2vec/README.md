@@ -60,7 +60,18 @@ The tier is a split at 100,000 votes, and votes still vary a lot above it. `vote
 | Action | all labelled | 522,416 | 83,034 | 0.926 |
 | Action | 100k+ | 535,638 | 159,953 | 0.877 |
 
-So "the signal survives the tier control" only means the tier dummy is gone. Popularity isn't: inside 100k+, votes alone separate hits from flops far better than any text representation. Adding the vector to a cross-validated baseline that includes log(votes) doesn't help. For Action 100k+, the baseline with votes gives 0.795, and with the vector added 0.781 (dialogue) and 0.789 (description). Votes are partly the outcome, since a film that more people saw has a larger gross, so this isn't a confounder to adjust away. But it means the AUC can't tell text that predicts success apart from text that marks a widely seen film.
+So "the signal survives the tier control" only means the tier dummy is gone. Popularity isn't: inside 100k+, votes alone separate hits from flops far better than any text representation. We also added the vector to a cross-validated baseline that includes log(votes) (`results/votes_check.csv`):
+
+| Genre | Set | Baseline + votes | With dialogue vector | With description vector |
+|---|---|---|---|---|
+| Comedy | all labelled | 0.815 | 0.841 | 0.839 |
+| Comedy | 100k+ | 0.743 | 0.666 | 0.730 |
+| Action | all labelled | 0.879 | 0.864 | 0.872 |
+| Action | 100k+ | 0.795 | 0.781 | 0.789 |
+
+The AUC drops in three of the four rows. In Comedy over all labelled films it rises by about 0.025, but 0.841 is still below the 0.882 of log(votes) alone. The baseline with votes is below log(votes) alone in every row, so the classifier doesn't use the votes fully, and part of that rise could come from this. These are observed AUCs with no shuffle or interval, so neither the rise nor the drops are tested.
+
+Votes are partly the outcome, since a film that more people saw has a larger gross, so this isn't a confounder to adjust away. But it means the AUC can't tell text that predicts success apart from text that marks a widely seen film.
 
 ## Vector + baseline, with an interval
 
@@ -139,3 +150,32 @@ Action doesn't survive either check. Inside a tier the shuffle already gives a s
 `horror_check.py` asks what the Horror split is made of, with the TMDB keyword subgenres of `analysis/genre/q1_tmdb.py`, whose keyword lists were fixed there before looking. The hits are more often supernatural (37 % of the 52 hits against 15 % of the 52 flops) and slasher (38 % against 12 %), and less often creature films (27 % against 40 %). The median budget is $10.4M for hits and $15.0M for flops, which partly follows from defining hits on gross over budget. But none of these explains the separation. Shuffling within era x each subgenre flag, or within era x the Horror budget median, still leaves it far above the null (z from 4.1 to 10.2, every p at most 0.0035, `results/horror_check.csv`). The largest null comes from the slasher flag, at a sixth of the observed separation in dialogue. So Horror hit scripts resemble each other in a way the subgenre labels and the budget don't capture, and this test can't say what it is. Stratifying on all flags at once would leave mostly single-film strata, where the shuffle can't move anything, so it isn't done.
 
 This measures whether hit scripts resemble each other more than they resemble flops, in a space trained on all 2188 scripts. It misses anything a mean vector loses: structure, plot and order. It can't tell a script that causes success from one that marks a subgenre, a budget level or a franchise, and the checks above show those carry most of what it finds.
+
+## The same test, with budget held fixed (post hoc, D29)
+
+`budget_matched.py` repeats the test above but shuffles labels only within genre x era x budget third. Its criteria (D29) were written after a one-seed run and before this five-seed run. The era-only run reproduces the separations of `all_genres.csv`.
+
+| Genre (hits/flops) | Layer | Separation | 95 % of shuffles | p | Holm p (18 tests) |
+|---|---|---|---|---|---|
+| Action (108/108) | dialogue | +0.0183 | 0.0221 | 0.0960 | 0.960 |
+| Action (108/108) | description | +0.0097 | 0.0152 | 0.2224 | 1.000 |
+| Adventure (84/84) | dialogue | +0.0022 | 0.0091 | 0.2649 | 1.000 |
+| Adventure (84/84) | description | +0.0008 | 0.0069 | 0.3483 | 1.000 |
+| Comedy (136/136) | dialogue | +0.0083 | 0.0046 | 0.0075 | 0.120 |
+| Comedy (136/136) | description | +0.0041 | 0.0047 | 0.0670 | 0.806 |
+| Crime (85/85) | dialogue | -0.0045 | 0.0064 | 0.9065 | 1.000 |
+| Crime (85/85) | description | +0.0058 | 0.0071 | 0.0850 | 0.935 |
+| Drama (223/223) | dialogue | +0.0034 | 0.0038 | 0.0620 | 0.806 |
+| Drama (223/223) | description | +0.0005 | 0.0031 | 0.2914 | 1.000 |
+| Horror (52/52) | dialogue | +0.0485 | 0.0239 | 0.0010 | 0.017 |
+| Horror (52/52) | description | +0.0586 | 0.0246 | 0.0005 | 0.009 |
+| Mystery (50/50) | dialogue | +0.0159 | 0.0154 | 0.0470 | 0.658 |
+| Mystery (50/50) | description | +0.0245 | 0.0134 | 0.0105 | 0.157 |
+| Romance (59/59) | dialogue | -0.0005 | 0.0110 | 0.4228 | 1.000 |
+| Romance (59/59) | description | -0.0050 | 0.0104 | 0.8486 | 1.000 |
+| Thriller (74/74) | dialogue | +0.0023 | 0.0084 | 0.2009 | 1.000 |
+| Thriller (74/74) | description | +0.0050 | 0.0085 | 0.1209 | 1.000 |
+
+Only Horror passes. Its description layer also passes with budget halves and quarters, without franchise films (p 0.0045), in the 100k+ films (p 0.041, 46/20) and with the vote tier kept in the shuffle (p 0.0075, 58 % of films movable). Its dialogue layer misses with budget quarters (Holm 0.051) and in the 100k+ films (p 0.077), so it isn't reported as a finding. All five seeds agree. Of 6,006 description words only *closet* beats the family-wise shuffle threshold, and no dialogue word does, so the test mostly can't say what differs. A failed test isn't evidence that scripts don't matter.
+
+`prerelease.py` has the two other checks. Against era, other genres and log budget (linear), the vectors raise Action's AUC by 0.084 (dialogue) and 0.088 (description) with intervals above zero, which disagrees with the shuffle above, so no Action claim is made. And films with a script are the popular ones: 36 % of hits have one against 13 % of flops, 49 % against 42 % among 100k+ films.

@@ -1,0 +1,17 @@
+genre,check,layer,hits,flops,share_movable,separation,null_mean,null_q95,z,p,too_small
+Horror,no franchise,dialogue,37,45,0.939024,0.0223655,-0.00318487,0.0126777,3.20409,0.0069965,False
+Horror,no franchise,description,37,45,0.939024,0.0412432,0.00083375,0.019713,3.92349,0.00449775,False
+Horror,100k+ only,dialogue,46,20,0.727273,0.0474851,0.0171132,0.0532218,1.50157,0.0774613,False
+Horror,100k+ only,description,46,20,0.727273,0.0306962,-0.000187465,0.0286524,1.8266,0.0414793,False
+Horror,terciles x vote tier,dialogue,52,52,0.576923,0.0485485,0.0169063,0.0332068,3.4148,0.00549725,False
+Horror,terciles x vote tier,description,52,52,0.576923,0.0586089,0.0222835,0.0439675,2.98367,0.00749625,False
+Horror,"main, vectors_w5_s1 alone",dialogue,52,52,0.903846,0.0490017,0.0058835,0.0237302,4.60926,0.00049975,False
+Horror,"main, vectors_w5_s1 alone",description,52,52,0.903846,0.0581958,0.0063921,0.0242907,5.60186,0.00049975,False
+Horror,"main, vectors_w5_s2 alone",dialogue,52,52,0.903846,0.0491927,0.00604829,0.0241114,4.56444,0.0009995,False
+Horror,"main, vectors_w5_s2 alone",description,52,52,0.903846,0.0593928,0.00662506,0.0246854,5.60817,0.00049975,False
+Horror,"main, vectors_w5_s3 alone",dialogue,52,52,0.903846,0.0474049,0.00573215,0.0237002,4.44358,0.0009995,False
+Horror,"main, vectors_w5_s3 alone",description,52,52,0.903846,0.0580563,0.00642497,0.0244218,5.57021,0.00049975,False
+Horror,"main, vectors_w5_s4 alone",dialogue,52,52,0.903846,0.0475914,0.00573793,0.0236772,4.49597,0.0009995,False
+Horror,"main, vectors_w5_s4 alone",description,52,52,0.903846,0.0583615,0.00643771,0.0244858,5.6254,0.00049975,False
+Horror,"main, vectors_w5_s5 alone",dialogue,52,52,0.903846,0.049552,0.00593779,0.0239384,4.62789,0.00049975,False
+Horror,"main, vectors_w5_s5 alone",description,52,52,0.903846,0.0590383,0.0066131,0.0247186,5.61443,0.00049975,False
