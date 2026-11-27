@@ -634,6 +634,13 @@ CLAIMS = [
     ("moviesum final", "and @ have at least 500 tokens in both the dialogue", lambda s: [s.genre["sets"]["in_common_set"]["films"]]),
     ("per seed", r"Each of the five Word2Vec runs alone also gives $p\le@$",
      lambda s: [s.bmc[s.bmc.index.get_level_values(0).str.endswith(" alone")].p.max()]),
+    ("corpus tokens", "The scripts hold @ million tokens before preprocessing (@ million dialogue, @ million description), and Word2Vec trains on the @ million left after it (@ million and @ million)",
+     lambda s: (lambda p, c: [(p["dialogue_raw_whitespace_tokens"] + p["description_raw_whitespace_tokens"]) / 1e6,
+                              p["dialogue_raw_whitespace_tokens"] / 1e6, p["description_raw_whitespace_tokens"] / 1e6,
+                              (c["dialogue_tokens"] + c["description_tokens"]) / 1e6, c["dialogue_tokens"] / 1e6, c["description_tokens"] / 1e6]
+                if (p["dialogue_tokens_after"], p["description_tokens_after"]) == (c["dialogue_tokens"], c["description_tokens"]) else [None])(
+         pd.read_csv(ROOT / "src/analysis/screenplays/preprocess/preprocess_summary.csv").set_index("measure").value,
+         pd.read_csv(ROOT / "src/analysis/screenplays/word2vec/corpus_summary.csv").set_index("measure").value)),
     ("manual read", "one of us read @ elements from @ screenplays, drawn by era, and found @ in the wrong layer",
      lambda s: [s.manual.n.sum(), s.manual_films, s.manual.k.sum()]),
 ]
@@ -660,9 +667,6 @@ AWAITING_SOURCE = {
     "2,200": "MovieSum row count (src/analysis/screenplays/DECISIONS.md has no row count; no output file)",
     "2,020": "scripts among 10k+ vote films (only in src/analysis/screenplays/DECISIONS.md, not in an output)",
     "1,621": "scripts that pass the money rule (only in src/analysis/screenplays/DECISIONS.md, not in an output)",
-    "48.3": "corpus tokens; word2vec/corpus_summary.csv gives 19,484,090 + 24,756,749 = 44.2 million",
-    "20.2": "dialogue tokens; word2vec/corpus_summary.csv gives 19.5 million",
-    "28.2": "description tokens; word2vec/corpus_summary.csv gives 24.8 million",
 }
 
 
