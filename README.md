@@ -44,6 +44,6 @@ The first runs the tests, the second starts the explorer on <http://localhost:85
 
 Commands in the code's own notes, such as `python -m analysis.genre.q1_genre`, are meant to be run from `src/`.
 
-The larger data isn't in git. [`data/SOURCES.md`](data/SOURCES.md) and [`AGENTS.md`](AGENTS.md) say how to get it and under which terms.
+The larger data isn't in git. Two of the bundles do hold text: `moviesum-screenplays-2026-11-11` has the MovieSum screenplays and `wikipedia-wikidata-2026-11-11` has the Wikipedia article wikitext ([`data/bundles/README.md`](data/bundles/README.md)). Don't add more raw data, article text, review text or screenplays. [`data/SOURCES.md`](data/SOURCES.md) and [`AGENTS.md`](AGENTS.md) say how to get it and under which terms.
 
 The README from before the November 2026 cleanup, with the full notes on every bundle and branch, is [`archive/docs/README-before-cleanup.md`](archive/docs/README-before-cleanup.md).
