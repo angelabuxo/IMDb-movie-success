@@ -468,7 +468,7 @@ CLAIMS = [
     ("communities", "finds @ groups among the @ linked films, with modularity @ against at most @ for the network rewired with every film's degree kept, and @ seeds agree with NMI @",
      lambda s: [s.comA["communities"], s.comA["films_in_network"], s.comA["modularity"], s.comA["rewired_modularity_max"],
                 s.comA["seeds"], s.comA["mean_nmi_best_vs_other_seeds"]] if s.comA["modularity_p"] < .05 else [None]),
-    ("coverage careers", r"only @\% of the credits of our films' teams (their directors, writers, producers, and top 3 actors) are on films with 10,000+ votes",
+    ("coverage careers", r"Only @\% of the credits of our films' teams (their directors, writers, producers and top 3 actors) are on films with 10,000+ votes, so the gap is large",
      lambda s: [100 * s.cov["careers"]["share_on_10k_vote_films"]]),
     ("coverage crew", r"@\% of the directors in IMDb's separate crew list appear among them",
      lambda s: [100 * s.cov_crew.loc[("director", "all"), "share_in_principals"]]),
